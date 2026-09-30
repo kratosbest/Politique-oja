@@ -12,7 +12,7 @@ Vidéo de présentation en motion design de 65 s, 1920×1080, calée sur la voix
 |---|---|---|
 | 0–3 s | « Besoin de vous déplacer ? Avec OJA, vous avez le choix. » | Place de l'Amazone (Cotonou) : pin sur la statue, voiture OJA qui entre, logo |
 | 3–9 s | Réserver, trajet, option | Téléphone avec l'écran réel « Choisissez votre course » |
-| 9–14 s | Voiture, moto, tricycle / budget | Cartes véhicules (vraie voiture et vraie moto OJA détourées), curseur de budget |
+| 9–14 s | Voiture, moto, tricycle / budget | Cartes véhicules (vraie voiture, moto et tricycle OJA détourés), curseur de budget |
 | 14–22 s | Formule ÉCO, trajet partagé | Tampon ÉCO, covoiturage, prix 8 130 → 6 100 XOF |
 | 22–33 s | Destination, recherche, géolocalisation | Recherche « Marché Dantokpa », carte de Cotonou, trajet |
 | 33–37 s | « Vous avez un colis à envoyer ? » | Chute du colis, zoom de transition |
@@ -32,6 +32,5 @@ ffmpeg -i video.mp4 -i assets/soundtrack.m4a -c:v copy -c:a copy -shortest OJA_M
 
 ## Visuels
 
-- `assets/car.png`, `assets/moto.png` : détourés à partir des visuels de campagne OJA.
+- `assets/car.png`, `assets/moto.png`, `assets/moto_course.png`, `assets/tricycle.png` : détourés à partir des visuels de campagne OJA.
 - `assets/amazone.jpg` : Place de l'Amazone, photo © Présidence du Bénin (crédit affiché dans la vidéo).
-- Tricycle : illustration provisoire. Pour la remplacer, ajouter une photo détourée `assets/tricycle.png` et l'utiliser dans `VEH` (`index.html`).
