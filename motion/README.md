@@ -59,3 +59,28 @@ Deuxième film, calé sur la voix off « Avec OJA, transformez chaque déplaceme
 | 54–61 s | Roulez, pédalez, livrez, gagnez · Rejoignez OJA | Tagline, écran de fin (statue + chauffeur) |
 
 Thème distinct du premier film : ciel bleu, bleu nuit et or au lieu du crème et du noir. `assets/statue.png` et `assets/sky.jpg` viennent de la photo © Présidence du Bénin (crédit affiché).
+
+---
+
+# OJA Market — restaurants & commerces (55 s)
+
+Troisième film, calé sur la voix off « Vos restaurants préférés sont maintenant à portée de main ».
+
+- **Vidéo :** `OJA_Market_Benin.mp4`
+- **Source :** `market.html` (même moteur). Les écrans d'appli sont recréés en HTML (données du Bénin, prix en XOF) dans des iPhone 3D animés.
+- **Rendu :** `PAGE=market.html node render.js 60 0 3300 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_market.m4a`
+
+| Temps | Voix off | Visuel |
+|---|---|---|
+| 0–5 s | Vos restaurants préférés… en un seul clic avec OJA Market | iPhone qui pivote, plats en orbite, tap sur Market |
+| 5–8 s | Envie de votre plat préféré ? Plus besoin de vous déplacer | Plats en stickers, livreur OJA vers la maison |
+| 8–15 s | Ouvrez, découvrez, choisissez, commandez, faites-vous livrer | 5 étapes, l'iPhone pivote d'écran en écran (accueil, menu, paiement, suivi) |
+| 15–19 s | Quartier, fast food, cuisine locale, bonnes adresses | 4 cartes qui se retournent |
+| 19–23 s | Retrouvez vos restaurants préférés | Favoris (cœurs) sur l'iPhone |
+| 23–30 s | Réseau de livraison OJA · vélo, moto, tricycle, voiture | Carte réseau animée, véhicules réels |
+| 30–37 s | Boutiques, commerces, produits près de chez vous | Onglet Magasins, produits en stickers |
+| 37–40 s | Un restaurant ? Un produit ? Une envie ? À un clic | Coupes rapides |
+| 40–48 s | Commandez local… OJA Market · à portée de clic | Pin Bénin, logo, trois iPhone en éventail |
+| 48–55 s | OJA. Le local devient visible | Logo animé (carte, pin, traits), boutons de téléchargement |
+
+Les noms de restaurants et les prix sont des exemples. Logo découpé en calques `mk_map.png`, `mk_pin.png`, `mk_streak.png`.
