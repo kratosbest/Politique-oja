@@ -92,7 +92,7 @@ Les noms de restaurants et les prix sont des exemples. Logo découpé en calques
 Quatrième film, calé sur la voix off « Vous avez des objets que vous n'utilisez plus ? ».
 
 - **Vidéo :** `NOVOJA_Benin.mp4`
-- **Source :** `novoja.html` (même moteur et mêmes iPhone 3D que `market.html`), thème vert « seconde vie »
+- **Source :** `novoja.html` (même moteur et mêmes iPhone 3D que `market.html`), aux couleurs OJA (orange et noir chaud)
 - **Rendu :** `PAGE=novoja.html node render.js 60 0 3510 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_novoja.m4a`
 
 | Temps | Voix off | Visuel |
