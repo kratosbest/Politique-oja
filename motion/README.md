@@ -84,3 +84,26 @@ Troisième film, calé sur la voix off « Vos restaurants préférés sont maint
 | 48–55 s | OJA. Le local devient visible | Logo animé (carte, pin, traits), boutons de téléchargement |
 
 Les noms de restaurants et les prix sont des exemples. Logo découpé en calques `mk_map.png`, `mk_pin.png`, `mk_streak.png`.
+
+---
+
+# NOVOJA — objets d'occasion (58,5 s)
+
+Quatrième film, calé sur la voix off « Vous avez des objets que vous n'utilisez plus ? ».
+
+- **Vidéo :** `NOVOJA_Benin.mp4`
+- **Source :** `novoja.html` (même moteur et mêmes iPhone 3D que `market.html`), thème vert « seconde vie »
+- **Rendu :** `PAGE=novoja.html node render.js 60 0 3510 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_novoja.m4a`
+
+| Temps | Voix off | Visuel |
+|---|---|---|
+| 0–3 s | Des objets inutilisés ? Ne les jetez pas ! | Objets qui tombent vers la poubelle et rebondissent |
+| 3–6 s | Une seconde vie avec NOVOJA | Anneau de recyclage, logo NOVOJA |
+| 6–11 s | Donner ou revendre autour de vous | iPhone fil d'annonces, badges Don / À vendre, distances |
+| 11–17 s | Téléphones, meubles, vêtements… | 7 cartes catégories synchronisées |
+| 17–20 s | Publiez en quelques clics | Écran de publication (saisie, prix, « Annonce publiée ») |
+| 20–26 s | Bonne affaire ? Parcourez, achetez | Étiquette, fil puis fiche objet en rotation 3D |
+| 26–34 s | Paiement sécurisé | Discussion, négociation, MTN MoMo, fonds protégés |
+| 34–40 s | Besoin d'une livraison ? | Trajet vendeuse → acheteur, livreur OJA, « Objet reçu » |
+| 40–50 s | Vendez, donnez, achetez malin · nouvelle vie | Coupes de couleur, trois iPhone en éventail |
+| 50–58 s | NOVOJA avec OJA, le local devient visible | Logo animé, anneau de recyclage, boutons de téléchargement |
