@@ -235,31 +235,29 @@ const TOG = (id, x, y, w = 40, h = 25) => `<div id="${id}" class="abs" style="le
 function setTog(id, p, w = 40, h = 25) { const e = el(id); e.querySelector('.knb').style.left = (2 + p * (w - h + 2)) + 'px'; const tr = e.querySelector('.trk'); tr.style.background = p > .5 ? '#C2410C' : '#E5E7EB'; tr.style.borderColor = p > .5 ? '#C2410C' : '#D1D5DB'; }
 const moneyChip = (id, txt, x, y) => `<div id="${id}" class="pill" style="left:${x}px;top:${y}px;background:#12B76A;color:#fff;font:800 30px Poppins;box-shadow:0 14px 34px rgba(0,0,0,.3)">${ic('up', 30, '#fff', 3)}${txt}</div>`;
 
-/* S0 — Place de l'Amazone: "Avec OJA, transformez chaque déplacement en opportunité." */
-H += `<div class="scene" id="s0" style="background:#0E0F14">
-<div id="amzcam" class="abs" style="left:0;top:0;width:1920px;height:1080px;transform-origin:720px 430px">
-<img src="assets/amazone.jpg" class="abs" style="left:0;top:0;width:1920px;height:1080px">
-${[0, 1, 2].map(i => `<div id="amzr${i}" class="abs" style="left:620px;top:455px;width:200px;height:70px;border-radius:50%;border:4px solid #FF6B00"></div>`).join('')}
-<div id="amzpin" class="abs" style="left:688px;top:186px;width:64px;height:80px;transform-origin:50% 100%;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))">${PINSVG}</div>
-<div id="amzlab" class="pill" style="left:770px;top:150px;background:#fff;color:#0E0F14;font-size:24px;padding:12px 22px 12px 12px;box-shadow:0 14px 34px rgba(0,0,0,.3);transform-origin:0 50%">${flag(42, 28)}Place de l'Amazone · Cotonou</div>
-</div>
-<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(14,15,20,.88) 0%,rgba(14,15,20,.62) 38%,rgba(14,15,20,0) 64%)"></div>
-<div class="abs" style="inset:0;background:linear-gradient(180deg,rgba(255,138,46,.10) 0%,rgba(0,0,0,0) 45%,rgba(14,15,20,.45) 100%)"></div>
-<div id="s0disc" class="abs c" style="left:120px;top:140px;width:230px;height:230px;border-radius:50%;background:#fff;box-shadow:0 30px 70px rgba(0,0,0,.45);display:grid;place-items:center"><img src="assets/logo.png" style="width:188px"></div>
-<div id="s0t" class="abs H" style="left:120px;top:420px;color:#fff">
+/* S0 — statue + ciel du Bénin: "Avec OJA, transformez chaque déplacement en opportunité." */
+H += `<div class="scene" id="s0" style="background:#1E6FD9">
+<img id="s0sky" src="assets/sky.jpg" class="abs" style="left:-80px;top:-50px;width:2080px;height:1180px">
+<div id="s0sun" class="abs" style="left:1350px;top:-420px;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,rgba(255,244,214,.75),rgba(255,244,214,0) 60%)"></div>
+<div id="s0st" class="abs" style="left:1250px;top:0px;width:660px;transform-origin:50% 100%"><img src="assets/statue.png" style="width:660px;display:block;filter:drop-shadow(0 30px 40px rgba(0,20,60,.35))"></div>
+<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(8,18,40,.84) 0%,rgba(8,18,40,.55) 38%,rgba(8,18,40,0) 62%)"></div>
+<div class="abs" style="left:0;right:0;bottom:0;height:420px;background:linear-gradient(180deg,rgba(8,18,40,0),rgba(8,18,40,.55))"></div>
+<div id="s0flag" class="pill" style="left:1290px;top:960px;background:#fff;color:#0E0F14;font-size:24px;padding:12px 22px 12px 12px;box-shadow:0 14px 34px rgba(0,0,0,.3);transform-origin:0 50%">${flag(42, 28)}Fièrement béninois</div>
+<div id="s0disc" class="abs c" style="left:120px;top:110px;width:220px;height:220px;border-radius:50%;background:#fff;box-shadow:0 30px 70px rgba(0,0,0,.45);display:grid;place-items:center"><img src="assets/logo.png" style="width:180px"></div>
+<div id="s0t" class="abs H" style="left:120px;top:370px;color:#fff">
 <div id="s0a" style="font-size:96px">${W('Avec *OJA,*')}</div>
-<div id="s0b" style="font-size:74px;margin-top:10px">${W('transformez chaque déplacement')}</div>
-<div id="s0c" style="font-size:74px">${W('en')} <span style="position:relative;display:inline-block;padding:0 18px"><span id="s0hl" class="abs" style="left:0;top:6px;right:0;bottom:-8px;background:#FF6B00;border-radius:16px;transform-origin:0 50%"></span><span style="position:relative">${W('opportunité.', '')}</span></span></div></div>
-<div id="amzcar" class="abs" style="left:1040px;top:670px;width:840px"><div class="abs" style="left:50px;right:30px;bottom:-6px;height:54px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.55),rgba(0,0,0,0) 70%)"></div><img src="assets/car.png" style="position:relative;width:840px;display:block"></div>
-${moneyChip('s0m0', '+2 500 XOF', 1470, 640)}${moneyChip('s0m1', '+1 800 XOF', 1690, 600)}${moneyChip('s0m2', '+3 200 XOF', 1560, 540)}
+<div id="s0b" style="font-size:64px;margin-top:10px">${W('transformez chaque déplacement')}</div>
+<div id="s0c" style="font-size:64px">${W('en')} <span style="position:relative;display:inline-block;padding:0 18px"><span id="s0hl" class="abs" style="left:0;top:6px;right:0;bottom:-8px;background:#FF6B00;border-radius:16px;transform-origin:0 50%"></span><span style="position:relative">${W('opportunité.', '')}</span></span></div></div>
+<div id="amzcar" class="abs" style="left:110px;top:760px;width:700px"><div class="abs" style="left:40px;right:24px;bottom:-6px;height:46px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.55),rgba(0,0,0,0) 70%)"></div><img src="assets/car.png" style="position:relative;width:700px;display:block"></div>
+${moneyChip('s0m0', '+2 500 XOF', 830, 850)}${moneyChip('s0m1', '+1 800 XOF', 900, 740)}${moneyChip('s0m2', '+3 200 XOF', 820, 630)}
 <div class="abs" style="left:24px;bottom:18px;font:500 15px Inter;color:rgba(255,255,255,.6)">Photo : © Présidence du Bénin</div>
 </div>`;
 
 /* S1 — "Vous avez une voiture, une moto, un tricycle ou un vélo ?" */
 const V4 = [['Voiture', '<img src="assets/car.png" class="abs" style="left:-8px;top:120px;width:416px">'], ['Moto', '<img src="assets/moto_course.png" class="abs" style="left:88px;top:14px;width:228px">'], ['Tricycle', '<img src="assets/tricycle.png" class="abs" style="left:58px;top:30px;width:286px">'], ['Vélo', `<div class="abs" style="left:100px;top:40px">${bikeCard(200)}</div>`]];
-H += `<div class="scene" id="s1" style="background:#FFF5EB;color:#0E0F14">
-<div id="s1bg" class="abs H" style="left:0;top:560px;white-space:nowrap;font-size:300px;color:transparent;-webkit-text-stroke:3px rgba(255,107,0,.12)">VOITURE · MOTO · TRICYCLE · VÉLO · VOITURE · MOTO ·</div>
-<div id="s1t" class="abs H" style="left:0;top:110px;width:1920px;text-align:center;font-size:92px">${W('Vous avez un *véhicule* ?')}</div>
+H += `<div class="scene" id="s1" style="background:#1E6FD9;color:#0E0F14"><img id="s1sky" src="assets/sky.jpg" class="abs" style="left:-60px;top:-40px;width:2040px;height:1160px"><div class="abs" style="inset:0;background:linear-gradient(180deg,rgba(8,18,40,.35),rgba(8,18,40,0) 40%,rgba(8,18,40,.25))"></div>
+<div id="s1bg" class="abs H" style="left:0;top:560px;white-space:nowrap;font-size:300px;color:transparent;-webkit-text-stroke:3px rgba(255,255,255,.3)">VOITURE · MOTO · TRICYCLE · VÉLO · VOITURE · MOTO ·</div>
+<div id="s1t" class="abs H" style="left:0;top:110px;width:1920px;text-align:center;font-size:92px;color:#fff;text-shadow:0 8px 30px rgba(8,18,40,.45)">${W('Vous avez un *véhicule* ?')}</div>
 ${V4.map(([n, img], i) => `<div class="vcard c" id="s1c${i}" style="left:${100 + i * 430}px;top:330px;width:400px;height:470px"><div class="abs" style="left:75px;top:24px;width:250px;height:250px;border-radius:50%;background:#FFEBDC"></div><div id="s1v${i}" class="abs" style="left:0;top:0;width:400px;height:300px">${img}</div>
 <div class="abs" style="left:0;right:0;top:330px;text-align:center;font:800 56px Poppins">${n}</div><div class="abs" style="left:0;right:0;top:410px;text-align:center;font:600 22px Inter;color:#C2410C;letter-spacing:.14em">0${i + 1}</div></div>`).join('')}
 </div>`;
@@ -275,7 +273,7 @@ ${[['car', 'Passagers', 1000, 380], ['pkg', 'Livraisons', 1560, 520], ['leaf', '
 </div>`;
 
 /* S3 — modes: passagers / livraisons / combiner */
-H += `<div class="scene" id="s3" style="background:#0E0F14">
+H += `<div class="scene" id="s3" style="background:radial-gradient(ellipse at 20% 0%,#16274A,#0A1020 65%)">
 <div class="abs" style="inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:80px 80px"></div>
 <div id="s3glow" class="abs" style="left:900px;top:-100px;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.3),rgba(255,107,0,0) 65%)"></div>
 ${[['car', 'Transporter des passagers'], ['pkg', 'Effectuer des livraisons'], ['swap', 'Combiner les deux']].map(([icn, lb], i) => `<div class="frow" id="s3r${i}" style="left:150px;top:${190 + i * 130}px"><div class="fic" style="width:96px;height:96px;border-radius:26px">${ic(icn, 48, '#FF6B00', 2.2)}</div><div class="flab" style="font-size:54px">${lb}</div></div>`).join('')}
@@ -296,14 +294,14 @@ ${TOG('s3tg0', 229, 108)}${TOG('s3tg1', 136, 157)}</div>${statusBar()}</div></di
 </div>`;
 
 /* S4 — missions OJA Market / NOVOJA / commerces & restaurants */
-H += `<div class="scene" id="s4" style="background:#FFF5EB;color:#0E0F14">
+H += `<div class="scene" id="s4" style="background:radial-gradient(ellipse at 15% 10%,#1B3160,#0A1020 62%);color:#fff">
 <div class="abs" style="left:150px;top:150px"><div id="s4k" class="kicker">${ic('zap', 28, '#FF6B00', 2.4)}MISSIONS PARTENAIRES</div></div>
 <div id="s4t" class="abs H" style="left:150px;top:240px;font-size:92px"><div>${W('Recevez aussi')}</div><div>${W('des *missions.*')}</div></div>
-${[['bag', 'OJA MARKET', 'Votre boutique'], ['utensils', 'NOVOJA', 'Restauration']].map(([icn, a, b], i) => `<div id="s4b${i}" class="abs c" style="left:${150 + i * 400}px;top:480px;width:370px;height:236px;border-radius:32px;background:#0E0F14;color:#fff;padding:30px 32px;box-shadow:0 30px 60px rgba(14,15,20,.25)">
-<div style="width:70px;height:70px;border-radius:20px;background:#FF6B00;display:grid;place-items:center">${ic(icn, 38, '#fff', 2.2)}</div>
-<div style="font:800 38px Poppins;margin-top:18px;letter-spacing:.01em">${a}</div><div style="font:500 22px Inter;color:#9AA0B4">${b}</div></div>`).join('')}
+${[['bag', 'OJA MARKET', 'Votre boutique'], ['utensils', 'NOVOJA', 'Restauration']].map(([icn, a, b], i) => `<div id="s4b${i}" class="abs c" style="left:${150 + i * 400}px;top:480px;width:370px;height:236px;border-radius:32px;background:linear-gradient(135deg,#FF8A1F,#E85D00);color:#fff;padding:30px 32px;box-shadow:0 30px 60px rgba(14,15,20,.25)">
+<div style="width:70px;height:70px;border-radius:20px;background:rgba(255,255,255,.22);display:grid;place-items:center">${ic(icn, 38, '#fff', 2.2)}</div>
+<div style="font:800 38px Poppins;margin-top:18px;letter-spacing:.01em">${a}</div><div style="font:500 22px Inter;color:rgba(255,255,255,.88)">${b}</div></div>`).join('')}
 ${[['store', 'Commerces'], ['utensils', 'Restaurants partenaires']].map(([icn, lb], i) => `<div id="s4p${i}" class="pill" style="left:${150 + i * 290}px;top:760px;background:#fff;color:#0E0F14;box-shadow:0 14px 30px rgba(194,65,12,.14)">${ic(icn, 30, '#FF6B00', 2.4)}${lb}</div>`).join('')}
-${[['bag', 'OJA MARKET · Mission', 'Retrait : boutique à Ganhi'], ['utensils', 'NOVOJA · Restaurant', 'Akpakpa → Fidjrossè'], ['store', 'Commerce partenaire', 'Livraison à Haie Vive']].map(([icn, a, b], i) => `<div id="s4n${i}" class="abs" style="left:1130px;top:${260 + i * 190}px;width:660px;height:160px;border-radius:30px;background:#fff;display:flex;align-items:center;gap:26px;padding:0 34px;box-shadow:0 30px 60px rgba(194,65,12,.16)">
+${[['bag', 'OJA MARKET · Mission', 'Retrait : boutique à Ganhi'], ['utensils', 'NOVOJA · Restaurant', 'Akpakpa → Fidjrossè'], ['store', 'Commerce partenaire', 'Livraison à Haie Vive']].map(([icn, a, b], i) => `<div id="s4n${i}" class="abs" style="left:1130px;top:${260 + i * 190}px;width:660px;height:160px;border-radius:30px;background:#fff;color:#0E0F14;display:flex;align-items:center;gap:26px;padding:0 34px;box-shadow:0 30px 60px rgba(0,0,0,.35)">
 <div style="width:86px;height:86px;border-radius:24px;background:#FFF1E6;display:grid;place-items:center">${ic(icn, 44, '#FF6B00', 2.2)}</div>
 <div style="flex:1;white-space:nowrap"><div style="font:700 27px Inter">${a}</div><div style="font:500 24px Inter;color:#6b7080;margin-top:4px">${b}</div></div>
 <div style="padding:10px 20px;border-radius:16px;background:#FF6B00;color:#fff;font:800 22px Poppins">Accepter</div></div>`).join('')}
@@ -328,26 +326,26 @@ ${[[500, 260, 150, 1], [360, 540, 120, .85], [860, 400, 130, .75], [170, 390, 95
 </div>`;
 
 /* S6 — revenus: commission % ou forfait illimité 0 % */
-H += `<div class="scene" id="s6" style="background:#FFF5EB;color:#0E0F14">
+H += `<div class="scene" id="s6" style="background:radial-gradient(ellipse at 50% 0%,#1B3160,#0A1020 62%);color:#fff">
 <div id="s6t" class="abs H" style="left:0;top:100px;width:1920px;text-align:center;font-size:100px">${W('Côté *revenus*')}</div>
-<div id="s6a" class="abs c" style="left:230px;top:290px;width:640px;height:560px;border-radius:44px;background:#fff;box-shadow:0 40px 80px rgba(194,65,12,.14);padding:50px 56px">
+<div id="s6a" class="abs c" style="left:230px;top:290px;width:640px;height:560px;border-radius:44px;background:#fff;color:#0E0F14;box-shadow:0 40px 80px rgba(194,65,12,.14);padding:50px 56px">
 <div class="kicker" style="background:#F1F2F5;color:#565b6b">${ic('percent', 26, '#565b6b', 2.6)}COMMISSION</div>
 <svg class="abs" style="left:56px;top:150px" width="250" height="250" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="#F1DCCB" stroke-width="16"/><circle id="s6arc" cx="50" cy="50" r="38" fill="none" stroke="#FF6B00" stroke-width="16" stroke-dasharray="0 239" transform="rotate(-90 50 50)" stroke-linecap="round"/></svg>
 <div class="abs H" style="left:56px;top:238px;width:250px;text-align:center;font-size:60px">%</div>
 <div class="abs" style="left:340px;top:190px;width:250px;font:700 34px Poppins;line-height:1.2">Un pourcentage par course</div>
 <div class="abs" style="left:56px;top:440px;right:56px;font:500 26px Inter;color:#6b7080">Vous payez seulement quand vous roulez.</div></div>
-<div id="s6ou" class="abs c H" style="left:885px;top:500px;width:150px;height:150px;border-radius:50%;background:#0E0F14;color:#fff;display:grid;place-items:center;font-size:52px;z-index:2">ou</div>
-<div id="s6b" class="abs c" style="left:1050px;top:290px;width:640px;height:560px;border-radius:44px;background:#0E0F14;color:#fff;box-shadow:0 40px 90px rgba(255,107,0,.3);padding:50px 56px;overflow:hidden">
+<div id="s6ou" class="abs c H" style="left:885px;top:500px;width:150px;height:150px;border-radius:50%;background:#fff;color:#0A1020;display:grid;place-items:center;font-size:52px;z-index:2">ou</div>
+<div id="s6b" class="abs c" style="left:1050px;top:290px;width:640px;height:560px;border-radius:44px;background:linear-gradient(145deg,#FF8A1F,#E04E00);color:#fff;box-shadow:0 40px 90px rgba(255,107,0,.35);padding:50px 56px;overflow:hidden">
 <div class="abs" style="right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.45),rgba(255,107,0,0) 70%)"></div>
-<div class="pill" style="position:relative;display:inline-flex;border:3px solid #FF8A1F;color:#FF8A1F;background:rgba(255,107,0,.08)">${ic('zap', 30, '#FF8A1F', 2.4)}Pass illimité</div>
-<div class="abs H" style="left:56px;top:150px;font-size:230px;color:#FF6B00;letter-spacing:-.05em"><span id="s6pct">20</span><span style="font-size:130px">%</span></div>
+<div class="pill" style="position:relative;display:inline-flex;border:3px solid #fff;color:#fff;background:rgba(255,255,255,.12)">${ic('zap', 30, '#fff', 2.4)}Pass illimité</div>
+<div class="abs H" style="left:56px;top:150px;font-size:230px;color:#fff;letter-spacing:-.05em"><span id="s6pct">20</span><span style="font-size:130px">%</span></div>
 <div class="abs" style="left:56px;top:400px;font:800 40px Poppins">de commission</div>
-<div class="abs" style="left:56px;top:460px;font:500 26px Inter;color:#9AA0B4">Forfait illimité : tout est pour vous.</div>
+<div class="abs" style="left:56px;top:460px;font:500 26px Inter;color:rgba(255,255,255,.88)">Forfait illimité : tout est pour vous.</div>
 <div id="s6st" class="abs c H" style="right:40px;top:170px;width:170px;height:170px;border-radius:50%;background:#12B76A;display:grid;place-items:center;font-size:30px;text-align:center;line-height:1.05;transform:rotate(-12deg)">100 %<br>pour vous</div></div>
 </div>`;
 
 /* S7 — poche / forfaits / paiement MoMo */
-H += `<div class="scene" id="s7" style="background:#0E0F14">
+H += `<div class="scene" id="s7" style="background:radial-gradient(ellipse at 20% 0%,#16274A,#0A1020 65%)">
 <div class="abs" style="inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 2px,transparent 2px);background-size:44px 44px"></div>
 <div id="s7glow" class="abs" style="left:900px;top:-80px;width:1200px;height:1200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.28),rgba(255,107,0,0) 62%)"></div>
 <div id="s7t" class="abs H" style="left:150px;top:120px;font-size:88px"><div>${W('Tout est dans')}</div><div>${W('*votre poche.*')}</div></div>
@@ -367,11 +365,11 @@ ${[['24 H', 'Journalier'], ['7 JOURS', 'Hebdomadaire'], ['1 MOIS', 'Mensuel']].m
 </div>`;
 
 /* S8 — recap: véhicules (couleurs du Bénin) + services */
-const RV = [['Voiture', '#008751', '<img src="assets/car.png" style="width:1100px">'], ['Moto', '#FCD116', '<img src="assets/moto_course.png" style="height:640px">'], ['Tricycle', '#E8112D', '<img src="assets/tricycle.png" style="height:600px">'], ['Vélo', '#FF6B00', bikeCard(460)]];
+const RV = [['Voiture', '#0A1020', '<img src="assets/car.png" style="width:1100px">'], ['Moto', '#1E6FD9', '<img src="assets/moto_course.png" style="height:530px;margin-top:-60px">'], ['Tricycle', '#F5B301', '<img src="assets/tricycle.png" style="height:520px;margin-top:-60px">'], ['Vélo', '#FF6B00', bikeCard(460)]];
 H += `<div class="scene" id="s8">${RV.map(([n, bg, img], i) => `<div id="s8f${i}" class="abs" style="inset:0;background:${bg};display:none">
-<div id="s8n${i}" class="abs H" style="left:0;top:40px;width:1920px;text-align:center;font-size:250px;font-weight:900;color:${i === 1 ? 'rgba(14,15,20,.16)' : 'rgba(255,255,255,.2)'};letter-spacing:-.04em">${n.toUpperCase()}</div>
+<div id="s8n${i}" class="abs H" style="left:0;top:40px;width:1920px;text-align:center;font-size:250px;font-weight:900;color:${i === 2 ? 'rgba(14,15,20,.16)' : 'rgba(255,255,255,.2)'};letter-spacing:-.04em">${n.toUpperCase()}</div>
 <div id="s8i${i}" class="abs" style="left:0;top:300px;width:1920px;height:700px;display:flex;align-items:center;justify-content:center">${img}</div>
-<div class="abs H" style="left:0;top:880px;width:1920px;text-align:center;font-size:110px;color:${i === 1 ? '#0E0F14' : '#fff'}">${n}</div></div>`).join('')}
+<div class="abs H" style="left:0;top:880px;width:1920px;text-align:center;font-size:110px;color:${i === 2 ? '#0B0A07' : '#fff'}">${n}</div></div>`).join('')}
 <div id="s8S" class="abs" style="inset:0;background:#0E0F14;display:none">
 <div class="abs" style="inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 2px,transparent 2px);background-size:44px 44px"></div>
 ${[['user', 'Passagers', '#FF6B00'], ['pkg', 'Colis', '#FF6B00'], ['bag', 'Market', '#FF6B00'], ['utensils', 'NOVOJA', '#FF6B00'], ['crown', 'VIP', '#F5B301']].map(([icn, lb, c], i) => `<div id="s8c${i}" class="abs c" style="left:${[240, 740, 1240, 490, 990][i]}px;top:${i < 3 ? 250 : 560}px;width:440px;height:230px;border-radius:40px;background:${i === 4 ? 'linear-gradient(135deg,#FDE68A,#F5B301)' : '#1B1E29'};border:2px solid ${i === 4 ? '#F5B301' : '#2A2E3D'};display:flex;align-items:center;gap:28px;padding:0 44px;color:${i === 4 ? '#0B0A07' : '#fff'}">
@@ -379,12 +377,12 @@ ${[['user', 'Passagers', '#FF6B00'], ['pkg', 'Colis', '#FF6B00'], ['bag', 'Marke
 </div></div>`;
 
 /* S9 — tagline: Avec OJA, roulez, pédalez, livrez… et gagnez à votre manière. */
-const TAG = [['OJA', '#FF6B00', '#fff', 440], ['Roulez.', '#008751', '#fff', 280], ['Pédalez.', '#FCD116', '#0E0F14', 270], ['Livrez.', '#E8112D', '#fff', 280]];
+const TAG = [['OJA', '#1E6FD9', '#fff', 440], ['Roulez.', '#FF6B00', '#fff', 280], ['Pédalez.', '#0A1020', '#fff', 270], ['Livrez.', '#F5B301', '#0B0A07', 280]];
 H += `<div class="scene" id="s9">${TAG.map(([txt, bg, fg, fs], i) => `<div id="s9f${i}" class="abs" style="inset:0;background:${bg};display:none">
 ${[0, 1, 2, 3, 4, 5].map(k => `<div class="abs s9ln" style="left:0;top:${140 + k * 150}px;height:${4 + (k % 3) * 3}px;width:${300 + (k * 173) % 500}px;background:${fg};opacity:.18"></div>`).join('')}
 ${i === 0 ? `<div class="abs H" style="left:0;top:250px;width:1920px;text-align:center;font-size:90px;color:#0E0F14">Avec</div>` : ''}
 <div id="s9t${i}" class="abs H c" style="left:0;top:${i === 0 ? 60 : 0}px;width:1920px;height:1080px;display:flex;align-items:center;justify-content:center;font-size:${fs}px;color:${fg};font-weight:900;letter-spacing:-.04em">${i === 0 ? txt : L(txt)}</div></div>`).join('')}
-<div id="s9f4" class="abs" style="inset:0;background:#0E0F14;display:none">
+<div id="s9f4" class="abs" style="inset:0;background:radial-gradient(ellipse at 20% 0%,#16274A,#0A1020 65%);display:none">
 <div class="abs" style="left:1000px;top:-100px;width:1200px;height:1200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.35),rgba(255,107,0,0) 62%)"></div>
 <div id="s9g" class="abs H" style="left:150px;top:330px;font-size:140px;color:#fff"><div>${W('et *gagnez*')}</div><div>${W('à votre manière.')}</div></div>
 <div id="s9ul" class="abs" style="left:150px;top:680px;width:1000px;height:20px;border-radius:10px;background:#FF6B00;transform-origin:0 50%"></div>
@@ -392,17 +390,20 @@ ${i === 0 ? `<div class="abs H" style="left:0;top:250px;width:1920px;text-align:
 ${moneyChip('s9m0', '+2 500 XOF', 1200, 380)}${moneyChip('s9m1', '+4 000 XOF', 1560, 700)}</div></div>`;
 
 /* S10 — "Rejoignez OJA." */
-H += `<div class="scene" id="s10" style="background:#FFF8F1;color:#0E0F14">
-<img src="assets/amazone.jpg" class="abs" style="left:0;top:0;width:1920px;height:1080px"><div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(255,248,241,.55) 0%,rgba(255,248,241,.93) 42%,rgba(255,248,241,.97) 100%)"></div>
-<div id="s10drv" class="abs" style="left:260px;top:120px;width:290px"><img src="assets/driver.png" style="width:290px;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.3))"></div>
-<div id="s10disc" class="abs c" style="left:600px;top:110px;width:220px;height:220px;border-radius:50%;background:#fff;box-shadow:0 30px 70px rgba(194,65,12,.2);display:grid;place-items:center"><img src="assets/logo.png" style="width:180px"></div>
-<div id="s10t" class="abs H" style="left:880px;top:230px;font-size:124px"><div>${W('Rejoignez *OJA.*')}</div></div>
-<div id="s10s" class="abs" style="left:884px;top:390px;font:500 44px Inter;color:#565b6b">${W('Devenez chauffeur partenaire.')}</div>
-<div id="s10st0" class="store" style="left:884px;top:510px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="s10st1" class="store" style="left:1244px;top:510px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
-<div id="s10b" class="pill" style="left:884px;top:680px;background:#0E0F14;color:#fff;padding:14px 28px 14px 16px">${flag(54, 36)}Bientôt au Bénin</div>
-<div id="s10tag" class="abs" style="left:884px;top:790px;font:600 30px Inter;color:#9a8878;letter-spacing:.06em">Voiture · Moto · Tricycle · Vélo</div>
+H += `<div class="scene" id="s10" style="background:#0A1020;color:#fff">
+<img id="s10sky" src="assets/sky.jpg" class="abs" style="left:-60px;top:-40px;width:2040px;height:1160px">
+<div id="s10st" class="abs" style="left:-30px;top:40px;width:600px;opacity:.95"><img src="assets/statue.png" style="width:600px;display:block"></div>
+<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(10,16,32,.15) 0%,rgba(10,16,32,.78) 40%,rgba(10,16,32,.93) 100%)"></div>
+<div id="s10drv" class="abs" style="left:380px;top:120px;width:290px"><img src="assets/driver.png" style="width:290px;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))"></div>
+<div id="s10disc" class="abs c" style="left:640px;top:100px;width:200px;height:200px;border-radius:50%;background:#fff;box-shadow:0 30px 70px rgba(0,0,0,.4);display:grid;place-items:center"><img src="assets/logo.png" style="width:164px"></div>
+<div id="s10t" class="abs H" style="left:900px;top:230px;font-size:124px"><div>${W('Rejoignez *OJA.*')}</div></div>
+<div id="s10s" class="abs" style="left:904px;top:390px;font:500 44px Inter;color:#C9D4E8">${W('Devenez chauffeur partenaire.')}</div>
+<div id="s10st0" class="store" style="left:904px;top:510px;background:#fff;color:#0A1020">${ic('phone', 50, '#0A1020', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
+<div id="s10st1" class="store" style="left:1264px;top:510px;background:#fff;color:#0A1020">${ic('play', 46, '#0A1020', 1.8, '#0A1020')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
+<div id="s10b" class="pill" style="left:904px;top:680px;background:#FF6B00;color:#fff;padding:14px 28px 14px 16px">${flag(54, 36)}Bientôt au Bénin</div>
+<div id="s10tag" class="abs" style="left:904px;top:790px;font:600 30px Inter;color:#9FB0CC;letter-spacing:.06em">Voiture · Moto · Tricycle · Vélo</div>
 <div id="s10tri" class="abs" style="left:0;top:1062px;width:1920px;height:18px;display:flex;transform-origin:0 50%"><div style="flex:1;background:#008751"></div><div style="flex:1;background:#FCD116"></div><div style="flex:1;background:#E8112D"></div></div>
+<div class="abs" style="left:24px;bottom:28px;font:500 15px Inter;color:rgba(255,255,255,.6)">Photo : © Présidence du Bénin</div>
 </div>`;
 
 H += `<div id="wipe" class="abs" style="inset:0;z-index:40;pointer-events:none">${[0, 1, 2].map(i => `<div id="wb${i}" class="band" style="display:none"></div>`).join('')}</div>
@@ -415,7 +416,7 @@ const st = document.createElement('style'); st.textContent = '.hl2{color:#FF6B00
    SCENES
    ============================================================ */
 const SC = [['s0', 0, 3.7], ['s1', 3.7, 7.05], ['s2', 6.85, 10.4], ['s3', 10.4, 17.9], ['s4', 17.9, 23.85], ['s5', 23.7, 31.06], ['s6', 31.06, 38.05], ['s7', 37.85, 47.5], ['s8', 47.5, 54.15], ['s9', 54.15, 58.88], ['s10', 58.88, 99]];
-const WIPES = [[3.42, ['#FFF5EB', '#FF6B00', '#0E0F14']], [10.12, ['#0E0F14', '#FF6B00', '#FFF5EB']], [17.62, ['#FFF5EB', '#FF6B00', '#0E0F14']], [30.78, ['#FFF5EB', '#F5B301', '#0B0A07']]];
+const WIPES = [[3.42, ['#1E6FD9', '#FF6B00', '#0A1020']], [10.12, ['#0A1020', '#FF6B00', '#1E6FD9']], [17.62, ['#0A1020', '#1E6FD9', '#FF6B00']], [30.78, ['#0A1020', '#F5B301', '#1E6FD9']]];
 function circleClip(id, t, t0, d, cx, cy, e = E.ioC) {
   const p = P(t, t0, d, e); const r = p * 2300;
   el(id).style.clipPath = p >= 1 ? 'none' : `circle(${r}px at ${cx}px ${cy}px)`;
@@ -434,24 +435,23 @@ function wipes(t) {
 const pop = (t, a, d = .5, e = E.oB) => P(t, a, d, e);
 
 function uS0(t) {
-  const z = lerp(1.32, 1.05, P(t, 0, 3.8, E.oC));
-  el('amzcam').style.transform = `scale(${z}) translate(${Math.sin(t * .6) * 8}px,${-P(t, 0, 3.8) * 10}px)`;
-  const dp = P(t, .55, .55, E.oBo);
-  T('amzpin', { y: (1 - dp) * -420, o: t > .55 ? 1 : 0, sy: 1 - .12 * Math.max(0, Math.sin(clamp((t - 1.0) / .18) * Math.PI)) });
-  for (let i = 0; i < 3; i++) { const p = t < 1.0 ? 0 : ((t - 1.0 + i * .4) % 1.2) / 1.2; T('amzr' + i, { s: .3 + p * 1.6, o: t < 1.0 ? 0 : (1 - p) * .9 }); }
-  T('amzlab', { s: E.oB(clamp((t - .95) / .45)), o: t > .95 ? 1 : 0 });
+  T('s0sky', { x: -t * 14, s: 1 + t * .012 });
+  T('s0sun', { s: 1 + .06 * Math.sin(t * 1.4), o: .8 + .2 * Math.sin(t * 2) });
+  const sp = P(t, 0, 1.3, E.oE);
+  T('s0st', { y: (1 - sp) * 380, s: lerp(1.14, 1, P(t, 0, 3.8, E.oC)), x: -t * 4 });
+  T('s0flag', { s: E.oB(clamp((t - 1.0) / .45)), o: t > 1.0 ? 1 : 0 });
   T('s0disc', { s: P(t, .05, .55, E.oB2), r: (1 - P(t, .05, .55)) * -20 });
   wordsIn('s0a', t, .08, .1, .5);
   wordsIn('s0b', t, .95, .08, .5);
   wordsIn('s0c', t, 2.1, .12, .5);
   T('s0hl', { sx: P(t, 2.18, .45, E.oE) });
   const cp = P(t, .9, 1.0, E.oE);
-  T('amzcar', { x: (1 - cp) * 1200, y: Math.sin(t * 16) * (1 - cp) * 3 });
-  [2.35, 2.65, 2.95].forEach((a, i) => { const p = P(t, a, .9, E.oC); T('s0m' + i, { y: -p * 120, s: E.oB(clamp((t - a) / .35)), o: t < a ? 0 : 1 - P(t, a + .7, .3) }); });
+  T('amzcar', { x: (1 - cp) * 1600, y: Math.sin(t * 16) * (1 - cp) * 3 });
+  [2.35, 2.65, 2.95].forEach((a, i) => { const p = P(t, a, .9, E.oC); T('s0m' + i, { y: -p * 110, s: E.oB(clamp((t - a) / .35)), o: t < a ? 0 : 1 - P(t, a + .7, .3) }); });
 }
 const S1IN = [4.25, 4.95, 5.6, 6.3];
 function uS1(t) {
-  T('s1bg', { x: -((t - 3) * 110) % 2000 });
+  T('s1bg', { x: -((t - 3) * 110) % 2000 }); T('s1sky', { x: -(t - 3.7) * 18 });
   wordsIn('s1t', t, 3.78, .08, .5);
   for (let i = 0; i < 4; i++) {
     const a = S1IN[i], p = P(t, a, .6, E.oB), act = t >= a && (i === 3 || t < S1IN[i + 1]);
@@ -572,6 +572,7 @@ function uS9(t) {
   }
 }
 function uS10(t) {
+  T('s10sky', { x: -(t - 58.9) * 14 }); T('s10st', { y: (1 - P(t, 58.9, .9, E.oE)) * 300 });
   const d = P(t, 58.9, .7, E.oE); T('s10drv', { y: (1 - d) * 900 });
   T('s10disc', { s: pop(t, 59.1, .55, E.oB2), y: Math.sin(t * 2) * 5 });
   wordsIn('s10t', t, 58.95, .12, .55);

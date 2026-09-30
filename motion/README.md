@@ -47,7 +47,7 @@ Deuxième film, calé sur la voix off « Avec OJA, transformez chaque déplaceme
 
 | Temps | Voix off | Visuel |
 |---|---|---|
-| 0–4 s | Avec OJA, transformez chaque déplacement en opportunité | Place de l'Amazone, voiture OJA, gains qui montent |
+| 0–4 s | Avec OJA, transformez chaque déplacement en opportunité | Statue équestre sur ciel bleu (parallaxe), voiture OJA, gains qui montent |
 | 4–7 s | Voiture, moto, tricycle ou vélo ? | 4 cartes véhicules |
 | 7–10 s | Rejoignez OJA, choisissez votre façon de travailler | Chauffeur OJA détouré sur fond orange |
 | 10–18 s | Passagers, livraisons, ou combiner | Appli chauffeur : interrupteurs Livraison / Mode éco, trajets à vide ↓, opportunités ↑ |
@@ -56,4 +56,6 @@ Deuxième film, calé sur la voix off « Avec OJA, transformez chaque déplaceme
 | 31–38 s | Commission % ou forfait illimité 0 % | Deux cartes, compteur 20 % → 0 % |
 | 38–47 s | Journalier / hebdo / mensuel, paiement Mobile Money (MoMo) | Forfaits, paiement, « Forfait activé » |
 | 47–54 s | Voiture, moto, tricycle, vélo · Passagers, colis, Market, NOVOJA, VIP | Coupes aux couleurs du Bénin, puces services |
-| 54–61 s | Roulez, pédalez, livrez, gagnez · Rejoignez OJA | Tagline, écran de fin |
+| 54–61 s | Roulez, pédalez, livrez, gagnez · Rejoignez OJA | Tagline, écran de fin (statue + chauffeur) |
+
+Thème distinct du premier film : ciel bleu, bleu nuit et or au lieu du crème et du noir. `assets/statue.png` et `assets/sky.jpg` viennent de la photo © Présidence du Bénin (crédit affiché).
