@@ -34,3 +34,26 @@ ffmpeg -i video.mp4 -i assets/soundtrack.m4a -c:v copy -c:a copy -shortest OJA_M
 
 - `assets/car.png`, `assets/moto.png`, `assets/moto_course.png`, `assets/tricycle.png` : détourés à partir des visuels de campagne OJA.
 - `assets/amazone.jpg` : Place de l'Amazone, photo © Présidence du Bénin (crédit affiché dans la vidéo).
+
+---
+
+# OJA Chauffeur — recrutement (61 s)
+
+Deuxième film, calé sur la voix off « Avec OJA, transformez chaque déplacement en opportunité ».
+
+- **Vidéo :** `OJA_Chauffeur_Benin.mp4`
+- **Source :** `chauffeur.html` (même moteur que `index.html`)
+- **Rendu :** `PAGE=chauffeur.html node render.js 60 0 3672 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_chauffeur.m4a`
+
+| Temps | Voix off | Visuel |
+|---|---|---|
+| 0–4 s | Avec OJA, transformez chaque déplacement en opportunité | Place de l'Amazone, voiture OJA, gains qui montent |
+| 4–7 s | Voiture, moto, tricycle ou vélo ? | 4 cartes véhicules |
+| 7–10 s | Rejoignez OJA, choisissez votre façon de travailler | Chauffeur OJA détouré sur fond orange |
+| 10–18 s | Passagers, livraisons, ou combiner | Appli chauffeur : interrupteurs Livraison / Mode éco, trajets à vide ↓, opportunités ↑ |
+| 18–24 s | Missions OJA Market et NOVOJA | Notifications de missions partenaires |
+| 24–31 s | Option VIP, zones chaudes, priorité | Écran VIP réel, carte de chaleur de Cotonou |
+| 31–38 s | Commission % ou forfait illimité 0 % | Deux cartes, compteur 20 % → 0 % |
+| 38–47 s | Journalier / hebdo / mensuel, paiement Mobile Money (MoMo) | Forfaits, paiement, « Forfait activé » |
+| 47–54 s | Voiture, moto, tricycle, vélo · Passagers, colis, Market, NOVOJA, VIP | Coupes aux couleurs du Bénin, puces services |
+| 54–61 s | Roulez, pédalez, livrez, gagnez · Rejoignez OJA | Tagline, écran de fin |
