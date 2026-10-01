@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OJA Merchant — Motion</title>
+<link rel="stylesheet" href="fonts/local.css">
+<style>
+:root{--or:#FF6B00;--or2:#FF8A1F;--deep:#C2410C;--ink:#0E0F14;--ink2:#15171F;--cream:#FFF5EB;--g:#008751;--y:#FCD116;--r:#E8112D;--mute:#8A90A2}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:Inter,sans-serif;background:var(--ink);color:#fff}
+.scene{position:absolute;inset:0;overflow:hidden;display:none}
+.abs{position:absolute}
+.H{font-family:Poppins;font-weight:800;letter-spacing:-.025em;line-height:1.02}
+.wm{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .03em .12em;margin:-.04em -.03em -.12em}
+.wi{display:inline-block;will-change:transform}
+.hl{color:var(--or)}
+.c{transform-origin:50% 50%}
+.phone{position:absolute;width:440px;height:920px;border-radius:66px;background:#0b0b0f;padding:12px;box-shadow:0 0 0 2px #30303a inset,0 0 0 4px #1d1d24,0 70px 120px rgba(0,0,0,.55)}
+.screen{position:relative;width:100%;height:100%;border-radius:54px;overflow:hidden;background:#1A2130}
+.island{position:absolute;top:13px;left:50%;width:124px;height:36px;margin-left:-62px;border-radius:20px;background:#000;z-index:6}
+.sbar{position:absolute;top:18px;left:38px;right:30px;display:flex;justify-content:space-between;align-items:center;color:#fff;font:600 17px Inter;z-index:5}
+.sheet{position:absolute;left:0;width:416px;border-radius:26px 26px 0 0;overflow:hidden;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+.sheet img{display:block;width:416px}
+.kicker{display:inline-flex;align-items:center;gap:12px;padding:10px 22px;border-radius:40px;background:rgba(255,107,0,.14);color:var(--or);font:700 24px Inter;letter-spacing:.18em}
+.chip{position:absolute;display:flex;align-items:center;gap:14px;padding:16px 26px;border-radius:22px;background:#fff;color:var(--ink);font:600 26px Inter;box-shadow:0 20px 50px rgba(0,0,0,.35);white-space:nowrap}
+.chip .ci{width:46px;height:46px;border-radius:14px;background:#FFF1E6;display:grid;place-items:center}
+.frow{position:absolute;display:flex;align-items:center;gap:26px}
+.fic{width:78px;height:78px;border-radius:22px;background:rgba(255,107,0,.14);display:grid;place-items:center}
+.flab{font:600 46px Poppins;color:#fff}
+.vcard{position:absolute;width:470px;height:560px;border-radius:40px;background:#fff;box-shadow:0 40px 80px rgba(194,65,12,.16);color:var(--ink);overflow:visible}
+.vcard .disc{position:absolute;left:85px;top:40px;width:300px;height:300px;border-radius:50%;background:#FFEBDC}
+.vcard .vimg{position:absolute;filter:drop-shadow(0 18px 18px rgba(0,0,0,.18))}
+.vcard .veh{position:absolute;left:35px;top:95px;width:400px;overflow:visible}
+.vcard .vn{position:absolute;left:44px;top:370px;font:800 52px Poppins;letter-spacing:-.01em}
+.vcard .cap{position:absolute;left:44px;top:440px;display:flex;gap:10px;align-items:center;font:600 26px Inter;color:#5b6070}
+.vcard .pr{position:absolute;right:44px;top:436px;font:800 38px Poppins;color:var(--deep)}
+.vcard .tag{position:absolute;right:40px;top:382px;padding:8px 18px;border-radius:30px;background:var(--ink);color:#fff;font:700 20px Inter;letter-spacing:.06em}
+.vcard .ok{position:absolute;right:-18px;top:-18px;width:76px;height:76px;border-radius:50%;background:#12B76A;display:grid;place-items:center;box-shadow:0 12px 30px rgba(18,183,106,.45)}
+.band{position:absolute;top:-10%;left:-20%;width:140%;height:120%}
+.ucard{position:absolute;width:500px;height:500px;border-radius:40px;background:#1B1E29;border:2px solid #2A2E3D}
+.ucard .uic{position:absolute;left:50px;top:56px;width:150px;height:150px;border-radius:44px;background:linear-gradient(135deg,#FF8A1F,#E85D00);display:grid;place-items:center;box-shadow:0 20px 50px rgba(255,107,0,.35)}
+.ucard .ut{position:absolute;left:50px;top:258px;font:800 50px Poppins;line-height:1.08;color:#fff;letter-spacing:-.02em}
+.ucard .us{position:absolute;left:50px;top:386px;font:500 30px Inter;color:#9AA0B4}
+.ucard .un{position:absolute;right:46px;top:60px;font:800 40px Poppins;color:#3a3f52}
+.pill{position:absolute;display:flex;align-items:center;gap:12px;padding:14px 24px;border-radius:40px;font:700 26px Inter;white-space:nowrap}
+.store{position:absolute;width:330px;height:104px;border-radius:26px;background:var(--ink);display:flex;align-items:center;gap:18px;padding:0 28px;color:#fff}
+.store small{display:block;font:500 18px Inter;opacity:.75}
+.store b{display:block;font:700 34px Poppins;letter-spacing:-.01em;line-height:1.1}
+#grain{position:absolute;inset:-100px;pointer-events:none;opacity:.07;mix-blend-mode:overlay;z-index:50}
+#vig{position:absolute;inset:0;pointer-events:none;z-index:49;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 60%,rgba(0,0,0,.28) 100%)}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:60}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<audio id="aud" src="assets/soundtrack_merchant.m4a" preload="auto"></audio>
+<script>
+/* ============================================================
+   OJA Transport — 65 s motion piece, driven by renderAt(t).
+   Every frame is a pure function of time => deterministic render.
+   ============================================================ */
+const DUR = 59.5;
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  lin: x => x,
+  oC: x => 1 - Math.pow(1 - x, 3),
+  iC: x => x * x * x,
+  ioC: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  oQ: x => 1 - Math.pow(1 - x, 4),
+  oE: x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  iE: x => x === 0 ? 0 : Math.pow(2, 10 * x - 10),
+  ioE: x => x === 0 ? 0 : x === 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+  oB: x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  oB2: x => { const c1 = 2.8, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  oEl: x => x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - .75) * (2 * Math.PI) / 3) + 1,
+  oBo: x => { const n = 7.5625, d = 2.75; if (x < 1 / d) return n * x * x; if (x < 2 / d) return n * (x -= 1.5 / d) * x + .75; if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + .9375; return n * (x -= 2.625 / d) * x + .984375; },
+};
+const P = (t, a, d, e = E.oC) => e(clamp((t - a) / d));
+// keyframe interpolation: [[t,v],...]
+function KF(t, kf, e = E.ioC) {
+  if (t <= kf[0][0]) return kf[0][1];
+  for (let i = 1; i < kf.length; i++) if (t <= kf[i][0]) { const [t0, v0] = kf[i - 1], [t1, v1] = kf[i]; return lerp(v0, v1, e((t - t0) / (t1 - t0))); }
+  return kf[kf.length - 1][1];
+}
+const cache = {};
+const el = id => (typeof id === 'string' ? (cache[id] || (cache[id] = $(id))) : id);
+function T(id, o) {
+  const e = el(id); if (!e) return;
+  const { x = 0, y = 0, s = 1, sx = s, sy = s, r = 0, rx = 0, ry = 0, sk = 0 } = o;
+  e.style.transform = `perspective(1800px) translate3d(${x}px,${y}px,0) rotateX(${rx}deg) rotateY(${ry}deg) rotate(${r}deg) skewX(${sk}deg) scale(${sx},${sy})`;
+  if (o.o !== undefined) { e.style.opacity = o.o; e.style.visibility = o.o <= .001 ? 'hidden' : 'visible'; }
+}
+const O = (id, o) => { const e = el(id); e.style.opacity = o; e.style.visibility = o <= .001 ? 'hidden' : 'visible'; };
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------- text builders ---------- */
+// "*word*" => highlighted word
+function W(str, hl = 'hl') {
+  return str.split(' ').map(w => { const h = /^\*.*\*[.,?!]?$/.test(w); const txt = w.replace(/\*/g, ''); return `<span class="wm"><span class="wi ${h ? hl : ''}">${txt}</span></span>`; }).join(' ');
+}
+function L(str, hl = '') { return [...str].map(ch => `<span class="wm"><span class="wi ${hl}">${ch === ' ' ? '&nbsp;' : ch}</span></span>`).join(''); }
+function wordsIn(id, t, t0, st = .08, dur = .55, ease = E.oE, exitAt = null, exitDur = .4, from = 115) {
+  const ws = el(id).querySelectorAll('.wi');
+  ws.forEach((w, i) => {
+    const p = P(t, t0 + i * st, dur, ease);
+    let y = (1 - p) * from, r = (1 - p) * 8;
+    if (exitAt !== null) { const q = P(t, exitAt + i * st * .4, exitDur, E.iC); y -= q * 118; }
+    w.style.transform = `translateY(${y}%) rotate(${r}deg)`;
+    w.style.visibility = (p <= 0 || y <= -117) ? 'hidden' : 'visible';
+  });
+}
+
+/* ---------- icons ---------- */
+const ICONS = {
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+  route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  pkg: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  swap: '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  nav: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+  phone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  bike: '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2, f = 'none') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${f}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+/* ---------- vehicles (flat illustration) ---------- */
+const wheel = (cx, cy, r) => `<g class="wh" data-c="${cx},${cy}" transform="translate(${cx},${cy})"><circle r="${r}" fill="#15161c"/><circle r="${r * .56}" fill="#d9dce3"/><path d="M${-r * .5},0H${r * .5}M0,${-r * .5}V${r * .5}" stroke="#8a8f9c" stroke-width="${r * .13}"/><circle r="${r * .15}" fill="#555a66"/></g>`;
+function carSVG(color = '#FF6B00') {
+  return `<svg viewBox="0 0 300 150" class="veh"><ellipse cx="150" cy="138" rx="132" ry="8" fill="rgba(0,0,0,.2)"/><g class="vb">
+<path d="M18,98 Q18,74 44,70 L86,64 Q112,34 150,32 L192,32 Q222,34 246,62 L270,68 Q290,72 290,94 L290,108 Q290,116 280,116 L26,116 Q18,116 18,108Z" fill="${color}"/>
+<path d="M98,64 Q120,42 150,41 L166,41 L166,64Z" fill="#1d2230"/><path d="M176,41 L192,41 Q218,43 234,64 L176,64Z" fill="#1d2230"/>
+<path d="M104,60 Q122,46 140,45" stroke="rgba(255,255,255,.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path d="M20,94 L290,94" stroke="rgba(0,0,0,.14)" stroke-width="4"/><path d="M168,66 L168,112" stroke="rgba(0,0,0,.14)" stroke-width="3"/>
+<rect x="272" y="78" width="16" height="9" rx="4" fill="#FFE8A3"/><rect x="18" y="80" width="11" height="8" rx="3" fill="#E8112D"/></g>
+${wheel(78, 114, 24)}${wheel(226, 114, 24)}</svg>`;
+}
+function motoSVG(box = false) {
+  return `<svg viewBox="0 0 300 200" class="veh"><ellipse cx="152" cy="188" rx="122" ry="7" fill="rgba(0,0,0,.2)"/><g class="vb">
+${box ? `<g><rect x="40" y="62" width="76" height="64" rx="8" fill="#FF6B00"/><rect x="40" y="62" width="76" height="16" rx="8" fill="#C2410C"/><text x="78" y="113" font-family="Poppins" font-weight="800" font-size="22" fill="#fff" text-anchor="middle">OJA</text></g>` : ''}
+<path d="M72,160 L118,124 L196,124 L232,160" stroke="#23252e" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M108,112 L205,112 Q222,112 220,124 L208,140 L118,140 Q102,138 108,112Z" fill="#FF6B00"/>
+<path d="M92,106 L170,106 Q178,106 176,114 L96,116Z" fill="#15161c"/>
+<path d="M206,120 L238,84" stroke="#23252e" stroke-width="8" stroke-linecap="round"/><rect x="230" y="76" width="26" height="9" rx="4.5" fill="#23252e"/>
+<circle cx="248" cy="100" r="8" fill="#FFE8A3"/>
+<path d="M140,104 L176,134 L188,156" stroke="#1f3a8a" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<path d="M124,108 L146,50 Q150,42 160,44 L176,48 Q184,52 180,62 L162,108Z" fill="#FCD116"/>
+<path d="M170,60 L234,80" stroke="#FCD116" stroke-width="15" stroke-linecap="round"/><circle cx="236" cy="80" r="7" fill="#6b3f24"/>
+<circle cx="164" cy="30" r="17" fill="#6b3f24"/><path d="M145,31 A19,19 0 0 1 183,26 L186,33 L145,33Z" fill="#15161c"/></g>
+${wheel(72, 160, 27)}${wheel(232, 160, 27)}</svg>`;
+}
+function trikeSVG() {
+  return `<svg viewBox="0 0 300 190" class="veh"><ellipse cx="152" cy="176" rx="128" ry="7" fill="rgba(0,0,0,.2)"/><g class="vb">
+<path d="M36,150 L36,70 Q36,36 74,32 L196,32 Q236,36 252,74 L268,128 Q270,150 256,150Z" fill="#FF8A1F"/>
+<path d="M28,42 Q32,22 62,20 L206,20 Q234,22 242,42Z" fill="#15161c"/>
+<path d="M62,52 L146,52 L146,100 L62,100Z" fill="#1d2230"/><path d="M160,52 L214,52 Q236,58 244,100 L160,100Z" fill="#1d2230"/>
+<path d="M70,60 L96,60" stroke="rgba(255,255,255,.3)" stroke-width="4" stroke-linecap="round"/>
+<rect x="36" y="112" width="232" height="10" fill="#008751"/><rect x="36" y="122" width="232" height="6" fill="#FCD116"/><rect x="36" y="128" width="232" height="6" fill="#E8112D"/>
+<circle cx="258" cy="116" r="7" fill="#FFE8A3"/></g>
+${wheel(82, 150, 25)}${wheel(232, 150, 25)}</svg>`;
+}
+function boxSVG() {
+  return `<svg viewBox="0 0 240 240" width="100%" height="100%" style="overflow:visible"><ellipse cx="120" cy="228" rx="92" ry="11" fill="rgba(0,0,0,.22)"/>
+<path d="M120,20 L220,64 L120,108 L20,64Z" fill="#EBC08A"/><path d="M20,64 L120,108 L120,220 L20,176Z" fill="#CF9150"/><path d="M220,64 L120,108 L120,220 L220,176Z" fill="#B47A3E"/>
+<path d="M58,47 L78,38 L182,82 L162,91Z" fill="#FF6B00"/><path d="M162,91 L182,82 L182,194 L162,203Z" fill="#E85D00"/>
+<g transform="translate(40,120) skewY(24)"><rect width="58" height="34" rx="5" fill="#fff" opacity=".92"/><text x="29" y="24" font-family="Poppins" font-weight="800" font-size="19" fill="#FF6B00" text-anchor="middle">OJA</text></g></svg>`;
+}
+function spinWheels(root, deg) { el(root).querySelectorAll('.wh').forEach(w => { w.setAttribute('transform', `translate(${w.dataset.c}) rotate(${deg})`); }); }
+function bob(root, t, amp = 1.5, f = 14) { el(root).querySelectorAll('.vb').forEach(g => g.setAttribute('transform', `translate(0,${Math.sin(t * f) * amp})`)); }
+
+/* ---------- maps ---------- */
+function roads(seed, w, h, n, col = '#263044') {
+  const R = rng(seed); let s = '';
+  for (let i = 0; i < n * 3; i++) { const x = R() * w, y = R() * h, bw = 20 + R() * 60, bh = 14 + R() * 40; s += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="3" fill="#1F2737" transform="rotate(${-18 + R() * 6},${x},${y})"/>`; }
+  for (let i = 0; i < n; i++) { const y = R() * h * 1.2 - h * .1; s += `<path d="M${-60},${y} L${w + 60},${y - w * .3 + (R() - .5) * 120}" stroke="${col}" stroke-width="${1.5 + R() * 2.5}" fill="none"/>`; }
+  for (let i = 0; i < n; i++) { const x = R() * w * 1.2 - w * .1; s += `<path d="M${x},${-60} L${x + h * .32 + (R() - .5) * 120},${h + 60}" stroke="${col}" stroke-width="${1.5 + R() * 2.5}" fill="none"/>`; }
+  return s;
+}
+function miniMap(id, seed, route) {
+  return `<svg class="abs" style="left:0;top:0" width="416" height="896" viewBox="0 0 416 896">
+<rect width="416" height="896" fill="#1A2130"/>${roads(seed, 416, 896, 22)}
+<path d="M-20,300 C120,260 260,330 440,250" stroke="#34405A" stroke-width="9" fill="none"/>
+<path d="M140,-20 C160,200 110,420 190,920" stroke="#34405A" stroke-width="9" fill="none"/>
+<path d="M-20,120 Q180,40 440,90 L440,-20 L-20,-20Z" fill="#0E1829"/>
+${route ? `<path id="${id}rt" d="${route}" stroke="#FF6B00" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+</svg>`;
+}
+function statusBar(dark = false) {
+  const c = dark ? '#111' : '#fff';
+  return `<div class="island"></div><div class="sbar" style="color:${c}"><span>07:30</span><span style="display:flex;gap:6px;align-items:center">
+<svg width="22" height="14" viewBox="0 0 22 14"><rect x="0" y="9" width="4" height="5" rx="1" fill="${c}"/><rect x="6" y="6" width="4" height="8" rx="1" fill="${c}"/><rect x="12" y="3" width="4" height="11" rx="1" fill="${c}"/><rect x="18" y="0" width="4" height="14" rx="1" fill="${c}"/></svg>
+<svg width="30" height="14" viewBox="0 0 30 14"><rect x=".5" y=".5" width="25" height="13" rx="4" fill="none" stroke="${c}" opacity=".6"/><rect x="3" y="3" width="17" height="8" rx="2" fill="${c}"/><rect x="27" y="4.5" width="2.5" height="5" rx="1" fill="${c}" opacity=".6"/></svg></span></div>`;
+}
+const flag = (w = 60, h = 40) => `<svg width="${w}" height="${h}" viewBox="0 0 30 20" style="border-radius:4px;display:block"><rect width="12" height="20" fill="#008751"/><rect x="12" width="18" height="10" fill="#FCD116"/><rect x="12" y="10" width="18" height="10" fill="#E8112D"/></svg>`;
+
+/* ============================================================
+   BUILD DOM — OJA Market (food & shops delivery, 50 s VO + logo outro)
+   ============================================================ */
+Object.assign(ICONS, {
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>',
+  home: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+  map: '<path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>',
+  back: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  recycle: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
+  hand: '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
+});
+const st0 = document.createElement('style');
+st0.textContent = `
+.ip{position:absolute;width:430px;height:900px;border-radius:74px;padding:11px;background:linear-gradient(145deg,#8d8d93,#3a3a3f 30%,#1c1c1f 60%,#77777d);box-shadow:0 0 0 2px #0c0c0e inset,0 80px 140px rgba(0,0,0,.5);transform-style:preserve-3d}
+.ip .scr{position:relative;width:408px;height:878px;border-radius:63px;overflow:hidden;background:#F6F6F6;color:#111;font-family:Inter}
+.ip .isl{position:absolute;top:12px;left:50%;width:122px;height:36px;margin-left:-61px;border-radius:20px;background:#000;z-index:20}
+.ip .glare{position:absolute;inset:0;border-radius:63px;background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.22) 45%,rgba(255,255,255,0) 60%);z-index:21;pointer-events:none}
+.sb{position:absolute;top:17px;left:36px;right:30px;display:flex;justify-content:space-between;font:600 17px Inter;z-index:19}
+.a-card{background:#fff;border-radius:22px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.a-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:20px;background:#fff;border:1.5px solid #ECECEC;font:600 15px Inter;white-space:nowrap}
+.a-chip.on{background:#C2410C;border-color:#C2410C;color:#fff}
+.emo{display:grid;place-items:center;font-family:'Noto Color Emoji';line-height:1}
+.stk{position:absolute;display:grid;place-items:center;border-radius:50%;background:#fff;box-shadow:0 24px 50px rgba(0,0,0,.25);font-family:'Noto Color Emoji';line-height:1;overflow:hidden}
+.stk img{width:100%;height:100%;object-fit:cover}
+.tile{position:absolute;width:380px;height:470px;border-radius:44px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.18);background:#fff;color:#111}
+.hl3{color:#FF6B00}.hly{color:#FFC83D}
+`;
+document.head.appendChild(st0);
+const stage = $('stage');
+let H = '';
+const PHOTO = { shawarma: 'assets/food_shawarma.jpg', croissant: 'assets/food_croissant.jpg' };
+// food visual: photo or emoji tile
+const fv = (k, w, h, r = 18, bg = '#FFE7D1') => PHOTO[k] ? `<div style="width:${w}px;height:${h}px;border-radius:${r}px;overflow:hidden"><img src="${PHOTO[k]}" style="width:100%;height:100%;object-fit:cover;display:block"></div>`
+  : `<div class="emo" style="width:${w}px;height:${h}px;border-radius:${r}px;background:${bg};font-size:${Math.min(w, h) * .55}px">${k}</div>`;
+const sticker = (id, k, s, x, y, bg = '#fff') => `<div id="${id}" class="stk" style="left:${x - s / 2}px;top:${y - s / 2}px;width:${s}px;height:${s}px;background:${bg};font-size:${s * .56}px">${PHOTO[k] ? `<img src="${PHOTO[k]}">` : k}</div>`;
+const sbar = (c = '#111') => `<div class="sb" style="color:${c}"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="20" height="13" viewBox="0 0 22 14"><rect x="0" y="9" width="4" height="5" rx="1" fill="${c}"/><rect x="6" y="6" width="4" height="8" rx="1" fill="${c}"/><rect x="12" y="3" width="4" height="11" rx="1" fill="${c}"/><rect x="18" y="0" width="4" height="14" rx="1" fill="${c}"/></svg><svg width="28" height="13" viewBox="0 0 30 14"><rect x=".5" y=".5" width="25" height="13" rx="4" fill="none" stroke="${c}" opacity=".6"/><rect x="3" y="3" width="17" height="8" rx="2" fill="${c}"/></svg></span></div>`;
+const iphone = (id, inner, x, y) => `<div id="${id}" class="ip" style="left:${x}px;top:${y}px"><div class="scr">${inner}<div class="isl"></div></div><div class="glare" id="${id}g"></div></div>`;
+
+const RESTOS = [['shawarma', 'Shawarma House', 'Fast food · 1,2 km', '4.8'], ['🥘', 'Maquis Chez Tanti', 'Cuisine locale · 0,8 km', '4.9'], ['croissant', 'Boulangerie du Coin', 'Viennoiseries · 1,5 km', '4.7'], ['🍔', 'Burger Station', 'Fast food · 2,1 km', '4.6'], ['🍕', 'Pizza Fidjrossè', 'Pizzeria · 2,4 km', '4.8']];
+const SHOPS = [['🛒', 'Supermarché'], ['💊', 'Pharmacie'], ['👗', 'Mode'], ['📱', 'Électronique'], ['💄', 'Beauté'], ['🏠', 'Maison']];
+function scrHome(p) {
+  return `${sbar('#fff')}
+<div class="abs" style="left:0;top:0;width:408px;height:150px;background:#FF6B00"></div>
+<div class="abs" style="left:18px;top:62px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center">${ic('grid', 24, '#fff', 2.2)}</div>
+<div class="abs" style="left:0;right:0;top:66px;display:flex;justify-content:center;align-items:center;gap:8px"><img src="assets/mk_logo.png" style="width:40px;height:40px;background:#fff;border-radius:50%;padding:2px"><span style="font:900 30px Poppins;color:#fff">OJA</span><span style="padding:3px 10px;border-radius:8px;background:rgba(255,255,255,.25);color:#fff;font:700 15px Inter">Market</span></div>
+<div class="abs" style="right:18px;top:62px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center">${ic('map', 24, '#fff', 2.2)}</div>
+<div class="abs a-card" style="left:16px;right:16px;top:164px;height:56px;border:2px solid #C2410C;display:flex;align-items:center;gap:12px;padding:0 16px;font:500 16px Inter;color:#777">${ic('search', 22, '#111', 2.4)}Rechercher un plat ou une boutique</div>
+<div class="abs a-card" style="left:16px;right:16px;top:232px;height:78px;display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:48px;height:48px;border-radius:14px;background:#FFF1E6;display:grid;place-items:center">${ic('bag', 24, '#C2410C', 2.2)}</div>
+<div style="flex:1"><div style="font:800 20px Poppins">Oja Marketplace</div><div style="font:500 13px Inter;color:#666">Restaurants et boutiques proches de vous.</div></div>${ic('nav', 22, '#C2410C', 2.2, '#C2410C')}</div>
+<div class="abs a-card" style="left:16px;right:16px;top:322px;height:52px;padding:4px"><div id="${p}seg" class="abs" style="left:4px;top:4px;width:184px;height:44px;border-radius:16px;background:#C2410C"></div>
+<div class="abs" style="left:4px;top:4px;width:184px;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 16px Inter" id="${p}sr">${ic('utensils', 18, 'currentColor', 2.2)}Restaurants</div>
+<div class="abs" style="left:188px;top:4px;width:184px;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 16px Inter" id="${p}sm">${ic('store', 18, 'currentColor', 2.2)}Magasins</div></div>
+<div class="abs" style="left:16px;top:388px;display:flex;gap:8px"><span class="a-chip on">Tous</span><span class="a-chip">Ouverts</span><span class="a-chip">Top notés</span><span class="a-chip">Promos</span></div>
+<div class="abs" style="left:0;top:440px;width:408px;height:350px;overflow:hidden">
+<div id="${p}rl" class="abs" style="left:16px;top:0;width:376px">${RESTOS.map(([k, n, m, r], i) => `<div class="a-card" style="position:relative;height:220px;margin-bottom:14px;overflow:hidden">${fv(k, 376, 140, 0, ['#FFE7D1', '#FFE9B8', '#FFE7D1', '#FFE0E0', '#E3F4E8'][i])}
+<div class="abs" style="right:12px;top:12px;padding:5px 12px;border-radius:14px;background:#12B76A;color:#fff;font:800 12px Inter">OUVERT</div>
+<div id="${p}hrt${i}" class="abs" style="right:14px;top:156px">${ic('heart', 26, '#999', 2.2)}</div>
+<div style="padding:12px 16px 0"><div style="font:800 19px Poppins">${n}</div><div style="font:500 13px Inter;color:#777;margin-top:2px">${m} · <span style="color:#F59E0B">★</span> ${r}</div></div></div>`).join('')}</div>
+<div id="${p}sl" class="abs" style="left:16px;top:0;width:376px;opacity:0">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${SHOPS.map(([e, n], i) => `<div id="${p}sh${i}" class="a-card" style="height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><div class="emo" style="font-size:42px">${e}</div><div style="font:700 13px Inter">${n}</div></div>`).join('')}</div>
+<div class="a-card" style="margin-top:12px;height:96px;display:flex;align-items:center;gap:14px;padding:0 14px"><div class="emo" style="width:68px;height:68px;border-radius:16px;background:#E3F4E8;font-size:40px">🛍️</div><div><div style="font:800 17px Poppins">Boutique Ganhi Center</div><div style="font:500 13px Inter;color:#777">Mode & accessoires · 1,1 km</div></div></div></div></div>
+<div class="abs" style="left:14px;right:14px;top:796px;height:66px;border-radius:24px;background:#1E1E22;display:flex;justify-content:space-around;align-items:center;color:#ddd;font:600 11px Inter">
+${[['home', 'Accueil'], ['recycle', 'NOVOJA'], ['car', 'Transport'], ['store', 'Market'], ['user', 'Profil']].map(([icn, lb], i) => `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;${i === 3 ? 'color:#FF8A1F' : ''}">${ic(icn, 20, i === 3 ? '#FF8A1F' : '#ddd', 2)}${lb}</div>`).join('')}</div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+const MENU = [['shawarma', 'Shawarma poulet', '2 500', '3 000'], ['croissant', 'Croissants x3', '1 000', '1 200'], ['🍗', 'Poulet braisé', '3 500', ''], ['🥤', 'Jus de bissap', '700', '']];
+function scrMenu(p) {
+  return `${sbar()}
+<div class="abs" style="left:18px;top:56px;width:52px;height:52px;border-radius:16px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);display:grid;place-items:center">${ic('back', 24, '#111', 2.4)}</div>
+<div class="abs" style="left:86px;top:66px;font:800 24px Poppins">Maquis Chez Tanti</div>
+<div class="abs a-card" style="left:16px;right:16px;top:124px;height:54px;display:flex;align-items:center;gap:12px;padding:0 16px;font:500 16px Inter;color:#777">${ic('search', 22, '#111', 2.4)}Rechercher un plat, une boisson…</div>
+<div class="abs" style="left:16px;top:192px;display:flex;gap:8px"><span class="a-chip" style="background:#111;color:#fff;border-color:#111">Tout 4</span><span class="a-chip">Promos 2</span><span class="a-chip">Disponibles 4</span></div>
+<div class="abs" style="left:16px;top:250px;width:376px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+${MENU.map(([k, n, pr, old], i) => `<div id="${p}it${i}" class="a-card" style="position:relative;height:282px;padding:10px">${fv(k, 162, 150, 16, ['#FFE7D1', '#FFE7D1', '#FFE9B8', '#FFE0E0'][i])}
+${old ? `<div class="abs" style="left:18px;top:18px;padding:4px 10px;border-radius:10px;background:#E8112D;color:#fff;font:800 12px Inter">Promo</div>` : ''}
+<div style="font:700 11px Inter;color:#888;margin-top:10px;letter-spacing:.06em">CHEZ TANTI</div><div style="font:800 16px Poppins;margin-top:2px">${n}</div>
+<div style="font:800 16px Inter;margin-top:8px;color:${old ? '#E8112D' : '#111'}">${old ? `<s style="color:#999;font-weight:600;font-size:13px">${old}</s> ` : ''}${pr} <span style="font-size:12px">XOF</span></div>
+<div class="abs" style="right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;background:#FF6B00;display:grid;place-items:center">${ic('bag', 20, '#fff', 2.2)}</div></div>`).join('')}</div>
+<div id="${p}cart" class="abs" style="left:16px;right:16px;top:790px;height:66px;border-radius:22px;background:#111;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font:700 17px Inter;z-index:5">
+<span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:50%;background:#FF6B00;display:grid;place-items:center;font:800 15px Inter">1</span>Voir le panier</span><span>2 500 XOF</span></div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+function scrCheckout(p) {
+  return `${sbar()}
+<div class="abs" style="left:18px;top:56px;width:52px;height:52px;border-radius:16px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);display:grid;place-items:center">${ic('back', 24, '#111', 2.4)}</div>
+<div class="abs" style="left:86px;top:66px;font:800 24px Poppins">Paiement OJA</div>
+<div class="abs" style="left:16px;top:124px;width:184px;height:74px;border-radius:20px;border:2px solid #FF6B00;background:#FFF1E6;padding:12px 14px"><div style="font:800 16px Inter;color:#E85D00">Livraison OJA</div><div style="font:600 14px Inter;color:#E85D00">800 XOF</div></div>
+<div class="abs a-card" style="left:208px;top:124px;width:184px;height:74px;padding:12px 14px"><div style="font:800 16px Inter">À emporter</div><div style="font:600 14px Inter;color:#777">Gratuit</div></div>
+<div class="abs" style="left:16px;right:16px;top:212px;height:70px;border-radius:20px;background:#FFE4D2;display:flex;align-items:center;gap:12px;padding:0 16px;font:700 15px Inter">${ic('lock', 24, '#111', 2.2)}Paiement Mobile Money sécurisé après validation.</div>
+<div class="abs a-card" style="left:16px;right:16px;top:296px;height:62px;display:flex;align-items:center;gap:12px;padding:0 16px;font:600 17px Inter">${ic('pin', 22, '#111', 2.2)}Haie Vive, Cotonou</div>
+<div class="abs" style="left:18px;top:376px;font:800 18px Inter">Choisissez votre mode de livraison</div>
+<div id="${p}velo" class="abs" style="left:16px;right:16px;top:410px;height:104px;border-radius:20px;border:2px solid #12B76A;background:#E7F6EF;padding:14px 16px">
+<div style="display:flex;justify-content:space-between"><b style="font:800 18px Inter">Vélo</b><b style="font:800 17px Inter;color:#12B76A">800 XOF</b></div><div style="font:500 13px Inter;color:#555;margin-top:4px;width:280px">Livraison économique confiée à un livreur à vélo.</div>
+<div class="abs" style="right:16px;top:50px;width:26px;height:26px;border-radius:50%;border:3px solid #12B76A;display:grid;place-items:center"><div style="width:12px;height:12px;border-radius:50%;background:#12B76A"></div></div></div>
+<div class="abs a-card" style="left:16px;right:16px;top:526px;height:104px;padding:14px 16px;border:1.5px solid #E2E2E2">
+<div style="display:flex;justify-content:space-between"><b style="font:800 18px Inter">Livraison OJA</b><b style="font:800 17px Inter;color:#E85D00">1 200 XOF</b></div><div style="font:500 13px Inter;color:#555;margin-top:4px;width:280px">Moto, tricycle ou voiture : OJA choisit le véhicule disponible.</div></div>
+<div class="abs a-card" style="left:16px;right:16px;top:644px;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font:700 16px Inter"><span>Commande · 1 article</span><span style="color:#E85D00">2 500 XOF</span></div>
+<div class="abs" style="left:0;right:0;top:730px;bottom:0;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px 20px">
+<div><div style="font:500 13px Inter;color:#666">Mobile Money sécurisé</div><div style="font:800 20px Inter">Total 3 300 XOF</div></div>
+<div id="${p}pay" style="position:relative;overflow:hidden;padding:18px 22px;border-radius:18px;background:#C2410C;color:#fff;font:800 17px Inter">PAYER 3 300 XOF<div id="${p}paid" class="abs" style="inset:0;background:#12B76A;display:flex;align-items:center;justify-content:center;gap:6px">${ic('check', 22, '#fff', 3)}Payé</div></div></div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+const TRK = 'M70,470 C120,380 170,420 210,330 S300,260 330,170';
+function scrTrack(p) {
+  return `${sbar()}
+<svg class="abs" style="left:0;top:0" width="408" height="600" viewBox="0 0 408 600"><rect width="408" height="600" fill="#EDE8E1"/>
+<g stroke="#fff" stroke-width="12" fill="none"><path d="M-20,140 L430,90"/><path d="M-20,300 L430,260"/><path d="M-20,470 L430,430"/><path d="M90,-20 L130,620"/><path d="M250,-20 L300,620"/><path d="M-20,560 C120,520 280,560 430,520"/></g>
+<g stroke="#fff" stroke-width="5" fill="none" opacity=".9"><path d="M-20,210 L430,175"/><path d="M-20,385 L430,345"/><path d="M40,-20 L70,620"/><path d="M180,-20 L215,620"/><path d="M350,-20 L380,620"/></g>
+<rect x="300" y="360" width="80" height="60" rx="10" fill="#CFE8D2"/><rect x="20" y="20" width="60" height="90" rx="10" fill="#CFE8D2"/>
+<path id="${p}rt" d="${TRK}" stroke="#FF6B00" stroke-width="7" fill="none" stroke-linecap="round"/>
+<circle cx="70" cy="470" r="12" fill="#111" stroke="#fff" stroke-width="4"/>
+<g transform="translate(330,170)"><circle r="20" fill="#FF6B00" opacity=".25"/><circle r="11" fill="#FF6B00" stroke="#fff" stroke-width="4"/></g>
+<g id="${p}cur"><circle r="22" fill="#fff" stroke="#FF6B00" stroke-width="3"/><text y="9" text-anchor="middle" font-size="24" font-family="Noto Color Emoji">🛵</text></g></svg>
+<div class="abs" style="left:0;right:0;top:560px;bottom:0;border-radius:28px 28px 0 0;background:#fff;box-shadow:0 -8px 24px rgba(0,0,0,.08);padding:22px 20px">
+<div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font:800 22px Poppins">Votre commande arrive</div><div style="font:500 14px Inter;color:#777">Maquis Chez Tanti → Haie Vive</div></div><div style="font:900 30px Poppins;color:#FF6B00"><span id="${p}eta">12</span><span style="font-size:16px"> min</span></div></div>
+<div style="display:flex;gap:6px;margin-top:18px">${[0, 1, 2, 3].map(i => `<div style="flex:1;height:8px;border-radius:4px;background:#EEE;overflow:hidden"><div id="${p}st${i}" style="height:8px;width:0;background:#FF6B00"></div></div>`).join('')}</div>
+<div style="display:flex;justify-content:space-between;font:600 12px Inter;color:#888;margin-top:8px"><span>Acceptée</span><span>Préparation</span><span>En route</span><span>Livrée</span></div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:18px"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FF8A1F,#C2410C);display:grid;place-items:center;color:#fff;font:800 18px Poppins">KA</div><div><div style="font:800 17px Inter">Koffi · Livreur OJA</div><div style="font:500 13px Inter;color:#777">Moto · ★ 4,9</div></div></div></div>`;
+}
+
+
+/* ============================================================
+   OJA MERCHANT — app for restaurants & merchants (54.4 s VO + logo outro)
+   (prelude from market_body.js provides iphone(), sbar(), fv(), sticker(), scrHome()…)
+   ============================================================ */
+Object.assign(ICONS, {
+  chart: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  bellr: '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/>',
+  clip: '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  box: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  gear: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+  timer: '<line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/>',
+  minus: '<path d="M5 12h14"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+});
+const OR = '#FF6B00', INK = '#0F0F12', PEARL = '#F7F5F2', DK = '#0D0D10';
+const st2 = document.createElement('style'); st2.textContent = `
+.hlo{color:${OR}}.hlk{color:${INK}}
+.glass{position:absolute;border-radius:28px;background:rgba(255,255,255,.82);border:1.5px solid rgba(255,255,255,.95);box-shadow:0 30px 70px rgba(80,40,10,.14);color:${INK}}
+.mesh{position:absolute;border-radius:50%;filter:blur(2px)}
+.kpi{font:900 44px Poppins;letter-spacing:-.02em}
+`; document.head.appendChild(st2);
+const meshBg = (id) => `<div id="${id}" class="abs" style="inset:0;background:${PEARL}">
+<div class="mesh" style="left:-240px;top:-300px;width:900px;height:900px;background:radial-gradient(circle,rgba(255,138,46,.32),rgba(255,138,46,0) 65%)"></div>
+<div class="mesh" style="left:1300px;top:500px;width:1000px;height:1000px;background:radial-gradient(circle,rgba(255,196,140,.45),rgba(255,196,140,0) 65%)"></div>
+<div class="abs" style="inset:0;background-image:linear-gradient(rgba(15,15,18,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(15,15,18,.045) 1px,transparent 1px);background-size:96px 96px"></div></div>`;
+const darkBg = `<div class="abs" style="inset:0;background:radial-gradient(ellipse at 60% 45%,#3A1E0C 0%,${DK} 62%)"></div><div class="abs" style="inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 2px,transparent 2px);background-size:46px 46px"></div>`;
+const mark = (s = 90) => `<span style="display:inline-grid;place-items:center;width:${s}px;height:${s}px;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.18)"><img src="assets/mk_logo.png" style="width:${s * .86}px"></span>`;
+const NAVM = (p, act) => `<div class="abs" style="left:0;right:0;top:800px;height:78px;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;font:600 11px Inter;color:#444">
+${[['grid', 'Accueil'], ['bell', 'Nouvelles'], ['clip', 'En cours'], ['box', 'Prêtes'], ['gear', 'Réglages']].map(([icn, lb], i) => `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;${i === act ? `color:${OR}` : ''}"><div style="padding:5px 16px;border-radius:14px;${i === act ? 'background:#FFE9DA' : ''}">${ic(icn, 21, i === act ? OR : '#444', 2)}</div>${lb}</div>`).join('')}</div>`;
+const tapEl = p => `<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.3);border:3px solid ${OR};opacity:0;z-index:18"></div>`;
+
+function scrDash(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:500 14px Inter;color:#777">Bonjour 👋</div><div style="font:800 24px Poppins">Maquis Chez Tanti</div></div>
+<div class="abs" style="right:18px;top:66px;padding:8px 14px;border-radius:16px;background:#E7F6EF;color:#0B7A5E;font:800 13px Inter;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#12B76A"></span>Ouvert</div>
+<div class="abs" style="left:16px;right:16px;top:124px;height:150px;border-radius:24px;background:linear-gradient(135deg,#FF8A1F,#E85D00);color:#fff;padding:18px 20px">
+<div style="font:600 14px Inter;opacity:.9">Ventes du jour</div><div style="font:900 36px Poppins;margin-top:2px"><span id="${p}sales">48 500</span> <span style="font-size:18px">XOF</span></div>
+<div style="font:700 13px Inter;margin-top:6px;display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:10px;background:rgba(255,255,255,.2)">${ic('up', 16, '#fff', 2.6)}+18 % vs hier</div></div>
+<div class="abs" style="left:16px;top:288px;width:182px;height:96px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:14px 16px"><div style="font:600 13px Inter;color:#777">Commandes</div><div style="font:900 30px Poppins" id="${p}ord">23</div></div>
+<div class="abs" style="left:210px;top:288px;width:182px;height:96px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:14px 16px"><div style="font:600 13px Inter;color:#777">En préparation</div><div style="font:900 30px Poppins;color:${OR}">4</div></div>
+<div class="abs" style="left:16px;right:16px;top:398px;height:200px;border-radius:22px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:16px 18px"><div style="font:800 16px Inter">Ventes de la semaine</div>
+<div class="abs" style="left:18px;right:18px;bottom:18px;height:120px;display:flex;align-items:flex-end;gap:12px">${[45, 62, 50, 78, 66, 92, 100].map((h, i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div id="${p}bar${i}" style="width:100%;height:${h}px;border-radius:8px;background:${i === 6 ? OR : '#FFD9BF'};transform-origin:50% 100%"></div><span style="font:600 11px Inter;color:#999">${'LMMJVSD'[i]}</span></div>`).join('')}</div></div>
+<div class="abs" style="left:16px;right:16px;top:612px;height:76px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:46px;height:46px;border-radius:14px;background:#FFE9DA;display:grid;place-items:center">${ic('bellr', 22, OR, 2.2)}</div><div style="flex:1"><div style="font:800 15px Inter">Nouvelle commande</div><div style="font:500 13px Inter;color:#777">#3C24A4 · 2 articles · 5 700 XOF</div></div>${ic('arrow', 18, '#999', 2.4)}</div>
+<div class="abs" style="left:16px;right:16px;top:700px;height:76px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:46px;height:46px;border-radius:14px;background:#E7F6EF;display:grid;place-items:center">${ic('wallet', 22, '#12B76A', 2.2)}</div><div style="flex:1"><div style="font:800 15px Inter">Solde disponible</div><div style="font:500 13px Inter;color:#777">125 450 XOF</div></div>${ic('arrow', 18, '#999', 2.4)}</div>
+${NAVM(p, 0)}${tapEl(p)}`;
+}
+const CAT = [['shawarma', 'Shawarma poulet', '2 500', 18], ['croissant', 'Croissants x3', '1 000', 25], ['🍗', 'Poulet braisé', '3 500', 12], ['🥤', 'Jus de bissap', '700', 40]];
+function scrCatalog(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 24px Poppins">Catalogue boutique</div><div style="font:500 13px Inter;color:#777">Produits, prix, photos et stocks</div></div>
+<div class="abs" style="left:16px;top:130px;display:flex;gap:8px"><span class="a-chip on" style="background:${INK};border-color:${INK}">Tout 4</span><span class="a-chip">Plats</span><span class="a-chip">Boissons</span><span class="a-chip">Desserts</span></div>
+<div class="abs" style="left:16px;right:16px;top:186px">${CAT.map(([k, n, pr, s], i) => `<div id="${p}r${i}" class="a-card" style="position:relative;height:104px;margin-bottom:12px;display:flex;align-items:center;gap:14px;padding:0 14px">${fv(k, 76, 76, 16, ['#FFE7D1', '#FFE7D1', '#FFE9B8', '#FFE0E0'][i])}
+<div style="flex:1"><div style="font:800 16px Poppins">${n}</div><div style="font:800 16px Inter;color:#C2410C;margin-top:2px"><span id="${p}pr${i}">${pr}</span> <span style="font-size:12px">XOF</span></div>
+<div style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:3px 10px;border-radius:10px;background:#F3F4F6;font:700 12px Inter;color:#444">Stock <span id="${p}st${i}">${s}</span></div></div>
+<div style="width:46px;height:28px;border-radius:14px;background:#12B76A;position:relative"><div style="position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff"></div></div></div>`).join('')}</div>
+<div id="${p}add" class="abs" style="left:16px;right:16px;top:690px;height:62px;border-radius:20px;background:${OR};color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:800 18px Inter">${ic('plus', 22, '#fff', 3)}Ajouter un produit</div>
+<div id="${p}form" class="abs" style="left:0;right:0;top:200px;height:678px;border-radius:30px 30px 0 0;background:#fff;box-shadow:0 -20px 50px rgba(0,0,0,.2);padding:22px 20px;z-index:8">
+<div style="width:60px;height:5px;border-radius:3px;background:#ddd;margin:0 auto 16px"></div><div style="font:800 22px Poppins">Nouveau produit</div>
+<div style="display:flex;gap:10px;margin-top:16px"><div id="${p}fph" style="width:110px;height:110px;border-radius:20px;background:#FFE9B8;display:grid;place-items:center;overflow:hidden"><span class="emo" style="font-size:70px">🍗</span></div><div style="width:110px;height:110px;border-radius:20px;border:2px dashed #ccc;display:grid;place-items:center">${ic('camera', 30, '#aaa', 2)}</div></div>
+<div style="font:700 13px Inter;color:#777;margin-top:16px">Nom</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;padding:0 14px;font:600 17px Inter;border:1.5px solid #eee"><span id="${p}typ"></span><span id="${p}cur" style="display:inline-block;width:3px;height:22px;background:${OR};margin-left:2px"></span></div>
+<div style="display:flex;gap:10px;margin-top:14px"><div style="flex:1"><div style="font:700 13px Inter;color:#777">Prix</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;padding:0 14px;font:800 18px Inter;color:#C2410C;border:1.5px solid #eee"><span id="${p}fpr">0</span>&nbsp;XOF</div></div>
+<div style="flex:1"><div style="font:700 13px Inter;color:#777">Stock</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border:1.5px solid #eee"><span style="width:32px;height:32px;border-radius:10px;background:#F3F4F6;display:grid;place-items:center">${ic('minus', 18, '#111', 2.6)}</span><b id="${p}fst" style="font:800 18px Inter">0</b><span style="width:32px;height:32px;border-radius:10px;background:${OR};display:grid;place-items:center">${ic('plus', 18, '#fff', 2.6)}</span></div></div></div>
+<div id="${p}save" style="position:relative;margin-top:22px;height:60px;border-radius:20px;background:${INK};color:#fff;display:grid;place-items:center;font:800 18px Inter;overflow:hidden">Enregistrer<div id="${p}ok" class="abs" style="inset:0;background:#12B76A;display:flex;align-items:center;justify-content:center;gap:8px">${ic('check', 22, '#fff', 3)}Produit ajouté</div></div></div>
+${NAVM(p, 4)}${tapEl(p)}`;
+}
+const STEPS = ['Reçue', 'Acceptée', 'En préparation', 'Prête', 'Livrée'];
+function scrOrder(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 24px Poppins">Nouvelles commandes</div><div style="font:500 13px Inter;color:#777">Acceptez rapidement les demandes entrantes</div></div>
+<div id="${p}card" class="abs" style="left:14px;right:14px;top:130px;border-radius:26px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:18px">
+<div style="display:flex;align-items:center;gap:8px"><b style="font:900 20px Inter">#3C24A4</b><span style="padding:4px 10px;border-radius:12px;background:#E8F1FF;color:#1D63D8;font:700 12px Inter">🛵 Livraison</span><span style="padding:4px 10px;border-radius:12px;border:1.5px solid #12B76A;background:#E7F6EF;color:#0B7A5E;font:700 12px Inter">Payée ✓</span></div>
+<div style="margin-top:14px;border-radius:18px;background:#FFF1E6;padding:12px 14px;font:500 14px Inter">
+<div style="display:flex;justify-content:space-between"><span>2× Shawarma poulet</span><b>5 000</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span>1× Jus de bissap</span><b>700</b></div>
+<div style="display:flex;justify-content:space-between;margin-top:8px;color:#1D63D8"><span>Livraison prépayée Mobile Money</span><b>800</b></div>
+<div style="height:1px;background:#F2D9C8;margin:10px 0"></div><div style="display:flex;justify-content:space-between;font:800 15px Inter"><span>Votre gain</span><span style="color:#0B7A5E">5 700 XOF</span></div></div>
+<div id="${p}btns" style="display:flex;gap:10px;margin-top:14px"><div style="flex:1;height:54px;border-radius:18px;border:2px solid #E8112D;color:#E8112D;display:grid;place-items:center;font:800 16px Inter">Refuser</div><div id="${p}acc" style="flex:1;height:54px;border-radius:18px;background:#12B76A;color:#fff;display:grid;place-items:center;font:800 16px Inter">Accepter</div></div>
+<div id="${p}prog" class="abs" style="left:18px;right:18px;bottom:18px;height:54px;border-radius:18px;background:${INK};color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:800 16px Inter">${ic('timer', 20, OR, 2.4)}<span id="${p}stat">En préparation</span></div></div>
+<div class="abs" style="left:20px;right:20px;top:540px">${STEPS.map((s, i) => `<div style="display:flex;align-items:center;gap:12px;height:46px"><div id="${p}dot${i}" style="width:30px;height:30px;border-radius:50%;background:#E5E7EB;display:grid;place-items:center">${ic('check', 16, '#fff', 3)}</div><span id="${p}lb${i}" style="font:700 15px Inter;color:#999">${s}</span></div>`).join('')}</div>
+${NAVM(p, 1)}${tapEl(p)}`;
+}
+function scrRevenue(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 23px Poppins">Revenus & reversements</div><div style="font:500 13px Inter;color:#777">Vos gains, séparés des paiements clients</div></div>
+<div class="abs" style="left:16px;right:16px;top:124px;height:236px;border-radius:26px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.07);text-align:center;padding-top:22px">
+<div style="font:800 14px Inter;letter-spacing:.12em;color:#444">DISPONIBLE</div><div style="font:900 40px Poppins;margin-top:6px"><span id="${p}bal">0</span> <span style="font-size:20px">XOF</span></div>
+<div style="font:500 13px Inter;color:#666;margin:6px 26px 0">Commandes payées protégées jusqu'à la remise.</div>
+<div style="display:flex;gap:10px;margin:14px 18px 0"><div style="flex:1;height:50px;border-radius:16px;background:${OR};color:#fff;display:grid;place-items:center;font:800 16px Inter">Retirer</div><div style="flex:1;height:50px;border-radius:16px;border:1.5px solid #ddd;display:grid;place-items:center;font:700 16px Inter">Tout retirer</div></div></div>
+<div class="abs" style="left:20px;top:378px;font:800 18px Inter">Historique</div>
+<div class="abs" style="left:16px;right:16px;top:410px">${[['5 700', 'Commande #3C24A4', 'Il y a 2 min'], ['3 500', 'Commande #3C24A1', 'Il y a 18 min'], ['8 200', 'Commande #3C249F', 'Il y a 40 min'], ['2 500', 'Commande #3C249A', 'Il y a 1 h']].map(([a, b, c], i) => `<div id="${p}h${i}" class="a-card" style="height:80px;margin-bottom:10px;display:flex;align-items:center;gap:14px;padding:0 16px"><div style="width:44px;height:44px;border-radius:14px;background:#E7F6EF;display:grid;place-items:center">${ic('up', 20, '#12B76A', 2.6)}</div><div style="flex:1"><div style="font:800 16px Inter">+${a} XOF</div><div style="font:500 12px Inter;color:#777">${b} · ${c}</div></div><span style="font:700 12px Inter;color:#0B7A5E">Disponible</span></div>`).join('')}</div>
+${NAVM(p, 0)}${tapEl(p)}`;
+}
+Object.assign(ICONS, { up: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>', tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/>', arrow: '<path d="m9 18 6-6-6-6"/>', camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>' });
+
+/* S0 — hook: restaurateur / commerçant / vendeur ? */
+const HOOK = [['Restaurateur', 'shawarma', OR], ['Commerçant', '🛍️', '#FFC83D'], ['Vendeur', '📦', '#fff']];
+H += `<div class="scene" id="s0">${darkBg}
+<div id="s0sweep" class="abs" style="left:-600px;top:-200px;width:500px;height:1500px;background:linear-gradient(90deg,rgba(255,138,46,0),rgba(255,138,46,.35),rgba(255,138,46,0));transform:rotate(18deg)"></div>
+<div id="s0k" class="abs" style="left:140px;top:250px;font:700 34px Inter;color:#bbb;letter-spacing:.2em">VOUS ÊTES</div>
+${HOOK.map(([w, k, c], i) => `<div id="s0w${i}" class="abs H" style="left:140px;top:330px;font-size:150px;color:${c};letter-spacing:-.04em">${L(w)}</div>${sticker('s0i' + i, k, 330, 1580, 540, i === 2 ? '#1E1E22' : '#fff')}`).join('')}
+<div id="s0q" class="abs H" style="left:140px;top:560px;font-size:96px;color:#fff">${W('…ou les trois *?*')}</div>
+</div>`;
+
+/* S1 — faites grandir votre activité avec OJA Merchant */
+H += `<div class="scene" id="s1">${meshBg('s1bg')}
+<svg class="abs" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">
+${[0, 1, 2, 3, 4, 5, 6].map(i => `<rect id="s1b${i}" x="${1020 + i * 120}" y="${900 - (140 + i * 90)}" width="80" height="${140 + i * 90}" rx="18" fill="${i === 6 ? OR : '#FFD2B0'}"/>`).join('')}
+<path id="s1ln" d="M980,800 C1150,760 1250,700 1380,640 S1600,420 1800,240" stroke="${INK}" stroke-width="10" fill="none" stroke-linecap="round"/>
+<circle id="s1dot" r="18" fill="${OR}" stroke="#fff" stroke-width="6"/></svg>
+<div id="s1t" class="abs H" style="left:140px;top:280px;font-size:118px;color:${INK}"><div>${W('Faites grandir')}</div><div>${W('votre *activité.*')}</div></div>
+<div id="s1lock" class="abs" style="left:140px;top:620px;display:flex;align-items:center;gap:24px">${mark(120)}<div class="H" style="font-size:104px;color:${INK}">OJA <span class="hlo">Merchant</span></div></div>
+</div>`;
+
+/* S2 — écosystème OJA + visible sur OJA Market */
+const ECO = [['store', 'OJA Market', 1590, 230], ['users', 'Clients', 1720, 560], ['bike', 'Livreurs OJA', 1560, 860], ['wallet', 'Paiements', 330, 880], ['zap', 'NOVOJA', 260, 560]];
+H += `<div class="scene" id="s2">${meshBg('s2bg')}
+<svg class="abs" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080">${ECO.map(([, , x, y], i) => `<path id="s2l${i}" d="M960,560 L${x},${y}" stroke="${OR}" stroke-width="4" stroke-dasharray="10 12" fill="none" opacity=".6"/>`).join('')}</svg>
+${ECO.map(([icn, lb, x, y], i) => `<div id="s2n${i}" class="glass" style="left:${x - 130}px;top:${y - 48}px;width:260px;height:96px;display:flex;align-items:center;gap:14px;padding:0 18px"><div style="width:56px;height:56px;border-radius:18px;background:${INK};display:grid;place-items:center">${ic(icn, 28, OR, 2.2)}</div><div style="font:800 24px Poppins">${lb}</div></div>`).join('')}
+${[0, 1, 2, 3, 4].map(i => `<div id="s2p${i}" class="abs" style="left:0;top:0;width:16px;height:16px;margin:-8px;border-radius:50%;background:${OR};box-shadow:0 0 18px ${OR}"></div>`).join('')}
+<div id="s2t" class="abs H" style="left:0;top:70px;width:1920px;text-align:center;font-size:78px;color:${INK}">${W('Votre commerce rejoint *l\'écosystème OJA*')}</div>
+<div id="s2u" class="abs H" style="left:0;top:70px;width:1920px;text-align:center;font-size:78px;color:${INK}">${W('Visible par les clients sur *OJA Market*')}</div>
+<div id="s2wrap" class="abs" style="left:745px;top:150px;width:430px;height:900px">${iphone('s2pA', scrDash('d2'), 0, 0)}</div>
+<div id="s2wrapB" class="abs" style="left:1240px;top:170px;width:430px;height:900px">${iphone('s2pB', scrHome('h2'), 0, 0)}</div>
+</div>`;
+
+/* S3 — produits, prix, stocks */
+H += `<div class="scene" id="s3">${meshBg('s3bg')}
+<div id="s3t" class="abs H" style="left:140px;top:230px;font-size:96px;color:${INK}"><div>${W('Ajoutez vos')}</div><div>${W('*produits.*')}</div></div>
+${[['tag', 'Gérez vos prix', '3 000 → 3 500 XOF'], ['box', 'Suivez vos stocks', 'Stock 12 → 20']].map(([icn, a, b], i) => `<div id="s3f${i}" class="glass" style="left:140px;top:${520 + i * 170}px;width:620px;height:140px;display:flex;align-items:center;gap:22px;padding:0 28px"><div style="width:84px;height:84px;border-radius:24px;background:${OR};display:grid;place-items:center">${ic(icn, 42, '#fff', 2.2)}</div><div><div style="font:800 34px Poppins">${a}</div><div style="font:700 24px Inter;color:#C2410C" id="s3fv${i}">${b}</div></div></div>`).join('')}
+<div id="s3wrap" class="abs" style="left:1180px;top:90px;width:430px;height:900px">${iphone('s3ph', scrCatalog('c3'), 0, 0)}</div>
+${[['🍗', 980, 250], ['shawarma', 1780, 320], ['🥤', 1760, 800]].map(([k, x, y], i) => sticker('s3k' + i, k, 150, x, y, '#fff')).join('')}
+</div>`;
+
+/* S4 — recevez vos commandes · une seule application */
+H += `<div class="scene" id="s4">${darkBg}
+<div id="s4t" class="abs H" style="left:140px;top:260px;font-size:100px;color:#fff"><div>${W('Recevez et suivez')}</div><div>${W('vos *commandes*')}</div></div>
+<div id="s4s" class="abs" style="left:144px;top:520px;font:600 44px Inter;color:#cfcfd6">${W('depuis une seule application.')}</div>
+${[0, 1, 2, 3, 4].map(i => `<div id="s4o${i}" class="abs" style="left:0;top:0;width:330px;height:96px;border-radius:24px;background:#fff;display:flex;align-items:center;gap:14px;padding:0 18px;box-shadow:0 20px 50px rgba(0,0,0,.4)"><div style="width:54px;height:54px;border-radius:16px;background:#FFE9DA;display:grid;place-items:center">${ic('bellr', 26, OR, 2.2)}</div><div><div style="font:800 19px Inter;color:#111">#3C24${['A4', 'A1', '9F', '9A', '97'][i]}</div><div style="font:600 15px Inter;color:#777">${['5 700', '3 500', '8 200', '2 500', '4 300'][i]} XOF</div></div></div>`).join('')}
+<div id="s4wrap" class="abs" style="left:1180px;top:90px;width:430px;height:900px">${iphone('s4ph', scrDash('d4'), 0, 0)}</div>
+</div>`;
+
+/* S5 — nouvelle commande en temps réel */
+H += `<div class="scene" id="s5">${meshBg('s5bg')}
+${[0, 1, 2].map(i => `<div id="s5r${i}" class="abs" style="left:1395px;top:200px;width:10px;height:10px;border-radius:50%;border:4px solid rgba(255,107,0,.6)"></div>`).join('')}
+<div id="s5n" class="abs" style="left:1100px;top:40px;width:600px;height:130px;border-radius:32px;background:${INK};color:#fff;display:flex;align-items:center;gap:20px;padding:0 26px;box-shadow:0 30px 70px rgba(0,0,0,.35);z-index:5">
+<div style="width:76px;height:76px;border-radius:22px;background:${OR};display:grid;place-items:center">${ic('bellr', 40, '#fff', 2.2)}</div><div><div style="font:800 30px Poppins">Nouvelle commande</div><div style="font:600 22px Inter;color:#bbb">#3C24A4 · 5 700 XOF · payée</div></div></div>
+<div id="s5t" class="abs H" style="left:140px;top:250px;font-size:84px;color:${INK}"><div>${W('Une nouvelle')}</div><div>${W('*commande* arrive ?')}</div></div>
+<div id="s5steps" class="abs" style="left:140px;top:520px">${['Vous la voyez', 'Vous la préparez', 'Prise en charge', 'Livrée'].map((s, i) => `<div id="s5s${i}" style="display:flex;align-items:center;gap:22px;height:96px"><div class="s5d" style="width:66px;height:66px;border-radius:22px;background:#EDEAE6;display:grid;place-items:center;font:900 26px Poppins;color:#999">${i + 1}</div><div class="s5l" style="font:800 48px Poppins;color:#999">${s}</div></div>`).join('')}</div>
+<div id="s5wrap" class="abs" style="left:1180px;top:150px;width:430px;height:900px">${iphone('s5ph', scrOrder('o5'), 0, 0)}</div>
+<div id="s5moto" class="abs" style="left:1550px;top:760px;width:300px"><img src="assets/moto.png" style="width:300px;filter:drop-shadow(0 20px 20px rgba(0,0,0,.3))"></div>
+</div>`;
+
+/* S6 — paiements, ventes, opérations */
+H += `<div class="scene" id="s6">${meshBg('s6bg')}
+<div id="s6t" class="abs H" style="left:0;top:70px;width:1920px;text-align:center;font-size:80px;color:${INK}">${W('Une vision *claire* de votre activité')}</div>
+<div id="s6wrap" class="abs" style="left:745px;top:190px;width:430px;height:900px">${iphone('s6ph', scrRevenue('r6'), 0, 0)}</div>
+${[['wallet', 'Paiements', 'Mobile Money sécurisé', 140, 300], ['chart', 'Ventes', '+18 % cette semaine', 140, 560], ['clip', 'Opérations', '23 commandes · 0 litige', 1280, 380]].map(([icn, a, b, x, y], i) => `<div id="s6c${i}" class="glass" style="left:${x}px;top:${y}px;width:500px;height:200px;padding:28px 30px">
+<div style="display:flex;align-items:center;gap:16px"><div style="width:66px;height:66px;border-radius:20px;background:${INK};display:grid;place-items:center">${ic(icn, 34, OR, 2.2)}</div><div style="font:800 38px Poppins">${a}</div></div><div style="font:700 26px Inter;color:#C2410C;margin-top:18px">${b}</div></div>`).join('')}
+<div id="s6g" class="glass" style="left:1280px;top:640px;width:500px;height:260px;padding:24px 28px"><div style="font:800 26px Poppins">Chiffre d'affaires</div>
+<svg width="444" height="170" viewBox="0 0 444 170" style="margin-top:10px"><path d="M0,150 L0,150 C60,140 90,120 140,110 S230,70 280,80 S380,30 444,14 L444,170 L0,170Z" fill="rgba(255,107,0,.12)"/><path id="s6ln" d="M0,150 C60,140 90,120 140,110 S230,70 280,80 S380,30 444,14" stroke="${OR}" stroke-width="6" fill="none" stroke-linecap="round"/></svg></div>
+</div>`;
+
+/* S7 — types de commerces */
+const TYPES = [['🍲', 'Restaurants'], ['🛍️', 'Boutiques'], ['🛒', 'Alimentation'], ['👗', 'Mode'], ['💄', 'Beauté'], ['📱', 'Électronique'], ['🏪', 'Commerce de quartier']];
+H += `<div class="scene" id="s7">${darkBg}
+${TYPES.map(([e, n], i) => { const row = i < 4 ? 0 : 1, col = row ? i - 4 : i; const x = row ? 330 + col * 430 : 120 + col * 430, y = row ? 590 : 170; return `<div id="s7c${i}" class="abs c" style="left:${x}px;top:${y}px;width:${i === 6 ? 520 : 400}px;height:340px;border-radius:40px;background:linear-gradient(160deg,#232328,#16161A);border:1.5px solid rgba(255,255,255,.08);text-align:center;color:#fff"><div class="emo" style="height:230px;font-size:150px">${e}</div><div class="H" style="font-size:${i === 6 ? 40 : 46}px">${n}</div></div>`; }).join('')}
+</div>`;
+
+/* S8 — vendre plus / clients autour de vous */
+const AV = [[-330, -120], [-260, 170], [-40, -280], [210, -230], [340, 40], [250, 250], [-30, 300], [-380, 30]];
+H += `<div class="scene" id="s8">${meshBg('s8bg')}
+<div id="s8t" class="abs H" style="left:140px;top:250px;font-size:104px;color:${INK}"><div>${W('Les outils pour')}</div><div>${W('*vendre plus.*')}</div></div>
+<div id="s8s" class="abs" style="left:144px;top:530px;font:600 46px Inter;color:#555;width:760px">${W('Touchez davantage de clients autour de vous.')}</div>
+<div id="s8cnt" class="glass" style="left:140px;top:720px;width:540px;height:170px;padding:26px 32px"><div style="font:700 24px Inter;color:#777">Clients ce mois-ci</div><div class="kpi" style="font-size:64px;color:${OR}">+<span id="s8n">0</span></div></div>
+${[0, 1, 2].map(i => `<div id="s8r${i}" class="abs" style="left:1420px;top:540px;width:10px;height:10px;border-radius:50%;border:4px solid rgba(255,107,0,.5)"></div>`).join('')}
+<div id="s8shop" class="abs c" style="left:1320px;top:440px;width:200px;height:200px;border-radius:60px;background:${OR};display:grid;place-items:center;box-shadow:0 30px 70px rgba(255,107,0,.4)"><span class="emo" style="font-size:110px">🏪</span></div>
+${AV.map(([dx, dy], i) => `<div id="s8a${i}" class="abs c" style="left:${1420 + dx - 42}px;top:${540 + dy - 42}px;width:84px;height:84px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 14px 30px rgba(0,0,0,.15)">${ic('user', 40, [OR, INK, '#12B76A', '#1D63D8'][i % 4], 2.4)}</div>`).join('')}
+</div>`;
+
+/* S9 — moins de complications / plus de visibilité / plus d'opportunités */
+const TRIAD = [['Moins de', 'complications.', PEARL, INK, '−'], ['Plus de', 'visibilité.', OR, '#fff', '+'], ['Plus', "d'opportunités.", DK, '#fff', '+']];
+H += `<div class="scene" id="s9">${TRIAD.map(([a, b, bg, fg, sg], i) => `<div id="s9f${i}" class="abs" style="inset:0;background:${bg};display:none">
+<div class="abs H" style="left:1180px;top:110px;font-size:900px;line-height:.8;color:${i === 1 ? 'rgba(255,255,255,.16)' : i === 0 ? 'rgba(255,107,0,.12)' : 'rgba(255,107,0,.2)'}" id="s9g${i}">${sg}</div>
+<div id="s9t${i}" class="abs H" style="left:140px;top:300px;font-size:150px;color:${fg};letter-spacing:-.03em"><div style="font-size:100px;opacity:.75">${W(a)}</div><div>${L(b)}</div></div></div>`).join('')}</div>`;
+
+/* S10 — finale: iPhones alignés */
+H += `<div class="scene" id="s10">${darkBg}
+<div id="s10t" class="abs H" style="left:0;top:60px;width:1920px;text-align:center;font-size:80px;color:#fff">${W('Votre commerce *dans votre poche,*')}</div>
+<div id="s10u" class="abs H" style="left:0;top:160px;width:1920px;text-align:center;font-size:70px;color:#FFC83D">${W('vos clients à portée de clic.')}</div>
+${[['A', scrCatalog('c10')], ['B', scrOrder('o10')], ['C', scrDash('d10')], ['D', scrRevenue('r10')], ['E', scrHome('h10')]].map(([k, sc]) => `<div id="s10w${k}" class="abs" style="left:745px;top:290px;width:430px;height:900px">${iphone('s10p' + k, sc, 0, 0)}</div>`).join('')}
+</div>`;
+
+/* S11 — logo OJA Marketplace / Merchant + CTA */
+const LG = [['sky', 'inset(0 0 73% 0)'], ['map', 'inset(50% 4% 30% 4%)'], ['sgl', 'inset(31% 59% 42% 13%)'], ['sgr', 'inset(31% 13% 42% 59%)'], ['pin', 'ellipse(18% 24% at 50% 40%)'], ['ban', 'inset(58% 6% 16% 6%)'], ['tag', 'inset(83% 0 0 0)']];
+H += `<div class="scene" id="s11" style="background:${PEARL}">${meshBg('s11bg')}
+<div id="s11glow" class="abs" style="left:560px;top:-60px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(255,138,46,.35),rgba(255,138,46,0) 65%)"></div>
+<div id="s11logo" class="abs" style="left:700px;top:20px;width:520px;height:520px">${LG.map(([k, cp]) => `<img id="s11${k}" src="assets/merchant_logo.png" class="abs" style="left:0;top:0;width:520px;height:520px;clip-path:${cp}">`).join('')}
+<div id="s11shine" class="abs" style="left:0;top:0;width:520px;height:520px;overflow:hidden;-webkit-mask:url(assets/merchant_logo.png) center/contain no-repeat;mask:url(assets/merchant_logo.png) center/contain no-repeat"><div id="s11sh" class="abs" style="left:-200px;top:-100px;width:140px;height:800px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));transform:rotate(20deg)"></div></div></div>
+<div id="s11w" class="abs H" style="left:0;top:560px;width:1920px;text-align:center;font-size:118px;color:${INK}">${L('OJA')}<span style="display:inline-block;width:28px"></span><span class="hlo">${L('Merchant')}</span></div>
+<div id="s11s" class="abs" style="left:0;top:705px;width:1920px;text-align:center;font:600 46px Inter;color:#555">${W('Le local devient *visible.*', 'hlo')}</div>
+<div id="s11st0" class="store" style="left:600px;top:810px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
+<div id="s11st1" class="store" style="left:990px;top:810px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
+<div class="abs" style="left:0;top:950px;width:1920px;display:flex;justify-content:center"><div id="s11cta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 30px Poppins;padding:14px 32px 14px 18px">${flag(48, 32)}Téléchargez OJA Merchant</div></div>
+</div>`;
+
+H += `<div id="wipe" class="abs" style="inset:0;z-index:40;pointer-events:none">${[0, 1, 2].map(i => `<div id="wb${i}" class="band" style="display:none"></div>`).join('')}</div>
+<canvas id="grain" width="512" height="512"></canvas><div id="vig"></div><div id="fade"></div>`;
+stage.innerHTML = H;
+(() => { const c = $('grain'), g = c.getContext('2d'), im = g.createImageData(512, 512), R = rng(99); for (let i = 0; i < im.data.length; i += 4) { const v = R() * 255; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } g.putImageData(im, 0, 0); c.style.width = '2120px'; c.style.height = '1280px'; c.style.imageRendering = 'pixelated'; })();
+const prep = id => { const p = $(id), l = p.getTotalLength(); p.style.strokeDasharray = `${l} ${l}`; return [p, l]; };
+const s1ln = prep('s1ln'), s6ln = prep('s6ln');
+['h2', 'h10'].forEach(p => { el(p + 'seg').style.transform = 'translateX(0)'; el(p + 'sr').style.color = '#fff'; el(p + 'sm').style.color = '#111'; O(p + 'sl', 0); });
+
+/* ============================================================
+   SCENES
+   ============================================================ */
+const SC = [['s0', 0, 2.42], ['s1', 2.42, 5.47], ['s2', 5.47, 12.42], ['s3', 12.42, 15.62], ['s4', 15.62, 19.17], ['s5', 19.17, 25.88], ['s6', 25.88, 32.85], ['s7', 32.85, 38.15], ['s8', 38.15, 43.29], ['s9', 43.29, 47.22], ['s10', 47.22, 51.8], ['s11', 51.8, 99]];
+const WIPES = [[5.19, [PEARL, OR, INK]], [12.14, [PEARL, OR, INK]], [15.34, [DK, OR, PEARL]], [25.6, [PEARL, OR, INK]], [32.57, [DK, OR, PEARL]], [37.87, [PEARL, OR, DK]]];
+function circleClip(id, t, t0, d, cx, cy, e = E.ioC) { const p = P(t, t0, d, e); el(id).style.clipPath = p >= 1 ? 'none' : `circle(${p * 2300}px at ${cx}px ${cy}px)`; }
+function wipes(t) {
+  let active = null;
+  for (const w of WIPES) if (t >= w[0] - .01 && t < w[0] + .75) active = w;
+  for (let i = 0; i < 3; i++) {
+    const b = el('wb' + i);
+    if (!active) { b.style.display = 'none'; continue; }
+    const t0 = active[0]; b.style.display = 'block'; b.style.background = active[1][i];
+    const inP = P(t, t0 + i * .05, .22, E.oC), outP = P(t, t0 + .3 + (2 - i) * .05, .26, E.iC);
+    b.style.transform = `translateX(${(1 - inP) * 2500 - outP * 2500}px) skewX(-12deg)`;
+  }
+}
+const pop = (t, a, d = .5, e = E.oB) => P(t, a, d, e);
+function tap(id, t, a, x, y) { const q = (t - a) / .45; if (q < 0 || q > 1) { O(id, 0); return; } T(id, { x, y, s: .5 + q * 1.3, o: 1 - q }); }
+function glare(id, ry) { const g = el(id + 'g'); if (g) g.style.transform = `translateX(${ry * 6}px)`; }
+function phoneIn(wrap, ph, t, a, from = -60, base = -12) { const p = P(t, a, .95, E.oE), ry = lerp(from, base, p) + Math.sin(t * .9) * 4; T(wrap, { y: (1 - p) * 750, s: lerp(.85, 1, p) }); T(ph, { ry, rx: 5 }); glare(ph, ry); }
+function rings(pre, t, a, cx, cy, maxR = 900, per = 1.3) { for (let i = 0; i < 3; i++) { const p = t < a ? 0 : ((t - a + i * per / 3) % per) / per; const r = 120 + p * maxR; const e = el(pre + i); e.style.width = e.style.height = r + 'px'; e.style.left = (cx - r / 2) + 'px'; e.style.top = (cy - r / 2) + 'px'; O(e, t < a ? 0 : (1 - p) * .8); } }
+function countTo(id, t, a, d, to) { el(id).textContent = fmt(to * P(t, a, d, E.oQ)); }
+
+const S0T = [0.25, 1.0, 1.65, 2.42];
+function uS0(t) {
+  T('s0sweep', { x: ((t * 1600) % 3200) }); T('s0k', { o: P(t, .05, .3), x: (1 - P(t, .05, .5, E.oE)) * -60 });
+  for (let i = 0; i < 3; i++) {
+    const a = S0T[i], b = S0T[i + 1], on = t >= a && t < b - .02;
+    const lt = t - a;
+    el('s0w' + i).querySelectorAll('.wi').forEach((w, k) => { const q = P(lt, k * .018, .32, E.oE); w.style.transform = `translateY(${(1 - q) * 110}%)`; });
+    O('s0w' + i, on ? 1 : 0);
+    const p = pop(lt, 0, .45, E.oB2); T('s0i' + i, { s: on ? p : 0, r: (1 - p) * 40 + Math.sin(t * 3) * 4, o: on ? 1 : 0 });
+  }
+  O('s0q', 0);
+}
+function uS1(t) {
+  for (let i = 0; i < 7; i++) { const p = pop(t, 2.5 + i * .08, .5, E.oB); const b = $('s1b' + i); b.setAttribute('transform', `translate(0,${(1 - p) * 700})`); }
+  const [p, l] = s1ln; const lp = P(t, 2.8, 1.3, E.ioC); p.style.strokeDashoffset = l * (1 - lp);
+  const pt = p.getPointAtLength(l * lp); $('s1dot').setAttribute('transform', `translate(${pt.x},${pt.y}) scale(${lp > 0 ? 1 : 0})`);
+  wordsIn('s1t', t, 2.45, .09, .55);
+  const lk = pop(t, 4.25, .6, E.oB2); T('s1lock', { s: lk, o: clamp(lk * 3), x: (1 - lk) * -80 });
+}
+function uS2(t) {
+  wordsIn('s2t', t, 5.5, .06, .5, E.oE, 8.7, .3);
+  wordsIn('s2u', t, 9.0, .06, .5);
+  const mv = P(t, 8.8, .8, E.ioC);
+  T('s2wrap', { x: lerp(0, -420, mv) });
+  phoneIn('s2wrap', 's2pA', t, 5.5, -40, lerp(-8, 16, mv));
+  const pb = P(t, 9.0, .9, E.oE), ryb = lerp(60, -14, pb) + Math.sin(t) * 4; T('s2wrapB', { y: (1 - pb) * 1000, x: lerp(300, 0, pb), o: t > 8.95 ? 1 : 0 }); T('s2pB', { ry: ryb, rx: 5 }); glare('s2pB', ryb);
+  ECO.forEach(([, , x, y], i) => {
+    const p = pop(t, 6.2 + i * .25, .5, E.oB2);
+    T('s2n' + i, { s: p * (1 - mv * .0), o: clamp(p * 3) * (1 - mv), y: Math.sin(t * 2 + i) * 6 });
+    O('s2l' + i, clamp(p) * .7 * (1 - mv));
+    const q = ((t - 6.6 - i * .2) % 1.2) / 1.2, on = t > 6.6 && mv < .5;
+    T('s2p' + i, { x: lerp(960, x, clamp(q)), y: lerp(560, y, clamp(q)), o: on ? Math.sin(clamp(q) * Math.PI) : 0 });
+  });
+  el('h2rl').style.transform = `translateY(${-P(t, 10.3, 1.5, E.ioC) * 230}px)`;
+}
+function uS3(t) {
+  wordsIn('s3t', t, 12.45, .1, .5);
+  [13.6, 14.55].forEach((a, i) => { const p = P(t, a, .5, E.oE); T('s3f' + i, { x: (1 - p) * -200, o: p }); });
+  phoneIn('s3wrap', 's3ph', t, 12.42, 50, -12);
+  const f = P(t, 12.65, .45, E.oE); T('c3form', { y: (1 - f) * 700 });
+  const txt = 'Poulet braisé', n = Math.floor(P(t, 12.95, .55, E.lin) * txt.length); el('c3typ').textContent = txt.slice(0, n);
+  O('c3cur', Math.floor(t * 3) % 2 === 0 ? 1 : 0);
+  el('c3fpr').textContent = t < 13.65 ? '0' : fmt(Math.round(lerp(3000, 3500, P(t, 13.85, .4)) / 100) * 100);
+  el('c3fst').textContent = Math.round(lerp(0, 20, P(t, 14.6, .6, E.oC)));
+  tap('c3tap', t, 14.75, 330, 562);
+  el('c3ok').style.clipPath = `circle(${P(t, 15.15, .3, E.oC) * 260}px at 50% 50%)`;
+  [0, 1, 2].forEach(i => { const p = pop(t, 12.9 + i * .2, .5, E.oB2); T('s3k' + i, { s: p, y: Math.sin(t * 2 + i) * 12, r: Math.sin(t + i) * 8, o: p > 0 ? 1 : 0 }); });
+}
+function uS4(t) {
+  wordsIn('s4t', t, 15.65, .08, .5); wordsIn('s4s', t, 17.4, .05, .45);
+  phoneIn('s4wrap', 's4ph', t, 15.62, -60, -12);
+  for (let i = 0; i < 5; i++) {
+    const a = 16.2 + i * .35, p = P(t, a, .9, E.ioC), R = rng(i + 11);
+    const x0 = 200 + R() * 700, y0 = 650 + R() * 280;
+    T('s4o' + i, { x: lerp(x0, 1260, p), y: lerp(y0, 760, p), s: lerp(1, .3, p), o: t < a - .4 ? 0 : (t < a ? clamp((t - a + .4) * 3) : 1 - P(t, a + .7, .2)) });
+  }
+  countTo('d4ord', t, 16.4, 2.4, 23);
+}
+const S5ST = [20.5, 21.85, 22.95, 25.0];
+function uS5(t) {
+  wordsIn('s5t', t, 19.2, .08, .45);
+  const n = P(t, 19.2, .5, E.oB); T('s5n', { y: (1 - n) * -260, o: clamp(n * 3), s: 1 + .03 * Math.sin(t * 8) * (t < 20.6 ? 1 : 0) });
+  rings('s5r', t, 19.4, 1400, 105, 700, 1.1);
+  phoneIn('s5wrap', 's5ph', t, 19.25, 40, -12);
+  const act = S5ST.filter(a => t >= a).length - 1;
+  S5ST.forEach((a, i) => { const p = P(t, a - .05, .45, E.oE), e = el('s5s' + i); T(e, { x: (1 - p) * -80, o: clamp(p * 2) * (i === act ? 1 : .5) }); e.querySelector('.s5d').style.background = i <= act ? OR : '#EDEAE6'; e.querySelector('.s5d').style.color = i <= act ? '#fff' : '#999'; e.querySelector('.s5l').style.color = i === act ? INK : '#999'; });
+  tap('o5tap', t, 21.75, 300, 512);
+  O('o5btns', t < 21.95 ? 1 : 0); O('o5prog', t >= 21.95 ? 1 : 0);
+  el('o5stat').textContent = t < 22.95 ? 'En préparation' : t < 24.0 ? 'Prête · livreur assigné' : t < 25.0 ? 'Livreur en route' : 'Livrée ✓';
+  el('o5prog').style.background = t >= 25.0 ? '#12B76A' : INK;
+  const lvl = t < 20.5 ? 0 : t < 21.95 ? 1 : t < 22.95 ? 2 : t < 24.0 ? 3 : t < 25.0 ? 4 : 5;
+  STEPS.forEach((_, i) => { el('o5dot' + i).style.background = i < lvl ? '#12B76A' : '#E5E7EB'; el('o5lb' + i).style.color = i < lvl ? '#111' : '#999'; });
+  const m = P(t, 23.5, 2.0, E.ioC); T('s5moto', { x: lerp(500, -560, m), y: Math.sin(t * 22) * 2, o: t > 23.4 && t < 25.6 ? 1 : 0 });
+}
+function uS6(t) {
+  wordsIn('s6t', t, 25.9, .07, .5);
+  phoneIn('s6wrap', 's6ph', t, 25.9, -50, -6);
+  countTo('r6bal', t, 26.3, 2.2, 125450);
+  [0, 1, 2, 3].forEach(i => { const p = pop(t, 27.0 + i * .2, .45); T('r6h' + i, { s: p, o: clamp(p * 2) }); });
+  [28.1, 28.9, 29.6].forEach((a, i) => { const p = pop(t, a, .55, E.oB); T('s6c' + i, { x: (1 - p) * (i < 2 ? -300 : 300), o: clamp(p * 3), y: Math.sin(t * 1.6 + i) * 6 }); });
+  const g = pop(t, 30.4, .55, E.oB); T('s6g', { y: (1 - g) * 300, o: clamp(g * 3) });
+  const [p, l] = s6ln; p.style.strokeDashoffset = l * (1 - P(t, 30.6, 1.4, E.ioC));
+}
+const S7T = [32.9, 33.8, 34.5, 35.5, 36.0, 36.6, 37.3];
+function uS7(t) { S7T.forEach((a, i) => { const p = P(t, a, .6, E.oB), act = t >= a && (i === 6 || t < S7T[i + 1]); T('s7c' + i, { ry: (1 - p) * -95, y: (1 - p) * 140 + Math.sin(t * 1.6 + i) * 5, o: clamp((t - a) * 5), s: act ? 1.06 : 1 }); el('s7c' + i).style.borderColor = act ? OR : 'rgba(255,255,255,.08)'; el('s7c' + i).style.boxShadow = act ? '0 0 60px rgba(255,107,0,.35)' : 'none'; }); }
+function uS8(t) {
+  wordsIn('s8t', t, 38.2, .1, .5); wordsIn('s8s', t, 40.65, .05, .45);
+  T('s8cnt', { y: (1 - P(t, 39.0, .5, E.oE)) * 200, o: P(t, 39.0, .3) }); countTo('s8n', t, 39.2, 3.5, 1250);
+  T('s8shop', { s: pop(t, 38.4, .55, E.oB2), r: Math.sin(t * 2) * 4 });
+  rings('s8r', t, 40.6, 1420, 540, 900, 1.4);
+  AV.forEach((_, i) => { const p = pop(t, 40.75 + i * .14, .45, E.oB2); T('s8a' + i, { s: p, y: Math.sin(t * 2 + i) * 8, o: p > 0 ? 1 : 0 }); });
+}
+const S9T = [43.29, 44.58, 45.9, 47.22];
+function uS9(t) {
+  for (let i = 0; i < 3; i++) {
+    const on = t >= S9T[i] && t < S9T[i + 1]; el('s9f' + i).style.display = on ? 'block' : 'none'; if (!on) continue;
+    const lt = t - S9T[i];
+    el('s9t' + i).querySelectorAll('div:first-child .wi').forEach((w, k) => { const q = P(lt, k * .06, .4, E.oE); w.style.transform = `translateY(${(1 - q) * 110}%)`; w.style.visibility = 'visible'; });
+    el('s9t' + i).querySelectorAll('div:last-child .wi').forEach((w, k) => { const q = P(lt, .08 + k * .02, .35, E.oE); w.style.transform = `translateY(${(1 - q) * 110}%)`; });
+    T('s9g' + i, { s: lerp(1.3, 1, P(lt, 0, .5, E.oE)) + lt * .04, r: lt * 6, o: P(lt, 0, .3) });
+  }
+}
+function uS10(t) {
+  wordsIn('s10t', t, 47.3, .07, .5); wordsIn('s10u', t, 49.9, .07, .5);
+  const K = ['A', 'B', 'C', 'D', 'E'], pos = [-2, -1, 0, 1, 2];
+  K.forEach((k, i) => {
+    const d = pos[i], p = P(t, 47.25 + Math.abs(d) * .12, 1.0, E.oE), sw = Math.sin(t * .8 + i) * 3;
+    const spread = lerp(0, 1, P(t, 47.6, 1.2, E.ioC));
+    T('s10w' + k, { x: d * 360 * spread, y: (1 - p) * 800 + Math.abs(d) * 70 * spread, s: d === 0 ? 1 : .86 });
+    T('s10p' + k, { ry: -d * 18 * spread + sw, r: d * 5 * spread, rx: 4 }); glare('s10p' + k, -d * 18 + sw);
+    el('s10w' + k).style.zIndex = 10 - Math.abs(d);
+  });
+  ['c10', 'o10', 'd10', 'r10'].forEach(() => 0);
+  countTo('d10sales', t, 47.6, 2.5, 48500); countTo('r10bal', t, 47.6, 2.5, 125450);
+}
+function uS11(t) {
+  circleClip('s11', t, 51.8, .5, 960, 280);
+  T('s11glow', { s: 1 + .06 * Math.sin(t * 2), o: P(t, 51.9, .6) });
+  const sky = P(t, 51.95, .6, E.oE); T('s11sky', { y: (1 - sky) * 60, o: sky });
+  el('s11map').style.clipPath = `inset(50% ${4 + (1 - P(t, 52.15, .55, E.oC)) * 92}% 30% 4%)`;
+  const sl = P(t, 52.35, .55, E.oB); T('s11sgl', { x: (1 - sl) * -240, o: clamp(sl * 2) }); T('s11sgr', { x: (1 - sl) * 240, o: clamp(sl * 2) });
+  const dp = P(t, 52.55, .7, E.oBo), sq = t > 53.0 ? Math.exp(-(t - 53.0) * 9) * Math.sin((t - 53.0) * 30) : 0; el('s11pin').style.transformOrigin = '50% 70%'; T('s11pin', { y: (1 - dp) * -560, sx: 1 + sq * .08, sy: 1 - sq * .08, o: t > 52.55 ? 1 : 0 });
+  const bn = P(t, 53.0, .5, E.oB); el('s11ban').style.transformOrigin = '50% 72%'; T('s11ban', { sx: bn, o: clamp(bn * 3) });
+  T('s11tag', { o: P(t, 53.35, .4), y: (1 - P(t, 53.35, .5, E.oE)) * 20 });
+  T('s11sh', { x: lerp(-100, 900, P(t, 53.7, .9, E.ioC)) });
+  T('s11logo', { y: Math.sin(t * 1.8) * 5 * (t > 54 ? 1 : 0), s: 1 + .01 * Math.sin(t * 2.2) });
+  el('s11w').querySelectorAll('.wi').forEach((w, k) => { const q = P(t, 53.5 + k * .04, .45, E.oB); w.style.transform = `translateY(${(1 - q) * 110}%)`; });
+  wordsIn('s11s', t, 53.95, .1, .5);
+  [55.6, 55.75].forEach((a, i) => { const p = pop(t, a, .55); T('s11st' + i, { y: (1 - p) * 80, o: clamp(p * 2) }); });
+  const c = pop(t, 56.1, .55, E.oB2); T('s11cta', { s: c * (1 + .03 * Math.sin(t * 5) * (t > 57 ? 1 : 0)), o: clamp(c * 2) });
+  O('fade', P(t, 59.05, .45, E.lin));
+}
+const UPD = { s0: uS0, s1: uS1, s2: uS2, s3: uS3, s4: uS4, s5: uS5, s6: uS6, s7: uS7, s8: uS8, s9: uS9, s10: uS10, s11: uS11 };
+
+let frameNo = 0;
+window.renderAt = function (t) {
+  for (const [id, a, b] of SC) {
+    const on = t >= a && t < b; el(id).style.display = on ? 'block' : 'none';
+    if (on) UPD[id](t);
+  }
+  if (t < 59.0) O('fade', 0);
+  wipes(t);
+  const g = el('grain'), R = rng(Math.floor(t * 24) + 1);
+  g.style.transform = `translate(${-R() * 100}px,${-R() * 100}px)`;
+};
+
+/* readiness: fonts + images */
+window.ready = (async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+  window.renderAt(0);
+  return true;
+})();
+
+/* live preview: open index.html?play (click to start with sound) */
+if (location.search.includes('play')) {
+  const a = $('aud'); let t0 = null;
+  const fit = () => { const s = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.transform = `scale(${s})`; stage.style.transformOrigin = '0 0'; document.body.style.width = innerWidth + 'px'; document.body.style.height = innerHeight + 'px'; };
+  fit(); addEventListener('resize', fit);
+  const loop = () => { const t = a && !a.paused ? a.currentTime : (t0 === null ? 0 : (performance.now() - t0) / 1000); window.renderAt(t % DUR); requestAnimationFrame(loop); };
+  document.addEventListener('click', () => { a.currentTime = 0; a.play().catch(() => { t0 = performance.now(); }); });
+  window.ready.then(loop);
+}
+</script>
+</body>
+</html>

@@ -107,3 +107,28 @@ Quatrième film, calé sur la voix off « Vous avez des objets que vous n'utilis
 | 34–40 s | Besoin d'une livraison ? | Trajet vendeuse → acheteur, livreur OJA, « Objet reçu » |
 | 40–50 s | Vendez, donnez, achetez malin · nouvelle vie | Coupes de couleur, trois iPhone en éventail |
 | 50–58 s | NOVOJA avec OJA, le local devient visible | Logo animé, anneau de recyclage, boutons de téléchargement |
+
+---
+
+# OJA Merchant — commerçants & restaurants (59,5 s)
+
+Cinquième film, calé sur la voix off « Vous êtes restaurateur, commerçant ou vendeur ? ».
+
+- **Vidéo :** `OJA_Merchant_Benin.mp4`
+- **Source :** `merchant.html` (même moteur et mêmes iPhone 3D). Thème clair nacré premium (maillage pêche/orange, grille fine), scènes sombres pour l'impact.
+- **Rendu :** `PAGE=merchant.html node render.js 60 0 3570 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_merchant.m4a`
+
+| Temps | Voix off | Visuel |
+|---|---|---|
+| 0–2 s | Restaurateur, commerçant ou vendeur ? | Coupes typographiques rapides, balayage de lumière |
+| 2–5 s | Faites grandir votre activité avec OJA Merchant | Barres et courbe de croissance, logotype |
+| 5–12 s | Écosystème OJA, visible sur OJA Market | Tableau de bord marchand relié à Market, clients, livreurs, paiements, NOVOJA |
+| 12–16 s | Produits, prix, stocks | Catalogue, formulaire « Nouveau produit », prix et stock animés |
+| 16–19 s | Recevez et suivez vos commandes | Tickets de commande aspirés dans l'iPhone |
+| 19–26 s | Nouvelle commande, préparation, livraison | Notification, accepter, en préparation, prête, livreur, livrée |
+| 26–33 s | Paiements, ventes, opérations | Revenus (compteur), cartes en verre, courbe de chiffre d'affaires |
+| 33–38 s | Restaurants, boutiques… commerce de quartier | 7 cartes qui se retournent |
+| 38–43 s | Vendre plus, plus de clients | Commerce au centre, clients qui apparaissent, compteur |
+| 43–47 s | Moins de complications, plus de visibilité, d'opportunités | Coupes −/+ |
+| 47–52 s | Votre commerce dans votre poche | Cinq iPhone alignés en arc |
+| 52–59,5 s | OJA. Le local devient visible | Logo OJA Marketplace assemblé pièce par pièce, reflet, boutons de téléchargement |
