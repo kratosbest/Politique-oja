@@ -1,2 +1,5 @@
 motion/assets/mc/
 motion/_raw/
+motion/assets/cot/
+motion/__pycache__/
+motion/_ui.html

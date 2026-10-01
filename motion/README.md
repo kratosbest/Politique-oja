@@ -162,3 +162,33 @@ Photos réelles : marché (`biz_market`, `biz_epicerie`, `biz_etal`), panneau de
 # OJA Mascotte — tutoriel « Ajouter un lieu » (9:16, 57 s)
 
 Voir `MASCOTTE_TIMELINE.md` (transcription, découpage scène par scène, lip-sync).
+
+---
+
+# OJA Mascotte — « Dans les rues de Cotonou » (16:9, 60,5 s)
+
+Film tourné avec Google Flow (8 clips Veo de 8 s, prompts dans `PROMPTS_GOOGLE_FLOW_COTONOU.md`), puis monté et habillé en motion design.
+
+- **Vidéo :** `OJA_Mascotte_Cotonou.mp4` (1920 × 1080, 24 i/s)
+- **Sources :** clips dans `clips_cot/` (`cot1` à `cot8`), page `cotonou.html`, écrans OJA dans `assets/cot_ui/`
+- **Rendu :**
+  1. `python3 cot_frames.py` : génère le fond image par image dans `assets/cot/` et remplace les écrans verts des téléphones par les vrais écrans OJA (`cot_phone.py`).
+  2. `PAGE=cotonou.html node render.js 24 0 1452 video.mp4 ffmpeg`.
+  3. Multiplexer avec `assets/soundtrack_cotonou.m4a` (voix des clips + musique + bruitages, −14 LUFS).
+
+| Temps | Clip | Réplique de la mascotte | Habillage |
+|---|---|---|---|
+| 0–8 s | cot1 | Salut Cotonou ! Moi, c'est ton guide OJA. | Atterrissage, étiquette « Bienvenue à Cotonou 🇧🇯 » |
+| 8–14,2 s | cot2 | Tu as faim ? Cherche un restaurant sur OJA ! | Chapitre 01 · Trouver un restaurant ; écran OJA Market incrusté dans le téléphone, défilement jusqu'à « Maquis Chez Tanti » ♥ |
+| 14,2–21,3 s | cot3 | Les maquis autour de toi, avec les avis et le chemin. | Carte « Maquis Chez Tanti · ★ 4.9 · Ouvert » |
+| 21,3–28,5 s | cot4 | Besoin de bouger ? Commande une moto ou une voiture sur OJA. | Chapitre 02 · Commander une course ; vraie capture « Choisissez votre course » incrustée |
+| 28,5–35 s | cot5 | Ton chauffeur arrive, et tu suis ta course en direct. | Carte « Chauffeur en route », compte à rebours et barre de progression |
+| 35–37,8 s | cot6 | — | Chapitre 03 · Trouver un artisan ; la moto en panne |
+| 37,8–41,3 s | (graphique) | Une panne ? Trouve un artisan près de chez toi. | iPhone 3D : recherche « Vulcanisation », pins, fiche « Vulcanisation Qui Sait l'Avenir » (photo réelle) |
+| 41,3–44,3 s | cot7 | — | Réparation chez le vulcanisateur |
+| 44,3–47,6 s | (graphique) | Mécaniciens, couturiers, coiffeurs… | Trois cartes métiers |
+| 47,6–49 s | cot7 | … tes artisans sont sur OJA. | Check entre la mascotte et les artisans |
+| 49–55,5 s | cot8 | OJA. Le local devient visible. | Tout le monde réuni, la mascotte s'envole |
+| 55,5–60,5 s | cot8 (ciel) | — | Logo OJA tracé dans le ciel, App Store / Google Play, « Télécharge OJA » |
+
+Sur les plans 6 et 7, Veo a donné à la mascotte un visage-écran noir pendant ses répliques. Ces passages sont donc remplacés par des graphiques OJA, et la voix continue par-dessus.
