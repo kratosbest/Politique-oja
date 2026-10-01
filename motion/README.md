@@ -156,3 +156,9 @@ Sixième film, calé sur la voix off « Vous avez une boutique, un atelier, un s
 | 54–62 s | Ajoutez votre commerce sur OJA · OJA, le local devient visible | Pin → tracé de carte → logo OJA, boutons de téléchargement |
 
 Photos réelles : marché (`biz_market`, `biz_epicerie`, `biz_etal`), panneau de vulcanisation (`biz_vulca`), vendeuse de fruits (`biz_fruits`, © Présidence du Bénin, crédit affiché). Les autres métiers (coiffeur, couturier, restaurant, boutique, artisan) restent illustrés. Écran client recréé d'après la capture de l'accueil OJA (catégories, bannière, cartes « Près de vous »). Les noms (Chez Aïcha, etc.) sont des exemples.
+
+---
+
+# OJA Mascotte — tutoriel « Ajouter un lieu » (9:16, 57 s)
+
+Voir `MASCOTTE_TIMELINE.md` (transcription, découpage scène par scène, lip-sync).
