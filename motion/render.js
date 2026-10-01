@@ -14,6 +14,7 @@ const out = process.argv[5], ff = process.argv[6] || 'ffmpeg';
     '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(fps), out], { stdio: ['pipe', 'inherit', 'inherit'] });
   for (let f = a; f < b; f++) {
     await p.evaluate(t => renderAt(t), f / fps);
+    await p.evaluate(() => window.waitFrame ? window.waitFrame() : 0);
     const buf = await p.screenshot({ type: 'jpeg', quality: 95 });
     if (!enc.stdin.write(buf)) await new Promise(r => enc.stdin.once('drain', r));
   }

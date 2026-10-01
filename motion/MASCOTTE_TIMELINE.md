@@ -1,7 +1,7 @@
 # OJA — Tutoriel mascotte « Ajouter un lieu » (9:16)
 
-- **Vidéo :** `OJA_Mascotte_AjouterUnLieu_9x16.mp4`, 1080 × 1920, 60 i/s, 57 s
-- **Source :** `mascot.html` (même moteur que les autres films). Rendu : `VW=1080 VH=1920 PAGE=mascot.html node render.js 60 0 3420 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_mascot.m4a`.
+- **Vidéo :** `OJA_Mascotte_AjouterUnLieu_9x16.mp4`, 1080 × 1920, 30 i/s, 57 s (V2 : mascotte animée par les clips Google Flow)
+- **Source :** `mascot.html` (même moteur que les autres films). Préparer les images détourées : `python3 key_clips.py` (depuis `motion/`). Rendu : `VW=1080 VH=1920 PAGE=mascot.html node render.js 30 0 1710 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_mascot.m4a`.
 - **Audio master :** voix off fournie, **54,20 s**, non modifiée (ni coupée, ni accélérée). La vidéo dure 57 s pour laisser respirer le logo final.
 
 ## 1. Transcription avec timecodes
@@ -68,3 +68,25 @@
 
 - **Master :** 9:16, 1080 × 1920.
 - **Adaptation 16:9 :** la scène est construite en coordonnées. Pour passer en 16:9, on repositionne le téléphone à gauche et la mascotte à droite.
+
+## 5. V2 — clips Google Flow
+
+Les 6 clips sont dans `motion/clips/` : c1 salut, c2 et c3 clin d'œil + pointe, c4 salut + pointe + saut, c5 gestes, c6 atterrissage. Ils sont détourés image par image (fond vert retiré, couleurs corrigées), puis montés sur la voix off :
+
+| Temps | Clip (départ) | Geste mis en avant |
+|---|---|---|
+| 0–4,6 s | c6 (0 s) | Atterrissage et rebond sur « Eh ! Viens… Salut ! » |
+| 4,6–11,2 s | c5 (0 s) | Gestes de présentation, se tourne vers les commerces |
+| 11,2–14 s | c2 (0 s) | Écoute, regard caméra |
+| 14–17,4 s | c4 (0,6 s) | Salue près du bouton, puis pointe à gauche vers « Ajouter un lieu » |
+| 17,4–19,6 s | c3 (0 s) | Attente |
+| 19,6–27,6 s | c5 (0 s) | Gestes pendant le défilé des catégories |
+| 27,6–30,6 s | c1 (5,06 s) | Attente |
+| 30,6–36,9 s | c2 (0–3 s en aller-retour) | Attente pendant infos et photos |
+| 36,9–39,9 s | c3 (3,5 s) | Clin d'œil + pointe sur « valide » |
+| 39,9–44,9 s | c1 (1 s) | Grand salut sur « Et voilà ! » |
+| 44,9–50,3 s | c5 (1 s) | Présente la carte |
+| 50,3–51,3 s | c2 (4,4 s) | Clin d'œil + pointe : « À toi de jouer ! » |
+| 51,3 s → | c4 (6,4 s) | Saute hors du cadre, puis le logo arrive |
+
+**Lip-sync :** dans les clips, la bouche ne suit pas la voix off. Pour une synchro labiale, il faut générer des clips en mode dialogue (voir `PROMPTS_GOOGLE_FLOW.md`), un par phrase.

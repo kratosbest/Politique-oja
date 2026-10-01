@@ -561,6 +561,35 @@ function body(id, t, x, y, s, o = {}) {
 }
 function beam(id, on, len, ang) { const b = el(id + 'beam'); b.style.opacity = on; b.style.width = len + 'px'; b.style.transform = `rotate(${ang}deg)`; }
 
+
+/* ---------- video mascot (Flow clips, keyed to alpha WebP @24fps) ---------- */
+const CLIPF = 192;
+// [stageStart, stageEnd, clip, clipStart, mode]
+const SEG = [[0, 4.62, 6, 0, 'f'], [4.62, 11.22, 5, 0, 'f'], [11.22, 14.0, 2, 0, 'f'], [14.0, 17.42, 4, .6, 'f'], [17.42, 19.64, 3, 0, 'f'],
+  [19.64, 27.64, 5, 0, 'f'], [27.64, 30.58, 1, 5.06, 'f'], [30.58, 36.92, 2, 0, 'p'], [36.92, 39.9, 3, 3.5, 'f'], [39.9, 44.94, 1, 1.0, 'f'],
+  [44.94, 50.28, 5, 1.0, 'f'], [50.28, 51.3, 2, 4.4, 'f'], [51.3, 60, 4, 6.4, 'f']];
+function clipFrame(t) {
+  const sg = SEG.find(([a, b]) => t >= a && t < b) || SEG[SEG.length - 1];
+  let ct = t - sg[0];
+  if (sg[4] === 'p') { const L = 3.0, m = ct % (2 * L); ct = m < L ? m : 2 * L - m; }
+  const f = Math.min(CLIPF, Math.max(1, Math.round((sg[3] + ct) * 24) + 1));
+  return [sg[2], f, t - sg[0]];
+}
+function vmascot(id) {
+  return `<div id="${id}" class="abs" style="left:0;top:0;width:612px;height:960px;transform-origin:306px 926px">
+<div class="abs" style="left:146px;top:900px;width:320px;height:52px;border-radius:50%;background:radial-gradient(ellipse,rgba(60,25,5,.38),rgba(60,25,5,0) 70%)"></div>
+<img id="${id}i" class="abs" style="left:0;top:0;width:612px;height:960px"></div>`;
+}
+const VMS = [];
+function vbody(id, t, x, y, s, o = {}) {
+  const { r = 0 } = o;
+  const [c, f, since] = clipFrame(t), src = `assets/mc/c${c}_${String(f).padStart(3, '0')}.webp`;
+  const im = el(id + 'i'); if (im.getAttribute('src') !== src) im.setAttribute('src', src);
+  const popk = since < .22 && t > .3 ? 1 - .04 * Math.sin(since / .22 * Math.PI) : 1;
+  el(id).style.transform = `translate(${x - 306}px,${y - 926}px) scale(${s * popk}) rotate(${r}deg)`;
+}
+window.waitFrame = () => Promise.all([...document.querySelectorAll('img[id$="i"]')].filter(i => i.offsetParent !== null && i.getAttribute('src')).map(i => i.decode().catch(() => 0)));
+
 /* ---------- helpers ---------- */
 function bg(id, kind) {
   if (kind === 'light') return `<div class="abs" style="inset:0;background:${LIGHT}"></div><div class="abs" style="left:-300px;top:-300px;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,77,.45),rgba(255,154,77,0) 65%)"></div><div class="abs" style="left:300px;top:1100px;width:1200px;height:1200px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.25),rgba(255,107,0,0) 65%)"></div>`;
@@ -599,7 +628,7 @@ H += `<div class="scene" id="sA">${bg('A', 'light')}
 <div class="abs" style="inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(255,242,232,.2),rgba(255,242,232,.95) 72%)"></div>
 ${Array.from({ length: 14 }, (_, i) => { const R = rng(i + 7); return `<div id="Apin${i}" class="abs" style="left:${60 + R() * 960}px;top:${200 + R() * 1500}px;width:44px;height:55px;transform-origin:50% 100%">${PINC(i % 3 ? OL : OR, 44)}</div>`; }).join('')}
 ${[0, 1, 2].map(i => `<div id="Ar${i}" class="abs" style="left:0;top:0;border-radius:50%;border:5px solid rgba(255,107,0,.55)"></div>`).join('')}
-${mascot('mA')}
+${vmascot('mA')}
 ${cap('At1', W('Viens, je te *montre.*', 'hlo'), 150, 92)}
 ${cap('At2', `<span style="display:inline-block;padding:8px 26px;border-radius:24px;background:${OR};color:#fff">${W('Ton guide OJA')}</span>`, 170, 96)}
 <div id="Ahey" class="bub" style="left:110px;top:520px;--tx:300px">Salut ! 👋</div>
@@ -612,7 +641,7 @@ H += `<div class="scene" id="sB">${bg('B', 'light')}
 <div id="Bmap" class="abs" style="inset:0">${mapBg(61)}
 ${Array.from({ length: 9 }, (_, i) => { const R = rng(i + 70); return `<div id="Bg${i}" class="abs" style="left:${80 + R() * 880}px;top:${300 + R() * 900}px;width:120px;height:100px;border-radius:20px;background:rgba(255,255,255,.75);border:3px dashed #C9BFB4;display:grid;place-items:center;font:900 48px Poppins;color:#C9BFB4">?</div>`; }).join('')}</div>
 ${BCARDS.map(([e, n], i) => `<div id="Bc${i}" class="ccard" style="left:${BPOS[i][0]}px;top:${BPOS[i][1]}px"><div class="e">${e}</div><div class="n">${n}</div></div>`).join('')}
-${mascot('mB')}
+${vmascot('mB')}
 ${cap('Bt1', W('Un lieu *pas encore* sur OJA ?', 'hlo'), 120, 76)}
 </div>`;
 
@@ -635,7 +664,7 @@ ${['Description', 'Téléphone +229', 'Horaires'].map((s, i) => `<div id="Ci${i}
 <div id="Cici" class="bub" style="left:640px;top:1050px;--tx:24px">ICI 👇</div>
 <div id="Cok" class="abs" style="left:390px;top:640px;width:300px;height:300px;border-radius:50%;background:#12B76A;display:grid;place-items:center;box-shadow:0 30px 80px rgba(18,183,106,.45);z-index:8">${ic('check', 180, '#fff', 3)}</div>
 ${Array.from({ length: 26 }, (_, i) => `<div id="Cf${i}" class="abs" style="left:0;top:0;width:${14 + (i % 3) * 8}px;height:${14 + (i % 3) * 8}px;background:${[OR, OL, ANTH, '#fff'][i % 4]};border-radius:${i % 2 ? '50%' : '4px'};z-index:9"></div>`).join('')}
-${mascot('mC')}
+${vmascot('mC')}
 </div>`;
 
 /* D — effet wow + bénéfice collectif (39.88 → 50.27) */
@@ -655,14 +684,14 @@ ${USERS.map(([dx, dy], i) => `<div id="Du${i}" class="abs c" style="left:${540 +
 ${cap('Dt0', W('Et *voilà !*', 'hlo'), 130, 130)}
 ${cap('Dt1', W('Ton lieu est *sur OJA.*', 'hlo'), 140, 92)}
 ${cap('Dt2', W('Ensemble, rendons nos *quartiers visibles.*', 'hlo'), 120, 80)}
-${mascot('mD')}
+${vmascot('mD')}
 </div>`;
 
 /* E — à toi de jouer + logo (50.27 → 57) */
 H += `<div class="scene" id="sE">${bg('E', 'orange')}
 ${[0, 1, 2].map(i => `<div id="Er${i}" class="abs" style="left:0;top:0;border-radius:50%;border:5px solid rgba(255,255,255,.55)"></div>`).join('')}
 ${cap('Et0', W('À toi de *jouer !*', 'hla'), 170, 130, '#fff')}
-${mascot('mE')}
+${vmascot('mE')}
 <div id="Elogo" class="abs" style="inset:0;background:#fff">
 <div class="abs" style="left:-100px;top:200px;width:1280px;height:1280px;border-radius:50%;background:radial-gradient(circle,#FFE4CF,rgba(255,228,207,0) 65%)"></div>
 <svg id="Etrace" class="abs" style="left:240px;top:420px" width="600" height="600" viewBox="0 0 1024 1024"><path id="Etp" d="M512,-300 C620,60 900,300 760,560 L878,795 L500,812 L130,795 L330,560 L740,560" stroke="${OR}" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -712,10 +741,8 @@ function uA(t) {
   const land = P(t, .05, .6, E.oBo), sq = t > .55 ? Math.exp(-(t - .55) * 7) * Math.sin((t - .55) * 22) : 0;
   const wave = t > 1.85 && t < 2.7 ? Math.sin((t - 1.85) * 14) * 4 : 0;
   const hop = t > 2.64 && t < 3.2 ? Math.sin((t - 2.64) / .56 * Math.PI) * 60 : 0;
-  body('mA', t, 540, lerp(-400, 1780, land), .62, { sq, r: wave, hop });
+  vbody('mA', t, 540, 1852, 2.0);
   const [gx, gy] = gz(t, [[0, [0, -.6]], [.7, [0, .1]], [1.9, [0, 0]], [4.0, [-.6, -.2]]]);
-  face('mA', t, { gx, gy, brow: t > 1.83 && t < 2.6 ? .8 : t > 2.64 && t < 4 ? .4 : 0, smile: .8 });
-  beam('mA', t > 3.0 ? .6 + .2 * Math.sin(t * 8) : 0, 0, 0);
   rings('Ar', t, 2.7, 540, 1000, 1200, 1.4);
   wordsIn('At1', t, .55, .1, .5, E.oE, 2.55, .25);
   wordsIn('At2', t, 2.75, .12, .5, E.oB); O('At2', t > 2.7 ? 1 : 0); O('At1', t < 2.7 ? 1 : 0);
@@ -728,8 +755,7 @@ function uB(t) {
   BCARDS.forEach(([, , a], i) => { const p = pop(t, a, .45, E.oB2); T('Bc' + i, { s: p * (1 - toMap * .4), o: (p > 0 ? 1 : 0) * (1 - toMap), y: Math.sin(t * 2 + i) * 8, r: Math.sin(t + i) * 3 }); });
   const look = BCARDS.map(([, , a], i) => [a, [(BPOS[i][0] + 125 - 540) / 500, (BPOS[i][1] + 125 - 1000) / 700]]);
   const [gx, gy] = gz(t, [[4.6, [0, 0]], ...look, [9.3, [0, .2]], [10.2, [0, 0]]]);
-  body('mB', t, 540, 1880, .5, { lean: gx * 3, r: Math.sin(t * 1.4) * 1.2 });
-  face('mB', t, { gx, gy, brow: t > 8 && t < 11 ? .5 : .1, smile: t > 9 ? .3 : .7 });
+  vbody('mB', t, 540, 1890, 1.2);
   wordsIn('Bt1', t, 9.0, .08, .45);
 }
 const STEPT = [[17.42, 0], [19.64, 1], [27.64, 2], [30.58, 3], [36.92, 4]];
@@ -802,10 +828,8 @@ function uC(t) {
   const hop = t > 39.25 && t < 39.85 ? Math.sin((t - 39.25) / .6 * Math.PI) * 70 : 0;
   const nod = (t > 18.9 && t < 19.4) || (t > 26.7 && t < 27.2) || (t > 36.3 && t < 36.8) ? Math.sin((t % 1) * 20) * 2.5 : 0;
   const mIn = P(t, 11.35, .8, E.oB);
-  body('mC', t, lerp(1300, 860, mIn), 1890, .42, { lean: gx * 3 + nod, hop });
-  face('mC', t, { gx, gy, brow: (t > 15.6 && t < 17) || (t > 38.9 && t < 39.9) ? .8 : .15, smile: t > 39.2 ? 1 : .6 });
+  vbody('mC', t, lerp(1300, 850, mIn), 1900, 1.02);
   const pointing = (t > 15.75 && t < 17.0) || (t > 37.6 && t < 39.0);
-  beam('mC', pointing ? .8 + .2 * Math.sin(t * 12) : 0, 860, -104);
 }
 function uD(t) {
   // phase 1 (39.9-44.9): new pin, users discover. phase 2 (44.9-50.3): dezoom street→city→map
@@ -825,18 +849,15 @@ function uD(t) {
   wordsIn('Dt2', t, 45.1, .07, .45);
   const hop = t > 39.9 && t < 40.6 ? Math.sin((t - 39.9) / .7 * Math.PI) * 120 : 0;
   const pos = KF(t, [[39.9, 0], [44.9, 0], [45.4, 1]], E.ioC);
-  body('mD', t, lerp(840, 820, pos), lerp(1900, 1910, pos), lerp(.4, .5, pos), { hop, r: t > 40 && t < 40.7 ? Math.sin((t - 40) * 18) * 5 : Math.sin(t * 1.3) * 1.2 });
+  vbody('mD', t, lerp(850, 800, pos), 1905, lerp(1.0, 1.15, pos));
   const [gx, gy] = gz(t, [[39.9, [0, 0]], [41.2, [-.9, -.8]], [43.5, [-.3, -.2]], [45.2, [0, 0]], [46.5, [-.9, -.7]], [49.0, [-.4, -.9]], [50.2, [0, 0]]]);
-  face('mD', t, { gx, gy, brow: t < 41 ? .9 : .3, smile: 1 });
-  beam('mD', t > 46.6 && t < 49.6 ? .7 : 0, 380, -140);
 }
 function uE(t) {
   const lg = t > 51.3;
   rings('Er', t, 50.3, 540, 1100, 1200, 1.2);
   wordsIn('Et0', t, 50.3, .1, .45, E.oB);
   const m = P(t, 50.28, .5, E.oB);
-  body('mE', t, 540, 1880 + (1 - m) * 500, .7, { r: Math.sin((t - 50.3) * 12) * 3 * (1 - P(t, 51, .3)), hop: t < 51.2 ? Math.sin(clamp((t - 50.5) / .5) * Math.PI) * 50 : 0 });
-  face('mE', t, { gx: 0, gy: 0, brow: .7, smile: 1, blinkExtra: t > 50.95 && t < 51.15 ? 1 : 0 });
+  vbody('mE', t, 540, 1852 + (1 - m) * 500, 2.0); el('mE').style.zIndex = 5; O('mE', t < 52.7 ? 1 : 0);
   // logo card
   el('Elogo').style.clipPath = `circle(${P(t, 51.3, .55, E.ioC) * 2300}px at 540px 720px)`; O('Elogo', lg ? 1 : 0);
   const tr = P(t, 51.5, .9, E.ioC); Etp.style.strokeDashoffset = EtL * (1 - tr);
