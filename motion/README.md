@@ -132,3 +132,27 @@ Cinquième film, calé sur la voix off « Vous êtes restaurateur, commerçant o
 | 43–47 s | Moins de complications, plus de visibilité, d'opportunités | Coupes −/+ |
 | 47–52 s | Votre commerce dans votre poche | Cinq iPhone alignés en arc |
 | 52–59,5 s | OJA. Le local devient visible | Logo OJA Marketplace assemblé pièce par pièce, reflet, boutons de téléchargement |
+
+---
+
+# OJA — « Le local devient visible » : commerces sur la carte (62 s)
+
+Sixième film, calé sur la voix off « Vous avez une boutique, un atelier, un salon… ».
+
+- **Vidéo :** `OJA_Commerces_Benin.mp4`
+- **Source :** `places.html` (même moteur et mêmes iPhone 3D)
+- **Rendu :** `PAGE=places.html node render.js 60 0 3720 video.mp4 ffmpeg`, puis multiplexer avec `assets/soundtrack_places.m4a`
+
+| Temps | Voix off | Visuel |
+|---|---|---|
+| 0–4,5 s | Boutique, atelier, salon, restaurant ? | Façades de commerces illustrées, « Vous avez un commerce ? » |
+| 4,5–7 s | Faites-vous enfin voir avec OJA | Plein orange, pin qui tombe et zoome |
+| 7–13,5 s | Sur la carte, découverte autour de vous | iPhone carte de Cotonou, pins, « Chez Aïcha », utilisateurs reliés |
+| 13,5–23 s | Ouvrez OJA, nom, activité, emplacement, infos, photos | Écran réel « Enregistrer un lieu » rempli étape par étape |
+| 23–31 s | Les utilisateurs vous trouvent | Recherche « Restaurant autour de moi », résultats, fiche du lieu, retour au commerce |
+| 31–44 s | Coiffeur, couturier… même sans site internet | 8 métiers, convergence vers une carte remplie de pins |
+| 44–49 s | Plus de visibilité, plus de chances d'être découvert | Commerce entouré d'utilisateurs, cercles de découverte |
+| 49–54 s | Existe dans votre quartier → sur la carte | Rue → ville → carte, le pin s'illumine parmi les autres |
+| 54–62 s | Ajoutez votre commerce sur OJA · OJA, le local devient visible | Pin → tracé de carte → logo OJA, boutons de téléchargement |
+
+Les façades de commerces sont des illustrations (aucune photo réelle fournie) ; les noms (Chez Aïcha, etc.) sont des exemples.
