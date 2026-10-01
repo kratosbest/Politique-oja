@@ -155,4 +155,4 @@ Sixième film, calé sur la voix off « Vous avez une boutique, un atelier, un s
 | 49–54 s | Existe dans votre quartier → sur la carte | Rue → ville → carte, le pin s'illumine parmi les autres |
 | 54–62 s | Ajoutez votre commerce sur OJA · OJA, le local devient visible | Pin → tracé de carte → logo OJA, boutons de téléchargement |
 
-Les façades de commerces sont des illustrations (aucune photo réelle fournie) ; les noms (Chez Aïcha, etc.) sont des exemples.
+Photos réelles : marché (`biz_market`, `biz_epicerie`, `biz_etal`), panneau de vulcanisation (`biz_vulca`), vendeuse de fruits (`biz_fruits`, © Présidence du Bénin, crédit affiché). Les autres métiers (coiffeur, couturier, restaurant, boutique, artisan) restent illustrés. Écran client recréé d'après la capture de l'accueil OJA (catégories, bannière, cartes « Près de vous »). Les noms (Chez Aïcha, etc.) sont des exemples.
