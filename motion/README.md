@@ -246,3 +246,31 @@ La mascotte guide l'inscription chauffeur, étape par étape, avec les écrans d
 | 50,7–54,6 s | Mets-toi disponible, reçois tes premières courses | Accueil chauffeur : EN LIGNE, nouvelle demande |
 | 54,6–59,3 s | Ton véhicule est prêt ? Ton dossier aussi ? On se retrouve sur la route ! | Mascotte, voiture et moto qui passent |
 | 59,3–64,5 s | OJA. Ta mobilité, ton opportunité. | Logo, App Store / Google Play, « Deviens chauffeur OJA » |
+
+---
+
+# OJA Mascotte — tutoriel « Commander une course » (passager, 9:16, 84 s)
+
+La mascotte guide le parcours passager complet. Les écrans sont recréés d'après les captures de l'app, avec des données d'exemple : une destination à Cotonou et le chauffeur « Rodrigue ».
+
+- **Vidéo :** `OJA_Mascotte_CommanderUneCourse_9x16.mp4` (1080 × 1920, 30 i/s)
+- **Sources :** page `passager_tuto.html`, voix ElevenLabs `assets/pas/voix_passager.mp3`
+- **Rendu :**
+  1. Préparer la mascotte avec `python3 key_clips.py`.
+  2. `VW=1080 VH=1920 PAGE=passager_tuto.html node render.js 30 0 2520 video.mp4 ffmpeg`.
+  3. Multiplexer avec `assets/soundtrack_passager_tuto.m4a`.
+
+| Temps | Étape | Écran |
+|---|---|---|
+| 0–5,3 s | Accroche | Mascotte, moto, tricycle et voiture réels |
+| 5,3–9 s | Ouvre OJA Transport | « Je suis passager » |
+| 9–10,6 s | Destination | « Où allez-vous ? » (recréé) |
+| 10,6–16,5 s | Choix de la course | « Choisissez votre course » : moto, tricycle, voiture, prix |
+| 16,5–22 s | Paiement | « Comment voulez-vous payer ? » Espèces / Mobile Money |
+| 22–35 s | Réservation | « Maintenant », choix de la date et de l'heure, « Confirmer la réservation », puis « Mes réservations » : EN ATTENTE → ACCEPTÉE, avec notification |
+| 35–47,5 s | Pas de moto disponible | Voiture standard / de luxe, « M'avertir » |
+| 47,5–53,4 s | Chauffeur en route | Note, arrivée en direct, « Appeler » |
+| 53,4–59 s | Pendant le trajet | « Signaler un problème », puis fenêtre SOS |
+| 59–70 s | Paie et note | « Course terminée », payer avec MTN MoMo, « Le chauffeur a-t-il demandé plus d'argent ? », étoiles |
+| 70–78,6 s | Et voilà ! | Mascotte, véhicules |
+| 78,6–84 s | Logo | « Ta mobilité, ton opportunité. », boutons de téléchargement |
