@@ -718,7 +718,7 @@ function showScr(t) {
   const sched = [[5.6, 'spl'], [6.45, 'tr'], [8.75, 'f1'], [15.55, 'f2'], [45.75, 'ok'], [50.6, 'drv']];
   let cur = 'spl', prev = null, k = 1;
   sched.forEach(([a, n], i) => { if (t >= a) { prev = i ? sched[i - 1][1] : null; cur = n; k = P(t, a, .38, E.ioC); } });
-  SCRS.forEach(n => { const e = el('s' + n); if (n === cur) { e.style.display = 'block'; e.style.transform = cur === 'tr' && prev === 'spl' ? `scale(${1.08 - .08 * k})` : `translateX(${(1 - k) * 420}px)`; e.style.opacity = cur === 'tr' && prev === 'spl' ? k : 1; e.style.zIndex = 2; } else if (n === prev && k < 1) { e.style.display = 'block'; e.style.transform = `translateX(${-k * 160}px)`; e.style.opacity = 1; e.style.zIndex = 1; } else e.style.display = 'none'; });
+  SCRS.forEach(n => { const e = el('s' + n); if (n === cur) { e.style.display = n === 'spl' ? 'flex' : 'block'; e.style.transform = cur === 'tr' && prev === 'spl' ? `scale(${1.08 - .08 * k})` : `translateX(${(1 - k) * 420}px)`; e.style.opacity = cur === 'tr' && prev === 'spl' ? k : 1; e.style.zIndex = 2; } else if (n === prev && k < 1) { e.style.display = 'block'; e.style.transform = `translateX(${-k * 160}px)`; e.style.opacity = 1; e.style.zIndex = 1; } else e.style.display = 'none'; });
 }
 function shot(id, t, a) {
   const on = t >= a, p = pop(t, a, .45, E.oB2);
