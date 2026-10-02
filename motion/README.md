@@ -197,7 +197,7 @@ Sur les plans 6 et 7, Veo a donné à la mascotte un visage-écran noir pendant 
 
 # OJA Mascotte — « Le tour du Bénin » (16:9, 60,5 s)
 
-La mascotte fait le tour du Bénin, du sud au nord. Le film combine 5 clips Google Flow (`clips_bj/`, prompts dans `PROMPTS_GOOGLE_FLOW_BENIN.md`), une carte animée du Bénin (vraies frontières), les vraies photos des villes (`assets/bj/ph_*.jpg`) et une voix ElevenLabs pour les villes sans clip.
+La mascotte fait le tour du Bénin, du sud au nord. Le film combine 6 clips Google Flow (`clips_bj/`, prompts dans `PROMPTS_GOOGLE_FLOW_BENIN.md`), une carte animée du Bénin (vraies frontières), les vraies photos des villes (`assets/bj/ph_*.jpg`) et une voix ElevenLabs pour les villes sans clip.
 
 - **Vidéo :** `OJA_Mascotte_TourDuBenin.mp4` (1920 × 1080, 24 i/s)
 - **Rendu :**
@@ -211,7 +211,7 @@ La mascotte fait le tour du Bénin, du sud au nord. Le film combine 5 clips Goog
 | 7,6–13 s | bj2 | — | Survol de Ganvié, les pêcheurs saluent |
 | 13–14,6 s | Carte | — | Cotonou → Ganvié → Porto-Novo, photo de la ville |
 | 14,6–20,6 s | bj3 | À Porto-Novo, ta moto OJA arrive en quelques minutes. | Étudiant, zémidjan ; écran « Choisissez votre course » incrusté |
-| 20,6–26,6 s | Carte + graphique | À Calavi, tes repas sont livrés jusqu'au campus ! (ElevenLabs) | Photo de l'UAC, iPhone OJA Market, « Livreur en route » |
+| 20,6–26,6 s | Carte + bj4 | À Calavi, tes repas sont livrés jusqu'au campus ! | Photo de l'UAC, puis la mascotte sur le campus (écran OJA Market incrusté) et le livreur qui remet les repas ; légende incrustée par Veo effacée |
 | 26,6–34,8 s | Carte + bj5 | À Ouidah, découvre les lieux à visiter et les bonnes adresses autour de toi. | Photo de la Porte du Non-Retour, puis le couple ; écran « Près de vous » incrusté |
 | 34,8–43 s | Carte + bj6 | À Abomey, nos artisans sont visibles sur la carte OJA. | Statue de Béhanzin, puis l'artisane des tentures ; carte OJA « Tentures d'Abomey » incrustée |
 | 43–48,8 s | Carte + graphique | À Parakou, envoie tes marchandises en tricycle. (ElevenLabs) | Marché Arzèkè, écran de course avec « Tricycle » sélectionné, tricycle qui traverse |

@@ -502,10 +502,11 @@ const VIEW = { cot: V(2.42, 6.42, 95), south: V(2.38, 6.5, 150), southW: V(2.3, 
 // map windows: [start, end, legs drawn (indices), from view, to view, city reached]
 const MW = [[13.0, 14.6, [0, 1], 'cot', 'south', 'pn'], [20.6, 22.2, [2], 'south', 'south', 'cal'], [26.6, 28.2, [3], 'south', 'southW', 'oui'],
   [34.8, 36.4, [4], 'southW', 'abo', 'abo'], [43.0, 44.6, [5], 'abo', 'par', 'par'], [48.8, 52.0, [6], 'par', 'nat', 'nat']];
-const CLIPS = [[0, 7.6], [7.6, 13.0], [14.6, 20.6], [28.2, 34.8], [36.4, 43.0]];
-const TAGS = [[0.9, 4.6, 'Départ', 'Cotonou'], [8.0, 11.8, 'Survol', 'Lac Nokoué · Ganvié'], [14.8, 17.8, 'Porto-Novo', 'Course à moto'], [28.4, 31.4, 'Ouidah', 'Lieux & bonnes adresses'], [36.6, 39.6, 'Abomey', 'Artisans sur la carte']];
+const CLIPS = [[0, 7.6], [7.6, 13.0], [14.6, 20.6], [22.2, 26.6], [28.2, 34.8], [36.4, 43.0]];
+const TAGS = [[0.9, 4.6, 'Départ', 'Cotonou'], [8.0, 11.8, 'Survol', 'Lac Nokoué · Ganvié'], [14.8, 17.8, 'Porto-Novo', 'Course à moto'], [22.25, 26.4, 'Abomey-Calavi', 'Repas livrés'], [28.4, 31.4, 'Ouidah', 'Lieux & bonnes adresses'], [36.6, 39.6, 'Abomey', 'Artisans sur la carte']];
 const SUBS = [[0.81, 4.7, 'Salut ! Aujourd’hui, je fais le tour du Bénin avec *OJA !*'],
   [16.29, 19.95, 'À Porto-Novo, ta moto *OJA* arrive en quelques minutes.'],
+  [22.49, 25.45, 'À Calavi, tes repas sont livrés jusqu’au campus !'],
   [30.12, 33.75, 'À Ouidah, découvre les lieux à visiter et les bonnes adresses autour de toi.'],
   [38.17, 42.0, 'À Abomey, nos artisans sont visibles sur la carte *OJA.*'],
   [52.25, 55.0, 'Du sud au nord, *OJA* est partout au Bénin.']];
@@ -725,7 +726,7 @@ function uV(t) {
   if (clip) { const n = Math.min(NF - 1, Math.floor(t * FPS + 1e-6)); if (bgImg.dataset.n != n) { bgImg.src = `assets/bjf/f${String(n).padStart(4, '0')}.jpg`; bgImg.dataset.n = n; } }
   const mapOn = inR(t, MW.map(m => [m[0], m[1]])) || (t >= 52.0 && t < 55.85);
   O('map', mapOn ? 1 : 0); if (mapOn) uMap(t);
-  const cal = t >= 22.2 && t < 26.6, par = t >= 44.6 && t < 48.8, lg = t >= 55.2;
+  const cal = false, par = t >= 44.6 && t < 48.8, lg = t >= 55.2;
   O('sCal', cal ? 1 : 0); if (cal) uCal(t);
   O('sPar', par ? 1 : 0); if (par) uPar(t);
   O('out', lg ? 1 : 0); if (lg) uLogo(t);
