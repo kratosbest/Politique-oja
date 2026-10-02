@@ -10,7 +10,7 @@ Le film dure environ 60 s, en **16:9**. Il se compose de **9 plans Flow de 8 s**
 | 2 | Lac Nokoué (Ganvié) | Vol de transition | Pêcheurs en pirogue |
 | 3 | Porto-Novo | Course à moto | Un étudiant pressé |
 | 4 | Abomey-Calavi | Livraison de repas (OJA Market) | Des étudiants sur le campus |
-| 5 | Ouidah | Bonnes adresses (carte OJA) | Un couple de visiteurs |
+| 5 | Ouidah | Lieux à visiter et bonnes adresses (carte OJA), à la Porte du Non-Retour | Un couple de visiteurs |
 | 6 | Abomey | Artisan visible sur la carte | Une artisane des tentures appliquées |
 | 7 | Parakou | Livraison en tricycle | Une commerçante du marché |
 | 8 | Natitingou | Final, l'Atacora au coucher du soleil | — |
@@ -64,13 +64,13 @@ A sunny university campus in Abomey-Calavi, students sitting on benches under bi
 ```
 *Réplique :* « À Calavi, tes repas sont livrés jusqu'au campus. »
 
-### Plan 5 — Ouidah · les bonnes adresses
+### Plan 5 — Ouidah · la Porte du Non-Retour et les bonnes adresses
 ```
-A coastal road in Ouidah lined with tall coconut palms, the ocean visible at the end of the road, warm afternoon light. A young couple of visitors with a small suitcase looks around, unsure where to go. The mascot walks up and shows them its smartphone with a solid green screen; they smile and follow the mascot toward a charming small beach restaurant with straw parasols. Tracking shot.
+On the beach in Ouidah, in front of a large monumental memorial arch on the sand facing the ocean (Door of No Return atmosphere), tall coconut palms, warm late-afternoon light, a few tourists visiting calmly. A young couple of visitors stands in front of the arch, looking at it thoughtfully. The mascot approaches gently and respectfully, stands beside them for a moment looking at the monument, then shows them its smartphone with a solid green screen; they smile and walk with the mascot along the palm-lined beach toward a small beach restaurant with straw parasols. Calm, respectful mood, no dancing. Slow tracking shot.
 ```
-*Réplique :* « À Ouidah, trouve les bonnes adresses autour de toi. »
+*Réplique :* « À Ouidah, découvre les lieux à visiter et les bonnes adresses autour de toi. »
 
-> **Lieu à éviter à Ouidah :** la Porte du Non-Retour. C'est un mémorial de la traite négrière, il ne convient pas à une publicité. La route des cocotiers et la plage suffisent pour reconnaître Ouidah.
+> **Ton du plan :** la Porte du Non-Retour est aujourd'hui un lieu touristique, mais elle reste un mémorial. La mascotte y est calme et respectueuse : pas de saut ni de danse devant le monument. Le côté joyeux arrive ensuite, au restaurant de plage. Veo ne reproduira pas l'arche à l'identique. Si tu as une vraie photo de la Porte, je l'utilise sur la carte de transition « Ouidah ».
 
 ### Plan 6 — Abomey · l'artisane visible sur la carte
 ```
@@ -110,7 +110,7 @@ Les répliques, dans l'ordre :
 1. « Salut ! Aujourd'hui, je fais le tour du Bénin avec OJA ! »
 2. « À Porto-Novo, ta moto OJA arrive en quelques minutes. »
 3. « À Calavi, tes repas sont livrés jusqu'au campus. »
-4. « À Ouidah, trouve les bonnes adresses autour de toi. »
+4. « À Ouidah, découvre les lieux à visiter et les bonnes adresses autour de toi. »
 5. « À Abomey, nos artisans sont visibles sur la carte OJA. »
 6. « À Parakou, envoie tes marchandises en tricycle. »
 7. « Du sud au nord, OJA est partout au Bénin. »
