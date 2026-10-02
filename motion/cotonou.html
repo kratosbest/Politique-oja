@@ -506,7 +506,7 @@ const st4 = document.createElement('style'); st4.textContent = `
 .acard .lb b{font:800 34px Poppins;letter-spacing:-.01em}
 `; document.head.appendChild(st4);
 
-const SUBS = [[4.55, 8.0, 'Salut Cotonou ! Moi, c’est ton guide *OJA.*'],
+const SUBS = [[5.2, 8.0, 'Salut ! Moi, c’est ton guide *OJA.*'],
   [10.86, 13.66, 'Tu as faim ? Cherche un restaurant sur *OJA !*'],
   [16.64, 21.2, 'Les maquis autour de toi, avec les avis et le chemin.'],
   [23.09, 24.6, 'Besoin de bouger ?'],
@@ -523,7 +523,7 @@ H = `<div class="scene" id="sV">
 
 <div id="loc" class="abs" style="left:70px;top:64px;display:flex;align-items:center;gap:18px;padding:16px 30px 16px 18px;border-radius:24px;background:#fff;color:${ANTH};box-shadow:0 20px 50px rgba(0,0,0,.3);z-index:31">
 <div style="width:64px;height:64px;border-radius:18px;background:${OR};display:grid;place-items:center">${ic('pin', 36, '#fff', 2.4)}</div>
-<div><div style="font:700 18px Inter;letter-spacing:.2em;color:${OR}">BIENVENUE À</div><div style="font:800 42px Poppins;letter-spacing:-.015em;line-height:1.05;display:flex;align-items:center;gap:14px">Cotonou ${flag(48, 32)}</div></div></div>
+<div><div style="font:700 18px Inter;letter-spacing:.2em;color:${OR}">BIENVENUE AU</div><div style="font:800 42px Poppins;letter-spacing:-.015em;line-height:1.05;display:flex;align-items:center;gap:14px">Bénin ${flag(48, 32)}</div></div></div>
 
 ${CHAP.map(([, , n, l], i) => `<div id="ch${i}" class="chap"><div class="n">${n}</div><div class="l"><small>AVEC OJA</small><b>${l}</b></div></div>`).join('')}
 ${SUBS.map(([, , s], i) => `<div id="sb${i}" class="sub"><span class="pl">${Wh(s)}</span></div>`).join('')}
@@ -607,6 +607,7 @@ function uV(t) {
   if (g6) { const k = P(t, 37.82, .35) * (1 - P(t, 41.05, .27, E.iC)); blur = 18 * k; tint = k; sc = 1 + .06 * P(t, 37.82, 3.5, E.lin); }
   if (g7) { const k = P(t, 44.32, .35) * (1 - P(t, 47.3, .26, E.iC)); blur = 18 * k; tint = k; sc = 1 + .06 * P(t, 44.32, 3.2, E.lin); }
   if (t >= 57) sc = 1 + .05 * P(t, 57, 3.5, E.oC);
+  if (t >= 5.52 && t < 8.04) sc = 1.07 - .025 * P(t, 5.52, 2.5, E.oC); // punch-in hides the jump cut ("Cotonou" removed)
   bgImg.style.filter = blur > .1 ? `blur(${blur}px) saturate(1.1)` : 'none'; bgImg.style.transform = `scale(${sc + (blur > .1 ? .04 : 0)})`; O('tint', tint);
 
   // watermark (hidden over the graphics and the end card)

@@ -178,7 +178,7 @@ Film tourné avec Google Flow (8 clips Veo de 8 s, prompts dans `PROMPTS_GOOGLE_
 
 | Temps | Clip | Réplique de la mascotte | Habillage |
 |---|---|---|---|
-| 0–8 s | cot1 | Salut Cotonou ! Moi, c'est ton guide OJA. | Atterrissage, étiquette « Bienvenue à Cotonou 🇧🇯 » |
+| 0–8 s | cot1 | Salut ! Moi, c'est ton guide OJA. (« Cotonou » coupé : le film parle à tout le Bénin) | Atterrissage, étiquette « Bienvenue au Bénin 🇧🇯 », petit zoom à la coupe |
 | 8–14,2 s | cot2 | Tu as faim ? Cherche un restaurant sur OJA ! | Chapitre 01 · Trouver un restaurant ; écran OJA Market incrusté dans le téléphone, défilement jusqu'à « Maquis Chez Tanti » ♥ |
 | 14,2–21,3 s | cot3 | Les maquis autour de toi, avec les avis et le chemin. | Carte « Maquis Chez Tanti · ★ 4.9 · Ouvert » |
 | 21,3–28,5 s | cot4 | Besoin de bouger ? Commande une moto ou une voiture sur OJA. | Chapitre 02 · Commander une course ; vraie capture « Choisissez votre course » incrustée |

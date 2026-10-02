@@ -46,7 +46,7 @@ Setting: real modern Cotonou, Benin, West Africa. Warm natural sunlight, red-ear
 ```
 Wide establishing shot of a busy sunny street in Cotonou in the morning, zemidjans passing by. The mascot drops in from the sky like a map pin landing, lands softly in the middle of the sidewalk, its wings flutter, it straightens up, looks around at the city with delight, then turns to the camera and waves hello. Passers-by smile and look at it with curiosity. Camera slowly pushes in.
 ```
-*Dialogue (option) :* « Salut Cotonou ! Moi, c'est ton guide OJA. »
+*Dialogue (option) :* « Salut ! Moi, c'est ton guide OJA. »
 
 ### Plan 2 — Situation 1 : il a faim · 8–16 s
 ```
@@ -105,7 +105,7 @@ The mascot speaks in French with a cheerful young male voice, mouth clearly movi
 - **Une réplique courte par plan**, 3–5 s maximum, sinon Veo coupe ou accélère.
 - **Voix finale :** je remplace ensuite l'audio par ta voix ElevenLabs (mêmes répliques). La bouche reste synchronisée puisque le texte est le même.
 - **Script complet** à enregistrer sur ElevenLabs, environ 45 s de voix sur 60 s :
-  1. « Salut Cotonou ! Moi, c'est ton guide OJA. »
+  1. « Salut ! Moi, c'est ton guide OJA. »
   2. « Tu as faim ? Cherche un restaurant sur OJA ! »
   3. « Les maquis autour de toi, avec les avis et le chemin. »
   4. « Besoin de bouger ? Commande une moto ou une voiture sur OJA. »
