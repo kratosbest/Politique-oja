@@ -18,6 +18,18 @@ Le film dure environ 60 s, en **16:9**. Il se compose de **9 plans Flow de 8 s**
 
 ---
 
+## Photos de référence (dans `assets/`)
+
+À mettre en **2e ingrédient** dans Flow pour le plan correspondant. Je les utilise aussi dans les transitions de la carte.
+
+| Fichier | Lieu | Plan |
+|---|---|---|
+| `amazone.jpg` | Cotonou, Place de l'Amazone | 1 |
+| `bj_portonovo.jpg` | Porto-Novo, ancienne Grande Mosquée afro-brésilienne et nouvelle mosquée | 3 |
+| `bj_ouidah.jpg` | Ouidah, Porte du Non-Retour | 5 |
+| `bj_abomey.jpg` | Abomey, statue du roi Béhanzin | 6 (transition) |
+| `bj_natitingou.jpg` | Tata Somba (Atacora) | 8 |
+
 ## 1. Réglages Flow (comme pour Cotonou)
 
 - **Mode :** **Ingredients to Video**. Ingrédient 1 : une image de la mascotte avec le **visage orange** (une capture du clip `cot1`, par exemple).
@@ -54,7 +66,7 @@ Aerial drone shot at sunrise over a stilt village on a calm lake (Ganvié atmosp
 
 ### Plan 3 — Porto-Novo · course à moto
 ```
-A street in Porto-Novo with colorful Afro-Brazilian colonial architecture, pastel facades with arched windows and balconies. A young Beninese student with a backpack checks his watch, worried about being late. The mascot lands softly next to him, shows him its smartphone with a solid green screen and taps it; seconds later a friendly zemidjan driver in a yellow shirt and helmet pulls up on a clean motorbike and hands the student a helmet. The student hops on and gives a thumbs up as they leave. Medium-wide shot.
+A paved square in Porto-Novo in front of a large old Afro-Brazilian building with weathered red, ochre and cream facades, arched windows and a red brick bell tower, next to a modern mosque with tall grey and yellow minarets topped with golden domes, blue sky, zemidjans passing on the paving stones. A young Beninese student with a backpack checks his watch, worried about being late. The mascot lands softly next to him, shows him its smartphone with a solid green screen and taps it; seconds later a friendly zemidjan driver in a yellow shirt and helmet pulls up on a clean motorbike and hands the student a helmet. The student hops on and gives a thumbs up as they leave. Medium-wide shot.
 ```
 *Réplique :* « À Porto-Novo, ta moto OJA arrive en quelques minutes. »
 
@@ -74,7 +86,7 @@ On the beach in Ouidah, in front of a large monumental memorial arch on the sand
 
 ### Plan 6 — Abomey · l'artisane visible sur la carte
 ```
-Red-earth street in Abomey next to long ochre traditional palace walls. In front of her small open workshop, a Beninese woman artisan sews colorful traditional appliqué tapestries with figures of animals and symbols; finished tapestries hang on a line. The mascot admires a tapestry, then shows her its smartphone with a solid green screen; a soft orange glow comes from the phone. She smiles proudly; customers start to arrive and look at her work. Medium shot.
+Red-earth courtyard of the royal palaces of Abomey: low red clay buildings with large thatched or rust-colored corrugated roofs on twisted wooden pillars, walls decorated with small colorful bas-relief panels of animals and royal symbols, big shade trees. In front of her small open workshop, a Beninese woman artisan sews colorful traditional appliqué tapestries with figures of animals and symbols; finished tapestries hang on a line. The mascot admires a tapestry, then shows her its smartphone with a solid green screen; a soft orange glow comes from the phone. She smiles proudly; customers start to arrive and look at her work. Medium shot.
 ```
 *Réplique :* « À Abomey, nos artisans sont visibles sur la carte OJA. »
 
@@ -86,7 +98,7 @@ A huge busy open-air market in Parakou, northern Benin, dry harmattan haze and w
 
 ### Plan 8 — Natitingou · final dans l'Atacora
 ```
-Golden hour in the Atacora mountains near Natitingou, northern Benin: green hills, savanna, traditional fortified clay tower houses (Tata Somba) in the valley. The mascot stands on a rock overlooking the landscape, turns to the camera, smiles and opens its arms wide toward the view, then spreads its wings. Slow cinematic push-in. Leave the sky above the mountains empty for a title.
+Golden hour in the Atacora mountains near Natitingou, northern Benin: green hills and savanna, and in the foreground a traditional Tata Somba house, a fortified two-storey red clay house with round towers topped by conical thatched roofs, on red earth. The mascot stands on a rock overlooking the landscape, turns to the camera, smiles and opens its arms wide toward the view, then spreads its wings. Slow cinematic push-in. Leave the sky above the mountains empty for a title.
 ```
 *Réplique :* « Du sud au nord, OJA est partout au Bénin. »
 
