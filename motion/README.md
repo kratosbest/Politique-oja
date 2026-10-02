@@ -217,3 +217,32 @@ La mascotte fait le tour du Bénin, du sud au nord. Le film combine 5 clips Goog
 | 43–48,8 s | Carte + graphique | À Parakou, envoie tes marchandises en tricycle. (ElevenLabs) | Marché Arzèkè, écran de course avec « Tricycle » sélectionné, tricycle qui traverse |
 | 48,8–55,2 s | Carte | Du sud au nord, OJA est partout au Bénin. (ElevenLabs) | Natitingou (Tata Somba), puis tout le Bénin avec les 6 photos |
 | 55,2–60,5 s | Logo | OJA, le local devient visible. (ElevenLabs) | Logo OJA, App Store / Google Play, « Télécharge OJA » |
+
+---
+
+# OJA Mascotte — tutoriel « Créer son compte chauffeur » (9:16, 64,5 s)
+
+La mascotte guide l'inscription chauffeur, étape par étape, avec les écrans de l'app recréés d'après les captures et remplis avec des données d'exemple (Koffi Agossou, Toyota Corolla, AB 1234 RB).
+
+- **Vidéo :** `OJA_Mascotte_CompteChauffeur_9x16.mp4` (1080 × 1920, 30 i/s)
+- **Sources :** page `chauffeur_tuto.html`, voix ElevenLabs `assets/chf/voix_chauffeur.mp3`
+- **Rendu :**
+  1. Préparer la mascotte avec `python3 key_clips.py`.
+  2. `VW=1080 VH=1920 PAGE=chauffeur_tuto.html node render.js 30 0 1935 video.mp4 ffmpeg`.
+  3. Multiplexer avec `assets/soundtrack_chauffeur_tuto.m4a`.
+
+| Temps | Voix | Écran / visuel |
+|---|---|---|
+| 0–5,6 s | Hé ! Tu veux gagner de l'argent… je te montre comment créer ton compte chauffeur. | Mascotte, voiture et moto réelles, pièces |
+| 5,6–9 s | Ouvre OJA Transport, appuie sur « Je suis chauffeur » | Écran « Oja Transport » (passager / chauffeur) |
+| 9–15,6 s | Première étape : nom complet et numéro, puis « Suivant » | « Devenir chauffeur » – Étape 1/2 |
+| 15,6–24,9 s | Type de véhicule, modèle, plaque, couleur | « Véhicule & identité » – menu Moto / Voiture / Tricycle |
+| 24,9–28,5 s | Pièce d'identité et permis | Validation d'identité, photos ajoutées ✓ |
+| 28,5–34,7 s | Carte grise, visite technique, assurance, TVM | Documents du véhicule ✓ |
+| 34,7–39,9 s | Vue avant et vue arrière, plaque visible | Photos du véhicule ✓ |
+| 39,9–44 s | Astuce : photos claires = validation plus rapide | Carte « Astuce » floue / nette |
+| 44–46,7 s | Tout est bon ? Envoie ton dossier | Bouton « Envoyer mon dossier » (recréé), puis « Dossier envoyé » |
+| 46,7–50,7 s | L'équipe OJA vérifie, puis active le compte | Vérifications ✓, « Compte chauffeur activé » |
+| 50,7–54,6 s | Mets-toi disponible, reçois tes premières courses | Accueil chauffeur : EN LIGNE, nouvelle demande |
+| 54,6–59,3 s | Ton véhicule est prêt ? Ton dossier aussi ? On se retrouve sur la route ! | Mascotte, voiture et moto qui passent |
+| 59,3–64,5 s | OJA. Ta mobilité, ton opportunité. | Logo, App Store / Google Play, « Deviens chauffeur OJA » |
