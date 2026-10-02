@@ -192,3 +192,28 @@ Film tourné avec Google Flow (8 clips Veo de 8 s, prompts dans `PROMPTS_GOOGLE_
 | 55,5–60,5 s | cot8 (ciel) | — | Logo OJA tracé dans le ciel, App Store / Google Play, « Télécharge OJA » |
 
 Sur les plans 6 et 7, Veo a donné à la mascotte un visage-écran noir pendant ses répliques. Ces passages sont donc remplacés par des graphiques OJA, et la voix continue par-dessus.
+
+---
+
+# OJA Mascotte — « Le tour du Bénin » (16:9, 60,5 s)
+
+La mascotte fait le tour du Bénin, du sud au nord. Le film combine 5 clips Google Flow (`clips_bj/`, prompts dans `PROMPTS_GOOGLE_FLOW_BENIN.md`), une carte animée du Bénin (vraies frontières), les vraies photos des villes (`assets/bj/ph_*.jpg`) et une voix ElevenLabs pour les villes sans clip.
+
+- **Vidéo :** `OJA_Mascotte_TourDuBenin.mp4` (1920 × 1080, 24 i/s)
+- **Rendu :**
+  1. `python3 bj_frames.py` : génère les images des clips dans `assets/bjf/` et remplace les écrans verts des téléphones par les écrans OJA.
+  2. `PAGE=benin.html node render.js 24 0 1452 video.mp4 ffmpeg`.
+  3. Multiplexer avec `assets/soundtrack_benin.m4a`.
+
+| Temps | Source | Voix | Visuel |
+|---|---|---|---|
+| 0–7,6 s | bj1 | Salut ! Aujourd'hui, je fais le tour du Bénin avec OJA ! | Cotonou, la mascotte s'envole |
+| 7,6–13 s | bj2 | — | Survol de Ganvié, les pêcheurs saluent |
+| 13–14,6 s | Carte | — | Cotonou → Ganvié → Porto-Novo, photo de la ville |
+| 14,6–20,6 s | bj3 | À Porto-Novo, ta moto OJA arrive en quelques minutes. | Étudiant, zémidjan ; écran « Choisissez votre course » incrusté |
+| 20,6–26,6 s | Carte + graphique | À Calavi, tes repas sont livrés jusqu'au campus ! (ElevenLabs) | Photo de l'UAC, iPhone OJA Market, « Livreur en route » |
+| 26,6–34,8 s | Carte + bj5 | À Ouidah, découvre les lieux à visiter et les bonnes adresses autour de toi. | Photo de la Porte du Non-Retour, puis le couple ; écran « Près de vous » incrusté |
+| 34,8–43 s | Carte + bj6 | À Abomey, nos artisans sont visibles sur la carte OJA. | Statue de Béhanzin, puis l'artisane des tentures ; carte OJA « Tentures d'Abomey » incrustée |
+| 43–48,8 s | Carte + graphique | À Parakou, envoie tes marchandises en tricycle. (ElevenLabs) | Marché Arzèkè, écran de course avec « Tricycle » sélectionné, tricycle qui traverse |
+| 48,8–55,2 s | Carte | Du sud au nord, OJA est partout au Bénin. (ElevenLabs) | Natitingou (Tata Somba), puis tout le Bénin avec les 6 photos |
+| 55,2–60,5 s | Logo | OJA, le local devient visible. (ElevenLabs) | Logo OJA, App Store / Google Play, « Télécharge OJA » |
