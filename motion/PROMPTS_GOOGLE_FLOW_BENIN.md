@@ -27,7 +27,9 @@ Le film dure environ 60 s, en **16:9**. Il se compose de **9 plans Flow de 8 s**
 | `amazone.jpg` | Cotonou, Place de l'Amazone | 1 |
 | `bj_portonovo.jpg` | Porto-Novo, ancienne Grande Mosquée afro-brésilienne et nouvelle mosquée | 3 |
 | `bj_ouidah.jpg` | Ouidah, Porte du Non-Retour | 5 |
+| `bj_calavi.jpg` | Abomey-Calavi, entrée principale de l'université (UAC) | 4 |
 | `bj_abomey.jpg` | Abomey, statue du roi Béhanzin | 6 (transition) |
+| `bj_parakou.jpg` | Parakou, marché international Arzèkè | 7 |
 | `bj_natitingou.jpg` | Tata Somba (Atacora) | 8 |
 
 ## 1. Réglages Flow (comme pour Cotonou)
@@ -72,7 +74,7 @@ A paved square in Porto-Novo in front of a large old Afro-Brazilian building wit
 
 ### Plan 4 — Abomey-Calavi · repas livré sur le campus
 ```
-A sunny university campus in Abomey-Calavi, students sitting on benches under big trees with notebooks. Three hungry students look at the mascot, who shows them its smartphone with a solid green screen. A delivery rider arrives on a motorbike with an orange insulated delivery box (no logo), hands over warm food bags; the students cheer and share the food with the mascot, who does a happy little dance. Medium shot, joyful mood.
+A sunny university campus in Abomey-Calavi, just inside the main gate with its big orange and cream pillars and a round cream guard house, students sitting on benches under big trees with notebooks. Three hungry students look at the mascot, who shows them its smartphone with a solid green screen. A delivery rider arrives on a motorbike with an orange insulated delivery box (no logo), hands over warm food bags; the students cheer and share the food with the mascot, who does a happy little dance. Medium shot, joyful mood.
 ```
 *Réplique :* « À Calavi, tes repas sont livrés jusqu'au campus. »
 
@@ -92,7 +94,7 @@ Red-earth courtyard of the royal palaces of Abomey: low red clay buildings with 
 
 ### Plan 7 — Parakou · colis en tricycle
 ```
-A huge busy open-air market in Parakou, northern Benin, dry harmattan haze and warm dusty light, stalls of yams, onions and fabrics. A Beninese market woman in a colorful outfit has several big sacks to send. The mascot taps its smartphone with a solid green screen; a cargo tricycle with a smiling driver arrives, the driver and the mascot load the sacks together, the woman waves as the tricycle drives off through the market. Wide shot.
+The busy Arzèkè international market street in Parakou, northern Benin: a wide dusty street lined with shops and stalls under colorful umbrellas, a big entrance gate across the street, crowds of shoppers, women in headscarves, zemidjan drivers in yellow shirts, dry harmattan haze and warm light, stalls of yams, onions and fabrics. A Beninese market woman in a colorful outfit has several big sacks to send. The mascot taps its smartphone with a solid green screen; a cargo tricycle with a smiling driver arrives, the driver and the mascot load the sacks together, the woman waves as the tricycle drives off through the market. Wide shot.
 ```
 *Réplique :* « À Parakou, envoie tes marchandises en tricycle. »
 
