@@ -274,3 +274,36 @@ La mascotte guide le parcours passager complet. Les écrans sont recréés d'apr
 | 59–70 s | Paie et note | « Course terminée », payer avec MTN MoMo, « Le chauffeur a-t-il demandé plus d'argent ? », étoiles |
 | 70–78,6 s | Et voilà ! | Mascotte, véhicules |
 | 78,6–84 s | Logo | « Ta mobilité, ton opportunité. », boutons de téléchargement |
+
+---
+
+# OJA — sketch « Je suis devant le gros arbre ! » (9:16, 40,5 s)
+
+Sketch comique sur la fonction « enregistrer et retrouver un commerce sur la carte ».
+
+- **Vidéo :** `OJA_Sketch_GrosArbre_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Sources :**
+  - 6 clips Google Flow dans `clips_arbre/` (prompts dans `PROMPTS_GOOGLE_FLOW_ARBRE.md`) ;
+  - voix ElevenLabs dans `assets/arbre/` : client, commerçant en 3 prises (la réplique la plus nette de chaque prise est utilisée), mascotte ;
+  - mascotte tirée des clips fond vert c9, c10, c11, c7 et c8.
+- **Rendu :**
+  1. `python3 arbre_frames.py` : génère le fond image par image, l'écran partagé et les arrêts sur image.
+  2. `python3 arbre_voices.py` : place les répliques et produit `assets/arbre/dialogue.wav`.
+  3. `VW=1080 VH=1920 PAGE=arbre.html node render.js 24 0 972 video.mp4 ffmpeg`.
+  4. Multiplexer avec `assets/soundtrack_arbre.m4a`.
+
+| Temps | Plan | Réplique | Habillage |
+|---|---|---|---|
+| 0–3 s | ar1 | Client : « Allô ? Oui, je suis devant le gros arbre ! » | Sous-titre avec étiquette CLIENT |
+| 3–6,2 s | ar2 | Commerçant : « Quel gros arbre ? Il y en a cinq ici ! » | Arbres numérotés de 1 à 5, tampon « ×5 » |
+| 6,2–8,9 s | ar3 | Client : « Celui à côté de la vendeuse de pain ! » | |
+| 8,9–11,5 s | ar4 | Commerçant : « Des vendeuses de pain aussi, il y en a cinq ! » | 5 baguettes, « ×5 » |
+| 11,5–14,1 s | ar5 | Client : « Bon… je tourne à gauche ? » | 💫 qui tourne autour de sa tête |
+| 14,1–15,9 s | ar4 | Commerçant : « Ma gauche ou ta gauche ?! » | Flèches ← → |
+| 15,9–17,3 s | Écran partagé ar5 / ar4 | (silence, musique coupée) | Points d'interrogation |
+| 17,3–20,5 s | Arrêt sur image + mascotte (c9) | « Ou bien… on met simplement le commerce sur OJA ? » | Le pin OJA tombe, la mascotte le pointe |
+| 20,5–23,6 s | Écran OJA (mascotte c10) | « Le commerçant enregistre sa boutique… » | « Enregistrer un lieu » : Boutique Chez Bona, Épicerie, Lieu enregistré ✓ |
+| 23,6–28,3 s | Écran OJA (mascotte c11) | « Le client la retrouve, appuie sur « Itinéraire »… » | Le pin tombe sur la carte, recherche, fiche, « Itinéraire », tracé, « Vous êtes arrivé ! » |
+| 28,3–32,9 s | ar6 | « Ah ! Je vous vois ! » / « Bienvenue, bienvenue ! » | Poignée de main |
+| 32,9–36,2 s | Arrêt sur image + mascotte (c7) | « Fini les "après le manguier, tourne à gauche" ! » | Citation barrée, tampon « FINI ! », « Ton commerce sur la carte OJA » |
+| 36,2–40,5 s | Logo (mascotte c8) | « OJA. Le local devient visible. » | App Store / Google Play, « Mets ton commerce sur OJA » |
