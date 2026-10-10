@@ -56,6 +56,8 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
 <div id="stage"></div>
 <audio id="aud" src="assets/soundtrack_arbre.m4a" preload="auto"></audio>
 <script>
+// Version « Bientôt au Bénin » (avant le lancement) : PAGE=page.html?soon
+const SOON = /[?&]soon\b/.test(location.search);
 /* ============================================================
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
@@ -631,9 +633,9 @@ ${cap('Dc1', W('Le client *la retrouve*'), 170, 74, ANTH, 'text-align:left')}
 ${[0, 1, 2].map(i => `<div id="El${i}" class="abs" style="left:0;top:0;border-radius:50%;border:5px solid rgba(255,107,0,.4)"></div>`).join('')}
 <div id="Ew" class="abs cap" style="left:0;top:700px;width:${VW}px;text-align:center;font-size:140px;color:${ANTH}">${L('OJA')}</div>
 <div id="Es" class="abs cap" style="left:0;top:865px;width:${VW}px;text-align:center;font-size:58px;color:${OR}">${W('Le local devient visible.')}</div>
-<div id="Est0" class="store" style="left:200px;top:990px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="Est1" class="store" style="left:550px;top:990px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
-<div class="abs" style="left:0;top:1135px;width:${VW}px;display:flex;justify-content:center"><div id="Ecta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 34px Poppins;padding:16px 36px 16px 20px">${flag(54, 36)}Mets ton commerce sur OJA</div></div></div>
+<div id="Est0" class="store" style="left:200px;top:990px">${ic('phone', 50, '#fff', 1.8)}<div><small>${SOON ? 'Bientôt sur' : 'Télécharger sur'}</small><b>App Store</b></div></div>
+<div id="Est1" class="store" style="left:550px;top:990px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>${SOON ? 'Bientôt sur' : 'Disponible sur'}</small><b>Google Play</b></div></div>
+<div class="abs" style="left:0;top:1135px;width:${VW}px;display:flex;justify-content:center"><div id="Ecta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 34px Poppins;padding:16px 36px 16px 20px">${flag(54, 36)}${SOON ? 'Bientôt au Bénin' : 'Mets ton commerce sur OJA'}</div></div></div>
 ${vmascot('mV')}
 ${SUBS.map(([, , w, s], i) => `<div id="sb${i}" class="sp"><span class="who" style="background:${SPK[w][1]};color:${SPK[w][2]}">${SPK[w][0]}</span><span class="tx">${s}</span></div>`).join('')}
 </div>

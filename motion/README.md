@@ -307,3 +307,19 @@ Sketch comique sur la fonction « enregistrer et retrouver un commerce sur la ca
 | 28,3–32,9 s | ar6 | « Ah ! Je vous vois ! » / « Bienvenue, bienvenue ! » | Poignée de main |
 | 32,9–36,2 s | Arrêt sur image + mascotte (c7) | « Fini les "après le manguier, tourne à gauche" ! » | Citation barrée, tampon « FINI ! », « Ton commerce sur la carte OJA » |
 | 36,2–40,5 s | Logo (mascotte c8) | « OJA. Le local devient visible. » | App Store / Google Play, « Mets ton commerce sur OJA » |
+
+---
+
+# Versions « Bientôt au Bénin » (avant le lancement)
+
+Les 12 films existent aussi en version d'avant-lancement, dans `bientot/` (`<film>_Bientot.mp4`). Seul l'écran de fin change :
+
+- les boutons deviennent « Bientôt sur App Store » et « Bientôt sur Google Play » ;
+- le bouton orange devient « Bientôt au Bénin » (« OJA Merchant · Bientôt au Bénin » pour le film marchand) ;
+- dans le film Transport, « Téléchargez OJA et découvrez toutes les possibilités » devient « OJA arrive. Toutes les possibilités, bientôt. ».
+
+Le reste du film et le son d'origine sont gardés à l'identique, sauf pour le film Transport (`OJA_Motion_Benin`). Sa voix off finit sur « Téléchargez OJA… » : dans la version « Bientôt », cette phrase est coupée en fondu et remplacée par un impact grave. Pour avoir une vraie phrase à la place, il suffit d'enregistrer « OJA arrive bientôt au Bénin » sur ElevenLabs et de la poser à 60,6 s.
+
+**Comment ça marche :** chaque page accepte `?soon` (`PAGE=market.html?soon`). Sans ce paramètre, le rendu donne la version de lancement, comme avant.
+
+**Rendu :** depuis `motion/`, lancer `./bientot.sh` pour tous les films, ou `./bientot.sh market novoja` pour certains seulement. Le script garde le film d'origine jusqu'à l'écran de fin, refait seulement l'écran de fin, puis recolle les deux. Pour les films à clips (mascotte, Cotonou, tour du Bénin, sketch), il faut d'abord générer les images avec `python3 key_clips.py`, `cot_frames.py`, `bj_frames.py` et `arbre_frames.py`.

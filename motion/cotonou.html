@@ -56,6 +56,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 <div id="stage"></div>
 <audio id="aud" src="assets/soundtrack_cotonou.m4a" preload="auto"></audio>
 <script>
+// Version « Bientôt au Bénin » (avant le lancement) : PAGE=page.html?soon
+const SOON = /[?&]soon\b/.test(location.search);
 /* ============================================================
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
@@ -564,9 +566,9 @@ ${[['meca', 'Mécanicien', '🔧', '#E8EBEF'], ['cout', 'Couturier', '🧵', '#F
 ${[0, 1, 2].map(i => `<div id="El${i}" class="abs" style="left:0;top:0;border-radius:50%;border:5px solid rgba(255,107,0,.4)"></div>`).join('')}
 <div id="Ew" class="abs H" style="left:0;top:418px;width:1920px;text-align:center;font-size:130px;font-weight:900;color:${ANTH}">${L('OJA')}</div>
 <div id="Es" class="abs H" style="left:0;top:572px;width:1920px;text-align:center;font-size:58px;color:${OR}">${W('Le local devient visible.')}</div>
-<div id="Est0" class="store" style="left:610px;top:690px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="Est1" class="store" style="left:980px;top:690px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
-<div class="abs" style="left:0;top:830px;width:1920px;display:flex;justify-content:center"><div id="Ecta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 34px Poppins;padding:16px 36px 16px 20px">${flag(54, 36)}Télécharge OJA</div></div></div>
+<div id="Est0" class="store" style="left:610px;top:690px">${ic('phone', 50, '#fff', 1.8)}<div><small>${SOON ? 'Bientôt sur' : 'Télécharger sur'}</small><b>App Store</b></div></div>
+<div id="Est1" class="store" style="left:980px;top:690px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>${SOON ? 'Bientôt sur' : 'Disponible sur'}</small><b>Google Play</b></div></div>
+<div class="abs" style="left:0;top:830px;width:1920px;display:flex;justify-content:center"><div id="Ecta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 34px Poppins;padding:16px 36px 16px 20px">${flag(54, 36)}${SOON ? 'Bientôt au Bénin' : 'Télécharge OJA'}</div></div></div>
 </div>
 <div id="wipe" class="abs" style="inset:0;z-index:40;pointer-events:none">${[0, 1, 2].map(i => `<div id="wb${i}" class="band" style="display:none"></div>`).join('')}</div>
 <canvas id="grain" width="512" height="512"></canvas><div id="vig"></div><div id="fade"></div>`;

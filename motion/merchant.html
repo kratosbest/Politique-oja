@@ -56,6 +56,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 <div id="stage"></div>
 <audio id="aud" src="assets/soundtrack_merchant.m4a" preload="auto"></audio>
 <script>
+// Version « Bientôt au Bénin » (avant le lancement) : PAGE=page.html?soon
+const SOON = /[?&]soon\b/.test(location.search);
 /* ============================================================
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
@@ -538,9 +540,9 @@ H += `<div class="scene" id="s11" style="background:${PEARL}">${meshBg('s11bg')}
 <div id="s11shine" class="abs" style="left:0;top:0;width:520px;height:520px;overflow:hidden;-webkit-mask:url(assets/merchant_logo.png) center/contain no-repeat;mask:url(assets/merchant_logo.png) center/contain no-repeat"><div id="s11sh" class="abs" style="left:-200px;top:-100px;width:140px;height:800px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));transform:rotate(20deg)"></div></div></div>
 <div id="s11w" class="abs H" style="left:0;top:560px;width:1920px;text-align:center;font-size:118px;color:${INK}">${L('OJA')}<span style="display:inline-block;width:28px"></span><span class="hlo">${L('Merchant')}</span></div>
 <div id="s11s" class="abs" style="left:0;top:705px;width:1920px;text-align:center;font:600 46px Inter;color:#555">${W('Le local devient *visible.*', 'hlo')}</div>
-<div id="s11st0" class="store" style="left:600px;top:810px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="s11st1" class="store" style="left:990px;top:810px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
-<div class="abs" style="left:0;top:950px;width:1920px;display:flex;justify-content:center"><div id="s11cta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 30px Poppins;padding:14px 32px 14px 18px">${flag(48, 32)}Téléchargez OJA Merchant</div></div>
+<div id="s11st0" class="store" style="left:600px;top:810px">${ic('phone', 50, '#fff', 1.8)}<div><small>${SOON ? 'Bientôt sur' : 'Télécharger sur'}</small><b>App Store</b></div></div>
+<div id="s11st1" class="store" style="left:990px;top:810px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>${SOON ? 'Bientôt sur' : 'Disponible sur'}</small><b>Google Play</b></div></div>
+<div class="abs" style="left:0;top:950px;width:1920px;display:flex;justify-content:center"><div id="s11cta" class="pill" style="position:relative;background:${OR};color:#fff;font:800 30px Poppins;padding:14px 32px 14px 18px">${flag(48, 32)}${SOON ? 'OJA Merchant · Bientôt au Bénin' : 'Téléchargez OJA Merchant'}</div></div>
 </div>`;
 
 H += `<div id="wipe" class="abs" style="inset:0;z-index:40;pointer-events:none">${[0, 1, 2].map(i => `<div id="wb${i}" class="band" style="display:none"></div>`).join('')}</div>

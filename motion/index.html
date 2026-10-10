@@ -56,6 +56,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 <div id="stage"></div>
 <audio id="aud" src="assets/soundtrack.m4a" preload="auto"></audio>
 <script>
+// Version « Bientôt au Bénin » (avant le lancement) : PAGE=page.html?soon
+const SOON = /[?&]soon\b/.test(location.search);
 /* ============================================================
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
@@ -421,10 +423,10 @@ H += `<div class="scene" id="s10" style="background:#FFF8F1;color:#0E0F14">
 <div id="s10blob2" class="abs" style="left:1300px;top:500px;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle,#FFD3B0,rgba(255,211,176,0) 70%)"></div>
 <div id="s10disc" class="abs c" style="left:150px;top:190px;width:640px;height:640px;border-radius:50%;background:#fff;box-shadow:0 50px 100px rgba(194,65,12,.18)"></div>
 <img id="s10logo" class="abs c" src="assets/logo.png" style="left:205px;top:270px;width:530px">
-<div id="s10t" class="abs H" style="left:900px;top:250px;font-size:112px"><div>${W('Téléchargez *OJA*')}</div></div>
-<div id="s10s" class="abs" style="left:904px;top:390px;font:500 44px Inter;color:#565b6b">${W('et découvrez toutes les possibilités.')}</div>
-<div id="s10st0" class="store" style="left:904px;top:520px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="s10st1" class="store" style="left:1264px;top:520px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
+<div id="s10t" class="abs H" style="left:900px;top:250px;font-size:112px"><div>${W(SOON ? '*OJA* arrive.' : 'Téléchargez *OJA*')}</div></div>
+<div id="s10s" class="abs" style="left:904px;top:390px;font:500 44px Inter;color:#565b6b">${W(SOON ? 'Toutes les possibilités, bientôt.' : 'et découvrez toutes les possibilités.')}</div>
+<div id="s10st0" class="store" style="left:904px;top:520px">${ic('phone', 50, '#fff', 1.8)}<div><small>${SOON ? 'Bientôt sur' : 'Télécharger sur'}</small><b>App Store</b></div></div>
+<div id="s10st1" class="store" style="left:1264px;top:520px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>${SOON ? 'Bientôt sur' : 'Disponible sur'}</small><b>Google Play</b></div></div>
 <div id="s10b" class="pill" style="left:904px;top:690px;background:#0E0F14;color:#fff;padding:14px 28px 14px 16px">${flag(54, 36)}Bientôt au Bénin</div>
 <div id="s10tri" class="abs" style="left:0;top:1062px;width:1920px;height:18px;display:flex"><div style="flex:1;background:#008751"></div><div style="flex:1;background:#FCD116"></div><div style="flex:1;background:#E8112D"></div></div>
 <div id="s10tag" class="abs" style="left:904px;top:800px;font:600 30px Inter;color:#9a8878;letter-spacing:.06em">Transport · Livraison · Multiplateforme</div>

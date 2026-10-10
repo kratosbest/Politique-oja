@@ -56,6 +56,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
 <div id="stage"></div>
 <audio id="aud" src="assets/soundtrack_novoja.m4a" preload="auto"></audio>
 <script>
+// Version « Bientôt au Bénin » (avant le lancement) : PAGE=page.html?soon
+const SOON = /[?&]soon\b/.test(location.search);
 /* ============================================================
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
@@ -451,9 +453,9 @@ H += `<div class="scene" id="s10" style="background:#FFFFFF;color:#111">
 <img id="s10pin" src="assets/mk_pin.png" class="abs" style="left:0;top:0;width:400px;height:400px;transform-origin:50% 75%"></div>
 <div id="s10w" class="abs H" style="left:0;top:600px;width:1920px;text-align:center;font-size:120px">${L('NOV')}<span class="hlo">${L('OJA')}</span></div>
 <div id="s10by" class="abs" style="left:0;top:735px;width:1920px;text-align:center;font:600 44px Inter;color:#555">${W('avec OJA, le local devient *visible.*', 'hlo')}</div>
-<div id="s10st0" class="store" style="left:600px;top:840px">${ic('phone', 50, '#fff', 1.8)}<div><small>Télécharger sur</small><b>App Store</b></div></div>
-<div id="s10st1" class="store" style="left:990px;top:840px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>Disponible sur</small><b>Google Play</b></div></div>
-<div id="s10cta" class="pill" style="left:770px;top:970px;background:${OR};color:#fff;font:800 28px Poppins;padding:12px 30px 12px 16px">${flag(48, 32)}Téléchargez OJA · Bénin</div>
+<div id="s10st0" class="store" style="left:600px;top:840px">${ic('phone', 50, '#fff', 1.8)}<div><small>${SOON ? 'Bientôt sur' : 'Télécharger sur'}</small><b>App Store</b></div></div>
+<div id="s10st1" class="store" style="left:990px;top:840px">${ic('play', 46, '#fff', 1.8, '#fff')}<div><small>${SOON ? 'Bientôt sur' : 'Disponible sur'}</small><b>Google Play</b></div></div>
+<div id="s10cta" class="pill" style="left:${SOON ? 785 : 770}px;top:970px;background:${OR};color:#fff;font:800 28px Poppins;padding:12px 30px 12px 16px">${flag(48, 32)}${SOON ? 'Bientôt au Bénin' : 'Téléchargez OJA · Bénin'}</div>
 </div>`;
 
 H += `<div id="wipe" class="abs" style="inset:0;z-index:40;pointer-events:none">${[0, 1, 2].map(i => `<div id="wb${i}" class="band" style="display:none"></div>`).join('')}</div>
