@@ -241,22 +241,22 @@ Une **seule voix pour toute la campagne**, comme pour une bande-annonce de film 
 - débit lent ;
 - réglages de départ : Stability autour de 45 %, Similarity autour de 75 %, Style autour de 20 %.
 
-Génère un fichier par vidéo. Les « … » marquent les pauses.
+Génère un fichier par vidéo. Les « … » marquent les pauses. Dans le texte envoyé à la voix, écris toujours **« Odja »** et non « OJA » : sinon la voix épelle les lettres « O-J-A ». La voix choisie est **Isac** (accent ivoirien léger).
 
 **Concept 1** (`voix_cs1.mp3`)
-> Un pays qui bouge… Des millions d'ambitions… Et bientôt… une nouvelle façon de tout connecter. … OJA arrive.
+> Un pays qui bouge… Des millions d'ambitions… Et bientôt… une nouvelle façon de tout connecter. … Odja arrive.
 
 **Concept 2** (`voix_cs2.mp3`)
-> Attendre une moto… qui ne s'arrête jamais. Avoir une boutique… que personne ne trouve. Traverser la ville… pour un simple colis. … Et si tout était plus simple ? … Le Bénin bouge. Le monde avance. OJA arrive.
+> Attendre une moto… qui ne s'arrête jamais. Avoir une boutique… que personne ne trouve. Traverser la ville… pour un simple colis. … Et si tout était plus simple ? … Le Bénin bouge. Le monde avance. Odja arrive.
 
 **Concept 6** (`voix_cs6.mp3`)
-> Ils attendent. Ils cherchent. Ils traversent la ville. … Ils ne savent pas encore… que tout va changer. … OJA arrive.
+> Ils attendent. Ils cherchent. Ils traversent la ville. … Ils ne savent pas encore… que tout va changer. … Odja arrive.
 
 **Concept 4**, fin (`voix_cs4.mp3`)
-> Le Bénin bouge. Le monde avance. OJA arrive.
+> Le Bénin bouge. Le monde avance. Odja arrive.
 
 **Concept 7** (`voix_cs7.mp3`), plus énergique
-> Bénin… tu es prêt ? … OJA arrive. Bientôt.
+> Bénin… tu es prêt ? … Odja arrive. Bientôt.
 
 ## 9. Pièges à éviter
 
