@@ -354,3 +354,26 @@ Bande-annonce de nuit : le pays qui vit, des visages, un téléphone qui s'allum
 | 10,8–14 s | Le téléphone vibre et s'allume en orange | « Et bientôt… une nouvelle façon de tout connecter. » | Halo orange renforcé |
 | 14–17 s | La ville entière | — | Traînées de lumière qui forment le pin OJA, flash |
 | 17–21 s | Fond noir | « Odja arrive. » | Logo partiel à travers une fente, « BIENTÔT AU BÉNIN · COMING SOON » |
+
+## Concept 2 — « Et si tout était plus simple ? » (9:16, 28 s)
+
+Trois galères du quotidien dans le Cotonou moderne, puis les trois mêmes personnes reçoivent la lumière orange sur leur téléphone.
+
+- **Vidéo :** `OJA_ComingSoon_EtSiToutEtaitPlusSimple_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Sources :**
+  - 6 clips Google Flow `clips_cs/cs2_p1…p6.mp4` (prompts : `PROMPTS_GOOGLE_FLOW_COMINGSOON.md`, § 5 ; image de départ puis Frames to Video). Les images `refs_cs2/` (tirées des plans 1 à 3) ont servi de référence pour les gros plans.
+  - Voix « Isac » : `assets/cs/voix_cs2.mp3`. Silhouette de la mascotte tirée du clip fond vert c7.
+- **Rendu :**
+  1. `python3 cs2_frames.py` : découpe les plans et compose le triptyque (`assets/cs2f/`, non versionné).
+  2. `VW=1080 VH=1920 PAGE=comingsoon_simple.html node render.js 24 0 672 video.mp4 ffmpeg`.
+  3. Multiplexer avec `assets/soundtrack_comingsoon_simple.m4a` (voix placée, son d'origine des clips en bruitage, musique, −14 LUFS).
+
+| Temps | Image | Voix |
+|---|---|---|
+| 0–6 s | La jeune femme appelle, aucun zem ne s'arrête | « Attendre une moto… qui ne s'arrête jamais. » |
+| 6–11,3 s | Le commerçant attend devant sa boutique | « Avoir une boutique… que personne ne trouve. » |
+| 11,3–16,8 s | Le client et son colis au carrefour | « Traverser la ville… pour un simple colis. » |
+| 16,8–20,4 s | Les trois téléphones vibrent, lumière orange | — |
+| 20,4–23,4 s | Triptyque des trois sourires, les lumières se rejoignent | « Et si tout était plus simple ? » |
+| 23,4–24,7 s | Silhouette de la mascotte en contre-jour | « Le Bénin bouge. Le monde avance. » |
+| 24,7–28 s | Logo partiel, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
