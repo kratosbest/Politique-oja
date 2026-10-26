@@ -124,30 +124,97 @@ Aerial drone shot rising slowly above Cotonou at night, the whole city lights sp
 
 Trois galères du quotidien. À chaque fois, le téléphone vibre et une lumière orange éclaire le visage.
 
-**Personnages :**
-- **A** : le client du sketch (chemise jaune). Il a un colis à envoyer.
-- **B** : le commerçant du sketch. Personne ne trouve sa boutique.
-- **D** : nouveau personnage, à créer en image d'abord :
+**Réglages :** mode **Ingredients to Video**, en **vidéo**, 9:16, 8 s, Veo 3.1. Mets toujours l'image du personnage en ingrédient. Tous les plans se passent **vers 17 h, soleil bas et chaud venant de la gauche**, pour que la lumière raccorde.
+
+**Le son :** ambiance seulement (rue, motos, voix lointaines), **sans musique ni paroles**. Je peux ainsi garder le vrai bruit de rue sous la voix d'Isac.
+
+### Les personnages (images de référence)
+
+**A — le client** (le même que dans le sketch : reprends son image)
 ```
-Photorealistic portrait, full body, of a Beninese woman in her early thirties, elegant, wearing a green and orange wax-print dress and a small handbag, braided hair, standing on a busy roadside in Cotonou, late afternoon light, 9:16 vertical.
+Photorealistic full-body portrait, vertical 9:16. A Beninese man in his early thirties, slim build, short black hair, light beard, bright yellow short-sleeve shirt, beige chino trousers, white sneakers. He stands on a red-earth street in Cotonou in warm late-afternoon light, neutral expression, looking at the camera. Background of roadside kiosks without any readable sign. Sharp focus. No text, no logo, no watermark.
 ```
 
-### Plan 1 — Elle attend une moto (`cs2_p1.mp4`)
+**B — le commerçant** (le même que dans le sketch : reprends son image)
 ```
-Late afternoon on a busy roadside in Cotonou. Character D (the woman from the reference image) waves at passing zemidjan moto-taxis, but every one passes by already carrying a passenger. She sighs, checks her watch and fans herself in the heat. Medium shot, handheld.
+Photorealistic full-body portrait, vertical 9:16. A Beninese shopkeeper in his fifties, round friendly face, short grey hair, short-sleeve blue and orange wax-print shirt, dark trousers, brown sandals. He stands in front of his small blue and orange kiosk shop in Cotonou in warm late-afternoon light, looking at the camera. No readable sign anywhere. Sharp focus. No text, no logo, no watermark.
 ```
-### Plan 2 — La boutique que personne ne voit (`cs2_p2.mp4`)
+
+**D — la cliente pressée** (nouvelle)
 ```
-Character B (the shopkeeper from the reference image) stands in the doorway of his small colorful shop at the end of a quiet side street; on the main road in the background, people walk past without ever turning toward the shop. He watches them hopefully, then shrugs and sits down on a wooden stool. Medium-wide shot.
+Photorealistic full-body portrait, vertical 9:16. A Beninese woman in her early thirties, slim, braided hair tied up in a bun, small gold stud earrings, knee-length green and orange wax-print dress with short sleeves, small brown leather handbag on her right shoulder, a thin silver watch on her left wrist, black flat sandals. She stands on a red-earth roadside in Cotonou in warm late-afternoon light, neutral expression, looking at the camera. Background of roadside kiosks without any readable sign. Sharp focus. No text, no logo, no watermark.
 ```
-### Plan 3 — Le colis (`cs2_p3.mp4`)
+
+### Plan 1 — Elle attend une moto qui ne s'arrête pas (`cs2_p1.mp4`, ingrédient D)
 ```
-Character A (the man in the yellow shirt from the reference image) holds a cardboard parcel under his arm at a crowded intersection with a long traffic jam of cars and motorbikes. He looks at the jam, then at the parcel, and puffs out his cheeks, discouraged. Medium shot.
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the woman from the reference image: Beninese woman in her early thirties, braided hair tied up in a bun, knee-length green and orange wax-print dress, small brown handbag on her right shoulder, silver watch on her left wrist.
+SETTING: a busy red-earth roadside around 5 pm. She stands on the sidewalk, the paved road right behind her. In the background, a wooden kiosk and a woman selling oranges under a faded parasol, nothing readable.
+ACTION: 0-2 s: she turns toward the road and raises her right arm to hail a zemidjan moto-taxi. 2-5 s: three zemidjans pass behind her from left to right, each driver in a yellow shirt with a passenger already sitting on the back; none of them slows down. 5-8 s: she turns back toward the camera, lowers her arm, sighs, looks at the watch on her left wrist, then fans her face with her hand in the heat.
+CAMERA: eye level, 35 mm lens, gentle handheld, medium shot from the knees up, she stays in the centre of the frame and her face is never hidden.
+LIGHT: warm low sun from the left, light dust in the air.
+AUDIO: natural street ambience only (motorbike engines passing, distant voices), no music, no dialogue.
+AVOID: any text, readable signs, logos, brand names, licence plates, subtitles, watermark; distorted hands or faces.
 ```
-### Plans 4, 5 et 6 — La lumière orange (`cs2_p4.mp4`, `cs2_p5.mp4`, `cs2_p6.mp4`)
-Même prompt pour chacun des trois personnages. Remplace « Character D » par B puis par A, et garde le décor de leur plan.
+
+### Plan 2 — La boutique que personne ne voit (`cs2_p2.mp4`, ingrédient B)
 ```
-Close-up: Character D (same outfit, same place as before) feels her phone vibrate, takes it out and looks at it. A warm orange light from the screen illuminates her face. She raises an eyebrow, then a curious smile appears. The screen is never visible to the camera.
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the shopkeeper from the reference image: Beninese man in his fifties, round friendly face, short grey hair, short-sleeve blue and orange wax-print shirt, dark trousers, brown sandals.
+SETTING: a quiet, narrow red-earth side street around 5 pm. On the right of the frame, his small kiosk shop of wood and sheet metal painted blue and orange, open front with shelves of colourful packages without labels, a red plastic stool in front. On the left, at the end of the side street, the busy main road is visible in the background: pedestrians and zemidjans pass along it in both directions and nobody turns into the side street.
+ACTION: 0-3 s: he stands in the doorway of his shop, hands on his hips, looking hopefully toward the main road. 3-6 s: he raises one hand halfway as if to call a passer-by, then lets it drop. 6-8 s: he shrugs, sits down on the red plastic stool and rests his elbows on his knees.
+CAMERA: static, slightly low angle, 28 mm lens, medium-wide shot, the shopkeeper on the right third, the main road visible on the left in the background.
+LIGHT: warm low sun from the left, long shadows on the red earth.
+AUDIO: distant traffic and voices from the main road, quiet side street, no music, no dialogue.
+AVOID: any text, readable signs, shop names, logos, brand names on packages, subtitles, watermark; distorted hands or faces.
+```
+
+### Plan 3 — Traverser la ville pour un colis (`cs2_p3.mp4`, ingrédient A)
+```
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the man from the reference image: Beninese man in his early thirties, short black hair, light beard, bright yellow short-sleeve shirt, beige chino trousers, white sneakers.
+SETTING: the corner of a crowded intersection around 5 pm. Cars and zemidjan motorbikes are stuck bumper to bumper in every direction, heat haze and dust above the traffic.
+ACTION: 0-2 s: he stands on the corner of the sidewalk holding a closed brown cardboard parcel (about 40 cm, taped, no label) under his left arm and looks at the traffic jam. 2-5 s: he looks down at the parcel, then back at the endless jam. 5-8 s: he puffs out his cheeks, exhales slowly and shakes his head, discouraged.
+CAMERA: eye level, 50 mm lens, medium shot from the waist up, the man centred, the traffic jam in soft focus behind him, very slow push-in.
+LIGHT: warm low sun from the left, hazy golden air.
+AUDIO: traffic jam ambience (idling engines, a few car horns), no music, no dialogue.
+AVOID: any text, readable signs, logos, licence plates, labels on the parcel, subtitles, watermark; distorted hands or faces.
+```
+
+### Plan 4 — La lumière orange : la cliente (`cs2_p4.mp4`, ingrédient D)
+```
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the woman from the reference image: braided hair in a bun, gold stud earrings, green and orange wax-print dress, brown handbag on her right shoulder.
+SETTING: the same busy red-earth roadside around 5 pm, the road and passing zemidjans blurred behind her.
+ACTION: 0-2 s: her phone vibrates inside her handbag; she looks down at the bag. 2-4 s: she takes out a black smartphone and holds it in front of her chest, screen facing her, the back of the phone toward the camera. 4-6 s: a warm orange light from the screen lights her face from below; she reads and raises an eyebrow. 6-8 s: a curious smile slowly appears, she looks up from the phone, thoughtful.
+CAMERA: static, eye level, 85 mm lens, close-up from the chest up, face in the upper third, very shallow depth of field.
+LIGHT: warm low sun from the left, plus the orange glow of the screen on her face.
+AUDIO: a short phone vibration, soft street ambience, no music, no dialogue.
+AVOID: the phone screen being visible to the camera, any text, logos, subtitles, watermark; distorted hands or faces.
+```
+
+### Plan 5 — La lumière orange : le commerçant (`cs2_p5.mp4`, ingrédient B)
+```
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the shopkeeper from the reference image: short grey hair, round friendly face, blue and orange wax-print shirt.
+SETTING: he sits on the red plastic stool in front of his blue and orange kiosk shop on the quiet side street around 5 pm, the shop blurred behind him.
+ACTION: 0-2 s: his phone vibrates in his shirt pocket; he looks down at it. 2-4 s: he takes out a black smartphone and holds it in front of his chest, screen facing him, the back of the phone toward the camera. 4-6 s: a warm orange light from the screen lights his face from below; he reads and raises an eyebrow. 6-8 s: a curious smile slowly appears, he straightens up, thoughtful.
+CAMERA: static, eye level, 85 mm lens, close-up from the chest up, face in the upper third, very shallow depth of field.
+LIGHT: warm low sun from the left, plus the orange glow of the screen on his face.
+AUDIO: a short phone vibration, quiet street ambience, no music, no dialogue.
+AVOID: the phone screen being visible to the camera, any text, readable signs, logos, subtitles, watermark; distorted hands or faces.
+```
+
+### Plan 6 — La lumière orange : le client (`cs2_p6.mp4`, ingrédient A)
+```
+Vertical 9:16 cinematic live-action shot, photorealistic, 8 seconds, Cotonou, Benin.
+SUBJECT: the man from the reference image: short black hair, light beard, bright yellow short-sleeve shirt, the brown cardboard parcel still under his left arm.
+SETTING: the same crowded intersection around 5 pm, the traffic jam blurred behind him.
+ACTION: 0-2 s: his phone vibrates in his right trouser pocket; he looks down at it. 2-4 s: he takes out a black smartphone with his right hand and holds it in front of his chest, screen facing him, the back of the phone toward the camera. 4-6 s: a warm orange light from the screen lights his face from below; he reads and raises an eyebrow. 6-8 s: a curious smile slowly appears, he looks up from the phone, thoughtful.
+CAMERA: static, eye level, 85 mm lens, close-up from the chest up, face in the upper third, very shallow depth of field.
+LIGHT: warm low sun from the left, hazy golden air, plus the orange glow of the screen on his face.
+AUDIO: a short phone vibration, muffled traffic ambience, no music, no dialogue.
+AVOID: the phone screen being visible to the camera, any text, logos, labels on the parcel, licence plates, subtitles, watermark; distorted hands or faces.
 ```
 
 ### Montage du concept 2
