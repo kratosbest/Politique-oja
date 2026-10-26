@@ -377,3 +377,19 @@ Trois galères du quotidien dans le Cotonou moderne, puis les trois mêmes perso
 | 20,4–23,4 s | Triptyque des trois sourires, les lumières se rejoignent | « Et si tout était plus simple ? » |
 | 23,4–24,7 s | Silhouette de la mascotte en contre-jour | « Le Bénin bouge. Le monde avance. » |
 | 24,7–28 s | Logo partiel, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
+
+## Concept 6 — « Ils ne savent pas encore » (9:16, 20 s)
+
+Teaser mystérieux (phase « Intriguer ») remonté avec les plans du concept 2, sans nouvelle génération : les trois personnes avant que leur téléphone s'allume.
+
+- **Vidéo :** `OJA_ComingSoon_IlsNeSaventPasEncore_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Sources :** clips `clips_cs/cs2_p1…p6.mp4`, voix « Isac » `assets/cs/voix_cs6.mp3`.
+- **Rendu :** `python3 cs6_frames.py` (images dans `assets/cs6f/`, non versionné, et triptyque figé), puis `VW=1080 VH=1920 PAGE=comingsoon_ilsnesavent.html node render.js 24 0 480 video.mp4 ffmpeg`, multiplexé avec `assets/soundtrack_comingsoon_ilsnesavent.m4a`.
+
+| Temps | Image | Voix |
+|---|---|---|
+| 0–3,6 s | La jeune femme qui appelle un zem (couleurs éteintes) | « Ils attendent. » |
+| 3,6–7,2 s | Le commerçant devant sa boutique | « Ils cherchent. » |
+| 7,2–11 s | Le client et son colis | « Ils traversent la ville. » |
+| 11–15,5 s | Les trois visages figés, presque en noir et blanc ; une lumière orange les balaie et rend les couleurs | « Ils ne savent pas encore… que tout va changer. » |
+| 15,5–20 s | Logo partiel, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
