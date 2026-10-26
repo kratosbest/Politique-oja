@@ -277,24 +277,41 @@ No text, no billboards, no logos, no licence plates, no subtitles, no watermark.
 
 ## 6. Concept 4 — « OJA, c'est pour nous » (25 s, 9:16)
 
-Quatre personnes, dans quatre villes, parlent face caméra. Chaque plan contient **deux répliques** : d'abord son besoin, puis « C'est pour nous ! », que je monte à la fin en chœur.
+Quatre personnes, dans quatre villes du Bénin moderne, parlent face caméra. Chaque plan contient **deux répliques** : d'abord son besoin, puis « C'est pour nous ! », que je monte à la fin en chœur.
 
-### Plan 1 — Cotonou, le conducteur de moto (`cs4_p1.mp4`)
+**Un seul prompt pour tout le concept.** Colle-le dans l'assistant de Flow. Il oblige à faire **un plan à la fois** : l'image de départ, puis la vidéo, puis seulement ensuite le plan suivant, avec **1 seul résultat** à chaque fois pour ne pas gaspiller de crédits. L'audio est activé ici, parce que les personnes parlent.
+
 ```
-A Beninese zemidjan driver in his thirties, yellow shirt, sitting on his motorbike at a moto-taxi stand in Cotonou, looks straight into the camera and says in French, sincere and confident: "Moi, je veux plus de courses… et moins de tours à vide." Then, after a short pause, he smiles widely and says: "C'est pour nous !" Medium close-up, eye level.
+You are producing 4 short vertical videos for a teaser campaign in Benin. Work STRICTLY ONE PLAN AT A TIME, in the order below.
+
+RULES FOR EVERY PLAN:
+- Step A: generate ONE start image (1 output only) exactly as described in "START IMAGE".
+- Step B: only when that image is finished, animate THAT image with Veo 3.1 in Frames to Video mode (the image is the first frame): vertical 9:16, 8 seconds, 1 output only, audio ON, following "ANIMATION".
+- Do NOT start the next plan until the video of the current plan is completely finished.
+- Never generate several plans at the same time. Never generate more than 1 output per step.
+- Everywhere: modern present-day Benin, clean and beautiful, photorealistic, warm golden late-afternoon light. No text, no readable signs, no billboards, no logos, no subtitles, no watermark.
+- Each person speaks French with a natural Beninese accent and says ONLY the lines written below, word for word. No background music.
+
+PLAN 1 OF 4 - THE ZEMIDJAN DRIVER, COTONOU
+START IMAGE: Photorealistic vertical 9:16 photo. A Beninese zemidjan moto-taxi driver in his thirties, short hair, friendly confident face, bright yellow short-sleeve shirt without any logo, sitting on his parked motorbike at a clean modern moto-taxi stand in Cotonou; behind him, softly blurred, a wide palm-lined boulevard with solar streetlights and modern buildings. Medium close-up from the chest up, he faces the camera, face in the upper third of the frame, eyes looking into the lens, relaxed neutral expression. Camera at eye level, 1.5 metres away, 50 mm lens, shallow depth of field.
+ANIMATION: Use the start image as the first frame. Keep his face, his shirt, the motorbike and the boulevard exactly the same. Static camera. 0-1 s: he looks into the lens. 1-4 s: he says in French, sincere and confident: "Moi, je veux plus de courses... et moins de tours à vide." 4-5 s: short pause, he nods. 5-7 s: he smiles widely, points at the camera with his right hand and says with energy: "C'est pour nous !" 7-8 s: he keeps smiling at the camera. Audio: his voice and soft city ambience only.
+
+PLAN 2 OF 4 - THE MARKET WOMAN, PARAKOU (start only when plan 1 is completely finished)
+START IMAGE: Photorealistic vertical 9:16 photo. A Beninese market woman in her forties, warm determined face, colourful wax-print dress with a matching headscarf, standing behind her neat fabric stall in a clean, modern covered market in Parakou: tidy stalls of colourful folded fabrics, a few customers softly blurred behind her. Medium close-up from the chest up, she faces the camera, face in the upper third of the frame, eyes looking into the lens, neutral expression. Camera at eye level, 1.5 metres away, 50 mm lens, shallow depth of field.
+ANIMATION: Use the start image as the first frame. Keep her face, her clothes, the stall and the market exactly the same. Static camera. 0-1 s: she looks into the lens. 1-4 s: she says in French, warm and determined: "Moi, je veux que mes clients me trouvent facilement." 4-5 s: short pause, she smiles. 5-7 s: she laughs, opens both hands toward the camera and says: "C'est pour nous !" 7-8 s: she keeps smiling at the camera. Audio: her voice and soft market ambience only.
+
+PLAN 3 OF 4 - THE STUDENT, ABOMEY-CALAVI (start only when plan 2 is completely finished)
+START IMAGE: Photorealistic vertical 9:16 photo. A Beninese university student around twenty, short hair, thin glasses, light blue short-sleeve shirt, backpack straps on both shoulders, standing on a modern university campus in Abomey-Calavi: a clean paved alley with trees, a modern white and ochre faculty building softly blurred behind him, a few students walking far away. Medium close-up from the chest up, he faces the camera, face in the upper third of the frame, eyes looking into the lens, relaxed expression. Camera at eye level, 1.5 metres away, 50 mm lens, shallow depth of field.
+ANIMATION: Use the start image as the first frame. Keep his face, his glasses, his shirt and the campus exactly the same. Static camera. 0-1 s: he looks into the lens. 1-4 s: he says in French, playful: "Moi, je veux me déplacer sans me ruiner." 4-5 s: short pause, he raises his eyebrows. 5-7 s: he grins, gives a thumbs-up with his right hand and says: "C'est pour nous !" 7-8 s: he keeps grinning at the camera. Audio: his voice and soft campus ambience only.
+
+PLAN 4 OF 4 - THE RESTAURANT OWNER, PORTO-NOVO (start only when plan 3 is completely finished)
+START IMAGE: Photorealistic vertical 9:16 photo. A Beninese woman in her fifties who runs a family restaurant, proud and warm face, white apron over a wax-print dress, matching headwrap, standing behind the clean tiled counter of her bright, modern small restaurant in Porto-Novo; behind her, softly blurred, covered steaming pots and plates of local dishes. Medium close-up from the chest up, she faces the camera, face in the upper third of the frame, eyes looking into the lens, holding a wooden ladle in her right hand, neutral expression. Camera at eye level, 1.5 metres away, 50 mm lens, shallow depth of field.
+ANIMATION: Use the start image as the first frame. Keep her face, her apron, the ladle and the restaurant exactly the same. Static camera. 0-1 s: she looks into the lens. 1-4 s: she says in French, proud: "Moi, je veux livrer mes plats dans tout le quartier." 4-5 s: short pause, she smiles. 5-7 s: she raises the wooden ladle, laughs and says: "C'est pour nous !" 7-8 s: she keeps smiling at the camera. Audio: her voice and soft kitchen ambience only.
+
+When the 4 videos are finished, stop.
 ```
-### Plan 2 — Parakou, la commerçante (`cs4_p2.mp4`)
-```
-A Beninese market woman in her forties, colorful wax-print dress and matching headscarf, standing at her fabric stall in a lively market in Parakou, looks straight into the camera and says in French, warm and determined: "Moi, je veux que mes clients me trouvent facilement." Then, after a short pause, she laughs and says: "C'est pour nous !" Medium close-up, eye level.
-```
-### Plan 3 — Abomey-Calavi, l'étudiant (`cs4_p3.mp4`)
-```
-A Beninese university student around twenty, backpack and glasses, standing on a university campus in Abomey-Calavi with other students in the background, looks straight into the camera and says in French, playful: "Moi, je veux me déplacer sans me ruiner." Then, after a short pause, he grins and says: "C'est pour nous !" Medium close-up, eye level.
-```
-### Plan 4 — Porto-Novo, la restauratrice (`cs4_p4.mp4`)
-```
-A Beninese woman in her fifties who runs a small family restaurant (maquis) in Porto-Novo, apron over her wax-print dress, standing in front of steaming pots, looks straight into the camera and says in French, proud: "Moi, je veux livrer mes plats dans tout le quartier." Then, after a short pause, she raises her ladle and says: "C'est pour nous !" Medium close-up, eye level.
-```
+
+Envoie-moi les 4 vidéos (`cs4_p1.mp4` … `cs4_p4.mp4`). Vérifie avant que chacun dit bien sa phrase en entier, et qu'aucune enseigne n'est lisible.
 
 ### Montage du concept 4
 

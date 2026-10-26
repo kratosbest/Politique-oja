@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OJA — Coming soon : ils ne savent pas encore</title>
+<link rel="stylesheet" href="fonts/local.css">
+<style>
+*{margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+canvas{display:block}
+.pre{position:absolute;left:-9999px;top:0;width:10px;height:10px}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<img class="pre" id="bg" src="assets/cs6f/f0000.jpg"><img class="pre" id="tri" src="assets/cs6f/triptych.jpg"><img class="pre" id="logo" src="assets/mk_logo.png">
+<audio id="aud" src="assets/soundtrack_comingsoon_ilsnesavent.m4a" preload="auto"></audio>
+<span style="font:900 20px Poppins;position:absolute;left:-999px">A</span><span style="font:700 20px Poppins;position:absolute;left:-999px">A</span><span style="font:700 20px Inter;position:absolute;left:-999px">A</span>
+<script>
+const W = 1080, H = 1920, DUR = 20, FPS = 24;
+const cv = document.getElementById('cv'), X = cv.getContext('2d');
+const vc = document.createElement('canvas'); vc.width = W; vc.height = H; const V = vc.getContext('2d');
+const img = id => document.getElementById(id);
+const bg = img('bg'), tri = img('tri');
+
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => 1 - Math.pow(1 - clamp(u), 3);
+const easeIO = u => { u = clamp(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; };
+const rnd = (a, b = 0) => { const x = Math.sin(a * 127.1 + b * 311.7 + 17.3) * 43758.5453; return x - Math.floor(x); };
+const win = (t, a, b, f = .25) => clamp((t - a) / f) * clamp((b - t) / f);
+
+/* ---------- timeline (voice placed by the soundtrack script) ---------- */
+const CUTS = [0, 3.6, 7.2, 11.0];
+const T_TRI = 11.0, T_SWEEP = 14.15, T_END = 15.5, LASTF = 263;
+const HITS = [[3.6, .2, .05], [7.2, .2, .05], [T_TRI, .35, .08], [T_SWEEP, .45, .12], [T_END, 1.15, .26], [17.05, .3, .06], [18.6, .3, .06]];
+const glitchAt = t => { let g = 0; for (const [h, s, d] of HITS) if (t >= h - .04 && t < h + d) g = Math.max(g, s * (1 - Math.max(0, t - h) / d)); return g; };
+const CAPS = [
+  [0.9, 3.5, [[['Ils attendent.']]]],
+  [4.3, 7.1, [[['Ils cherchent.']]]],
+  [7.8, 10.9, [[['Ils traversent la ville.']]]],
+  [11.4, 13.6, [[['Ils ne savent pas encore…']]]],
+  [13.6, 15.45, [[['… que tout va '], ['changer.', 1]]]],
+  [16.2, 20.0, [[['OJA', 1], [' arrive.']]]],
+];
+
+/* ---------- helpers ---------- */
+const GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
+function decode(s, u, seed) {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]; if (' .·…’'.includes(c)) { out += c; continue; }
+    const k = clamp(u * (s.length + 4) - i, 0, 1);
+    out += k >= 1 ? c : k <= 0 ? ' ' : GLY[Math.floor(rnd(seed + i, Math.floor(u * 40)) * GLY.length)];
+  }
+  return out;
+}
+function spaced(ctx, s, x, y, sp) {
+  const ws = [...s].map(c => ctx.measureText(c).width), tot = ws.reduce((a, b) => a + b, 0) + sp * (s.length - 1);
+  let cx = x - tot / 2; ctx.textAlign = 'left';
+  [...s].forEach((c, i) => { ctx.fillText(c, cx, y); cx += ws[i] + sp; });
+}
+
+/* ---------- picture ---------- */
+function shot(t) {
+  let i = CUTS.length - 2; while (CUTS[i] > t) i--;
+  const u = (t - CUTS[i]) / (CUTS[i + 1] - CUTS[i]), z = 1 + .04 * easeIO(u);
+  const w = W * z, h = H * z;
+  V.save(); V.filter = 'saturate(.7) brightness(.93)'; V.drawImage(bg, (W - w) / 2, (H - h) / 2 - (z - 1) * 300, w, h); V.restore();
+}
+// the three faces, frozen just before their phones light up; then the orange light sweeps through
+function triptych(t) {
+  const u = (t - T_TRI) / (T_END - T_TRI), z = 1 + .06 * easeIO(u), w = W * z, h = H * z;
+  const sw = clamp((t - T_SWEEP) / .7), col = ease(clamp((t - T_SWEEP - .25) / .6));
+  V.save(); V.filter = `grayscale(${.65 * (1 - col)}) brightness(${.85 + .15 * col})`;
+  V.drawImage(tri, (W - w) / 2, (H - h) / 2 - (z - 1) * 250, w, h); V.restore();
+  V.save(); V.fillStyle = `rgba(255,${Math.round(255 - 105 * col)},${Math.round(255 - 195 * col)},${.35 + .5 * col})`;
+  if (col > 0) { V.shadowColor = '#FF6B00'; V.shadowBlur = 20 * col; }
+  V.fillRect(358, 0, 4, H); V.fillRect(718, 0, 4, H); V.restore();
+  if (sw > 0 && sw < 1) {
+    const x = -300 + (W + 600) * easeIO(sw);
+    V.save(); V.globalCompositeOperation = 'screen';
+    const g = V.createLinearGradient(x - 260, 0, x + 260, 0);
+    g.addColorStop(0, 'rgba(255,107,0,0)'); g.addColorStop(.5, 'rgba(255,170,90,.85)'); g.addColorStop(1, 'rgba(255,107,0,0)');
+    V.fillStyle = g; V.fillRect(x - 260, 0, 520, H); V.restore();
+  }
+  if (col > 0) {
+    V.save(); V.globalCompositeOperation = 'soft-light'; V.fillStyle = `rgba(255,107,0,${.4 * col})`; V.fillRect(0, 0, W, H); V.restore();
+  }
+}
+
+/* ---------- end card background ---------- */
+function backgroundV() {
+  V.fillStyle = '#07070a'; V.fillRect(0, 0, W, H);
+  V.save(); V.strokeStyle = 'rgba(255,107,0,.05)'; V.lineWidth = 1;
+  for (let x = 0; x <= W; x += 90) { V.beginPath(); V.moveTo(x + .5, 0); V.lineTo(x + .5, H); V.stroke(); }
+  for (let y = 0; y <= H; y += 90) { V.beginPath(); V.moveTo(0, y + .5); V.lineTo(W, y + .5); V.stroke(); }
+  V.restore();
+}
+
+/* ---------- end card: partial logo through a slit ---------- */
+function endCardV(t) {
+  const u = t - T_END;
+  backgroundV();
+  const LS = 700, bc = 760, LX = 540 - LS / 2, LY = bc - LS * 377 / 1024;
+  const sh = 330 * easeIO(u / .38) + 30 * easeIO((u - 1.1) / .8);
+  const gl = V.createRadialGradient(540, bc, 10, 540, bc, 520); gl.addColorStop(0, `rgba(255,107,0,${.32 * ease(u / .5)})`); gl.addColorStop(1, 'rgba(255,107,0,0)');
+  V.fillStyle = gl; V.fillRect(0, bc - 520, W, 1040);
+  V.save(); V.beginPath(); V.rect(0, bc - sh / 2, W, sh); V.clip(); V.drawImage(img('logo'), LX, LY, LS, LS); V.restore();
+  V.save(); V.shadowColor = '#FF6B00'; V.shadowBlur = 24; V.fillStyle = `rgba(255,170,90,${clamp(u / .1)})`;
+  V.fillRect(0, bc - sh / 2 - 2, W, 4); V.fillRect(0, bc + sh / 2 - 2, W, 4); V.restore();
+  V.save(); V.textBaseline = 'alphabetic';
+  V.font = '900 168px Poppins'; V.fillStyle = '#fff';
+  const k1 = clamp((u - .35) / .45); if (k1 > 0) spaced(V, decode('BIENTÔT', k1, 300), 540, 1225, 6);
+  V.font = '700 38px Inter'; V.fillStyle = '#FF6B00';
+  const k2 = clamp((u - .7) / .5); if (k2 > 0) spaced(V, decode('AU BÉNIN · COMING SOON', k2, 400), 540, 1315, 16);
+  V.restore();
+}
+
+/* ---------- post: glitch, grain, vignette, captions ---------- */
+const grains = [0, 1, 2, 3].map(s => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'), d = g.createImageData(256, 256);
+  for (let i = 0; i < d.data.length; i += 4) { const v = rnd(i * .37 + s * 1000, s) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  g.putImageData(d, 0, 0); return c; });
+function captions(t) {
+  X.save(); X.font = '700 60px Poppins'; X.textBaseline = 'middle'; X.textAlign = 'left';
+  for (const [a, b, lines] of CAPS) {
+    const al = win(t, a, b, .18); if (al <= 0) continue;
+    const dy = 14 * (1 - ease((t - a) / .25));
+    lines.forEach((segs, k) => {
+      const y = 1540 + (k - (lines.length - 1) / 2) * 76 + dy;
+      const tot = segs.reduce((s, [txt]) => s + X.measureText(txt).width, 0); let x = 540 - tot / 2;
+      for (const [txt, o] of segs) {
+        X.shadowColor = 'rgba(0,0,0,.85)'; X.shadowBlur = 18; X.fillStyle = o ? `rgba(255,122,26,${al})` : `rgba(255,255,255,${al})`;
+        X.fillText(txt, x, y); x += X.measureText(txt).width;
+      }
+    });
+  }
+  X.restore();
+}
+function post(t, fi) {
+  const g = glitchAt(t);
+  X.globalCompositeOperation = 'source-over'; X.drawImage(vc, 0, 0);
+  if (g > .02) {
+    const n = 6 + Math.floor(10 * g);
+    for (let k = 0; k < n; k++) {
+      const y = Math.floor(rnd(fi, k) * H), h = 8 + Math.floor(rnd(fi, k + 50) * 130 * g), dx = (rnd(fi, k + 99) - .5) * 220 * g;
+      X.drawImage(vc, 0, y, W, h, dx, y, W, h);
+    }
+    const s = Math.round(5 + 22 * g), id = X.getImageData(0, 0, W, H), d = id.data, src = new Uint8ClampedArray(d);
+    for (let y = 0; y < H; y++) { const row = y * W * 4;
+      for (let x = 0; x < W; x++) { const i = row + x * 4; d[i] = src[row + Math.min(W - 1, x + s) * 4]; d[i + 2] = src[row + Math.max(0, x - s) * 4 + 2]; } }
+    X.putImageData(id, 0, 0);
+  }
+  X.save(); X.globalAlpha = .05; X.globalCompositeOperation = 'screen';
+  const gc = grains[fi % 4], ox = Math.floor(rnd(fi, 1) * 256), oy = Math.floor(rnd(fi, 2) * 256);
+  for (let y = -oy; y < H; y += 256) for (let x = -ox; x < W; x += 256) X.drawImage(gc, x, y);
+  X.restore();
+  // soft dark gradient at the bottom so the captions read on any picture
+  const bgr = X.createLinearGradient(0, 1220, 0, H); bgr.addColorStop(0, 'rgba(0,0,0,0)'); bgr.addColorStop(1, 'rgba(0,0,0,.55)');
+  X.fillStyle = bgr; X.fillRect(0, 1220, W, H - 1220);
+  const v = X.createRadialGradient(540, 960, 650, 540, 960, 1300); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.45)');
+  X.fillStyle = v; X.fillRect(0, 0, W, H);
+  if (t < .4) { X.fillStyle = `rgba(0,0,0,${1 - ease(t / .4)})`; X.fillRect(0, 0, W, H); }
+  captions(t);
+}
+
+let curSrc = '';
+const setSrc = async (el, src, cur) => { if (src !== cur) el.src = src; await el.decode().catch(() => 0); return src; };
+window.renderAt = async t => {
+  const fi = Math.round(t * FPS);
+  if (t < T_TRI) {
+    curSrc = await setSrc(bg, `assets/cs6f/f${String(Math.min(fi, LASTF)).padStart(4, '0')}.jpg`, curSrc);
+    shot(t);
+  } else if (t < T_END) { await tri.decode().catch(() => 0); triptych(t); }
+  else endCardV(t);
+  post(t, fi);
+};
+window.waitFrame = () => 0;
+window.ready = (async () => {
+  for (const f of ['900 168px Poppins', '700 60px Poppins', '700 38px Inter']) await document.fonts.load(f);
+  await document.fonts.ready; await img('logo').decode().catch(() => 0); await tri.decode().catch(() => 0);
+  await window.renderAt(0);
+  return true;
+})();
+if (location.search.includes('play')) {
+  const a = document.getElementById('aud'); let t0 = null, busy = false;
+  const fit = () => { const s = Math.min(innerWidth / W, innerHeight / H); cv.style.transform = `scale(${s})`; cv.style.transformOrigin = '0 0'; };
+  fit(); addEventListener('resize', fit);
+  const loop = async () => { if (!busy) { busy = true; const t = a && !a.paused ? a.currentTime : (t0 === null ? 0 : (performance.now() - t0) / 1000); await window.renderAt(t % DUR); busy = false; } requestAnimationFrame(loop); };
+  document.addEventListener('click', () => { a.currentTime = 0; a.play().catch(() => { t0 = performance.now(); }); });
+  window.ready.then(loop);
+}
+
+</script>
+</body>
+</html>
