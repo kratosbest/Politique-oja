@@ -331,3 +331,26 @@ Teasing 100 % motion design, sans clip IA. Le compte à rebours traverse le Bén
 | 6,1–7 s | Le « 1 » devient la carte du Bénin, les 5 villes s'allument |
 | 7–8 s | « Le changement approche. » |
 | 8–10 s | Logo dévoilé en partie à travers une fente, « BIENTÔT », « AU BÉNIN · COMING SOON » |
+
+## Concept 1 — « Quelque chose arrive au Bénin » (21 s, 16:9 et 9:16)
+
+Bande-annonce de nuit : le pays qui vit, des visages, un téléphone qui s'allume en orange, des traînées de lumière qui se rejoignent en pin OJA, puis le logo en partie dévoilé.
+
+- **Vidéos :** `OJA_ComingSoon_QuelqueChoseArrive_16x9.mp4` (1920 × 1080, format cinéma 2,39:1) et `OJA_ComingSoon_QuelqueChoseArrive_9x16.mp4` (1080 × 1920 : image dans un cadre 4:5 sur fond flouté, texte au-dessus et en dessous), 24 i/s.
+- **Sources :**
+  - 8 clips Google Flow dans `clips_cs/` (prompts : `PROMPTS_GOOGLE_FLOW_COMINGSOON.md`, § 4). Leur son d'origine contient de la musique générée par Veo, il n'est pas utilisé.
+  - Voix ElevenLabs « Isac » : `assets/cs/voix_cs1.mp3`. Le nom est écrit « Odja » dans le texte pour qu'il soit lu d'un bloc.
+- **Rendu :**
+  1. `python3 cs1_frames.py` : découpe les plans en images (`assets/csf/`, non versionné) et efface la marque inventée par Veo sur le casque du zem.
+  2. `VW=1920 VH=1080 PAGE=comingsoon_trailer.html node render.js 24 0 504 video.mp4 ffmpeg` (ou `comingsoon_trailer_9x16.html` avec `VW=1080 VH=1920`).
+  3. Multiplexer avec `assets/soundtrack_comingsoon_trailer.m4a` (musique, bruitages et voix placée, −14 LUFS).
+
+| Temps | Plan | Voix | Habillage |
+|---|---|---|---|
+| 0–3,2 s | Survol du pont de Cotonou | « Un pays qui bouge. » | Étiquette COTONOU |
+| 3,2–5 s | La rue de nuit, zems | — | Ambiance de rue, passages de motos |
+| 5–6,6 s | L'Atacora à l'aube | — | Étiquette ATACORA |
+| 6,6–10,8 s | Portraits : commerçante, zem, étudiant | « Des millions d'ambitions. » | |
+| 10,8–14 s | Le téléphone vibre et s'allume en orange | « Et bientôt… une nouvelle façon de tout connecter. » | Halo orange renforcé |
+| 14–17 s | La ville entière | — | Traînées de lumière qui forment le pin OJA, flash |
+| 17–21 s | Fond noir | « Odja arrive. » | Logo partiel à travers une fente, « BIENTÔT AU BÉNIN · COMING SOON » |
