@@ -307,3 +307,27 @@ Sketch comique sur la fonction « enregistrer et retrouver un commerce sur la ca
 | 28,3–32,9 s | ar6 | « Ah ! Je vous vois ! » / « Bienvenue, bienvenue ! » | Poignée de main |
 | 32,9–36,2 s | Arrêt sur image + mascotte (c7) | « Fini les "après le manguier, tourne à gauche" ! » | Citation barrée, tampon « FINI ! », « Ton commerce sur la carte OJA » |
 | 36,2–40,5 s | Logo (mascotte c8) | « OJA. Le local devient visible. » | App Store / Google Play, « Mets ton commerce sur OJA » |
+
+---
+
+# OJA — campagne « COMING SOON »
+
+Teasing avant le lancement, en 7 vidéos et 3 phases (Intriguer, Révéler, Créer l'attente). Le plan complet, mon avis sur la proposition de départ et les prompts Google Flow sont dans `PROMPTS_GOOGLE_FLOW_COMINGSOON.md`.
+
+## Concept 3 — « Le compte à rebours » (9:16, 10 s)
+
+Teasing 100 % motion design, sans clip IA. Le compte à rebours traverse le Bénin, du sud au nord.
+
+- **Vidéo :** `OJA_ComingSoon_CompteARebours_9x16.mp4` (1080 × 1920, 30 i/s)
+- **Source :** `comingsoon_countdown.html`. Tout est dessiné dans un canvas, avec `renderAt(t)` comme pour les autres films : glitch (tranches décalées, séparation RVB), grain, lignes de balayage.
+- **Images :** `assets/cs/cd1…cd5.jpg`, photos des villes passées en duotone orange. La carte du Bénin utilise les vraies frontières (comme le tour du Bénin) ; le logo vient de `assets/mk_logo.png`.
+- **Son :** `assets/soundtrack_comingsoon_countdown.m4a`, sound design synthétisé (drone, impacts, glitchs, montée, impact final), à −14 LUFS.
+- **Rendu :** `VW=1080 VH=1920 PAGE=comingsoon_countdown.html node render.js 30 0 300 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
+
+| Temps | Visuel |
+|---|---|
+| 0–0,5 s | Écran noir, allumage façon vieux téléviseur |
+| 0,5–6,1 s | 5 COTONOU (Place de l'Amazone, photo © Présidence du Bénin, crédit affiché), 4 PORTO-NOVO, 3 OUIDAH (Porte du Non-Retour), 2 ABOMEY (Béhanzin), 1 NATITINGOU (Tata Somba). Chaque chiffre est rempli par la photo de la ville. |
+| 6,1–7 s | Le « 1 » devient la carte du Bénin, les 5 villes s'allument |
+| 7–8 s | « Le changement approche. » |
+| 8–10 s | Logo dévoilé en partie à travers une fente, « BIENTÔT », « AU BÉNIN · COMING SOON » |
