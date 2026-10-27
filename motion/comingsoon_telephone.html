@@ -13,7 +13,7 @@ canvas{display:block}
 </head>
 <body>
 <canvas id="cv" width="1080" height="1920"></canvas>
-<img class="pre" id="logo" src="assets/mk_logo.png"><img class="pre" id="pin" src="assets/mk_pin.png"><img class="pre" id="moto" src="assets/moto.png"><img class="pre" id="car" src="assets/car.png"><img class="pre" id="tricycle" src="assets/tricycle.png">
+<img class="pre" id="logo" src="assets/mk_logo.png"><img class="pre" id="pin" src="assets/mk_pin.png"><img class="pre" id="moto" src="assets/moto.png"><img class="pre" id="car" src="assets/car.png"><img class="pre" id="tricycle" src="assets/tricycle.png"><img class="pre" id="colis" src="assets/cs/obj_colis.png"><img class="pre" id="plat" src="assets/cs/obj_plat.png"><img class="pre" id="sac" src="assets/cs/obj_sac.png"><img class="pre" id="occasion" src="assets/cs/obj_occasion.png"><img class="pre" id="reveil" src="assets/cs/obj_reveil.png">
 <audio id="aud" src="assets/soundtrack_comingsoon_telephone.m4a" preload="auto"></audio>
 <span style="font:900 20px Poppins;position:absolute;left:-999px">A</span><span style="font:800 20px Poppins;position:absolute;left:-999px">A</span><span style="font:700 20px Inter;position:absolute;left:-999px">A</span>
 <script>
@@ -38,10 +38,11 @@ const T_BUZZ = 0.85, T_SPIRAL = 8.4, T_FLASH = 9.95, T_END = 10.4;
 const HITS = [[T_BUZZ, .3, .06], [3.0, .2, .05], [T_SPIRAL, .25, .06], [T_FLASH, 1.0, .22], [12.05, .25, .06], [14.2, .3, .06]];
 const glitchAt = t => { let g = 0; for (const [h, s, d] of HITS) if (t >= h - .04 && t < h + d) g = Math.max(g, s * (1 - Math.max(0, t - h) / d)); return g; };
 const WORDS = [[3.0, 'SE DÉPLACER'], [4.4, 'LIVRER'], [5.2, 'COMMANDER'], [6.0, 'ÊTRE VISIBLE'], [6.8, 'REVENDRE'], [7.6, 'RÉSERVER'], [T_SPIRAL, null]];
-// the OJA services leave the screen one by one: real OJA vehicles, then the app's other services
+// the OJA services leave the screen one by one: real OJA vehicles, then photoreal objects for the other services
+// (parcel, meal, shopping bag, second-hand items, alarm clock: generated in Google Flow, cut out with rembg)
 const ITEMS = [
   { t: 3.0, im: 'moto', w: 380 }, { t: 3.35, im: 'car', w: 410 }, { t: 3.7, im: 'tricycle', w: 290 },
-  { t: 4.4, icon: 'pkg' }, { t: 5.2, icon: 'utensils' }, { t: 6.0, icon: 'store' }, { t: 6.8, icon: 'recycle' }, { t: 7.6, icon: 'calendar' },
+  { t: 4.4, im: 'colis', w: 250 }, { t: 5.2, im: 'plat', w: 300 }, { t: 6.0, im: 'sac', w: 215 }, { t: 6.8, im: 'occasion', w: 320 }, { t: 7.6, im: 'reveil', w: 205 },
 ];
 const CAPS = [[10.65, 13.2, [[['Le Bénin bouge.']], [['Le monde avance.']]]], [13.3, 15.0, [[['OJA', 1], [' arrive.']]]]];
 
@@ -137,10 +138,15 @@ function orbit(t) {
   ITEMS.forEach((it, i) => {
     const u = (t - it.t) / .6; if (u <= 0 || k >= 1) return;
     const a = i * Math.PI * 2 / ITEMS.length + .5 * (t - 3) + 7 * k * k;
-    const R = (1 - k), ox = cx + 380 * R * Math.cos(a), oy = cy + 300 * R * Math.sin(a), z = Math.sin(a);
-    const p = back(u), x = cx + (ox - cx) * p, y = cy + (oy - cy) * p;
-    const s = (.25 + .75 * clamp(u * 1.6)) * (.78 + .22 * z) * (1 - .75 * k);
-    out.push({ it, x, y, z: u < 1 ? 1 : z, s, a: clamp(u * 3) * (1 - clamp((k - .85) / .15)) });
+    const R = (1 - k), ox = cx + 380 * R * Math.cos(a), oy = cy + 300 * R * Math.sin(a), zo = Math.sin(a);
+    const so = (.78 + .22 * zo) * (1 - .75 * k);
+    let x, y, s, z;
+    if (u < .55) {                       // pops out big, in front of the phone, while its word appears
+      const p = back(u / .55); x = cx; y = cy + 150 * p; s = .3 + 1.05 * p; z = 1;
+    } else {                             // then joins its place on the orbit
+      const q = easeIO((u - .55) / .9); x = cx + (ox - cx) * q; y = cy + 150 + (oy - cy - 150) * q; s = 1.35 + (so - 1.35) * q; z = q < 1 ? 1 : zo;
+    }
+    out.push({ it, x, y, z, s, a: clamp(u * 3) * (1 - clamp((k - .85) / .15)) });
   });
   return out;
 }
@@ -267,7 +273,7 @@ window.ready = (async () => {
   for (const [k, p] of Object.entries(ICON_PATHS)) { const im = new Image(); im.src = svg(p); await im.decode().catch(() => 0); icons[k] = im; }
   for (const f of ['900 150px Poppins', '900 104px Poppins', '800 92px Poppins', '800 78px Poppins', '700 60px Poppins', '700 40px Inter']) await document.fonts.load(f);
   await document.fonts.ready;
-  for (const id of ['logo', 'pin', 'moto', 'car', 'tricycle']) await img(id).decode().catch(() => 0);
+  for (const id of ['logo', 'pin', 'moto', 'car', 'tricycle', 'colis', 'plat', 'sac', 'occasion', 'reveil']) await img(id).decode().catch(() => 0);
   await window.renderAt(0);
   return true;
 })();

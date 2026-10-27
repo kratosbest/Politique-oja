@@ -422,7 +422,7 @@ Quatre personnes, quatre villes, quatre besoins, puis « C'est pour nous ! » en
 
 - **Vidéo :** `OJA_ComingSoon_LeTelephone_9x16.mp4` (1080 × 1920, 24 i/s)
 - **Source :** `comingsoon_telephone.html` (canvas, `renderAt(t)`). Le téléphone est dessiné à plat puis projeté en bandes verticales pour simuler sa rotation en 3D.
-- **Visuels :** vrais véhicules OJA détourés (`assets/moto.png`, `car.png`, `tricycle.png`), icônes de l'app (colis, restaurants, commerces, NOVOJA, réservation), `assets/mk_pin.png` et `assets/mk_logo.png`.
+- **Visuels :** vrais véhicules OJA détourés (`assets/moto.png`, `car.png`, `tricycle.png`) et objets photoréalistes générés dans Google Flow puis détourés avec rembg (`assets/cs/obj_colis.png`, `obj_plat.png`, `obj_sac.png`, `obj_occasion.png`, `obj_reveil.png`), `assets/mk_pin.png` et `assets/mk_logo.png`. Chaque objet sort d.abord en grand devant le téléphone, au moment où son mot s.affiche.
 - **Son :** `assets/soundtrack_comingsoon_telephone.m4a` (vibration, pops, arpège, impact) ; voix « Isac » reprise de `assets/cs/voix_cs2.mp3`.
 - **Rendu :** `VW=1080 VH=1920 PAGE=comingsoon_telephone.html node render.js 24 0 360 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
 
