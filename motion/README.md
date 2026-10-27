@@ -393,3 +393,25 @@ Teaser mystérieux (phase « Intriguer ») remonté avec les plans du concept 2,
 | 7,2–11 s | Le client et son colis | « Ils traversent la ville. » |
 | 11–15,5 s | Les trois visages figés, presque en noir et blanc ; une lumière orange les balaie et rend les couleurs | « Ils ne savent pas encore… que tout va changer. » |
 | 15,5–20 s | Logo partiel, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
+
+## Concept 4 — « OJA, c'est pour nous » (9:16, 25 s)
+
+Quatre personnes, quatre villes, quatre besoins, puis « C'est pour nous ! » en chœur et la révélation de la mascotte (phase 3).
+
+- **Vidéo :** `OJA_ComingSoon_CestPourNous_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Sources :**
+  - 4 clips Google Flow `clips_cs/cs4_p1…p4.mp4` (prompt unique, § 6 de `PROMPTS_GOOGLE_FLOW_COMINGSOON.md`) ; leurs voix sont celles générées par Veo.
+  - Le zem disait des mots inventés au milieu de sa phrase : ils sont coupés, et la seconde moitié est légèrement zoomée pour masquer la coupe.
+  - Mascotte : clip fond vert c7 (bras ouverts). Voix « Isac » : « Le Bénin bouge. Le monde avance. Odja arrive. », reprise de `assets/cs/voix_cs2.mp3`.
+- **Rendu :** `python3 cs4_frames.py` (images dans `assets/cs4f/`, non versionné, avec la mosaïque 2 × 2), puis `VW=1080 VH=1920 PAGE=comingsoon_pournous.html node render.js 24 0 600 video.mp4 ffmpeg`, multiplexé avec `assets/soundtrack_comingsoon_pournous.m4a`.
+
+| Temps | Image | Son |
+|---|---|---|
+| 0–3,3 s | Conducteur de zem, Cotonou | « Moi, je veux plus de courses… et moins de tours à vide. » |
+| 3,3–6,5 s | Commerçante, Parakou | « Moi, je veux que mes clients me trouvent facilement. » |
+| 6,5–8,5 s | Étudiant, Abomey-Calavi | « Moi, je veux me déplacer sans me ruiner. » |
+| 8,5–11 s | Restauratrice, Porto-Novo | « Moi, je veux livrer mes plats dans tout le quartier. » |
+| 11–16,9 s | Les quatre, l'un après l'autre | « C'est pour nous ! » |
+| 16,9–18,6 s | Mosaïque 2 × 2, « C'EST POUR NOUS. » | Les quatre en chœur |
+| 18,6–21,6 s | La mascotte dévoilée, bras ouverts, fond orange | Isac : « Le Bénin bouge. Le monde avance. » |
+| 21,6–25 s | Logo complet, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
