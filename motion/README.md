@@ -415,3 +415,20 @@ Quatre personnes, quatre villes, quatre besoins, puis « C'est pour nous ! » en
 | 16,9–18,6 s | Mosaïque 2 × 2, « C'EST POUR NOUS. » | Les quatre en chœur |
 | 18,6–21,6 s | La mascotte dévoilée, bras ouverts, fond orange | Isac : « Le Bénin bouge. Le monde avance. » |
 | 21,6–25 s | Logo complet, « BIENTÔT · AU BÉNIN · COMING SOON » | « Odja arrive. » |
+
+## Concept 5 — « Le téléphone qui change tout » (9:16, 15 s)
+
+100 % motion design, sans clip IA : un téléphone flotte dans le noir, vibre, s'allume en orange ; les services d'OJA en sortent un par un et tournent autour de lui, puis repartent en spirale dans l'écran d'où sort le logo.
+
+- **Vidéo :** `OJA_ComingSoon_LeTelephone_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `comingsoon_telephone.html` (canvas, `renderAt(t)`). Le téléphone est dessiné à plat puis projeté en bandes verticales pour simuler sa rotation en 3D.
+- **Visuels :** vrais véhicules OJA détourés (`assets/moto.png`, `car.png`, `tricycle.png`), icônes de l'app (colis, restaurants, commerces, NOVOJA, réservation), `assets/mk_pin.png` et `assets/mk_logo.png`.
+- **Son :** `assets/soundtrack_comingsoon_telephone.m4a` (vibration, pops, arpège, impact) ; voix « Isac » reprise de `assets/cs/voix_cs2.mp3`.
+- **Rendu :** `VW=1080 VH=1920 PAGE=comingsoon_telephone.html node render.js 24 0 360 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
+
+| Temps | Visuel | Texte / voix |
+|---|---|---|
+| 0–3 s | Le téléphone apparaît, vibre, l'écran s'allume en orange | « Un seul téléphone. » |
+| 3–8,4 s | Moto, voiture, tricycle, puis les icônes sortent de l'écran et tournent autour | SE DÉPLACER, LIVRER, COMMANDER, ÊTRE VISIBLE, REVENDRE, RÉSERVER |
+| 8,4–10 s | Tout repart en spirale dans l'écran, flash | « Une seule app. » |
+| 10–15 s | Le logo sort du téléphone, « BIENTÔT · AU BÉNIN · COMING SOON » | « Le Bénin bouge. Le monde avance. Odja arrive. » |
