@@ -422,7 +422,7 @@ Quatre personnes, quatre villes, quatre besoins, puis « C'est pour nous ! » en
 
 - **Vidéo :** `OJA_ComingSoon_LeTelephone_9x16.mp4` (1080 × 1920, 24 i/s)
 - **Source :** `comingsoon_telephone.html` (canvas, `renderAt(t)`). Le téléphone est dessiné à plat puis projeté en bandes verticales pour simuler sa rotation en 3D.
-- **Visuels :** vrais véhicules OJA détourés (`assets/moto.png`, `car.png`, `tricycle.png`) et objets photoréalistes générés dans Google Flow puis détourés avec rembg (`assets/cs/obj_colis.png`, `obj_plat.png`, `obj_sac.png`, `obj_occasion.png`, `obj_reveil.png`), `assets/mk_pin.png` et `assets/mk_logo.png`. Chaque objet sort d.abord en grand devant le téléphone, au moment où son mot s.affiche.
+- **Visuels :** vrais véhicules OJA détourés (`assets/moto.png`, `car.png`, `tricycle.png`) et objets photoréalistes générés dans Google Flow puis détourés avec rembg (`assets/cs/obj_colis.png`, `obj_plat.png`, `obj_sac.png`, `obj_occasion.png`, `obj_reveil.png`), `assets/mk_pin.png` et `assets/mk_logo.png`. Chaque objet sort d'abord en grand devant le téléphone, au moment où son mot s'affiche.
 - **Son :** `assets/soundtrack_comingsoon_telephone.m4a` (vibration, pops, arpège, impact) ; voix « Isac » reprise de `assets/cs/voix_cs2.mp3`.
 - **Rendu :** `VW=1080 VH=1920 PAGE=comingsoon_telephone.html node render.js 24 0 360 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
 
@@ -432,3 +432,27 @@ Quatre personnes, quatre villes, quatre besoins, puis « C'est pour nous ! » en
 | 3–8,4 s | Moto, voiture, tricycle, puis les icônes sortent de l'écran et tournent autour | SE DÉPLACER, LIVRER, COMMANDER, ÊTRE VISIBLE, REVENDRE, RÉSERVER |
 | 8,4–10 s | Tout repart en spirale dans l'écran, flash | « Une seule app. » |
 | 10–15 s | Le logo sort du téléphone, « BIENTÔT · AU BÉNIN · COMING SOON » | « Le Bénin bouge. Le monde avance. Odja arrive. » |
+
+## Pub OJA Market — « Tout ce que vous aimez » (9:16, 20,5 s)
+
+Pub de lancement d'OJA Market, construite comme les spots produit « tout ce que vous aimez, de A à Z » : un ruban de lumière orange, les vrais écrans de l'app, une route lumineuse sur une ville en 3D, le colis livré sur la table, deux slogans, puis le logo. Le produit vedette est un plat : poulet braisé, riz au gras et alloco du Maquis Chez Tanti (restaurant d'exemple). Pas de voix off, aucun clip IA.
+
+- **Vidéo :** `OJA_Market_Pub_ToutCeQueVousAimez_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_market_pub.html` (DOM + canvas, `renderAt(t)`). Écrans OJA Market repris du film Market (accueil, menu du restaurant, paiement) ; téléphone et cartes en CSS 3D ; ruban, ville 3D, moto et lumières sur canvas.
+- **Visuels :** `assets/cs/obj_plat.png` (le plat), `assets/moto.png` (le livreur OJA), `assets/mk_logo.png` ; `assets/mkp/` est généré par `python3 mkp_assets.py` (table en bois procédurale, logo OJA imprimé en blanc sur la boîte, photo du plat pour le menu).
+- **Son :** `assets/soundtrack_market_pub.m4a`, entièrement synthétisé (groove afro-pop en ré majeur, clics de frappe, carillon de paiement, moteur de la moto, notification, impacts).
+- **Rendu :** `VW=1080 VH=1920 PAGE=oja_market_pub.html node render.js 24 0 492 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
+
+| Temps | Visuel | Texte à l'écran |
+|---|---|---|
+| 0–1,6 s | Téléphone dans le noir, un ruban de lumière orange tourne autour | — |
+| 1,6–3 s | Zoom sur la recherche OJA Market, on tape « Poulet braisé » | — |
+| 3–5,4 s | Menu du Maquis Chez Tanti ; les cartes des plats sortent de l'écran en 3D, le poulet braisé vole vers la caméra | — |
+| 5,4–6,75 s | Le plat en grand, qui tourne lentement | MAQUIS CHEZ TANTI · Poulet braisé · 3 500 XOF · ★ 4,9 · Livraison OJA |
+| 6,75–8,3 s | Paiement : Livraison OJA (moto), « PAYER 4 700 XOF » → « Payé » | — |
+| 8,3–11,5 s | Une comète plonge sur une ville 3D (lagune, ponts) ; la route s'allume du restaurant à Haie Vive | « Votre commande arrive » : Acceptée → Préparation → En route → Livrée, 12 → 1 min |
+| 11,5–12,45 s | Le livreur OJA passe à moto, traînée de lumière | — |
+| 12,45–14,6 s | Le plat se pose sur une table en bois, le ruban fait le tour et révèle le logo OJA sur la boîte | Notification « Commande livrée — Votre poulet braisé est arrivé. Bon appétit ! » |
+| 14,6–16,3 s | Fond chaud, trait de lumière | « Tout ce que vous aimez. » |
+| 16,3–17,75 s | Flèche de lumière | « De Cotonou à Parakou. » |
+| 17,75–20,5 s | Logo OJA, flèche, boutons des stores | « OJA Market » · « Téléchargez l'app OJA » · App Store · Google Play |
