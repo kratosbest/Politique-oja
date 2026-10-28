@@ -440,7 +440,7 @@ Pub de lancement d'OJA Market, construite comme les spots produit « tout ce que
 - **Vidéo :** `OJA_Market_Pub_ToutCeQueVousAimez_9x16.mp4` (1080 × 1920, 24 i/s)
 - **Source :** `oja_market_pub.html` (DOM + canvas, `renderAt(t)`). Écrans OJA Market repris du film Market (accueil, menu du restaurant, paiement) ; téléphone et cartes en CSS 3D ; ruban, ville 3D, moto et lumières sur canvas.
 - **Visuels :** `assets/cs/obj_plat.png` (le plat), `assets/moto.png` (le livreur OJA), `assets/mk_logo.png` ; `assets/mkp/` est généré par `python3 mkp_assets.py` (table en bois procédurale, logo OJA imprimé en blanc sur la boîte, photo du plat pour le menu).
-- **Son :** `assets/soundtrack_market_pub.m4a`, entièrement synthétisé (groove afro-pop en ré majeur, clics de frappe, carillon de paiement, moteur de la moto, notification, impacts).
+- **Son :** `assets/soundtrack_market_pub.m4a`, entièrement synthétisé (groove afro-pop en ré majeur, clics de frappe, carillon de paiement, moteur de la moto, notification, impacts). Les changements d'écran sont marqués par un accord inversé qui monte vers la coupe, sans « whoosh » de souffle.
 - **Rendu :** `VW=1080 VH=1920 PAGE=oja_market_pub.html node render.js 24 0 492 video.mp4 ffmpeg`, puis multiplexer avec la bande son.
 
 | Temps | Visuel | Texte à l'écran |
