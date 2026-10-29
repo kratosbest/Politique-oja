@@ -12,7 +12,7 @@ the subscription or the --max-credits budget, so nothing is ever billed beyond t
   python3 tts.py --voices                                    # voices in "My voices"
   python3 tts.py --find-shared Isac                          # search the voice library
   python3 tts.py --add-shared PUBLIC_OWNER_ID VOICE_ID NAME  # add a library voice to "My voices"
-  python3 tts.py --voice SomyDQQmnE7TsltdiDgp --text-file voix.txt --out ../assets/cs/voix.mp3 [--model eleven_v3]
+  python3 tts.py --voice SomyDQQmnE7TsltdiDgp --text-file voix.txt --out ../assets/cs/voix.mp3 [--model eleven_v4]
                  [--max-credits 400] [--dry-run]
 The generation also writes <out>.json with per-character timings (to sync captions with the voice)."""
 import argparse, base64, json, os, sys, urllib.error, urllib.parse, urllib.request
@@ -48,7 +48,7 @@ def main():
     ap.add_argument('--credits', action='store_true'); ap.add_argument('--models', action='store_true'); ap.add_argument('--voices', action='store_true')
     ap.add_argument('--find-shared'); ap.add_argument('--add-shared', nargs=3, metavar=('PUBLIC_OWNER_ID', 'VOICE_ID', 'NAME'))
     ap.add_argument('--voice'); ap.add_argument('--text-file'); ap.add_argument('--out')
-    ap.add_argument('--model', default='eleven_v3'); ap.add_argument('--language', default='fr')
+    ap.add_argument('--model', default='eleven_v4'); ap.add_argument('--language', default='fr')
     ap.add_argument('--max-credits', type=int); ap.add_argument('--cost-per-char', type=float, default=1.0)
     ap.add_argument('--stability', type=float); ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
