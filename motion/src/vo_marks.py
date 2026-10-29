@@ -49,3 +49,10 @@ LIVRE = dict(hook='Tu commandes', midi='midi et demi', prog='Avec Odja', choisis
 VIDE = dict(hook='Chauffeur', trouvent='Avec Odja', prix='Et le prix', bagarre='plus de bagarre', zones="L'appli", attendent='là où',
             essence='Tu brûles', gagnes='Et tu vois', releve='ton relevé', vehic='Moto, tricycle', inscris='inscris-toi', endA='>Odja. On roule',
             endB='>On roule ensemble')
+
+# key phrases of the « Une journée à Cotonou » launch film voice (assets/jour/voix_journee.txt)
+JOURNEE = dict(t0='Sept heures', ganhi='Tu dois', carref='Au carrefour', combien="C'est combien", perdues='Dix minutes', midi='Midi quarante',
+               faim='Tu as faim', pastemps='Mais pas', seize='Seize heures', soeur='Ta sœur', personne='Et personne', soir='Le soir',
+               debrouiller='Tu as passé', siTout='Et si tout', voici='Voici Odja', course='Tu choisis', vz='zem, tri', vt='tricycle ou', vv='ou voiture', prix="Le prix s'affiche",
+               repas='Ton repas', colis='Ton colis', direct='tu suis', fin='À la fin', question='le chauffeur', moteur='Le moteur',
+               autre='Un autre', meme='Au même', liste='Zem. Tricycle', endA='>Odja. Tout', endB='>Tout ton Bénin')

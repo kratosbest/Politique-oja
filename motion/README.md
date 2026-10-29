@@ -658,3 +658,36 @@ Nouvelle version de la vidéo chauffeurs, dans un style « magazine » plus haut
 | 13–16,4 s | N° 04 Le relevé | Zem de Porto-Novo (chemise bleue) assombri, reçu ivoire « Relevé du jour » (montants masqués) |
 | 16,4–19,5 s | N° 05 Tous les véhicules | Triptyque moto / tricycle / voiture, « Inscris-toi sur OJA. » |
 | 19,5–25 s | — | Fond ivoire : logo, « On roule *ensemble.* », « Deviens chauffeur OJA », stores, mention |
+
+## OJA — « Une journée à Cotonou », film de lancement (16:9, 56 s)
+
+Film de présentation au format horizontal (1920 × 1080), dans le style de la vidéo de référence envoyée par l'équipe. Ce style comprend :
+- un récit « POV » à la deuxième personne ;
+- de grandes heures à l'écran et des couleurs qui suivent la journée (aube orange, carrefour rouge, midi doré, crépuscule violet avec la lune, nuit étoilée) ;
+- un texte qui apparaît mot par mot avec un flou ;
+- des bulles de discussion, des halos et un bokeh ;
+- la révélation du logo avec des rayons de lumière ;
+- une mini-scène par fonction, une orbite des services, puis une carte du Bénin qui s'allume.
+
+Il n'y a aucun montant ni aucun chiffre inventé, et seules des fonctions **en ligne** sont montrées.
+- **Vidéo :** `OJA_UneJourneeACotonou_16x9.mp4` (1920 × 1080, 24 i/s)
+- **Source :** `oja_journee_cotonou.html`, construite par `src/jour_build.py` à partir de `src/jour_body.js` et `src/bj_map.js` (vraies frontières). Voix Isac (`assets/jour/voix_journee.txt`), son `src/music30.py` (tic-tac, klaxons, montée tonale, groove), le tout calé sur le minutage de la voix.
+- **Rendu 16:9 :** `VW=1920 VH=1080 src/render_video.sh oja_journee_cotonou.html 56 assets/soundtrack_journee.m4a OJA_UneJourneeACotonou_16x9.mp4 <ffmpeg>`
+- **Images :** véhicules OJA (`assets/moto.png`, `tricycle.png`, `car.png`), `assets/cs/obj_plat.png`, `obj_colis.png`, visage du zem de Cotonou découpé dans `assets/edt/moto.jpg` (généré par IA) : `assets/jour/zem_face.png`.
+- **Mention à l'écran :** « Prix calculé avant la course. OJA Market : paiement MTN MoMo. En cas de panne, le prix total de la course ne change pas. Visage du zem généré par IA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–5,3 s | « Sept heures douze. Cotonou se réveille. Tu dois être à Ganhi à huit heures. » | 07:12, aube orange, soleil qui monte |
+| 5,3–11,6 s | « Au carrefour, ça recommence. C'est combien ? Le prix monte, tu discutes. Dix minutes perdues. » | 07:31, traînées de phares rouges, bulles avec le zem, « 10 min » géant flou |
+| 11,6–15,3 s | « Midi quarante. Tu as faim. Mais pas le temps de sortir. » | 12:40 doré, anneau des minutes, plat flou |
+| 15,3–20 s | « Seize heures cinq. Ta sœur attend un colis à Calavi. Et personne pour l'envoyer. » | 16:05 violet, lune, colis, pointillés vers « Calavi ? » |
+| 20–23,4 s | « Le soir tombe. Tu as passé la journée à te débrouiller. » | 19:48, nuit étoilée |
+| 23,4–26,7 s | « Et si tout était dans une seule appli ? Voici Odja. » | Un point de lumière grandit, éclair, logo et rayons |
+| 26,7–31,6 s | « Tu choisis ta course : zem, tricycle ou voiture. Le prix s'affiche avant de monter. » | 3 cartes véhicules, sélection sur chaque mot, « Prix fixé » |
+| 31,6–33,7 s | « Ton repas arrive, payé par MoMo. » | Carte commande, « Payé par MoMo » |
+| 33,7–37,1 s | « Ton colis traverse Cotonou, et tu suis le livreur en direct. » | Carte de nuit Cotonou → Abomey-Calavi, livreur, « EN DIRECT » |
+| 37,1–41,4 s | « À la fin de chaque course, une question… » | Carte « Le chauffeur a-t-il demandé plus d'argent ? » |
+| 41,4–45,8 s | « Le moteur lâche ? Un autre chauffeur Odja finit le trajet. Au même prix. » | Voiture en panne (warnings), une autre arrive, tampon « MÊME PRIX » |
+| 45,8–49,3 s | « Zem. Tricycle. Voiture. Repas. Colis. » | Orbite des services autour du logo, un mot géant à la fois |
+| 49,3–56 s | « Odja. Tout ton Bénin dans une seule appli. » | Carte du Bénin qui se dessine (Cotonou qui pulse), logo, slogan, stores, mention |

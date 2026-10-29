@@ -20,11 +20,12 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | OJA « Livré à ton heure » | `oja_livre_a_ton_heure.html` | `liv_body.js`, `liv_build.py` | `music27.py` + voix `assets/liv/voix_livre.mp3` |
 | OJA chauffeurs « Arrête de tourner à vide » | `oja_chauffeur_tourner_a_vide.html` | `chv_body.js`, `chv_build.py` | `music28.py` + voix `assets/chv/voix_chauffeur_vide.mp3` |
 | OJA chauffeurs, version éditoriale | `oja_chauffeur_editorial.html` | `edt_body.js`, `edt_build.py` (polices `fonts/editorial.css`, photos `assets/edt/`) | `music29.py` + même voix |
+| OJA « Une journée à Cotonou » (16:9) | `oja_journee_cotonou.html` | `jour_body.js`, `bj_map.js`, `jour_build.py` | `music30.py` + voix `assets/jour/voix_journee.mp3` |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.
 - **Rendu :** depuis `motion/` : `PAGE=page.html VW=1080 VH=1920 node render.js 24 <début> <fin> sortie.mp4 <ffmpeg>`. Couper en 4 morceaux lancés en parallèle, les concaténer, puis multiplexer avec la bande son (x264 `-preset slow -crf 20 -maxrate 14M -bufsize 28M`, son AAC 192k, `loudnorm=I=-14`).
-- **Rendu en une commande :** `src/render_video.sh page.html <secondes> <bande son> sortie.mp4 <ffmpeg>`.
+- **Rendu en une commande :** `src/render_video.sh page.html <secondes> <bande son> sortie.mp4 <ffmpeg>` (ajouter `VW=1920 VH=1080` devant pour une page 16:9).
 - **Aperçus :** `PAGE=page.html VW=1080 VH=1920 node src/snap.js <dossier> 1.5 3.2 …` (une image JPEG par instant).
 - **Détourage :** `cutout2.py` (rembg `isnet-general-use` + remplissage par inondation ; modes `ai` / `union`).
 - **Images ElevenLabs :** le connecteur ElevenLabs de Claude (`creative_generate_image`) fonctionne avec le forfait Creator ; l'API `/v1/flows/image` de `img.py` demande le forfait Pro.
