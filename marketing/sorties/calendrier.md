@@ -1,0 +1,81 @@
+# Calendrier détaillé J-14 → J+30 (prompt 04)
+
+Hypothèse du kit : **J = jour où la nouvelle version est sur les stores ET où les Défis sont activés au Bénin.** La colonne « Jour » suppose que J tombe un lundi (pour caler les séries hebdomadaires) ; si J tombe un autre jour, décaler les séries, pas les dates relatives.
+
+Heures : conseils de départ (Facebook à midi et le soir, TikTok le soir, chauffeurs tôt le matin avant le service). À ajuster après deux semaines selon les statistiques de chaque page.
+
+Les vidéos « déjà produites » sont celles du dossier `motion/` (campagne COMING SOON et pub OJA Market). Version CSV : `calendrier.csv`.
+
+| Date relative | Jour (si J = lundi) | Plateforme | Contenu (n° d'idée ou série) | Heure conseillée | Objectif | Indicateur | Dépendance |
+|---|---|---|---|---|---|---|---|
+| J-14 | lundi | TikTok + Facebook | n° 30 — Énigme #1 « Bientôt, une appli béninoise va tout changer » (sans le nom) | 19 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-13 | mardi | Facebook + statut WhatsApp | Devine le quartier #1 (un repère d'Akpakpa en gros plan) | 12 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-12 | mercredi | TikTok + Reels | n° 30 — Énigme #2 (un carrefour de Cotonou, une question) | 19 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-11 | jeudi | Instagram + Facebook | Coulisses de l'équipe (sans le nom ni le logo) | 18 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-10 | vendredi | Facebook + statut WhatsApp | Devine le quartier #2 (Abomey-Calavi) | 12 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-9 | samedi | TikTok + Reels | n° 30 — Énigme #3 « Ce que Cotonou ne savait pas encore… » | 19 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-8 | dimanche | Facebook + Instagram | Devine le quartier #3 (Porto-Novo) + « Demain, on vous dit tout » | 18 h | Curiosité | Vues, commentaires, partages | aucune |
+| J-7 | lundi | TikTok + Instagram + Facebook | n° 31 — « Elle s'appelle OJA » (OJA dit en fon, yoruba, mina, français) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-7 | lundi | Facebook | Vidéo COMING SOON concept 1 « Quelque chose arrive au Bénin » (déjà produite) | 12 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-6 | mardi | Facebook | n° 26 — « Chaque jour, ta ristourne grimpe » (recrutement chauffeurs) | 6 h 30 | Révélation | Recrutement chauffeurs : chauffeurs inscrits | Montants chauffeur Bénin |
+| J-6 | mardi | TikTok | n° 33 — « OJA dans ma langue » (sketch en fon sous-titré) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-5 | mercredi | Facebook + Instagram | n° 22 — « Maman Tanti met sa boutique sur OJA » (script 22) | 12 h | Révélation | Commerçants : boutiques créées et validées | aucune |
+| J-5 | mercredi | TikTok + Reels | Vidéo COMING SOON concept 6 « Ils ne savent pas encore » (déjà produite) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-4 | jeudi | Facebook | n° 27 — « Zone chaude près de toi » (recrutement chauffeurs) | 6 h 30 | Révélation | Recrutement chauffeurs : chauffeurs inscrits | aucune |
+| J-4 | jeudi | TikTok + Reels | n° 1 — « Le prix, avant de monter » (script 01, 30 s) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-3 | vendredi | Facebook + Instagram | n° 24 — « Tes clients te trouvent même sans connaître ton nom » | 12 h | Révélation | Commerçants : boutiques créées et validées | aucune |
+| J-3 | vendredi | TikTok + Facebook | Vidéo COMING SOON concept 2 « Et si tout était plus simple ? » (déjà produite) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-2 | samedi | Facebook | n° 29 — « Je vois tout ce que je gagne » (relevé chauffeur) | 6 h 30 | Révélation | Recrutement chauffeurs : chauffeurs inscrits | aucune |
+| J-2 | samedi | TikTok + Reels | n° 3 — « Même trajet, 25 % moins cher » (OJA Partage) | 19 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-1 | dimanche | Statut WhatsApp + Facebook | « Demain. » + lieux des stands (UAC, Dantokpa) | 12 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J-1 | dimanche | TikTok + Instagram + Facebook | Vidéo COMING SOON concept 3 « Le compte à rebours » (déjà produite) | 20 h | Révélation | Abonnés gagnés, clics vers le store | aucune |
+| J | lundi | Facebook Live + TikTok Live | n° 32 — Live « Premier client à Cotonou » + stands UAC et Dantokpa | 8 h | Événement | Installations, inscriptions, 1res courses | Version store ; Défis activés + budget |
+| J | lundi | TikTok + Instagram + Facebook | n° 9 — « Ma première course m'a coûté la moitié » (script 09) | 11 h | Événement | Installations, inscriptions, 1res courses | Défis activés + budget |
+| J | lundi | Facebook + statut WhatsApp | n° 5 — « Maman, suis-moi en direct » (script 05) | 15 h | Événement | Installations, inscriptions, 1res courses | Version store |
+| J | lundi | TikTok + Instagram + Facebook | Pub OJA Market « Tout ce que vous aimez » (déjà produite) | 19 h | Événement | Installations, inscriptions, 1res courses | aucune |
+| J+1 | mardi | Facebook | n° 2 — « Il t'a demandé plus d'argent ? Dis-le à OJA. » | 12 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | aucune |
+| J+1 | mardi | TikTok + Reels | n° 6 — « Ta sœur prend un zem au bord de la route ? » (Suivez-moi) | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Version store |
+| J+2 | mercredi | Facebook + Instagram | n° 1 — « Le prix, avant de monter » (version Facebook 4:5) | 12 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | aucune |
+| J+2 | mercredi | TikTok + Reels | n° 14 — « Invite ta bande » + challenge « Qui fait monter le plus d'amis ? » | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Version store ; Défis activés + budget |
+| J+3 | jeudi | Facebook + Instagram | n° 19 — « Commandé à 11 h, livré à 12 h 30 pile » (livraison programmée) | 11 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | aucune |
+| J+3 | jeudi | TikTok + Reels | n° 20 — « En retard ? OJA te paie » (−10 % sur la prochaine) | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | aucune |
+| J+4 | vendredi | Facebook | n° 28 — « Tu finis une course, la suivante t'attend à côté » (course relais) | 6 h 30 | Essai | Recrutement chauffeurs : chauffeurs inscrits | Version store |
+| J+4 | vendredi | TikTok + Reels | n° 9 — Réaction d'un 2e nouvel utilisateur (accord écrit) | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Défis activés + budget |
+| J+5 | samedi | Facebook | n° 5 — « Maman, suis-moi en direct » (version longue 45 s) | 12 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Version store |
+| J+5 | samedi | Facebook + Instagram | n° 23 — « C'est mon commerce » (ta fiche t'appartient) | 18 h | Essai | Commerçants : boutiques créées et validées | Version store |
+| J+6 | dimanche | Statut WhatsApp | n° 6 — Extrait « Suivez-moi » (8 s) | 7 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Version store |
+| J+6 | dimanche | TikTok | n° 14 — Résultats du challenge « Invite ta bande » | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Version store ; Défis activés + budget |
+| J+7 | lundi | Facebook + Instagram | n° 10 — Lancement du 1er Défi de quartier « 50 lieux à Akpakpa » | 12 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | Défis activés + budget |
+| J+7 | lundi | TikTok + Reels | n° 2 — « Il t'a demandé plus ? Dis-le. » (version 15 s) | 19 h | Essai | 1res courses, liens d'invitation utilisés, liens « Partager mon trajet » créés | aucune |
+| J+8 | mardi | Facebook | Série « Histoires de route » #1 — n° 8 « Le moteur a lâché en pleine course » | 12 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | aucune |
+| J+8 | mardi | TikTok | n° 13 — « 4 semaines d'affilée : −15 % » (série de semaines, max 500 F) | 19 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | Défis activés + budget |
+| J+9 | mercredi | Facebook + Instagram | Série « Vendu sur NOVOJA » #1 — n° 15 « Ce frigo dormait dans ma cour » (script 15) | 12 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | Décaissement MTN |
+| J+9 | mercredi | TikTok + Reels | n° 16 — « J'ai payé, mais l'argent attend que je reçoive l'objet » | 19 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | aucune |
+| J+10 | jeudi | Facebook + Instagram | Série « Commerçant vedette » #1 | 12 h | Habitude | Commerçants : boutiques créées et validées | aucune |
+| J+11 | vendredi | Facebook | Série « Chauffeur héros » #1 | 6 h 30 | Habitude | Recrutement chauffeurs : chauffeurs inscrits | Montants chauffeur Bénin |
+| J+11 | vendredi | TikTok + Reels | n° 21 — « Ton colis traverse Cotonou pendant que tu travailles » | 19 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | aucune |
+| J+12 | samedi | TikTok + Reels | Série « OJA dans ma langue » #1 | 11 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | aucune |
+| J+13 | dimanche | Facebook | n° 10 — « J'ai gagné une réduction parce que je connais mon quartier » (point d'étape Akpakpa) | 17 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | Défis activés + budget |
+| J+14 | lundi | Facebook + TikTok | Série « Le prix de la semaine » #1 | 12 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | aucune |
+| J+14 | lundi | Instagram + Facebook | n° 11 — Annonce du concours « Guides du mois » | 19 h | Habitude | Courses répétées, annonces NOVOJA publiées, commandes Market | Défis activés + budget |
+| J+15 | mardi | Facebook | Série « Histoires de route » #2 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+16 | mercredi | Facebook + Instagram | Série « Vendu sur NOVOJA » #2 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+17 | jeudi | Facebook + Instagram | Série « Commerçant vedette » #2 | 12 h | Communauté | Commerçants : boutiques créées et validées | aucune |
+| J+18 | vendredi | Facebook | Série « Chauffeur héros » #2 | 6 h 30 | Communauté | Recrutement chauffeurs : chauffeurs inscrits | Montants chauffeur Bénin |
+| J+19 | samedi | TikTok + Reels | Série « OJA dans ma langue » #2 | 11 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+20 | dimanche | Facebook + Instagram | Défi de quartier Akpakpa : résultats et carte des lieux ajoutés | 17 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | Défis activés + budget |
+| J+21 | lundi | Facebook + TikTok | Série « Le prix de la semaine » #2 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+22 | mardi | Facebook | Série « Histoires de route » #3 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+23 | mercredi | Facebook + Instagram | Série « Vendu sur NOVOJA » #3 — n° 17 « Je l'ai donné. Quelqu'un en avait besoin. » (dons) | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+24 | jeudi | Facebook + Instagram | Série « Commerçant vedette » #3 | 12 h | Communauté | Commerçants : boutiques créées et validées | aucune |
+| J+25 | vendredi | Facebook | Série « Chauffeur héros » #3 | 6 h 30 | Communauté | Recrutement chauffeurs : chauffeurs inscrits | Montants chauffeur Bénin |
+| J+26 | samedi | TikTok + Reels | Série « OJA dans ma langue » #3 | 11 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+27 | dimanche | Facebook + Instagram | n° 18 — « Vendu, livré par OJA » (témoignage réel, accord écrit) | 17 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+28 | lundi | Facebook + TikTok | Série « Le prix de la semaine » #3 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+29 | mardi | Facebook | Série « Histoires de route » #4 | 12 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | aucune |
+| J+30 | mercredi | Facebook + Instagram + TikTok | Série « Le Guide du mois » — n° 11, les 3 champions (avec leur accord) | 19 h | Communauté | Lieux ajoutés, participants aux défis, commerçants validés, chauffeurs actifs | Défis activés + budget |
+
+## Actions hors ligne (rappel du kit)
+- J-7 : chauffeurs en gilet et casque OJA aux carrefours clés.
+- J : stands au campus (UAC) et à Dantokpa : installation de l'appli + code d'invitation des ambassadeurs.
+- J+7 : premier Défi de quartier (Akpakpa).
