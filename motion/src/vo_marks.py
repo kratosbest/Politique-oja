@@ -56,3 +56,11 @@ JOURNEE = dict(t0='Sept heures', ganhi='Tu dois', carref='Au carrefour', combien
                debrouiller='Tu as passé', siTout='Et si tout', voici='Voici Odja', course='Tu choisis', vz='zem, tri', vt='tricycle ou', vv='ou voiture', prix="Le prix s'affiche",
                repas='Ton repas', colis='Ton colis', direct='tu suis', fin='À la fin', question='le chauffeur', moteur='Le moteur',
                autre='Un autre', meme='Au même', liste='Zem. Tricycle', endA='>Odja. Tout', endB='>Tout ton Bénin')
+
+# key phrases of the « Le local devient visible » places film voice (assets/lieux/voix_lieux.txt)
+LIEUX = dict(t0='Neuf heures', von='au fond', onze='Onze heures', appelle='Une cliente', bleue='Je suis devant', laquelle='Laquelle', trois='Il y en a',
+             expl='Tu expliques', tourne='Elle tourne', perd='Elle se perd', quatorze='Quatorze', vide="L'atelier est vide", tuesla='Tu es là', personne='mais personne', msg='Et puis',
+             ailleurs='Laisse', siAt='Et si ton', ajoute='Avec Odja', nom='le nom', cat='la catégorie', point='le point exact', photos='quelques photos',
+             mots='Et on te trouve', derriere="l'atelier derrière", publics='Les lieux publics', carte='sur la carte', listep='la pharmacie, le marché', marche='le marché', arret="l'arrêt de zem", tous='Ajoutés par',
+             deux='Quand deux', valide="l'équipe Odja", publie='le lieu est publié', erreur='Une erreur', signale='Tu la signales',
+             endA='>Odja. Le local', endB='>Le local devient')

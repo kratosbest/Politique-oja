@@ -21,6 +21,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | OJA chauffeurs « Arrête de tourner à vide » | `oja_chauffeur_tourner_a_vide.html` | `chv_body.js`, `chv_build.py` | `music28.py` + voix `assets/chv/voix_chauffeur_vide.mp3` |
 | OJA chauffeurs, version éditoriale | `oja_chauffeur_editorial.html` | `edt_body.js`, `edt_build.py` (polices `fonts/editorial.css`, photos `assets/edt/`) | `music29.py` + même voix |
 | OJA « Une journée à Cotonou » (16:9) | `oja_journee_cotonou.html` | `jour_body.js`, `bj_map.js`, `jour_build.py` | `music30.py` + voix `assets/jour/voix_journee.mp3` |
+| OJA « Le local devient visible » (16:9 et 9:16) | `oja_lieux_visible.html`, `oja_lieux_visible_9x16.html` | `lieu_body.js`, `lieu_build.py` (photos `assets/lieux/`) | `music31.py` + voix `assets/lieux/voix_lieux.mp3` |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.

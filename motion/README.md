@@ -706,3 +706,34 @@ Il n'y a aucun montant ni aucun chiffre inventé, et seules des fonctions **en l
 | 41,4–45,8 s | « Le moteur lâche ? Un autre chauffeur Odja finit le trajet. Au même prix. » | Voiture en panne (warnings), une autre arrive, tampon « MÊME PRIX » |
 | 45,8–49,3 s | « Zem. Tricycle. Voiture. Repas. Colis. » | Orbite des services autour du logo, un mot géant à la fois |
 | 49,3–56 s | « Odja. Tout ton Bénin dans une seule appli. » | L'héroïne souriante au coucher du soleil, logo, slogan, stores, mention |
+
+## OJA — « Le local devient visible », film lieux (16:9 et 9:16, 52 s)
+
+Il existe deux versions :
+- `OJA_LeLocalDevientVisible_16x9.mp4` (1920 × 1080) ;
+- `OJA_LeLocalDevientVisible_9x16.mp4` (1080 × 1920), pour TikTok et Reels.
+
+Même style que « Une journée à Cotonou » (grandes heures, couleurs de la journée, texte mot par mot avec flou, halos, bokeh, rayons), sur l'enregistrement des lieux. Il s'adresse aux artisans et commerçants qu'on ne trouve pas, puis montre les lieux publics ajoutés par tout le monde. Les deux pages (`oja_lieux_visible.html` et `oja_lieux_visible_9x16.html`) sont construites par `src/lieu_build.py` à partir du même `src/lieu_body.js` (drapeau `VERT`).
+
+Seules des fonctions **en ligne** sont montrées : ajouter un lieu (nom, catégorie, point exact, photos), la recherche avec les mots de tous les jours, les lieux publics, la règle de publication (deux personnes, même nom, même endroit, ou validation par l'équipe OJA), le signalement d'une erreur. Sont exclus : « C'est mon commerce » (version store) et les récompenses des Défis des lieux (dépendance). Aucun montant, aucun chiffre.
+- **Source :** voix Isac (`assets/lieux/voix_lieux.txt`), son `src/music31.py` (tic-tac, sonnerie, pas, notification, épingle qui tombe, frappe au clavier, tampon, groove), le tout calé sur le minutage de la voix.
+- **Rendu 16:9 :** `VW=1920 VH=1080 src/render_video.sh oja_lieux_visible.html 52 assets/soundtrack_lieux.m4a OJA_LeLocalDevientVisible_16x9.mp4 <ffmpeg>`
+- **Rendu 9:16 :** `src/render_video.sh oja_lieux_visible_9x16.html 52 assets/soundtrack_lieux.m4a OJA_LeLocalDevientVisible_9x16.mp4 <ffmpeg>`
+- **L'héroïne :** une couturière d'Akpakpa, le « tu » du récit, générée avec ElevenLabs à partir d'un portrait de référence (même visage dans chaque scène ; prompts dans `assets/lieux/prompts.txt`). La cliente perdue est aussi générée. Ce ne sont pas de vraies personnes, et la mention le dit. Photos `assets/lieux/h_*.jpg` (16:9) et `h_*_v.jpg` (9:16, recadrées sur le visage ; la fin `h_fin_v.jpg` est générée en vertical). L'écran partagé utilise `cliente.jpg` / `cliente_v.jpg` et `h_appel_t.jpg`. Les vignettes du formulaire `p1–p3.jpg` sont découpées dans les scènes.
+- **Noms fictifs :** « Atelier Couture Grâce », « Marché du quartier ».
+- **Mention à l'écran :** « Lieux publics : publiés quand deux personnes donnent le même nom au même endroit, ou après validation par l'équipe OJA. Noms de lieux fictifs. Personnes des images générées par IA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–5,4 s | « Neuf heures. Tu ouvres ton atelier, au fond d'une von à Akpakpa. » | 09:00, lumière du matin, elle ouvre la porte de l'atelier |
+| 5,4–11,2 s | « Onze heures vingt. Une cliente t'appelle : Je suis devant la boutique bleue. Laquelle ? Il y en a trois. » | 11:20, écran partagé : la couturière et la cliente au téléphone, bulles |
+| 11,2–14 s | « Tu expliques. Elle tourne. Elle se perd. » | Carte au trait : trois boutiques bleues, trajet en pointillés qui tourne, « ? » rouge ; l'atelier, au bout de la von, n'est sur aucune carte |
+| 14–18,8 s | « Quatorze heures. L'atelier est vide. Tu es là, mais personne ne te trouve. » | 14:00, anneau des minutes, l'atelier vide |
+| 18,8–21,9 s | « Et puis ce message : Laisse, j'ai trouvé ailleurs. » | Lumière bleue du soir, notification « Laisse, j'ai trouvé ailleurs. » (15:47) |
+| 21,9–23,9 s | « Et si ton atelier était sur la carte ? » | Noir, des rues se dessinent au trait orange, une épingle tombe |
+| 23,9–29,1 s | « Avec Odja, tu ajoutes ton lieu : le nom, la catégorie, le point exact, quelques photos. » | Éclair, carte « Ajouter un lieu » : nom tapé, « Couture », épingle sur la mini-carte, 3 photos |
+| 29,1–33 s | « Et on te trouve avec les mots de tous les jours : l'atelier derrière la pharmacie. » | Barre de recherche, « l'atelier derrière la pharmacie », résultat « Atelier Couture Grâce » |
+| 33–38,1 s | « Les lieux publics aussi : la pharmacie, le marché, l'arrêt de zem. Ajoutés par tout le monde. » | Carte ivoire : Pharmacie, Marché, Arrêt de zem (épingle jaune), avatars « + » |
+| 38,1–43,5 s | « Quand deux personnes donnent le même nom au même endroit, ou quand l'équipe Odja le valide, le lieu est publié. » | Deux cartes « Marché du quartier » reliées à la même épingle, badge « ou validé par l'équipe OJA », tampon « PUBLIÉ » |
+| 43,5–45,9 s | « Une erreur sur une fiche ? Tu la signales. » | Fiche du lieu, bouton « Signaler une erreur » → « Signalement envoyé » |
+| 45,9–52 s | « Odja. Le local devient visible. » | La couturière rit avec une cliente, logo, slogan, stores, mention |
