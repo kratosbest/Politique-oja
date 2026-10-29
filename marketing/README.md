@@ -17,3 +17,5 @@
 | 09 | `verification.md` | Contrôle de chaque contenu, corrections faites, points à trancher par l'équipe |
 
 Tout ce qui est `[ENTRE CROCHETS]` est à remplir avec une valeur réelle avant tournage ou publication. Chaque contenu indique sa **dépendance** (version store, Défis activés, décaissement MTN…).
+
+`calendrier.py` régénère `sorties/calendrier.md` et `sorties/calendrier.csv` : `python3 marketing/calendrier.py marketing/sorties`.

@@ -1,0 +1,267 @@
+const W = 1080, H = 1920, DUR = 15, FPS = 24;
+const cv = document.getElementById('cv'), X = cv.getContext('2d');
+const vc = document.createElement('canvas'); vc.width = W; vc.height = H; const V = vc.getContext('2d');
+const PW = 460, PH = 940;
+const pf = document.createElement('canvas'); pf.width = PW; pf.height = PH; const P = pf.getContext('2d');
+const phc = document.createElement('canvas'); phc.width = W; phc.height = H; const Q = phc.getContext('2d');   // phone drawn opaque, then faded as one layer
+const img = id => document.getElementById(id);
+
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => 1 - Math.pow(1 - clamp(u), 3);
+const easeIO = u => { u = clamp(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; };
+const back = u => { u = clamp(u); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(u - 1, 3) + c1 * Math.pow(u - 1, 2); };
+const rnd = (a, b = 0) => { const x = Math.sin(a * 127.1 + b * 311.7 + 17.3) * 43758.5453; return x - Math.floor(x); };
+const win = (t, a, b, f = .25) => clamp((t - a) / f) * clamp((b - t) / f);
+
+/* ---------- timeline ---------- */
+const T_BUZZ = 0.85, T_SPIRAL = 8.4, T_FLASH = 9.95, T_END = 10.4;
+const HITS = [[T_BUZZ, .3, .06], [3.0, .2, .05], [T_SPIRAL, .25, .06], [T_FLASH, 1.0, .22], [12.05, .25, .06], [14.2, .3, .06]];
+const glitchAt = t => { let g = 0; for (const [h, s, d] of HITS) if (t >= h - .04 && t < h + d) g = Math.max(g, s * (1 - Math.max(0, t - h) / d)); return g; };
+const WORDS = [[3.0, 'SE DÉPLACER'], [4.4, 'LIVRER'], [5.2, 'COMMANDER'], [6.0, 'ÊTRE VISIBLE'], [6.8, 'REVENDRE'], [7.6, 'RÉSERVER'], [T_SPIRAL, null]];
+// the OJA services leave the screen one by one: real OJA vehicles, then photoreal objects for the other services
+// (parcel, meal, shopping bag, second-hand items, alarm clock: generated in Google Flow, cut out with rembg)
+const ITEMS = [
+  { t: 3.0, im: 'moto', w: 380 }, { t: 3.35, im: 'car', w: 410 }, { t: 3.7, im: 'tricycle', w: 290 },
+  { t: 4.4, im: 'colis', w: 250 }, { t: 5.2, im: 'plat', w: 300 }, { t: 6.0, im: 'sac', w: 215 }, { t: 6.8, im: 'occasion', w: 320 }, { t: 7.6, im: 'reveil', w: 205 },
+];
+const CAPS = [[10.65, 13.2, [[['Le Bénin bouge.']], [['Le monde avance.']]]], [13.3, 15.0, [[['OJA', 1], [' arrive.']]]]];
+
+/* ---------- text helpers ---------- */
+const GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
+function decode(s, u, seed) {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]; if (' .·…’'.includes(c)) { out += c; continue; }
+    const k = clamp(u * (s.length + 4) - i, 0, 1);
+    out += k >= 1 ? c : k <= 0 ? ' ' : GLY[Math.floor(rnd(seed + i, Math.floor(u * 40)) * GLY.length)];
+  }
+  return out;
+}
+function spaced(ctx, s, x, y, sp) {
+  const ws = [...s].map(c => ctx.measureText(c).width), tot = ws.reduce((a, b) => a + b, 0) + sp * (s.length - 1);
+  let cx = x - tot / 2; ctx.textAlign = 'left';
+  [...s].forEach((c, i) => { ctx.fillText(c, cx, y); cx += ws[i] + sp; });
+  return tot;
+}
+
+/* ---------- background: dark, grid, warm glow, drifting particles ---------- */
+function background(t, glow) {
+  V.fillStyle = '#07070a'; V.fillRect(0, 0, W, H);
+  V.save(); V.strokeStyle = 'rgba(255,107,0,.05)'; V.lineWidth = 1;
+  for (let x = 0; x <= W; x += 90) { V.beginPath(); V.moveTo(x + .5, 0); V.lineTo(x + .5, H); V.stroke(); }
+  for (let y = 0; y <= H; y += 90) { V.beginPath(); V.moveTo(0, y + .5); V.lineTo(W, y + .5); V.stroke(); }
+  V.restore();
+  const g = V.createRadialGradient(540, 1060, 30, 540, 1060, 900); g.addColorStop(0, `rgba(255,107,0,${.28 * glow})`); g.addColorStop(1, 'rgba(255,107,0,0)');
+  V.fillStyle = g; V.fillRect(0, 0, W, H);
+  V.save(); V.globalCompositeOperation = 'screen';
+  for (let k = 0; k < 36; k++) {
+    const x = rnd(k, 1) * W, y = ((rnd(k, 2) * H - t * (18 + 30 * rnd(k, 3))) % H + H) % H, r = 3 + 9 * rnd(k, 4);
+    const a = (.1 + .25 * rnd(k, 5)) * (.5 + .5 * glow);
+    const gg = V.createRadialGradient(x, y, 0, x, y, r * 3); gg.addColorStop(0, `rgba(255,150,60,${a})`); gg.addColorStop(1, 'rgba(255,107,0,0)');
+    V.fillStyle = gg; V.fillRect(x - r * 3, y - r * 3, r * 6, r * 6);
+  }
+  V.restore();
+}
+
+/* ---------- the phone: front face drawn flat, then projected with a slow 3D turn ---------- */
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function phoneFace(t) {
+  P.clearRect(0, 0, PW, PH);
+  const m = P.createLinearGradient(0, 0, PW, PH); m.addColorStop(0, '#8d8d93'); m.addColorStop(.3, '#3a3a3f'); m.addColorStop(.6, '#1c1c1f'); m.addColorStop(1, '#77777d');
+  P.fillStyle = m; rr(P, 0, 0, PW, PH, 72); P.fill();
+  P.save(); rr(P, 12, 12, PW - 24, PH - 24, 62); P.clip();
+  P.fillStyle = '#050506'; P.fillRect(0, 0, PW, PH);
+  const on = ease((t - T_BUZZ - .05) / .45), flash = clamp((t - (T_FLASH - .55)) / .55);
+  if (on > 0) {
+    const g = P.createRadialGradient(PW / 2, PH * .46, 10, PW / 2, PH * .46, PH * .7);
+    g.addColorStop(0, `rgba(255,${150 + 80 * flash},${70 + 150 * flash},${on})`); g.addColorStop(.45, `rgba(255,107,0,${on})`); g.addColorStop(1, `rgba(90,25,0,${on})`);
+    P.fillStyle = g; P.fillRect(0, 0, PW, PH);
+    // pulsing rings from the centre of the screen
+    for (let k = 0; k < 3; k++) {
+      const ph = ((t * .8 + k / 3) % 1), r = 40 + 260 * ph;
+      P.strokeStyle = `rgba(255,235,210,${.35 * (1 - ph) * on})`; P.lineWidth = 4; P.beginPath(); P.arc(PW / 2, PH * .46, r, 0, 7); P.stroke();
+    }
+    const pa = on * (.55 + .45 * flash), ps = 150 + 40 * flash;
+    P.globalAlpha = pa; P.drawImage(img('pin'), PW / 2 - ps / 2, PH * .46 - ps * .55, ps, ps); P.globalAlpha = 1;
+    if (flash > 0) { P.fillStyle = `rgba(255,245,230,${flash * .85})`; P.fillRect(0, 0, PW, PH); }
+  }
+  P.restore();
+  P.fillStyle = '#000'; rr(P, PW / 2 - 62, 26, 124, 36, 18); P.fill();
+  const gl = P.createLinearGradient(0, 0, PW, PH); gl.addColorStop(.3, 'rgba(255,255,255,0)'); gl.addColorStop(.45, 'rgba(255,255,255,.13)'); gl.addColorStop(.55, 'rgba(255,255,255,0)');
+  P.fillStyle = gl; rr(P, 12, 12, PW - 24, PH - 24, 62); P.fill();
+}
+function drawPhone(cx, cy, th, s, alpha) {
+  const f = 2200, N = 115, sw = PW / N, ct = Math.cos(th), st = Math.sin(th);
+  if (alpha <= 0) return;
+  Q.clearRect(0, 0, W, H);
+  // shadow
+  Q.fillStyle = 'rgba(0,0,0,.45)'; Q.beginPath(); Q.ellipse(cx, cy + PH * s * .56, PW * s * .42, 26 * s, 0, 0, 7); Q.fill();
+  for (const pass of [0, 1]) {   // pass 0: the phone's thickness, pass 1: the front face
+    for (let k = 0; k < N; k++) {
+      const u0 = (k * sw - PW / 2) * s, u1 = ((k + 1) * sw - PW / 2) * s, dz = pass ? 0 : 22 * s;
+      const z0 = u0 * st + dz, z1 = u1 * st + dz, p0 = f / (f + z0), p1 = f / (f + z1);
+      const x0 = cx + (u0 * ct - (pass ? 0 : dz * st)) * p0, x1 = cx + (u1 * ct - (pass ? 0 : dz * st)) * p1;
+      const h = PH * s * p0, w = Math.max(1, x1 - x0 + 1.6);
+      if (w <= 0) continue;
+      if (!pass) Q.filter = 'brightness(.35)';
+      Q.drawImage(pf, k * sw, 0, sw, PH, x0, cy - h / 2, w, h);
+      if (!pass) Q.filter = 'none';
+    }
+  }
+  V.save(); V.globalAlpha = alpha; V.drawImage(phc, 0, 0); V.restore();
+}
+
+/* ---------- the services ---------- */
+const icons = {};
+function orbit(t) {
+  const out = [], cx = 540, cy = 1080, sp = clamp((t - T_SPIRAL) / (T_FLASH - T_SPIRAL - .1)), k = easeIO(sp);
+  ITEMS.forEach((it, i) => {
+    const u = (t - it.t) / .6; if (u <= 0 || k >= 1) return;
+    const a = i * Math.PI * 2 / ITEMS.length + .5 * (t - 3) + 7 * k * k;
+    const R = (1 - k), ox = cx + 380 * R * Math.cos(a), oy = cy + 300 * R * Math.sin(a), zo = Math.sin(a);
+    const so = (.78 + .22 * zo) * (1 - .75 * k);
+    let x, y, s, z;
+    if (u < .55) {                       // pops out big, in front of the phone, while its word appears
+      const p = back(u / .55); x = cx; y = cy + 150 * p; s = .3 + 1.05 * p; z = 1;
+    } else {                             // then joins its place on the orbit
+      const q = easeIO((u - .55) / .9); x = cx + (ox - cx) * q; y = cy + 150 + (oy - cy - 150) * q; s = 1.35 + (so - 1.35) * q; z = q < 1 ? 1 : zo;
+    }
+    out.push({ it, x, y, z, s, a: clamp(u * 3) * (1 - clamp((k - .85) / .15)) });
+  });
+  return out;
+}
+function drawItem(o) {
+  const { it, x, y, s, a } = o;
+  V.save(); V.globalAlpha = a * (o.z < 0 ? .75 : 1);
+  if (it.im) {
+    const im = img(it.im), w = it.w * s, h = w * im.naturalHeight / im.naturalWidth;
+    V.shadowColor = 'rgba(0,0,0,.55)'; V.shadowBlur = 30; V.shadowOffsetY = 18;
+    V.drawImage(im, x - w / 2, y - h / 2, w, h);
+  } else {
+    const r = 104 * s;
+    V.shadowColor = 'rgba(255,107,0,.6)'; V.shadowBlur = 40;
+    const g = V.createLinearGradient(x - r, y - r, x + r, y + r); g.addColorStop(0, '#FF8A1F'); g.addColorStop(1, '#C2410C');
+    V.fillStyle = g; V.beginPath(); V.arc(x, y, r, 0, 7); V.fill();
+    V.shadowBlur = 0; V.strokeStyle = 'rgba(255,255,255,.85)'; V.lineWidth = 4 * s; V.beginPath(); V.arc(x, y, r - 2 * s, 0, 7); V.stroke();
+    const is = 120 * s; V.drawImage(icons[it.icon], x - is / 2, y - is / 2, is, is);
+  }
+  V.restore();
+}
+
+/* ---------- headlines ---------- */
+function headline(t) {
+  V.save(); V.textBaseline = 'alphabetic';
+  const a1 = win(t, 1.0, 2.95, .25);
+  if (a1 > 0) { V.globalAlpha = a1; V.font = '800 78px Poppins'; V.fillStyle = '#fff'; V.textAlign = 'center'; V.fillText('Un seul téléphone.', 540, 330 + 16 * (1 - ease((t - 1) / .3))); }
+  for (let i = 0; i < WORDS.length - 1; i++) {
+    const [a, w] = WORDS[i], b = WORDS[i + 1][0]; if (t < a || t >= b) continue;
+    const u = t - a, al = i === WORDS.length - 2 ? win(t, a, b, .2) : clamp(u / .1);
+    V.globalAlpha = al; V.font = '900 104px Poppins'; V.fillStyle = '#fff';
+    const tw = spaced(V, decode(w, clamp(u / .35), i * 31), 540, 340, 2);
+    V.fillStyle = '#FF6B00'; const lw = Math.min(tw, 520) * ease(u / .35); V.fillRect(540 - lw / 2, 380, lw, 8);
+  }
+  const a3 = win(t, T_SPIRAL + .05, T_FLASH + .1, .25);
+  if (a3 > 0) {
+    V.globalAlpha = a3; V.font = '800 92px Poppins'; V.textAlign = 'left';
+    const s1 = 'Une seule ', s2 = 'app.', w1 = V.measureText(s1).width, w2 = V.measureText(s2).width, x0 = 540 - (w1 + w2) / 2, y = 340 + 16 * (1 - ease((t - T_SPIRAL) / .3));
+    V.fillStyle = '#fff'; V.fillText(s1, x0, y); V.fillStyle = '#FF6B00'; V.fillText(s2, x0 + w1, y);
+  }
+  V.restore();
+}
+
+/* ---------- end card: the logo comes out of the phone ---------- */
+function logoOut(t) {
+  const k = easeIO((t - T_FLASH) / .7);
+  const LS = 300 + 400 * k, cx = 540, bc = 1080 + (760 - 1080) * k;
+  const gl = V.createRadialGradient(cx, bc, 10, cx, bc, 560); gl.addColorStop(0, `rgba(255,107,0,${.34 * clamp((t - T_FLASH) / .4)})`); gl.addColorStop(1, 'rgba(255,107,0,0)');
+  V.fillStyle = gl; V.fillRect(0, bc - 560, W, 1120);
+  V.save(); V.globalAlpha = clamp((t - T_FLASH) / .2); V.drawImage(img('logo'), cx - LS / 2, bc - LS * 377 / 1024, LS, LS); V.restore();
+  if (t >= T_END) {
+    const u = t - T_END;
+    V.save(); V.textBaseline = 'alphabetic';
+    V.font = '900 150px Poppins'; V.fillStyle = '#fff';
+    const k1 = clamp((u - .2) / .45); if (k1 > 0) spaced(V, decode('BIENTÔT', k1, 300), 540, 1300, 6);
+    V.font = '700 40px Inter'; V.fillStyle = '#FF6B00';
+    const k2 = clamp((u - .55) / .5); if (k2 > 0) spaced(V, decode('AU BÉNIN · COMING SOON', k2, 400), 540, 1385, 14);
+    V.restore();
+  }
+}
+
+/* ---------- post: glitch, grain, vignette, captions ---------- */
+const grains = [0, 1, 2, 3].map(s => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'), d = g.createImageData(256, 256);
+  for (let i = 0; i < d.data.length; i += 4) { const v = rnd(i * .37 + s * 1000, s) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  g.putImageData(d, 0, 0); return c; });
+function captions(t) {
+  X.save(); X.font = '700 60px Poppins'; X.textBaseline = 'middle'; X.textAlign = 'left';
+  for (const [a, b, lines] of CAPS) {
+    const al = win(t, a, b, .18); if (al <= 0) continue;
+    const dy = 14 * (1 - ease((t - a) / .25));
+    lines.forEach((segs, k) => {
+      const y = 1600 + (k - (lines.length - 1) / 2) * 76 + dy;
+      const tot = segs.reduce((s, [txt]) => s + X.measureText(txt).width, 0); let x = 540 - tot / 2;
+      for (const [txt, o] of segs) { X.shadowColor = 'rgba(0,0,0,.85)'; X.shadowBlur = 18; X.fillStyle = o ? `rgba(255,122,26,${al})` : `rgba(255,255,255,${al})`; X.fillText(txt, x, y); x += X.measureText(txt).width; }
+    });
+  }
+  X.restore();
+}
+function post(t, fi) {
+  const g = glitchAt(t);
+  X.globalCompositeOperation = 'source-over'; X.drawImage(vc, 0, 0);
+  if (g > .02) {
+    const n = 6 + Math.floor(10 * g);
+    for (let k = 0; k < n; k++) {
+      const y = Math.floor(rnd(fi, k) * H), h = 8 + Math.floor(rnd(fi, k + 50) * 130 * g), dx = (rnd(fi, k + 99) - .5) * 220 * g;
+      X.drawImage(vc, 0, y, W, h, dx, y, W, h);
+    }
+    const s = Math.round(5 + 22 * g), id = X.getImageData(0, 0, W, H), d = id.data, src = new Uint8ClampedArray(d);
+    for (let y = 0; y < H; y++) { const row = y * W * 4;
+      for (let x = 0; x < W; x++) { const i = row + x * 4; d[i] = src[row + Math.min(W - 1, x + s) * 4]; d[i + 2] = src[row + Math.max(0, x - s) * 4 + 2]; } }
+    X.putImageData(id, 0, 0);
+  }
+  X.save(); X.globalAlpha = .05; X.globalCompositeOperation = 'screen';
+  const gc = grains[fi % 4], ox = Math.floor(rnd(fi, 1) * 256), oy = Math.floor(rnd(fi, 2) * 256);
+  for (let y = -oy; y < H; y += 256) for (let x = -ox; x < W; x += 256) X.drawImage(gc, x, y);
+  X.restore();
+  const v = X.createRadialGradient(540, 960, 650, 540, 960, 1300); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.5)');
+  X.fillStyle = v; X.fillRect(0, 0, W, H);
+  if (t < .5) { X.fillStyle = `rgba(0,0,0,${1 - ease(t / .5)})`; X.fillRect(0, 0, W, H); }
+  captions(t);
+}
+
+window.renderAt = async t => {
+  const fi = Math.round(t * FPS);
+  const glow = ease((t - T_BUZZ) / .6);
+  background(t, glow);
+  if (t < T_FLASH + .7) {
+    const out = clamp((t - T_FLASH) / .7);
+    const enter = ease(t / .9), buzz = t > T_BUZZ && t < T_BUZZ + .7 ? 7 * Math.sin(t * 95) * (1 - (t - T_BUZZ) / .7) : 0;
+    const th = (-.5 + .32 * enter + .14 * Math.sin(t * .7)) * (1 - easeIO((t - T_SPIRAL) / 1.3));
+    const cx = 540 + buzz, cy = 1080 + 260 * (1 - enter) + 12 * Math.sin(t * 1.3) + 700 * easeIO(out), s = 1.06 + .04 * Math.sin(t * .5);
+    phoneFace(t);
+    const items = orbit(t), behind = items.filter(o => o.z < 0), front = items.filter(o => o.z >= 0);
+    behind.forEach(drawItem);
+    drawPhone(cx, cy, th, s, enter * (1 - out));
+    front.forEach(drawItem);
+  }
+  if (t >= T_FLASH) logoOut(t);
+  headline(t);
+  post(t, fi);
+};
+window.waitFrame = () => 0;
+const svg = p => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`);
+window.ready = (async () => {
+  for (const [k, p] of Object.entries(ICON_PATHS)) { const im = new Image(); im.src = svg(p); await im.decode().catch(() => 0); icons[k] = im; }
+  for (const f of ['900 150px Poppins', '900 104px Poppins', '800 92px Poppins', '800 78px Poppins', '700 60px Poppins', '700 40px Inter']) await document.fonts.load(f);
+  await document.fonts.ready;
+  for (const id of ['logo', 'pin', 'moto', 'car', 'tricycle', 'colis', 'plat', 'sac', 'occasion', 'reveil']) await img(id).decode().catch(() => 0);
+  await window.renderAt(0);
+  return true;
+})();
+if (location.search.includes('play')) {
+  const a = document.getElementById('aud'); let t0 = null, busy = false;
+  const fit = () => { const s = Math.min(innerWidth / W, innerHeight / H); cv.style.transform = `scale(${s})`; cv.style.transformOrigin = '0 0'; };
+  fit(); addEventListener('resize', fit);
+  const loop = async () => { if (!busy) { busy = true; const t = a && !a.paused ? a.currentTime : (t0 === null ? 0 : (performance.now() - t0) / 1000); await window.renderAt(t % DUR); busy = false; } requestAnimationFrame(loop); };
+  document.addEventListener('click', () => { a.currentTime = 0; a.play().catch(() => { t0 = performance.now(); }); });
+  window.ready.then(loop);
+}

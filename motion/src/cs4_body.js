@@ -1,0 +1,207 @@
+const W = 1080, H = 1920, DUR = 25, FPS = 24;
+const cv = document.getElementById('cv'), X = cv.getContext('2d');
+const vc = document.createElement('canvas'); vc.width = W; vc.height = H; const V = vc.getContext('2d');
+const img = id => document.getElementById(id);
+const bg = img('bg'), mc = img('mc');
+
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => 1 - Math.pow(1 - clamp(u), 3);
+const easeIO = u => { u = clamp(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; };
+const rnd = (a, b = 0) => { const x = Math.sin(a * 127.1 + b * 311.7 + 17.3) * 43758.5453; return x - Math.floor(x); };
+const win = (t, a, b, f = .25) => clamp((t - a) / f) * clamp((b - t) / f);
+
+/* ---------- timeline (dialogue from the Flow clips, voice placed by the soundtrack script) ---------- */
+const CUTS = [0, 1.77, 3.32, 6.52, 8.52, 11.07, 12.47, 14.17, 15.67, 16.87, 18.6];
+const T_QUAD = 16.87, T_MASC = 18.6, T_END = 21.6, LASTF = 445;
+const HITS = [[3.32, .2, .05], [6.52, .2, .05], [8.52, .2, .05], [11.07, .4, .08], [12.47, .25, .05], [14.17, .25, .05], [15.67, .25, .05],
+  [T_QUAD, .45, .1], [T_MASC, 1.0, .2], [T_END, 1.1, .24], [23.2, .3, .06]];
+const glitchAt = t => { let g = 0; for (const [h, s, d] of HITS) if (t >= h - .04 && t < h + d) g = Math.max(g, s * (1 - Math.max(0, t - h) / d)); return g; };
+const LABELS = [[0.1, 3.3, 'CONDUCTEUR DE ZEM', 'COTONOU'], [3.4, 6.5, 'COMMERÇANTE', 'PARAKOU'],
+  [6.55, 8.5, 'ÉTUDIANT', 'ABOMEY-CALAVI'], [8.55, 11.05, 'RESTAURATRICE', 'PORTO-NOVO']];
+// captions: [start, end, lines, style]; a line is a list of [text, orange?]
+const CAPS = [
+  [0.1, 1.75, [[['Moi, je veux '], ['plus de courses…', 1]]]],
+  [1.8, 3.3, [[['… et '], ['moins de tours à vide.', 1]]]],
+  [3.4, 6.5, [[['Moi, je veux que mes clients']], [['me trouvent '], ['facilement.', 1]]]],
+  [6.55, 8.5, [[['Moi, je veux me déplacer']], [['sans me ruiner.', 1]]]],
+  [8.55, 11.05, [[['Moi, je veux livrer mes plats']], [['dans '], ['tout le quartier.', 1]]]],
+  [11.1, 16.85, [[['C’est pour '], ['nous !', 1]]], 'big'],
+  [18.75, 21.5, [[['Le Bénin bouge.']], [['Le monde avance.']]]],
+  [21.85, 25.0, [[['OJA', 1], [' arrive.']]]],
+];
+
+/* ---------- helpers ---------- */
+const GLY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
+function decode(s, u, seed) {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]; if (' .·…’'.includes(c)) { out += c; continue; }
+    const k = clamp(u * (s.length + 4) - i, 0, 1);
+    out += k >= 1 ? c : k <= 0 ? ' ' : GLY[Math.floor(rnd(seed + i, Math.floor(u * 40)) * GLY.length)];
+  }
+  return out;
+}
+function spaced(ctx, s, x, y, sp) {
+  const ws = [...s].map(c => ctx.measureText(c).width), tot = ws.reduce((a, b) => a + b, 0) + sp * (s.length - 1);
+  let cx = x - tot / 2; ctx.textAlign = 'left';
+  [...s].forEach((c, i) => { ctx.fillText(c, cx, y); cx += ws[i] + sp; });
+}
+
+/* ---------- picture ---------- */
+function shot(t) {
+  let i = CUTS.length - 2; while (CUTS[i] > t) i--;
+  const u = (t - CUTS[i]) / (CUTS[i + 1] - CUTS[i]), z = 1 + (i === 9 ? .01 : .03) * easeIO(u);
+  const w = W * z, h = H * z;
+  V.drawImage(bg, (W - w) / 2, (H - h) / 2 - (z - 1) * 300, w, h);
+  if (i === 9) {   // 2x2 grid: orange separators + big title
+    const k = easeIO((t - T_QUAD) / .4);
+    V.save(); V.shadowColor = '#FF6B00'; V.shadowBlur = 18; V.fillStyle = 'rgba(255,150,60,.95)';
+    V.fillRect(538, 960 - 960 * k, 4, 1920 * k); V.fillRect(540 - 540 * k, 958, 1080 * k, 4); V.restore();
+    V.fillStyle = `rgba(0,0,0,${.35 * k})`; V.fillRect(0, 0, W, H);
+  }
+  return i;
+}
+function label(t) {
+  for (const [a, b, role, city] of LABELS) {
+    if (t < a || t > b) continue;
+    const u = t - a, al = win(t, a, b, .2);
+    const gr = V.createLinearGradient(0, 0, 0, 420); gr.addColorStop(0, `rgba(0,0,0,${.45 * al})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    V.fillStyle = gr; V.fillRect(0, 0, W, 420);
+    V.save(); V.globalAlpha = al; V.textBaseline = 'alphabetic';
+    V.fillStyle = '#FF6B00'; const lw = 70 * ease(u / .4); V.fillRect(540 - lw / 2, 160, lw, 5);
+    V.fillStyle = '#fff'; V.font = '700 48px Inter'; spaced(V, decode(role, clamp((u - .05) / .4), a * 10), 540, 232, 10);
+    V.font = '600 30px Inter'; V.fillStyle = 'rgba(255,255,255,.75)'; if (u > .25) spaced(V, decode(city, clamp((u - .25) / .3), a * 7), 540, 280, 12);
+    V.restore();
+  }
+}
+/* ---------- the mascot, revealed at last ---------- */
+function mascot(t) {
+  const u = t - T_MASC;
+  const g = V.createRadialGradient(540, 900, 40, 540, 900, 1250); g.addColorStop(0, '#FF8A1F'); g.addColorStop(.55, '#FF6B00'); g.addColorStop(1, '#B83C0A');
+  V.fillStyle = g; V.fillRect(0, 0, W, H);
+  V.save(); V.translate(540, 900); V.rotate(u * .12);    // slow light rays
+  for (let k = 0; k < 16; k++) { V.rotate(Math.PI / 8); V.fillStyle = `rgba(255,240,220,${.07 + .03 * (k % 2)})`; V.beginPath(); V.moveTo(0, 0); V.lineTo(-90, -1600); V.lineTo(90, -1600); V.closePath(); V.fill(); }
+  V.restore();
+  const f = clamp((u - .0) / .25), s = 1.38 * (.92 + .08 * ease(u / .5)), w = 612 * s, h = 960 * s;
+  V.save(); V.globalAlpha = f; V.shadowColor = 'rgba(80,20,0,.45)'; V.shadowBlur = 40; V.shadowOffsetY = 20;
+  V.drawImage(mc, 540 - w / 2, 1430 - h, w, h); V.restore();
+  // flash on the reveal
+  const fl = 1 - clamp(u / .35); if (fl > 0) { V.fillStyle = `rgba(255,245,230,${fl})`; V.fillRect(0, 0, W, H); }
+}
+
+function backgroundV() {
+  V.fillStyle = '#07070a'; V.fillRect(0, 0, W, H);
+  V.save(); V.strokeStyle = 'rgba(255,107,0,.05)'; V.lineWidth = 1;
+  for (let x = 0; x <= W; x += 90) { V.beginPath(); V.moveTo(x + .5, 0); V.lineTo(x + .5, H); V.stroke(); }
+  for (let y = 0; y <= H; y += 90) { V.beginPath(); V.moveTo(0, y + .5); V.lineTo(W, y + .5); V.stroke(); }
+  V.restore();
+}
+/* ---------- end card: the full logo this time ---------- */
+function endCardV(t) {
+  const u = t - T_END;
+  backgroundV();
+  const LS = 700, bc = 760, LX = 540 - LS / 2, LY = bc - LS * 377 / 1024;
+  const sh = 330 * easeIO(u / .38) + 420 * easeIO((u - .45) / .6);
+  const gl = V.createRadialGradient(540, bc, 10, 540, bc, 560); gl.addColorStop(0, `rgba(255,107,0,${.34 * ease(u / .5)})`); gl.addColorStop(1, 'rgba(255,107,0,0)');
+  V.fillStyle = gl; V.fillRect(0, bc - 560, W, 1120);
+  V.save(); V.beginPath(); V.rect(0, bc - sh / 2, W, sh); V.clip(); V.drawImage(img('logo'), LX, LY, LS, LS); V.restore();
+  const ea = clamp(u / .1) * (1 - clamp((u - .9) / .4));
+  if (ea > 0) { V.save(); V.shadowColor = '#FF6B00'; V.shadowBlur = 24; V.fillStyle = `rgba(255,170,90,${ea})`;
+    V.fillRect(0, bc - sh / 2 - 2, W, 4); V.fillRect(0, bc + sh / 2 - 2, W, 4); V.restore(); }
+  V.save(); V.textBaseline = 'alphabetic';
+  V.font = '900 150px Poppins'; V.fillStyle = '#fff';
+  const k1 = clamp((u - .5) / .45); if (k1 > 0) spaced(V, decode('BIENTÔT', k1, 300), 540, 1300, 6);
+  V.font = '700 40px Inter'; V.fillStyle = '#FF6B00';
+  const k2 = clamp((u - .85) / .5); if (k2 > 0) spaced(V, decode('AU BÉNIN · COMING SOON', k2, 400), 540, 1385, 14);
+  V.restore();
+}
+
+/* ---------- post: glitch, grain, vignette, captions ---------- */
+const grains = [0, 1, 2, 3].map(s => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'), d = g.createImageData(256, 256);
+  for (let i = 0; i < d.data.length; i += 4) { const v = rnd(i * .37 + s * 1000, s) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  g.putImageData(d, 0, 0); return c; });
+function captions(t) {
+  X.save(); X.textBaseline = 'middle'; X.textAlign = 'left';
+  for (const [a, b, lines, style] of CAPS) {
+    const al = win(t, a, b, .18); if (al <= 0) continue;
+    const big = style === 'big';
+    let pop = 1; if (big) { for (const c of [11.07, 12.47, 14.17, 15.67]) if (t >= c && t < c + .25) pop = 1 + .08 * (1 - (t - c) / .25); }
+    X.font = big ? `900 ${Math.round(92 * pop)}px Poppins` : '700 60px Poppins';
+    const dy = 14 * (1 - ease((t - a) / .25));
+    lines.forEach((segs, k) => {
+      const y = 1540 + (k - (lines.length - 1) / 2) * 76 + dy;
+      const tot = segs.reduce((s, [txt]) => s + X.measureText(txt).width, 0); let x = 540 - tot / 2;
+      for (const [txt, o] of segs) {
+        X.shadowColor = 'rgba(0,0,0,.85)'; X.shadowBlur = 18; X.fillStyle = o ? `rgba(255,122,26,${al})` : `rgba(255,255,255,${al})`;
+        X.fillText(txt, x, y); x += X.measureText(txt).width;
+      }
+    });
+  }
+  // the 2x2 grid title
+  const q = win(t, T_QUAD + .1, T_MASC, .2);
+  if (q > 0) {
+    const sc = .85 + .15 * ease((t - T_QUAD - .1) / .3);
+    X.save(); X.translate(540, 960); X.scale(sc, sc); X.textAlign = 'center'; X.textBaseline = 'middle';
+    X.shadowColor = 'rgba(0,0,0,.9)'; X.shadowBlur = 30; X.font = '900 120px Poppins';
+    X.fillStyle = `rgba(255,255,255,${q})`; X.fillText('C’EST POUR', 0, -70);
+    X.fillStyle = `rgba(255,122,26,${q})`; X.fillText('NOUS.', 0, 60);
+    X.restore();
+  }
+  X.restore();
+}
+function post(t, fi) {
+  const g = glitchAt(t);
+  X.globalCompositeOperation = 'source-over'; X.drawImage(vc, 0, 0);
+  if (g > .02) {
+    const n = 6 + Math.floor(10 * g);
+    for (let k = 0; k < n; k++) {
+      const y = Math.floor(rnd(fi, k) * H), h = 8 + Math.floor(rnd(fi, k + 50) * 130 * g), dx = (rnd(fi, k + 99) - .5) * 220 * g;
+      X.drawImage(vc, 0, y, W, h, dx, y, W, h);
+    }
+    const s = Math.round(5 + 22 * g), id = X.getImageData(0, 0, W, H), d = id.data, src = new Uint8ClampedArray(d);
+    for (let y = 0; y < H; y++) { const row = y * W * 4;
+      for (let x = 0; x < W; x++) { const i = row + x * 4; d[i] = src[row + Math.min(W - 1, x + s) * 4]; d[i + 2] = src[row + Math.max(0, x - s) * 4 + 2]; } }
+    X.putImageData(id, 0, 0);
+  }
+  X.save(); X.globalAlpha = .05; X.globalCompositeOperation = 'screen';
+  const gc = grains[fi % 4], ox = Math.floor(rnd(fi, 1) * 256), oy = Math.floor(rnd(fi, 2) * 256);
+  for (let y = -oy; y < H; y += 256) for (let x = -ox; x < W; x += 256) X.drawImage(gc, x, y);
+  X.restore();
+  // soft dark gradient at the bottom so the captions read on any picture
+  const bgr = X.createLinearGradient(0, 1220, 0, H); bgr.addColorStop(0, 'rgba(0,0,0,0)'); bgr.addColorStop(1, 'rgba(0,0,0,.55)');
+  X.fillStyle = bgr; X.fillRect(0, 1220, W, H - 1220);
+  const v = X.createRadialGradient(540, 960, 650, 540, 960, 1300); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.45)');
+  X.fillStyle = v; X.fillRect(0, 0, W, H);
+  if (t < .4) { X.fillStyle = `rgba(0,0,0,${1 - ease(t / .4)})`; X.fillRect(0, 0, W, H); }
+  captions(t);
+}
+
+let curSrc = '', curMc = '';
+const setSrc = async (el, src, cur) => { if (src !== cur) el.src = src; await el.decode().catch(() => 0); return src; };
+window.renderAt = async t => {
+  const fi = Math.round(t * FPS);
+  if (t < T_MASC) {
+    curSrc = await setSrc(bg, `assets/cs4f/f${String(Math.min(fi, LASTF)).padStart(4, '0')}.jpg`, curSrc);
+    shot(t); label(t);
+  } else if (t < T_END) {
+    const f = 36 + Math.min(72, Math.round((t - T_MASC) * FPS));
+    curMc = await setSrc(mc, `assets/mc/c7_${String(f).padStart(3, '0')}.webp`, curMc);
+    mascot(t);
+  } else endCardV(t);
+  post(t, fi);
+};
+window.waitFrame = () => 0;
+window.ready = (async () => {
+  for (const f of ['900 150px Poppins', '900 120px Poppins', '700 60px Poppins', '700 48px Inter', '600 30px Inter', '700 40px Inter']) await document.fonts.load(f);
+  await document.fonts.ready; await img('logo').decode().catch(() => 0);
+  await window.renderAt(0);
+  return true;
+})();
+if (location.search.includes('play')) {
+  const a = document.getElementById('aud'); let t0 = null, busy = false;
+  const fit = () => { const s = Math.min(innerWidth / W, innerHeight / H); cv.style.transform = `scale(${s})`; cv.style.transformOrigin = '0 0'; };
+  fit(); addEventListener('resize', fit);
+  const loop = async () => { if (!busy) { busy = true; const t = a && !a.paused ? a.currentTime : (t0 === null ? 0 : (performance.now() - t0) / 1000); await window.renderAt(t % DUR); busy = false; } requestAnimationFrame(loop); };
+  document.addEventListener('click', () => { a.currentTime = 0; a.play().catch(() => { t0 = performance.now(); }); });
+  window.ready.then(loop);
+}
