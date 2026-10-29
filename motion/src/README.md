@@ -16,6 +16,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | OJA « Le moteur a lâché » | `oja_moteur_lache.html` | `pan_body.js`, `pan_build.py` | `music23.py` + voix `assets/pan/voix_panne.mp3` |
 | OJA « Dis-le à OJA » | `oja_dis_le_a_oja.html` | `dis_body.js`, `dis_build.py` | `music24.py` + voix `assets/dis/voix_disle.mp3` |
 | OJA Partage « Même trajet, 25 % moins cher » | `oja_meme_trajet_partage.html` | `prt_body.js`, `prt_build.py` | `music25.py` + voix `assets/prt/voix_partage.mp3` |
+| OJA Mascotte « Défis des lieux » | `oja_defis_lieux_mascotte.html` | `dfl_body.js`, `dfl_build.py` (clips mascotte `assets/mc/`) | `music26.py` + voix `assets/dfl/voix_defis.mp3` |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.

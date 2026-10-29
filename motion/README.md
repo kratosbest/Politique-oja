@@ -549,3 +549,32 @@ Idée 3 du kit marketing (prix et confiance). OJA Partage est un trajet partagé
 | 8,1–11,2 s | « Et le prix est vingt-cinq pour cent moins cher que le prix normal. » | Barres « Prix normal » et « OJA Partage » (les trois quarts), sans chiffres, pastille « −25 % » |
 | 11,2–14 s | « En plus, l'appli te montre le CO2 évité. » | Carte « CO₂ évité » (sans chiffre), feuilles qui montent |
 | 14–20 s | « Odja Partage. Moins cher à deux. » | Logo, « OJA Partage », slogan, boutons des stores, mention |
+
+## OJA Mascotte — « Défis des lieux » (9:16, 33 s)
+
+La mascotte explique les Défis liés aux lieux, avec les chiffres du kit (`marketing/kit/01-produit-oja.md`, section 3). Chaque pourcentage est montré avec son plafond, comme le veut la règle d'honnêteté du kit.
+- **Dépendance :** ne pas publier avant que les Défis soient activés au Bénin **et** qu'un budget mensuel soit fixé. Par défaut, le budget vaut 0 et seuls les badges sont donnés.
+- **Avant publication :** vérifier les taux et les plafonds dans le Centre de contrôle (ils sont réglables par pays).
+
+**Ce que dit la vidéo :**
+- 3 lieux : −15 % (jusqu'à 500 F), badge Éclaireur.
+- 10 lieux : −20 % (jusqu'à 1 000 F), badge Guide de quartier.
+- 25 lieux : −25 % (jusqu'à 1 500 F), badge Cartographe.
+- « Mon lieu a aidé 10 personnes » : −20 % (jusqu'à 500 F, 3 fois par mois).
+- Les 3 Guides du mois (au moins 3 lieux) : une course offerte (jusqu'à 1 500 F).
+- Un lieu compte après confirmation par l'équipe OJA.
+
+**Fichiers :**
+- **Vidéo :** `OJA_Mascotte_DefisDesLieux_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_defis_lieux_mascotte.html`, construite par `src/dfl_build.py` à partir de `src/dfl_body.js`. Voix Isac (`assets/dfl/voix_defis.txt`), son `src/music26.py`, le tout calé sur le minutage de la voix.
+- **Mascotte :** les clips détourés `assets/mc/c*_NNN.webp` (tableau `SEG` dans `dfl_body.js`) : c6 atterrissage, c10 montre la carte, c2, c9 et c8 sur les paliers, c7 bras ouverts, c11, puis c1 salut sur la fin.
+- **Mention à l'écran :** « Défis OJA : réductions à usage unique, plafonnées, valables 30 jours, selon budget disponible. Un lieu compte après confirmation par l'équipe OJA. Course offerte jusqu'à 1 500 F ; le prix ne descend jamais sous 100 F. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–3,7 s | « Eh ! Tu connais bien ton quartier ? Ça peut te rapporter ! » | La mascotte tombe sur la carte de Cotonou |
+| 3,7–8,6 s | « Ajoute des lieux sur la carte Odja. Chaque lieu confirmé par l'équipe Odja compte pour tes défis. » | Des pins tombent (« +1 lieu »), carte « Confirmé par l'équipe OJA » ; la mascotte montre la carte |
+| 8,6–19,7 s | Les trois paliers, « Et un badge à chaque palier ! » | 3 cartes de palier (lieux, %, plafond), puis les badges |
+| 19,7–23,4 s | « Ton lieu a aidé dix personnes ? Encore vingt pour cent, jusqu'à cinq cents francs. » | Grand pin entouré de 10 personnes, carte −20 % |
+| 23,4–26,4 s | « Et chaque mois, les trois meilleurs guides gagnent une course offerte. » | Podium 1-2-3 avec couronne, carte « Une course offerte » |
+| 26,4–33 s | « Odja. Le local devient visible. » | Logo, « OJA », slogan, la mascotte salue, stores, mention |

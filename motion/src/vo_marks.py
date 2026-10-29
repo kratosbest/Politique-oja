@@ -35,3 +35,8 @@ DISLE = dict(hook="Il t'a", argent="plus d'argent", dis='Dis-le', apres='Après 
 # key phrases of the « Même trajet, 25 % moins cher » voice (assets/prt/voix_partage.txt)
 PARTAGE = dict(hook='Même trajet', moins='vingt-cinq', ami='Toi et ton ami', calavi='Calavi', avec='Avec Odja Partage', montez='vous montez', voit='la même voiture',
                prix='Et le prix', normal='le prix normal', co2='En plus', evite='CO2', endA='>Odja Partage. Moins', endB='>Moins cher à deux')
+
+# key phrases of the « Défis des lieux » mascot voice (assets/dfl/voix_defis.txt)
+DEFIS = dict(hook='Eh', quartier='Tu connais', rapporte='Ça peut', ajoute='Ajoute des lieux', confirme='Chaque lieu', t1='Trois lieux',
+             t2='Dix lieux', t3='Vingt-cinq lieux', badge='Et un badge', aide='Ton lieu', guides='Et chaque mois', endA='>Odja. Le local',
+             endB='>Le local devient')

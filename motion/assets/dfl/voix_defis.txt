@@ -1,0 +1,8 @@
+[enjoué] Eh ! Tu connais bien ton quartier ? Ça peut te rapporter !
+Ajoute des lieux sur la carte Odja. Chaque lieu confirmé par l'équipe Odja compte pour tes défis.
+Trois lieux : quinze pour cent de réduction, jusqu'à cinq cents francs.
+Dix lieux : vingt pour cent, jusqu'à mille francs.
+Vingt-cinq lieux : vingt-cinq pour cent, jusqu'à mille cinq cents francs. Et un badge à chaque palier !
+Ton lieu a aidé dix personnes ? Encore vingt pour cent, jusqu'à cinq cents francs.
+Et chaque mois, les trois meilleurs guides gagnent une course offerte.
+[chaleureux] Odja. Le local devient visible.
