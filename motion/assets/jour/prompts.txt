@@ -10,3 +10,5 @@ h_colis.jpg: late afternoon by an office window, she holds a cardboard parcel bo
 h_soir.jpg: evening, she sits alone on a low wall at a dark street corner, completely exhausted, head tilted back, eyes closed, sighing deeply. Right third; left two thirds a dark blue night street with blurred street lamps.
 h_appli.jpg: night, almost total darkness, her face lit only by the warm orange glow of her smartphone, curious with a first hint of a hopeful smile. Close-up, right third; left two thirds deep black with tiny warm bokeh lights.
 (All: shallow depth of field, rich cinematic colour grading, film grain, no text, no logos.)
+h_fin.jpg (16:9, 1st take) / h_fin_v.jpg (9:16, 2nd take): golden hour on a Cotonou street, she walks relaxed holding her smartphone, she has just looked up from it and smiles broadly at the camera, a genuine relieved and happy smile (16:9: left third, sunset street on the right; 9:16: waist up, face in the upper half, calm space at the bottom).
+Vertical crops h_*_v.jpg of the problem scenes: 648 x 1152 cut from the 2048 x 1152 originals, centred on her face, resized to 1080 x 1920.

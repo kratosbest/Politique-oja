@@ -661,6 +661,14 @@ Nouvelle version de la vidéo chauffeurs, dans un style « magazine » plus haut
 
 ## OJA — « Une journée à Cotonou », film de lancement (16:9, 56 s)
 
+Il existe deux versions :
+- `OJA_UneJourneeACotonou_16x9.mp4` (1920 × 1080) ;
+- `OJA_UneJourneeACotonou_9x16.mp4` (1080 × 1920), pour TikTok et Reels.
+
+Les deux pages (`oja_journee_cotonou.html` et `oja_journee_cotonou_9x16.html`) sont construites par `src/jour_build.py` à partir du même `src/jour_body.js`. Le drapeau `VERT` y fixe toutes les positions. La version verticale n'est pas un recadrage du film : les photos sont recadrées sur le visage de l'héroïne (`assets/jour/h_*_v.jpg`), l'heure est en haut, le texte en bas, et les cartes sont empilées.
+
+La fin montre l'héroïne souriante, téléphone en main, au coucher du soleil (`h_fin.jpg` / `h_fin_v.jpg`, générées à partir du même portrait de référence), avec le logo, le slogan et les stores.
+
 Film de présentation au format horizontal (1920 × 1080), dans le style de la vidéo de référence envoyée par l'équipe. Ce style comprend :
 - un récit « POV » à la deuxième personne ;
 - de grandes heures à l'écran et des couleurs qui suivent la journée (aube orange, carrefour rouge, midi doré, crépuscule violet avec la lune, nuit étoilée) ;
@@ -673,6 +681,7 @@ Il n'y a aucun montant ni aucun chiffre inventé, et seules des fonctions **en l
 - **Vidéo :** `OJA_UneJourneeACotonou_16x9.mp4` (1920 × 1080, 24 i/s)
 - **Source :** `oja_journee_cotonou.html`, construite par `src/jour_build.py` à partir de `src/jour_body.js` et `src/bj_map.js` (vraies frontières). Voix Isac (`assets/jour/voix_journee.txt`), son `src/music30.py` (tic-tac, klaxons, montée tonale, groove), le tout calé sur le minutage de la voix.
 - **Rendu 16:9 :** `VW=1920 VH=1080 src/render_video.sh oja_journee_cotonou.html 56 assets/soundtrack_journee.m4a OJA_UneJourneeACotonou_16x9.mp4 <ffmpeg>`
+- **Rendu 9:16 :** `src/render_video.sh oja_journee_cotonou_9x16.html 56 assets/soundtrack_journee.m4a OJA_UneJourneeACotonou_9x16.mp4 <ffmpeg>`
 - **Images :** véhicules OJA (`assets/moto.png`, `tricycle.png`, `car.png`), `assets/cs/obj_plat.png`, `obj_colis.png`, visage du zem de Cotonou découpé dans `assets/edt/moto.jpg` (généré par IA) : `assets/jour/zem_face.png`.
 - **L'héroïne :** une jeune employée de Cotonou, le « tu » du récit. Elle a été générée avec ElevenLabs, d'abord en portrait de référence, puis dans chaque scène à partir de ce portrait pour garder le même visage (prompts dans `assets/jour/prompts.txt`). Ce n'est pas une vraie personne, et la mention le dit. Les photos `assets/jour/h_*.jpg` sont dessinées sous les halos, avec un dégradé du côté du texte :
   - exaspérée au carrefour (07:31) ;
@@ -696,4 +705,4 @@ Il n'y a aucun montant ni aucun chiffre inventé, et seules des fonctions **en l
 | 37,1–41,4 s | « À la fin de chaque course, une question… » | Carte « Le chauffeur a-t-il demandé plus d'argent ? » |
 | 41,4–45,8 s | « Le moteur lâche ? Un autre chauffeur Odja finit le trajet. Au même prix. » | Voiture en panne (warnings), une autre arrive, tampon « MÊME PRIX » |
 | 45,8–49,3 s | « Zem. Tricycle. Voiture. Repas. Colis. » | Orbite des services autour du logo, un mot géant à la fois |
-| 49,3–56 s | « Odja. Tout ton Bénin dans une seule appli. » | Carte du Bénin qui se dessine (Cotonou qui pulse), logo, slogan, stores, mention |
+| 49,3–56 s | « Odja. Tout ton Bénin dans une seule appli. » | L'héroïne souriante au coucher du soleil, logo, slogan, stores, mention |
