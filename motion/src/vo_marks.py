@@ -44,3 +44,8 @@ DEFIS = dict(hook='Eh', quartier='Tu connais', rapporte='Ça peut', ajoute='Ajou
 # key phrases of the « Livré à ton heure » voice (assets/liv/voix_livre.txt)
 LIVRE = dict(hook='Tu commandes', midi='midi et demi', prog='Avec Odja', choisis="c'est toi", repas='Pour tes repas', creneau='Odja te donne',
              quinze='quinze minutes', retard='Et si le livreur', dix='Dix pour cent', auto='Automatiquement', endA='>Odja. Livré', endB='>Livré à ton heure')
+
+# key phrases of the « Chauffeur, arrête de tourner à vide » voice (assets/chv/voix_chauffeur_vide.txt)
+VIDE = dict(hook='Chauffeur', trouvent='Avec Odja', prix='Et le prix', bagarre='plus de bagarre', zones="L'appli", attendent='là où',
+            essence='Tu brûles', gagnes='Et tu vois', releve='ton relevé', vehic='Moto, tricycle', inscris='inscris-toi', endA='>Odja. On roule',
+            endB='>On roule ensemble')

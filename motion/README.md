@@ -600,3 +600,29 @@ Idées 19 et 20 du kit (livraison programmée « Livré à… »). C'est une liv
 | 9,1–11,3 s | « Odja te donne un créneau de quinze minutes. » | Frise 12 h 00 → 13 h 00, créneau 12 h 30 – 12 h 45 ; le livreur arrive dedans : « Livré » |
 | 11,3–18 s | « Et si le livreur arrive après le créneau ? Dix pour cent de réduction… Automatiquement. » | Le livreur dépasse le créneau (« Après le créneau ») ; bon « −10 % », valable 30 jours, tampon « AUTOMATIQUE » |
 | 18–23 s | « Odja. Livré à ton heure. » | Logo, « OJA », slogan, boutons des stores, mention |
+
+## OJA chauffeurs — « Arrête de tourner à vide » (9:16, 25 s)
+
+Première vidéo de recrutement des chauffeurs, inspirée des idées 26 à 29 du kit et de `marketing/sorties/recrutement-chauffeurs.md`. Elle ne montre que des avantages **en ligne** et sans montant :
+- les clients te trouvent ;
+- le prix est fixé avant le départ, donc plus de marchandage ;
+- les zones chaudes montrent où sont les clients ;
+- le relevé montre chaque course, avec les montants masqués ;
+- moto, tricycle ou voiture.
+
+Restent volontairement hors de la vidéo : la ristourne quotidienne et le forfait (montants Bénin à fixer), le bonus de zone (activation par pays), la course relais (version store) et le paiement des gains sur MoMo (décaissement MTN).
+
+**Fichiers :**
+- **Vidéo :** `OJA_Chauffeur_ArreteDeTournerAVide_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_chauffeur_tourner_a_vide.html`, construite par `src/chv_build.py` à partir de `src/chv_body.js`. Voix Isac (`assets/chv/voix_chauffeur_vide.txt`), son `src/music28.py` (moteur, alerte d'essence), le tout calé sur le minutage de la voix.
+- **Mention à l'écran :** « Zones chaudes : l'appli montre où sont les clients. Prix de la course calculé avant le départ. Montants du relevé masqués. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–2,7 s | « Chauffeur, arrête de tourner à vide ! » | Le livreur à moto passe et repasse, la jauge d'essence descend |
+| 2,7–5 s | « Avec Odja, les clients te trouvent. » | Pin du chauffeur ; des clients apparaissent autour et l'appellent |
+| 5–8,4 s | « Et le prix est fixé avant le départ : plus de bagarre pour le prix. » | Bulles « Fais-moi un prix… » / « Ah non, c'est trop peu ! » barrées, ticket « Prix fixé avant le départ » |
+| 8,4–13 s | « L'appli te montre les zones chaudes… Tu brûles moins d'essence à chercher. » | Carte de nuit : zones chaudes à Dantokpa, Akpakpa, Ganhi, Cadjèhoun ; le chauffeur rejoint Ganhi ; la jauge remonte |
+| 13–16,4 s | « Et tu vois tout ce que tu gagnes, course par course, dans ton relevé. » | Carte « Mon relevé » : courses une par une, montants masqués, total du jour |
+| 16,4–19,6 s | « Moto, tricycle ou voiture : inscris-toi sur Odja. » | Moto, tricycle et voiture OJA alignés |
+| 19,6–25 s | « Odja. On roule ensemble ! » | Logo, « OJA », slogan, « Deviens chauffeur OJA », stores, mention |
