@@ -465,7 +465,7 @@ Vidéo motion design pour attirer les commerçants (idée 22 et carrousel 5 du k
 - **Source :** `oja_marchand_tucuisines.html`, construite par `src/mch_build.py` à partir de `src/mch_body.js`. Les écrans sont repris des films Market et Marchand.
 - **Voix :** Isac, générée directement avec `src/tts.py`. Texte dans `assets/mch/voix_marchand.txt`, minutage mot par mot dans `assets/mch/voix_marchand.mp3.json`. L'animation et la musique lisent ce minutage (`src/vo_marks.py`) : si on régénère la voix, il suffit de relancer `src/mch_build.py` et `src/music21.py`.
 - **Paiement :** sur OJA Market, tout se paie par MoMo (pas d'espèces).
-- **Vélo :** dès que `assets/mch/velo.png` existe (vrai vélo avec le caisson OJA, détouré), `src/mch_build.py` le met à la place de l'icône.
+- **Vélo :** `assets/mch/velo.png`, un vrai vélo avec le caisson OJA, remplace l'icône (`src/mch_build.py`). L'image vient d'ElevenLabs (modèle `bytedance-seedream-5-pro`, prompt dans `assets/mch/velo_prompt.txt`, caisson sans logo). `velo_asset.py` la détoure et imprime le logo OJA en blanc sur le caisson.
 - **Son :** `assets/soundtrack_marchand.m4a`, produit par `src/music21.py` : groove afro-pop, bruitages sur les mots, aucun whoosh, musique baissée sous la voix.
 - **Images :** `assets/mch/card_*.jpg` (restaurant, maquis, boutique), `assets/cs/obj_plat.png`, `assets/moto.png`, `tricycle.png`, `car.png`, `assets/mk_logo.png`.
 - **Mention à l'écran :** « Boutique en ligne après validation du dossier par l'équipe OJA. »

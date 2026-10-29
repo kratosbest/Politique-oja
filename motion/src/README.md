@@ -11,7 +11,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | COMING SOON 4 — « OJA, c'est pour nous » | `comingsoon_pournous.html` | `cs4_body.js`, `cs4_build.py` | `music17.py` |
 | COMING SOON 5 — « Le téléphone » | `comingsoon_telephone.html` | `cs5_body.js` (remplace le texte entre `const W = 1080` et `</script>` dans la page) | `music18.py` |
 | Pub OJA Market « Tout ce que vous aimez » | `oja_market_pub.html` | `mkp_body.js`, `market_body.js`, `mkp_build.py`, `../mkp_assets.py` | `music20.py` (sans « whoosh ») |
-| OJA Marchand « Tu cuisines, OJA livre » | `oja_marchand_tucuisines.html` | `mch_body.js`, `market_body.js`, `merchant_scenes.js`, `mch_build.py` | `music21.py` + voix `assets/mch/voix_marchand.mp3` (générée avec `tts.py`) |
+| OJA Marchand « Tu cuisines, OJA livre » | `oja_marchand_tucuisines.html` | `mch_body.js`, `market_body.js`, `merchant_scenes.js`, `mch_build.py` | `music21.py` + voix `assets/mch/voix_marchand.mp3` (générée avec `tts.py`) ; vélo `../velo_asset.py` |
 | OJA « Arrête de marchander » | `oja_arrete_de_marchander.html` | `amm_body.js`, `amm_build.py` (+ préludes Market/Marchand), plan d'accroche `../amm_frames.py` | `music22.py` + voix `assets/amm/voix_marchander.mp3` |
 | OJA « Le moteur a lâché » | `oja_moteur_lache.html` | `pan_body.js`, `pan_build.py` | `music23.py` + voix `assets/pan/voix_panne.mp3` |
 
@@ -21,6 +21,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 - **Rendu en une commande :** `src/render_video.sh page.html <secondes> <bande son> sortie.mp4 <ffmpeg>`.
 - **Aperçus :** `PAGE=page.html VW=1080 VH=1920 node src/snap.js <dossier> 1.5 3.2 …` (une image JPEG par instant).
 - **Détourage :** `cutout2.py` (rembg `isnet-general-use` + remplissage par inondation ; modes `ai` / `union`).
+- **Images ElevenLabs :** le connecteur ElevenLabs de Claude (`creative_generate_image`) fonctionne avec le forfait Creator ; l'API `/v1/flows/image` de `img.py` demande le forfait Pro.
 - **Voix ElevenLabs :** `tts.py` (voir son en-tête). La clé vient des réglages de l'environnement : un secret réseau pour `api.elevenlabs.io` (en-tête `xi-api-key`) ou la variable `ELEVENLABS_API_KEY`. Il vérifie les crédits avant chaque génération et refuse tout dépassement du forfait. Il écrit aussi les temps de chaque caractère dans `<sortie>.json`, pour caler les sous-titres sur la voix.
   - Voix habituelle : « Isac », `SomyDQQmnE7TsltdiDgp` (voix d'homme, léger accent ivoirien).
   - Toujours écrire « Odja » dans les textes, pour que la voix ne dise pas « O-J-A ».

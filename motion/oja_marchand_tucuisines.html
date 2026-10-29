@@ -458,7 +458,7 @@ const head = (id, html, top = 210, size = 92) => `<div id="${id}" class="abs hd"
 const store = (id, x, icn, sm, big) => `<div id="${id}" class="abs" style="left:${x}px;top:1430px;width:400px;height:120px;border-radius:30px;background:#141414;border:2px solid #333;display:flex;align-items:center;gap:20px;padding:0 30px;color:#fff">${ic(icn, 54, '#fff', 1.8)}<div><div style="font:500 22px Inter;opacity:.75">${sm}</div><div style="font:700 40px Poppins;line-height:1.1">${big}</div></div></div>`;
 const CANV = id => `<canvas id="${id}" class="lay" width="1080" height="1920"></canvas>`;
 const CARDS = [['restaurant', 'Restaurant'], ['maquis', 'Maquis'], ['boutique', 'Boutique']];
-const VEH = [['bike', 'Vélo'], ['assets/moto.png', 'Moto'], ['assets/tricycle.png', 'Tricycle'], ['assets/car.png', 'Voiture']];
+const VEH = [['assets/mch/velo.png', 'Vélo'], ['assets/moto.png', 'Moto'], ['assets/tricycle.png', 'Tricycle'], ['assets/car.png', 'Voiture']];
 H += `<div id="bg" class="lay" style="background:radial-gradient(ellipse 80% 55% at 50% 46%,#6a3110 0%,#33170a 38%,#120905 70%,#050302 100%)"></div>
 <div id="glow" class="abs" style="left:-260px;top:300px;width:1600px;height:1500px;background:radial-gradient(circle,rgba(255,107,0,.42),rgba(255,107,0,0) 58%)"></div>
 ${CANV('rbb')}
