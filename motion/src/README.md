@@ -17,7 +17,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 - **Rendu :** depuis `motion/` : `PAGE=page.html VW=1080 VH=1920 node render.js 24 <début> <fin> sortie.mp4 <ffmpeg>`. Couper en 4 morceaux lancés en parallèle, les concaténer, puis multiplexer avec la bande son (x264 `-preset slow -crf 20 -maxrate 14M -bufsize 28M`, son AAC 192k, `loudnorm=I=-14`).
 - **Aperçus :** `PAGE=page.html VW=1080 VH=1920 node src/snap.js <dossier> 1.5 3.2 …` (une image JPEG par instant).
 - **Détourage :** `cutout2.py` (rembg `isnet-general-use` + remplissage par inondation ; modes `ai` / `union`).
-- **Voix ElevenLabs :** `tts.py` (voir son en-tête). Il lit la clé dans la variable d'environnement `ELEVENLABS_API_KEY`, vérifie les crédits avant chaque génération et refuse tout dépassement du forfait. Il écrit aussi les temps de chaque caractère dans `<sortie>.json`, pour caler les sous-titres sur la voix.
+- **Voix ElevenLabs :** `tts.py` (voir son en-tête). La clé vient des réglages de l'environnement : un secret réseau pour `api.elevenlabs.io` (en-tête `xi-api-key`) ou la variable `ELEVENLABS_API_KEY`. Il vérifie les crédits avant chaque génération et refuse tout dépassement du forfait. Il écrit aussi les temps de chaque caractère dans `<sortie>.json`, pour caler les sous-titres sur la voix.
   - Voix habituelle : « Isac », `SomyDQQmnE7TsltdiDgp` (voix d'homme, léger accent ivoirien).
   - Toujours écrire « Odja » dans les textes, pour que la voix ne dise pas « O-J-A ».
 - **Musique :** scripts `music*.py` entièrement synthétisés (numpy). Les transitions d'écran utilisent un accord inversé (`swell`), pas de « whoosh » de souffle.

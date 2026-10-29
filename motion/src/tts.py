@@ -1,7 +1,8 @@
 """ElevenLabs text-to-speech straight into the repo, without the web app.
 
-Needs the environment variable ELEVENLABS_API_KEY (set in the cloud environment settings, never in the chat)
-and api.elevenlabs.io allowed by the environment's network policy.
+Needs the API key in the cloud environment settings (never in the chat): either a network secret for
+api.elevenlabs.io sending the header xi-api-key (the proxy adds it, the key stays invisible here), or the
+environment variable ELEVENLABS_API_KEY together with api.elevenlabs.io in the allowed domains.
 
 Credits are checked before every generation: the run is refused when its cost would exceed the credits left on
 the subscription or the --max-credits budget, so nothing is ever billed beyond the plan.
@@ -20,10 +21,12 @@ API = 'https://api.elevenlabs.io'
 
 
 def call(method, path, body=None):
+    # With a network secret on the environment the proxy adds the key itself, so the variable is optional.
     key = os.environ.get('ELEVENLABS_API_KEY')
-    if not key:
-        sys.exit('ELEVENLABS_API_KEY is not set in this environment.')
-    req = urllib.request.Request(API + path, method=method, headers={'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'application/json'},
+    headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+    if key:
+        headers['xi-api-key'] = key
+    req = urllib.request.Request(API + path, method=method, headers=headers,
                                  data=json.dumps(body).encode() if body is not None else None)
     try:
         with urllib.request.urlopen(req, timeout=300) as r:
