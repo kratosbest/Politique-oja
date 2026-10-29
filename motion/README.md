@@ -456,3 +456,23 @@ Pub de lancement d'OJA Market, construite comme les spots produit « tout ce que
 | 14,6–16,3 s | Fond chaud, trait de lumière | « Tout ce que vous aimez. » |
 | 16,3–17,75 s | Flèche de lumière | « De Cotonou à Parakou. » |
 | 17,75–20,5 s | Logo OJA, flèche, boutons des stores | « OJA Market » · « Téléchargez l'app OJA » · App Store · Google Play |
+
+## OJA Marchand — « Tu cuisines, OJA livre » (9:16, 29,5 s)
+
+Vidéo motion design pour attirer les commerçants (idée 22 et carrousel 5 du kit marketing). Elle utilise les vrais écrans OJA Marchand (tableau de bord, catalogue, commandes) **sans aucun montant**. On voit le plat, le livreur OJA, et les quatre véhicules qui apparaissent sur les mots de la voix.
+
+- **Vidéo :** `OJA_Marchand_TuCuisinesOJALivre_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_marchand_tucuisines.html`, construite par `src/mch_build.py` à partir de `src/mch_body.js`. Les écrans sont repris des films Market et Marchand.
+- **Voix :** Isac, générée directement avec `src/tts.py`. Texte dans `assets/mch/voix_marchand.txt`, minutage mot par mot dans `assets/mch/voix_marchand.mp3.json`. L'animation est calée sur ce minutage.
+- **Son :** `assets/soundtrack_marchand.m4a`, produit par `src/music21.py` : groove afro-pop, bruitages sur les mots, aucun whoosh, musique baissée sous la voix.
+- **Images :** `assets/mch/card_*.jpg` (restaurant, maquis, boutique), `assets/cs/obj_plat.png`, `assets/moto.png`, `tricycle.png`, `car.png`, `assets/mk_logo.png`.
+- **Mention à l'écran :** « Boutique en ligne après validation du dossier par l'équipe OJA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–3 s | « Tu cuisines ? Odja livre ! » | Le plat, puis le livreur OJA qui arrive avec une traînée de lumière |
+| 3–7,5 s | « Restaurant, maquis, boutique… mets ton commerce sur Odja Marchand. » | Trois photos, puis le téléphone avec le tableau de bord OJA Marchand |
+| 7,5–11,5 s | « Tu ajoutes tes produits, avec une photo. Tu appuies sur « Ouvert ». » | Nouveau produit (photo, nom, enregistré), puis la boutique passe de « fermée » à « ouverte » |
+| 11,5–18,6 s | « Une commande arrive ? Tu acceptes… et un livreur Odja vient la chercher : à vélo, à moto, en tricycle ou en voiture. » | Notification, commande acceptée, suivi ; le livreur arrive, puis les 4 véhicules |
+| 18,6–23,4 s | « Tes clients paient par MoMo ou en espèces. Et ils te trouvent, même s'ils ne connaissent pas ton nom. » | Cartes MoMo et Espèces ; recherche « maquis derrière la pharmacie » qui trouve la boutique |
+| 23,4–29,5 s | « Odja Marchand. Tu cuisines, Odja livre. » | Logo, « OJA Marchand », boutons des stores, mention |

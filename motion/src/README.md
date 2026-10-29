@@ -11,6 +11,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | COMING SOON 4 — « OJA, c'est pour nous » | `comingsoon_pournous.html` | `cs4_body.js`, `cs4_build.py` | `music17.py` |
 | COMING SOON 5 — « Le téléphone » | `comingsoon_telephone.html` | `cs5_body.js` (remplace le texte entre `const W = 1080` et `</script>` dans la page) | `music18.py` |
 | Pub OJA Market « Tout ce que vous aimez » | `oja_market_pub.html` | `mkp_body.js`, `market_body.js`, `mkp_build.py`, `../mkp_assets.py` | `music20.py` (sans « whoosh ») |
+| OJA Marchand « Tu cuisines, OJA livre » | `oja_marchand_tucuisines.html` | `mch_body.js`, `market_body.js`, `merchant_scenes.js`, `mch_build.py` | `music21.py` + voix `assets/mch/voix_marchand.mp3` (générée avec `tts.py`) |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.
