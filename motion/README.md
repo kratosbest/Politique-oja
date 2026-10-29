@@ -530,3 +530,22 @@ Idée 2 du kit marketing (prix et confiance). À la fin de chaque course, l'appl
 | 3,5–6,2 s | « Après chaque course, Odja te pose la question. » | iPhone 3D : fin de course, zoom sur la question |
 | 6,2–9,3 s | « Tu réponds en un clic. Ta réponse compte. » | Appui sur « OUI », puis sur « Valider et fermer » |
 | 9,3–14 s | « Odja. On t'écoute. » | Logo, « OJA », slogan, boutons des stores, mention |
+
+## OJA Partage — « Même trajet, 25 % moins cher » (9:16, 20 s)
+
+Idée 3 du kit marketing (prix et confiance). OJA Partage est un trajet partagé, dont le prix est 25 % moins cher que le prix normal ; l'appli affiche le CO₂ évité. Cette fonction est **en ligne**, donc aucune dépendance. Ce n'est pas un Défi, donc pas de plafond. Aucun montant n'apparaît.
+
+- **Avant publication :** vérifier le taux de 25 % dans le Centre de contrôle (il est réglable par pays).
+- **Vidéo :** `OJA_MemeTrajetPartage_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_meme_trajet_partage.html`, construite par `src/prt_build.py` à partir de `src/prt_body.js`. Voix Isac (`assets/prt/voix_partage.txt`), son `src/music25.py`, le tout calé sur le minutage de la voix.
+- **Images :** `assets/prt/amis.jpg`, deux amis à l'arrière d'une voiture, générés par IA avec ElevenLabs (prompt dans `assets/prt/amis_prompt.txt`). Ce ne sont pas de vraies personnes, et la mention le dit. Leurs visages ronds (`face_f.png`, `face_m.png`) sont découpés dans cette photo. La voiture est `assets/car.png`.
+- **Mention à l'écran :** « OJA Partage : trajet partagé en voiture, prix 25 % moins cher que le prix normal du même trajet. Personnes de l'image générées par IA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–3,2 s | « Même trajet, vingt-cinq pour cent moins cher. » | La photo des deux amis, zoom lent |
+| 3,2–5,1 s | « Toi et ton ami, vous allez à Calavi ? » | Puce « Abomey-Calavi » |
+| 5,1–8,1 s | « Avec Odja Partage, vous montez dans la même voiture. » | La voiture OJA s'arrête ; « Toi » et « Ton ami » sautent dedans, puis elle repart |
+| 8,1–11,2 s | « Et le prix est vingt-cinq pour cent moins cher que le prix normal. » | Barres « Prix normal » et « OJA Partage » (les trois quarts), sans chiffres, pastille « −25 % » |
+| 11,2–14 s | « En plus, l'appli te montre le CO2 évité. » | Carte « CO₂ évité » (sans chiffre), feuilles qui montent |
+| 14–20 s | « Odja Partage. Moins cher à deux. » | Logo, « OJA Partage », slogan, boutons des stores, mention |

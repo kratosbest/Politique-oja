@@ -31,3 +31,7 @@ PANNE = dict(course='En pleine', lache='le moteur', panique='Pas de panique', au
 # key phrases of the « Dis-le à OJA » voice (assets/dis/voix_disle.txt)
 DISLE = dict(hook="Il t'a", argent="plus d'argent", dis='Dis-le', apres='Après chaque', quest='te pose', clic='Tu réponds',
              compte='Ta réponse', endA='>Odja. On', endB=">On t'écoute")
+
+# key phrases of the « Même trajet, 25 % moins cher » voice (assets/prt/voix_partage.txt)
+PARTAGE = dict(hook='Même trajet', moins='vingt-cinq', ami='Toi et ton ami', calavi='Calavi', avec='Avec Odja Partage', montez='vous montez', voit='la même voiture',
+               prix='Et le prix', normal='le prix normal', co2='En plus', evite='CO2', endA='>Odja Partage. Moins', endB='>Moins cher à deux')
