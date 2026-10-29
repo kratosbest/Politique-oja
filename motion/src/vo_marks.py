@@ -40,3 +40,7 @@ PARTAGE = dict(hook='Même trajet', moins='vingt-cinq', ami='Toi et ton ami', ca
 DEFIS = dict(hook='Eh', quartier='Tu connais', rapporte='Ça peut', ajoute='Ajoute des lieux', confirme='Chaque lieu', t1='Trois lieux',
              t2='Dix lieux', t3='Vingt-cinq lieux', badge='Et un badge', aide='Ton lieu', guides='Et chaque mois', endA='>Odja. Le local',
              endB='>Le local devient')
+
+# key phrases of the « Livré à ton heure » voice (assets/liv/voix_livre.txt)
+LIVRE = dict(hook='Tu commandes', midi='midi et demi', prog='Avec Odja', choisis="c'est toi", repas='Pour tes repas', creneau='Odja te donne',
+             quinze='quinze minutes', retard='Et si le livreur', dix='Dix pour cent', auto='Automatiquement', endA='>Odja. Livré', endB='>Livré à ton heure')

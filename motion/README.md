@@ -578,3 +578,25 @@ La mascotte explique les Défis liés aux lieux, avec les chiffres du kit (`mark
 | 19,7–23,4 s | « Ton lieu a aidé dix personnes ? Encore vingt pour cent, jusqu'à cinq cents francs. » | Grand pin entouré de 10 personnes, carte −20 % |
 | 23,4–26,4 s | « Et chaque mois, les trois meilleurs guides gagnent une course offerte. » | Podium 1-2-3 avec couronne, carte « Une course offerte » |
 | 26,4–33 s | « Odja. Le local devient visible. » | Logo, « OJA », slogan, la mascotte salue, stores, mention |
+
+## OJA — « Livré à ton heure » (9:16, 23 s)
+
+Idées 19 et 20 du kit (livraison programmée « Livré à… »). C'est une livraison programmée pour les repas et les colis, avec un créneau de 15 min. Si le livreur arrive après le créneau, une réduction de −10 % est appliquée automatiquement sur la prochaine course ou livraison de colis, valable 30 jours. La fonction est **en ligne**. Aucun prix n'est montré : les heures (11 h, 12 h 30) sont des exemples.
+
+**Avant publication :**
+- Vérifier le délai de 30 jours et les conditions exactes (point 5 de `marketing/sorties/verification.md`).
+- Le kit ne donne pas de plafond pour ce −10 %. S'il en existe un dans le Centre de contrôle, l'ajouter à la mention.
+
+**Fichiers :**
+- **Vidéo :** `OJA_LivreATonHeure_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_livre_a_ton_heure.html`, construite par `src/liv_build.py` à partir de `src/liv_body.js`. Voix Isac (`assets/liv/voix_livre.txt`), son `src/music27.py` (tic-tac de l'horloge, carillon « Livré »), le tout calé sur le minutage de la voix.
+- **Images :** horloge dessinée, `assets/cs/obj_plat.png`, `assets/cs/obj_colis.png`, `assets/moto.png` (livreur OJA).
+- **Mention à l'écran :** « Livraison programmée (repas et colis) : créneau de 15 min. Si le livreur arrive après le créneau, −10 % automatique sur ta prochaine course ou livraison de colis, valable 30 jours. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–3,5 s | « Tu commandes à onze heures, pour être livré à midi et demi ? » | L'horloge tourne de 11 h 00 à 12 h 30 |
+| 3,5–9,1 s | « Avec Odja, tu programmes ta livraison : c'est toi qui choisis l'heure. Pour tes repas comme pour tes colis. » | Puce « Livré à 12 h 30 », puis le repas et le colis |
+| 9,1–11,3 s | « Odja te donne un créneau de quinze minutes. » | Frise 12 h 00 → 13 h 00, créneau 12 h 30 – 12 h 45 ; le livreur arrive dedans : « Livré » |
+| 11,3–18 s | « Et si le livreur arrive après le créneau ? Dix pour cent de réduction… Automatiquement. » | Le livreur dépasse le créneau (« Après le créneau ») ; bon « −10 % », valable 30 jours, tampon « AUTOMATIQUE » |
+| 18–23 s | « Odja. Livré à ton heure. » | Logo, « OJA », slogan, boutons des stores, mention |
