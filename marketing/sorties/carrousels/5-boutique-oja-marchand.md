@@ -35,7 +35,7 @@ Mention légale (dans la légende) : « Boutique en ligne après validation du d
 
 ### Diapo 7
 - **Titre :** Les clients te trouvent
-- **Texte :** Ta boutique apparaît dans la recherche OJA, même par les noms locaux. Paiement MoMo ou espèces.
+- **Texte :** Ta boutique apparaît dans la recherche OJA, même par les noms locaux. Tes clients paient par MoMo.
 - **Visuel :** une recherche « maquis derrière le marché » qui trouve la boutique.
 
 ### Diapo 8

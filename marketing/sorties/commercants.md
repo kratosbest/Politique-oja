@@ -23,7 +23,7 @@ TikTok 9:16 · 30 s
 |---|---|---|---|
 | 0–3 s | Boutique dans une ruelle, [NOM DU COMMERÇANT] au comptoir | **Tes clients te trouvent, même sans ton nom.** | « Ma boutique est cachée derrière l'église… » |
 | 3–12 s | Un client tape « boutique derrière l'église » dans OJA et la trouve | « Recherche par les noms d'ici » | « …mais sur OJA, on la trouve avec les noms que les gens utilisent. » |
-| 12–22 s | Commande reçue, acceptée ; paiement MoMo ou espèces | **MoMo ou espèces** | « Les clients paient par MoMo ou en espèces. » |
+| 12–22 s | Commande reçue, acceptée ; paiement MoMo | **Payé par MoMo** | « Les clients paient par MoMo. » |
 | 22–30 s | Logo OJA Marchand | **Ta boutique sur OJA** | VO : « OJA Marchand. Des clients qui te trouvent. » |
 
 ## Vidéo témoignage 3 — La vendeuse du marché (« Le client ose commander »)
@@ -55,7 +55,7 @@ Facebook 4:5 · 30 s
 - **Pourquoi OJA ?**
   - Les clients te trouvent dans la recherche OJA, même par les noms d'ici.
   - Livraison par OJA : vélo, moto, tricycle ou voiture, suivie en direct.
-  - Tes clients paient par MTN MoMo ou en espèces.
+  - Tes clients paient par MTN MoMo.
   - Sans réponse en 25 min, le client est remboursé : il ose commander.
   - Une question ? Tu discutes avec l'équipe OJA dans l'appli.
 - **Contact :** [NUMÉRO OJA MARCHAND] · [LIEU / AGENT TERRAIN]
@@ -68,7 +68,7 @@ Facebook 4:5 · 30 s
 > Vous connaissez les gens qui commandent à manger ou font leurs courses sur leur téléphone ? Avec OJA Marchand, ces clients-là peuvent vous trouver, vous.
 > C'est simple : vous mettez vos produits avec une photo et un prix. Quand vous êtes prêt, vous appuyez sur « Ouvert ».
 > Une commande arrive ? Vous acceptez, ou vous refusez avec un motif. Et vous n'avez pas besoin de chercher un livreur : OJA envoie un vélo, une moto, un tricycle ou une voiture, et vous le suivez en direct.
-> Les clients paient par MoMo ou en espèces.
+> Les clients paient par MoMo.
 > Et les gens vous trouvent même s'ils ne connaissent pas votre nom : ils tapent « le maquis derrière la pharmacie », et c'est vous qui sortez.
 > Je peux vous aider à vous inscrire maintenant ? Ça prend quelques minutes, puis l'équipe OJA valide votre dossier.
 

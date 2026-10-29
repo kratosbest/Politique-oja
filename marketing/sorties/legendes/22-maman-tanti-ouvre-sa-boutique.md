@@ -16,7 +16,7 @@ Boutique en ligne après validation par l'équipe OJA.
 
 ## Instagram
 Maman Tanti a mis son maquis sur OJA. 🧡
-Menu en photos, commandes acceptées en un clic, livreur OJA qui passe chercher le sac. Et ses clients paient par MoMo ou en espèces.
+Menu en photos, commandes acceptées en un clic, livreur OJA qui passe chercher le sac. Et ses clients paient par MoMo.
 Commerçant ? Télécharge OJA Marchand (lien en bio).
 Boutique en ligne après validation du dossier par l'équipe OJA.
 #OJA #OJAMarchand #Cotonou #Benin #Maquis

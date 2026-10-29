@@ -45,3 +45,4 @@ n.c. = non concerné (pas de pourcentage de Défi).
    - Restaurant d'exemple : « Maquis Chez Tanti ».
    - Je peux corriger la vidéo si besoin.
 5. **Fonction « Livré à… » :** le kit l'annonce en ligne (livraison programmée, −10 % si retard). Vérifier le délai de 30 jours et les conditions exactes avant l'idée 20.
+6. **Paiement OJA Market :** l'équipe précise que tout se paie par MTN MoMo sur OJA Market (pas d'espèces). Corrigé dans la synthèse, le carrousel 5, les légendes 22 et la campagne commerçants. Le transport accepte toujours les espèces ou MoMo (carrousel 1 inchangé).

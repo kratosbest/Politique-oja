@@ -2,7 +2,7 @@
 
 ## En 10 lignes
 1. OJA est une appli béninoise qui réunit tout le quotidien : se déplacer (zem, tricycle, voiture, confort, livraison), envoyer des colis, commander au restaurant ou en boutique (Market), vendre ou donner des objets (NOVOJA).
-2. OJA Marchand est l'appli des commerçants : catalogue, commandes, livraison par OJA, paiement MoMo ou espèces.
+2. OJA Marchand est l'appli des commerçants : catalogue, commandes, livraison par OJA. Sur OJA Market, tout se paie par MTN MoMo (précision de l'équipe OJA ; le kit indiquait aussi les espèces).
 3. La promesse : **« OJA. Tout ton Bénin dans une seule appli. »** Variante : « Bouge, envoie, mange, vends. Et gagne en le faisant. »
 4. Trois émotions à faire sentir en 3 secondes : « Je ne me fais plus avoir », « Mes proches sont rassurés », « OJA me rapporte ».
 5. Nos preuves : le prix est calculé avant le départ, la question « Le chauffeur vous a-t-il demandé plus d'argent ? », le paiement protégé NOVOJA, le partage de trajet, le chauffeur de remplacement en cas de panne, les Défis et badges.

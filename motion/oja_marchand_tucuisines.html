@@ -26,7 +26,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
    OJA Transport — 65 s motion piece, driven by renderAt(t).
    Every frame is a pure function of time => deterministic render.
    ============================================================ */
-const DUR = 29.5;
+const DUR = 28.5;
 const $ = id => document.getElementById(id);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, p) => a + (b - a) * p;
@@ -404,9 +404,8 @@ const CX = 540, CY = 960, PER = 2600, VO = 0.4;
 const PRE = [];
 const imgL = src => { const i = new Image(); i.src = src; PRE.push(i); return i; };
 const IMG = { moto: imgL('assets/moto.png') };
-// voice timings (seconds in the voice file, from its alignment)
-const W_ = { cuis: 0.0, livre: 1.12, resto: 2.75, maquis: 3.32, bout: 4.04, marchand: 4.85, prod: 7.12, photo: 8.72, ouvert: 10.21, cmd: 11.07, acc: 12.44,
-  livreur: 13.08, velo: 15.2, moto: 15.88, tri: 16.56, voit: 17.36, momo: 19.04, esp: 19.8, trouv: 20.52, endA: 23.07, endB: 24.24 };
+// voice timings (seconds in the voice file), injected by mch_build.py from assets/mch/voix_marchand.mp3.json
+const W_ = {"cuis": 0.147, "livre": 1.04, "resto": 2.827, "maquis": 3.4, "bout": 4.04, "marchand": 4.84, "prod": 7.04, "photo": 8.8, "ouvert": 10.213, "cmd": 11.04, "acc": 12.187, "livreur": 13.08, "velo": 15.2, "moto": 15.92, "tri": 16.6, "voit": 17.44, "momo": 19.2, "trouv": 19.88, "endA": 22.56, "endB": 23.68, "clients": 18.32};
 const V = k => W_[k] + VO;
 
 /* ---------- OJA Marchand screens, as in the app, without amounts ---------- */
@@ -474,8 +473,7 @@ ${CANV('rbb')}
 <img id="s4moto" src="assets/moto.png" class="abs" style="left:420px;top:880px;width:700px">
 <div id="veh" class="abs" style="left:40px;right:40px;top:1480px;display:flex;justify-content:space-between">${VEH.map(([s, n], i) => `<div id="vh${i}" style="width:230px;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:190px;height:190px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 20px 50px rgba(0,0,0,.4);overflow:hidden">${s.startsWith('assets') ? `<img src="${s}" style="width:170px">` : ic(s, 100, OR, 2)}</div><div style="font:800 34px Poppins;color:#fff">${n}</div></div>`).join('')}</div>
 <div id="s5" class="lay">
-<div id="pay0" class="abs" style="left:90px;top:560px;width:420px;height:300px;border-radius:44px;background:#FFCC00;color:#111;padding:40px 36px;box-shadow:0 40px 80px rgba(0,0,0,.45)"><div style="width:96px;height:96px;border-radius:28px;background:rgba(0,0,0,.08);display:grid;place-items:center">${ic('phone', 54, '#111', 2.2)}</div><div style="font:900 56px Poppins;margin-top:28px;line-height:1">MoMo</div><div style="font:600 26px Inter;margin-top:8px">MTN Mobile Money</div></div>
-<div id="pay1" class="abs" style="left:570px;top:560px;width:420px;height:300px;border-radius:44px;background:#12B76A;color:#fff;padding:40px 36px;box-shadow:0 40px 80px rgba(0,0,0,.45)"><div style="width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,.18);display:grid;place-items:center">${ic('wallet', 54, '#fff', 2.2)}</div><div style="font:900 56px Poppins;margin-top:28px;line-height:1">Espèces</div><div style="font:600 26px Inter;margin-top:8px">à la livraison</div></div>
+<div id="pay0" class="abs" style="left:190px;top:540px;width:700px;height:360px;border-radius:52px;background:#FFCC00;color:#111;padding:50px 54px;box-shadow:0 40px 80px rgba(0,0,0,.45)"><div style="width:120px;height:120px;border-radius:34px;background:rgba(0,0,0,.08);display:grid;place-items:center">${ic('phone', 66, '#111', 2.2)}</div><div style="font:900 84px Poppins;margin-top:30px;line-height:1">MoMo</div><div style="font:600 34px Inter;margin-top:10px">MTN Mobile Money</div></div>
 <div id="srch" class="abs" style="left:70px;right:70px;top:1000px;height:124px;border-radius:62px;background:#fff;color:#111;display:flex;align-items:center;gap:22px;padding:0 40px;box-shadow:0 30px 70px rgba(0,0,0,.45);border:4px solid ${OR}">${ic('search', 46, '#111', 2.6)}<span id="qtxt" style="font:600 38px Inter;white-space:nowrap"></span><span id="qcur" style="display:inline-block;width:4px;height:46px;background:${OR}"></span></div>
 <div id="res" class="abs" style="left:70px;right:70px;top:1170px;height:200px;border-radius:40px;background:#fff;color:#111;display:flex;align-items:center;gap:26px;padding:0 30px;box-shadow:0 30px 70px rgba(0,0,0,.45)"><div style="width:140px;height:140px;border-radius:28px;overflow:hidden;flex:none"><img src="assets/mkp/food_poulet.jpg" style="width:100%;height:100%;object-fit:cover"></div>
 <div style="flex:1"><div style="font:800 42px Poppins">Maquis Chez Tanti</div><div style="display:flex;gap:12px;margin-top:10px"><span style="padding:6px 16px;border-radius:16px;background:#E7F6EF;color:#0B7A5E;font:800 24px Inter">Ouvert</span><span style="padding:6px 16px;border-radius:16px;background:#FFF1E6;color:#C2410C;font:700 24px Inter">🛵 Livraison OJA</span></div></div></div></div>
@@ -488,7 +486,7 @@ ${head('h1', 'Tu cuisines&nbsp;?', 230, 128)}${head('h2', 'OJA <span style="colo
 ${head('h3', 'Ton commerce<br>sur <span style="color:#FF6B00">OJA Marchand</span>', 150, 84)}
 ${head('h4', 'Ajoute tes produits', 150, 84)}${head('h5', 'Appuie sur <span style="color:#12B76A">« Ouvert »</span>', 150, 84)}
 ${head('h6', 'Une commande&nbsp;?<br><span style="color:#12B76A">Accepte.</span>', 330, 84)}${head('h7', 'Un livreur OJA<br><span style="color:#FF6B00">vient la chercher</span>', 150, 84)}
-${head('h8', 'Tes clients paient', 330, 84)}${head('h9', 'Ils te trouvent,<br><span style="color:#FF6B00">même sans ton nom</span>', 700, 76)}
+${head('h8', 'Tes clients paient<br>par <span style="color:#FFCC00">MoMo</span>', 250, 84)}${head('h9', 'Ils te trouvent,<br><span style="color:#FF6B00">même sans ton nom</span>', 700, 76)}
 <div id="sEnd" class="lay">
 <img id="elogo" src="assets/mk_logo.png" class="abs" style="left:360px;top:420px;width:360px;height:360px;filter:drop-shadow(0 0 50px rgba(255,107,0,.55))">
 <div id="eword" class="abs" style="left:0;right:0;top:830px;text-align:center;font:900 124px Poppins;letter-spacing:-.03em;line-height:1"><span>OJA</span> <span style="color:#FF6B00">Marchand</span></div>
@@ -578,7 +576,7 @@ function sceneA(t, cf) {        // phone: 5.0 – 18.6
   else if (t < V('cmd') - .05) { const k = P(t, V('ouvert') - .55, .5, E.ioC); const a = pose(1.32, 1210, 520), b = pose(1.55, 1150, 250); o = { s: lerp(a.s, b.s, k), x: 0, y: lerp(a.y, b.y, k), ry: 0 }; }
   else { const k = P(t, V('cmd') - .05, .55, E.ioC), sh = P(t, V('livreur') - .1, .7, E.ioC); const a = pose(1.55, 1150, 250), b = pose(1.2, 1180, 450), c = pose(.78, 1000, 450, -250);
     o = { s: lerp(lerp(a.s, b.s, k), c.s, sh), x: lerp(0, c.x, sh), y: lerp(lerp(a.y, b.y, k), c.y, sh), ry: lerp(0, 14, sh) };
-    const out = P(t, V('momo') - .6, .45, E.iC); o.y += out * 1500; }
+    const out = P(t, V('clients') - .4, .45, E.iC); o.y += out * 1500; }
   o.ry = (o.ry || 0) + Math.sin(t * 1.3) * 2; o.g = .35 + .25 * Math.sin(t * 2.4);
   phoneT(o);
   el('phsh').style.backgroundPosition = `${lerp(130, -30, (t * .5) % 1)}% 0`;
@@ -606,7 +604,7 @@ function sceneA(t, cf) {        // phone: 5.0 – 18.6
     el('odot' + i).style.background = on2 ? '#12B76A' : '#E5E7EB'; el('olb' + i).style.color = on2 ? '#111' : '#999'; }
 }
 function scene4(t, cf) {        // rider + vehicles: 13.2 – 18.6
-  const a = V('livreur') + .05, k = P(t, a, .8, E.oQ), out = P(t, V('momo') - .6, .45, E.iC);
+  const a = V('livreur') + .05, k = P(t, a, .8, E.oQ), out = P(t, V('clients') - .4, .45, E.iC);
   const mx = lerp(900, 0, k), mv = (lerp(900, 0, k) - lerp(900, 0, P(t - 1 / 48, a, .8, E.oQ))) * 48;
   el('s4moto').style.transform = `translateX(${mx + out * 900}px)`; el('s4moto').style.filter = `blur(${clamp(Math.abs(mv) / 1800, 0, 1) * 6}px) drop-shadow(0 30px 40px rgba(0,0,0,.5))`;
   O('s4moto', t > a && out < 1 ? 1 : 0);
@@ -615,7 +613,7 @@ function scene4(t, cf) {        // rider + vehicles: 13.2 – 18.6
 }
 function scene5(t) {            // 18.6 – 23.45: MoMo / cash, search
   const up = P(t, V('trouv') - .2, .5, E.ioC), out = P(t, V('endA') - .35, .35, E.iC);
-  [V('momo'), V('esp')].forEach((d, i) => { const p = pop(t, d - .1, .5); el('pay' + i).style.transform = `translateY(${(1 - p) * 200 - up * 330}px) scale(${lerp(.6, 1, p) * (1 - .35 * up)}) rotate(${(i ? 3 : -3) * p}deg)`; el('pay' + i).style.opacity = clamp(p * 1.4) * (1 - out); });
+  const p0 = pop(t, V('momo') - .25, .5); el('pay0').style.transform = `translateY(${(1 - p0) * 200 - up * 330}px) scale(${lerp(.6, 1, p0) * (1 - .4 * up)}) rotate(${-2 * p0}deg)`; el('pay0').style.opacity = clamp(p0 * 1.4) * (1 - out);
   const sp = P(t, V('trouv') - .1, .45, E.oQ); el('srch').style.transform = `translateY(${(1 - sp) * 200 + out * -100}px)`; el('srch').style.opacity = sp * (1 - out);
   const qs = 'maquis derrière la pharmacie', n = Math.round(P(t, V('trouv') + .2, 1.2, E.lin) * qs.length);
   el('qtxt').textContent = qs.slice(0, n); el('qcur').style.opacity = Math.floor(t * 3) % 2 ? 1 : .2;
@@ -631,14 +629,14 @@ function sceneEnd(t, cf) {
   el('elogo').style.transform = `scale(${lerp(.55, 1, lp)})`; el('elogo').style.opacity = clamp(lp * 1.5); el('elogo').style.filter = `drop-shadow(0 0 50px rgba(255,107,0,.55)) blur(${(1 - clamp(lp)) * 14}px)`;
   el('eword').style.clipPath = `inset(-20% ${100 - P(t, V('endA'), .55, E.oQ) * 100}% -20% 0)`;
   const sp = P(t, V('endB'), .5, E.oQ); el('eslo').style.opacity = sp; el('eslo').style.transform = `translateY(${(1 - sp) * 30}px)`;
-  const cp = P(t, 26.9, .5, E.oQ); el('ecta').style.opacity = cp; el('ecta').style.transform = `translateY(${(1 - cp) * 30}px)`;
-  for (let i = 0; i < 2; i++) { const p = P(t, 27.1 + i * .12, .5, E.oB); el('est' + i).style.opacity = clamp(p); el('est' + i).style.transform = `translateY(${(1 - p) * 60}px)`; }
-  O('emen', P(t, 27.4, .5));
+  const cp = P(t, V('endB') + 2.2, .5, E.oQ); el('ecta').style.opacity = cp; el('ecta').style.transform = `translateY(${(1 - cp) * 30}px)`;
+  for (let i = 0; i < 2; i++) { const p = P(t, V('endB') + 2.4 + i * .12, .5, E.oB); el('est' + i).style.opacity = clamp(p); el('est' + i).style.transform = `translateY(${(1 - p) * 60}px)`; }
+  O('emen', P(t, V('endB') + 2.7, .5));
 }
 
 /* ---------- master ---------- */
-const DUR2 = 29.5;
-const SPANS = { s1: [0, 3.15], s2: [3.0, 7.6], sA: [5.0, 18.9], s4moto: [13.3, 18.9], veh: [15.4, 18.9], s5: [19.0, 23.5], sEnd: [23.35, 29.5] };
+const DUR2 = 28.5;
+const SPANS = { s1: [0, 3.15], s2: [3.0, 7.6], sA: [5.0, V('clients') + .1], s4moto: [13.3, V('clients') + .1], veh: [15.4, V('clients') + .1], s5: [V('clients') - .1, V('endA') + .1], sEnd: [V('endA') - .3, DUR2] };
 const on = (k, t) => { const s = SPANS[k]; return t >= s[0] && t < s[1]; };
 window.renderAt = function (t) {
   const cf = el('fx').getContext('2d'), cb = el('rbb').getContext('2d');
@@ -654,7 +652,7 @@ window.renderAt = function (t) {
   if (on('sEnd', t)) sceneEnd(t, cf);
   hd('h1', t, V('cuis') - .05, 1.5); hd('h2', t, V('livre'), 3.15);
   hd('h3', t, V('marchand') + .4, V('prod') - .05); hd('h4', t, V('prod'), V('ouvert') - .55); hd('h5', t, V('ouvert') - .5, V('cmd'));
-  hd('h6', t, V('cmd'), V('livreur') - .1); hd('h7', t, V('livreur'), V('momo') - .5); hd('h8', t, V('momo') - .45, V('trouv') - .2); hd('h9', t, V('trouv') - .1, V('endA') - .3);
+  hd('h6', t, V('cmd'), V('livreur') - .1); hd('h7', t, V('livreur'), V('clients') - .05); hd('h8', t, V('clients') - .05, V('trouv') - .2); hd('h9', t, V('trouv') - .1, V('endA') - .3);
   const nk = P(t, V('cmd') - .05, .5, E.oB), nout = P(t, V('acc') + .3, .4, E.iC);
   el('notif').style.transform = `translateY(${(1 - nk) * -320 - nout * 320}px)`; el('notif').style.display = t > V('cmd') - .1 && nout < 1 ? 'flex' : 'none';
   let fl = 0;

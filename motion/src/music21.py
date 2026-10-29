@@ -1,7 +1,7 @@
-# OJA Marchand « Tu cuisines, OJA livre » (29.5 s): music + sound design + Isac voice from 0.4 s, music ducked under the voice.
+# OJA Marchand « Tu cuisines, OJA livre » (28.5 s): music + sound design + Isac voice from 0.4 s, music ducked under the voice.
 # usage: python3 music21.py out.wav voix_marchand.mp3 ffmpeg
 import numpy as np, wave, sys, subprocess
-SR=44100; DUR=29.5; N=int(SR*DUR)
+SR=44100; DUR=28.5; N=int(SR*DUR)
 L=np.zeros(N); R=np.zeros(N)
 rng=np.random.default_rng(2121)
 def add(sig,t,pan=0.0,g=1.0,buf=None):
@@ -86,8 +86,9 @@ def chord_at(t):
 PROG=[[50,62,66,69],[47,59,62,66],[43,59,62,67],[45,61,64,69]]
 
 VO_AT = 0.4
-W = dict(cuis=0.0, livre=1.12, resto=2.75, maquis=3.32, bout=4.04, marchand=4.85, prod=7.12, photo=8.72, ouvert=10.21, cmd=11.07, acc=12.44,
-         livreur=13.08, velo=15.2, moto=15.88, tri=16.56, voit=17.36, momo=19.04, esp=19.8, trouv=20.52, endA=23.07, endB=24.24)
+sys.path.insert(0, __import__('os').path.dirname(__import__('os').path.abspath(__file__)))
+from vo_marks import marks, MARCHAND
+W = marks(sys.argv[2] + '.json', MARCHAND)
 V = lambda k: W[k] + VO_AT
 def engine(t0, d=0.9, g=.3, p0=.7, p1=-.7):
     n=int(d*SR); u=np.linspace(0,1,n); f=np.interp(u,[0,.45,.6,1],[150,126,118,84])
@@ -129,14 +130,14 @@ ding(V('cmd')-.05,g=.12); click(V('acc')-.05,.16); pop(V('acc')+.05,700,.1)
 engine(V('livreur')-.05,.95,.24); swell(V('livreur'),chord_at(13.5),.4,.08)
 for k,key in enumerate(('velo','moto','tri','voit')): pop(V(key)-.08,600+150*k,.13)
 swell(V('momo')-.15,chord_at(19.3),.45,.09)
-pop(V('momo')-.1,650,.13); pop(V('esp')-.1,820,.13)
+pop(V('momo')-.25,650,.15)
 for i in range(28): click(V('trouv')+.2+i*1.2/28,.06)
 pop(V('trouv')+1.5,760,.12)
 # ---------- end card ----------
 swell(V('endA')-.2,[74,78,81,86],.6,.12); boom(V('endA')-.2,.6,90,30,1.8); chime(V('endA'),(1175,1760,2349,2960),.09)
 shimmer(V('endA')-.15,.6,.08,-.6,.6)
-pad(V('endA')-.2,29.2,[38,50,57,62,66,69,73],g=.07,a=.2,rel=.4)
-for k,m in enumerate((62,66,69,74,78)): add(pluck(m+12,1.0,.045),27.0+k*.09,pan=-.4+.2*k)
+pad(V('endA')-.2,28.2,[38,50,57,62,66,69,73],g=.07,a=.2,rel=.4)
+for k,m in enumerate((62,66,69,74,78)): add(pluck(m+12,1.0,.045),V('endB')+2.4+k*.09,pan=-.4+.2*k)
 # ---------- reverb ----------
 irn=int(1.8*SR); ir=rng.standard_normal(irn)*np.exp(-np.arange(irn)/SR/0.5); ir=lp(ir,.25); ir/=np.abs(ir).sum()**.5*12
 def conv(x,irx=ir):
