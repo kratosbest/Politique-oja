@@ -478,3 +478,22 @@ Vidéo motion design pour attirer les commerçants (idée 22 et carrousel 5 du k
 | 11,5–18,6 s | « Une commande arrive ? Tu acceptes… et un livreur Odja vient la chercher : à vélo, à moto, en tricycle ou en voiture. » | Notification, commande acceptée, suivi ; le livreur arrive, puis les 4 véhicules |
 | 18,3–22,9 s | « Tes clients paient par MoMo. Et ils te trouvent, même s'ils ne connaissent pas ton nom. » | Carte MoMo ; recherche « maquis derrière la pharmacie » qui trouve la boutique |
 | 22,9–28,5 s | « Odja Marchand. Tu cuisines, Odja livre. » | Logo, « OJA Marchand », boutons des stores, mention |
+
+## OJA — « Arrête de marchander » (9:16, 23 s)
+
+Motion design tiré du script 01 du kit marketing, **sans aucun montant à l'écran** : on montre que le prix est fixé avant le départ, pas un chiffre.
+
+- **Vidéo :** `OJA_ArreteDeMarchander_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_arrete_de_marchander.html`, construite par `src/amm_build.py` à partir de `src/amm_body.js`. Le plan d'accroche (le zem en chemise jaune, clip `clips_cs/cs4_p1.mp4`) est extrait par `python3 amm_frames.py <ffmpeg>` dans `assets/ammf/`.
+- **Voix :** Isac via `src/tts.py`. Texte dans `assets/amm/voix_marchander.txt` ; l'animation et la musique (`src/music22.py`) lisent son minutage.
+- **Écrans :** « Choisissez votre course » (moto, tricycle, voiture, avec la pastille « Prix fixé » au lieu du montant) et la fin de course avec la vraie question de l'appli, « Le chauffeur a-t-il demandé plus d'argent ? », puis la réponse « NON » en un clic.
+- **Mention à l'écran :** « Prix calculé avant la course. Majoration de 25 % entre 23 h et 6 h. »
+- **Dépendance :** aucune.
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–2,3 s | « Arrête de marchander ! » | Le zem sur un boulevard de Cotonou ; bulles « C'est combien ? », « Mon frère, c'est l'essence… », « Eh ! Fais doucement ! » |
+| 2,3–8 s | « Avec Odja, tu choisis ta moto, ton tricycle ou ta voiture… et tu vois le prix avant de monter. » | Le téléphone : chaque véhicule s'allume sur son mot, puis « Prix fixé » sur les trois |
+| 8–11,3 s | « Tu montes, tu pars. Plus de discussion au bord de la route. » | Le livreur OJA passe à moto |
+| 11,3–17 s | « Et à l'arrivée, Odja te demande : Le chauffeur a-t-il demandé plus d'argent ? Tu réponds en un clic. » | Fin de course, la question s'allume, « NON » validé, étoiles |
+| 17–23 s | « Odja. Le prix, avant de monter. » | Logo, « OJA », slogan, boutons des stores, mention |

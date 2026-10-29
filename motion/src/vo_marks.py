@@ -19,3 +19,7 @@ def marks(alignment_json, keys):
 MARCHAND = dict(cuis='Tu cuisines', livre='Odja livre', resto='Restaurant', maquis='maquis', bout='boutique', marchand='mets ton commerce',
                 prod='Tu ajoutes', photo='photo', ouvert='Ouvert', cmd='Une commande', acc='Tu acceptes', livreur='et un livreur', velo='vélo',
                 moto='moto,', tri='tricycle', voit='voiture', momo='MoMo', trouv='Et ils te trouvent', endA='>Odja Marchand.', endB='>Tu cuisines, Odja livre')
+
+# key phrases of the « Arrête de marchander » voice (assets/amm/voix_marchander.txt)
+MARCHANDER = dict(hook='Arrête', choisis='Avec Odja', moto='moto', tri='tricycle', voit='voiture', prix='et tu vois le prix', montes='Tu montes',
+                  disc='Plus de discussion', arr='Et à l', quest='Le chauffeur', clic='Tu réponds', endA='>Odja. Le prix', endB='>Le prix, avant')
