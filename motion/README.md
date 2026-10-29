@@ -497,3 +497,19 @@ Motion design tiré du script 01 du kit marketing, **sans aucun montant à l'éc
 | 8–11,3 s | « Tu montes, tu pars. Plus de discussion au bord de la route. » | Le livreur OJA passe à moto |
 | 11,3–17 s | « Et à l'arrivée, Odja te demande : Le chauffeur a-t-il demandé plus d'argent ? Tu réponds en un clic. » | Fin de course, la question s'allume, « NON » validé, étoiles |
 | 17–23 s | « Odja. Le prix, avant de monter. » | Logo, « OJA », slogan, boutons des stores, mention |
+
+## OJA — « Le moteur a lâché » (9:16, 15 s)
+
+Idée 8 du kit marketing (sécurité, confiance). En cas de panne, OJA envoie un chauffeur de remplacement, et le prix total du client ne change pas. Cette fonction est **en ligne**, donc aucune dépendance. Aucun montant n'apparaît à l'écran.
+
+- **Vidéo :** `OJA_LeMoteurALache_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_moteur_lache.html`, construite par `src/pan_build.py` à partir de `src/pan_body.js`. Voix Isac (`assets/pan/voix_panne.txt`), son `src/music23.py`, le tout calé sur le minutage de la voix.
+- **Images :** `assets/car.png` (voiture OJA), `assets/driver.png` (chauffeur OJA), fumée et feux de détresse dessinés.
+- **Mention à l'écran :** « En cas de panne, OJA envoie un chauffeur de remplacement. Le prix total de ta course ne change pas. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–3,2 s | « En pleine course… le moteur lâche. » | La voiture OJA roule, puis cale : secousse, fumée, feux de détresse |
+| 3,2–6,7 s | « Pas de panique : Odja t'envoie un autre chauffeur pour finir le trajet. » | La voiture en panne se range, une seconde voiture OJA arrive, son chauffeur apparaît |
+| 6,7–9,8 s | « Et ton prix total ne change pas. Pas un franc de plus. » | Deux tickets « Prix au départ » = « Prix à l'arrivée », sans chiffres, tampon « INCHANGÉ » |
+| 9,8–15 s | « Odja. Ton trajet continue. » | Logo, « OJA », slogan, boutons des stores, mention |

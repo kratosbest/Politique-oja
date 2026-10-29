@@ -23,3 +23,7 @@ MARCHAND = dict(cuis='Tu cuisines', livre='Odja livre', resto='Restaurant', maqu
 # key phrases of the « Arrête de marchander » voice (assets/amm/voix_marchander.txt)
 MARCHANDER = dict(hook='Arrête', choisis='Avec Odja', moto='moto', tri='tricycle', voit='voiture', prix='et tu vois le prix', montes='Tu montes',
                   disc='Plus de discussion', arr='Et à l', quest='Le chauffeur', clic='Tu réponds', endA='>Odja. Le prix', endB='>Le prix, avant')
+
+# key phrases of the « Le moteur a lâché » voice (assets/pan/voix_panne.txt)
+PANNE = dict(course='En pleine', lache='le moteur', panique='Pas de panique', autre='un autre chauffeur', fin='pour finir', prix='Et ton prix',
+             franc='Pas un franc', endA='>Odja. Ton', endB='>Ton trajet')
