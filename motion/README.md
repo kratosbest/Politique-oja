@@ -603,6 +603,8 @@ Idées 19 et 20 du kit (livraison programmée « Livré à… »). C'est une liv
 
 ## OJA chauffeurs — « Arrête de tourner à vide » (9:16, 25 s)
 
+> Remplacée par la **version éditoriale** ci-dessous (même voix, même contenu, nouveau style et vraies photos de chauffeurs).
+
 Première vidéo de recrutement des chauffeurs, inspirée des idées 26 à 29 du kit et de `marketing/sorties/recrutement-chauffeurs.md`. Elle ne montre que des avantages **en ligne** et sans montant :
 - les clients te trouvent ;
 - le prix est fixé avant le départ, donc plus de marchandage ;
@@ -626,3 +628,28 @@ Restent volontairement hors de la vidéo : la ristourne quotidienne et le forfai
 | 13–16,4 s | « Et tu vois tout ce que tu gagnes, course par course, dans ton relevé. » | Carte « Mon relevé » : courses une par une, montants masqués, total du jour |
 | 16,4–19,6 s | « Moto, tricycle ou voiture : inscris-toi sur Odja. » | Moto, tricycle et voiture OJA alignés |
 | 19,6–25 s | « Odja. On roule ensemble ! » | Logo, « OJA », slogan, « Deviens chauffeur OJA », stores, mention |
+
+## OJA chauffeurs — « Arrête de tourner à vide », version éditoriale (9:16, 25 s)
+
+Nouvelle version de la vidéo chauffeurs, dans un style « magazine » plus haut de gamme. Elle garde la même voix et les mêmes avantages (en ligne, sans montant).
+- **Photos :** trois portraits de chauffeurs OJA générés avec ElevenLabs, prompts dans `assets/edt/prompts.txt` : un zem, une conductrice de tricycle et un chauffeur de voiture. Les chauffeurs ne sont pas de vraies personnes, et la mention le dit.
+- **Typographie :** titres en Playfair Display, avec les mots clés en italique orange ; étiquettes fines en Inter Tight (« N° 01 — LES CLIENTS ») ; pagination « 01 / 05 ».
+- **Mise en page :** filets fins, cartes ivoire (ticket « Prix fixé », relevé), carte au trait sur papier ivoire pour les zones chaudes, triptyque moto / tricycle / voiture, fin sur fond ivoire.
+- **Mouvement :** chaque photo est révélée par un masque qui monte, avec un zoom lent ; les lignes de titre sortent d'un masque.
+- **Musique :** piano cinéma (`src/music29.py`), sans percussions électroniques ni « whoosh ».
+- **Polices :** `fonts/editorial.css` (Playfair Display et Inter Tight, licence SIL Open Font License, copiées depuis Google Fonts).
+
+**Fichiers :**
+- **Vidéo :** `OJA_Chauffeurs_Editorial_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_chauffeur_editorial.html`, construite par `src/edt_build.py` à partir de `src/edt_body.js`. Voix `assets/chv/voix_chauffeur_vide.mp3`, son `assets/soundtrack_chauffeur_editorial.m4a`.
+- **Mention à l'écran :** « Zones chaudes : l'appli montre où sont les clients. Prix de la course calculé avant le départ. Montants du relevé masqués. Chauffeurs des photos générés par IA. »
+
+| Temps | Chapitre | Image |
+|---|---|---|
+| 0–2,7 s | N° 00 Chauffeurs OJA | Le zem, « Arrête de tourner *à vide.* » |
+| 2,7–4,9 s | N° 01 Les clients | La conductrice de tricycle, « Les clients *te trouvent.* » |
+| 4,9–8,4 s | N° 02 Le prix | Le chauffeur de voiture, ticket ivoire « Prix fixé avant le départ », « Plus de bagarre pour le prix. » |
+| 8,4–13 s | N° 03 Zones chaudes | Carte au trait : Dantokpa, Akpakpa, Ganhi, Cadjèhoun ; trajet orange jusqu'à Ganhi |
+| 13–16,4 s | N° 04 Le relevé | Portrait assombri, reçu ivoire « Relevé du jour » (montants masqués) |
+| 16,4–19,5 s | N° 05 Tous les véhicules | Triptyque moto / tricycle / voiture, « Inscris-toi sur OJA. » |
+| 19,5–25 s | — | Fond ivoire : logo, « On roule *ensemble.* », « Deviens chauffeur OJA », stores, mention |
