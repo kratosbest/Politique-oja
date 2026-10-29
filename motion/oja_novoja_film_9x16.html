@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>NOVOJA — Ce qui dort chez toi vaut de l'argent</title>
+<link rel="stylesheet" href="fonts/local.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:Inter,sans-serif;background:#070504;color:#fff}
+.abs{position:absolute}
+.lay{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.wm{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .03em .12em;margin:-.04em -.03em -.12em}
+.wi{display:inline-block;will-change:transform}
+.hl{color:#FF6B00}
+#grain{position:absolute;inset:-100px;pointer-events:none;opacity:.08;mix-blend-mode:overlay;z-index:50}
+#vig{position:absolute;inset:0;pointer-events:none;z-index:49;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
+#fade{position:absolute;inset:0;background:#000;opacity:0;z-index:60}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<audio id="aud" src="assets/soundtrack_novoja_film.m4a" preload="auto"></audio>
+<script>
+/* ============================================================
+   OJA Transport — 65 s motion piece, driven by renderAt(t).
+   Every frame is a pure function of time => deterministic render.
+   ============================================================ */
+const DUR = 57.0;
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  lin: x => x,
+  oC: x => 1 - Math.pow(1 - x, 3),
+  iC: x => x * x * x,
+  ioC: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  oQ: x => 1 - Math.pow(1 - x, 4),
+  oE: x => x === 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  iE: x => x === 0 ? 0 : Math.pow(2, 10 * x - 10),
+  ioE: x => x === 0 ? 0 : x === 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+  oB: x => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  oB2: x => { const c1 = 2.8, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  oEl: x => x === 0 ? 0 : x === 1 ? 1 : Math.pow(2, -10 * x) * Math.sin((x * 10 - .75) * (2 * Math.PI) / 3) + 1,
+  oBo: x => { const n = 7.5625, d = 2.75; if (x < 1 / d) return n * x * x; if (x < 2 / d) return n * (x -= 1.5 / d) * x + .75; if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + .9375; return n * (x -= 2.625 / d) * x + .984375; },
+};
+const P = (t, a, d, e = E.oC) => e(clamp((t - a) / d));
+// keyframe interpolation: [[t,v],...]
+function KF(t, kf, e = E.ioC) {
+  if (t <= kf[0][0]) return kf[0][1];
+  for (let i = 1; i < kf.length; i++) if (t <= kf[i][0]) { const [t0, v0] = kf[i - 1], [t1, v1] = kf[i]; return lerp(v0, v1, e((t - t0) / (t1 - t0))); }
+  return kf[kf.length - 1][1];
+}
+const cache = {};
+const el = id => (typeof id === 'string' ? (cache[id] || (cache[id] = $(id))) : id);
+function T(id, o) {
+  const e = el(id); if (!e) return;
+  const { x = 0, y = 0, s = 1, sx = s, sy = s, r = 0, rx = 0, ry = 0, sk = 0 } = o;
+  e.style.transform = `perspective(1800px) translate3d(${x}px,${y}px,0) rotateX(${rx}deg) rotateY(${ry}deg) rotate(${r}deg) skewX(${sk}deg) scale(${sx},${sy})`;
+  if (o.o !== undefined) { e.style.opacity = o.o; e.style.visibility = o.o <= .001 ? 'hidden' : 'visible'; }
+}
+const O = (id, o) => { const e = el(id); e.style.opacity = o; e.style.visibility = o <= .001 ? 'hidden' : 'visible'; };
+const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+/* ---------- text builders ---------- */
+// "*word*" => highlighted word
+function W(str, hl = 'hl') {
+  return str.split(' ').map(w => { const h = /^\*.*\*[.,?!]?$/.test(w); const txt = w.replace(/\*/g, ''); return `<span class="wm"><span class="wi ${h ? hl : ''}">${txt}</span></span>`; }).join(' ');
+}
+function L(str, hl = '') { return [...str].map(ch => `<span class="wm"><span class="wi ${hl}">${ch === ' ' ? '&nbsp;' : ch}</span></span>`).join(''); }
+function wordsIn(id, t, t0, st = .08, dur = .55, ease = E.oE, exitAt = null, exitDur = .4, from = 115) {
+  const ws = el(id).querySelectorAll('.wi');
+  ws.forEach((w, i) => {
+    const p = P(t, t0 + i * st, dur, ease);
+    let y = (1 - p) * from, r = (1 - p) * 8;
+    if (exitAt !== null) { const q = P(t, exitAt + i * st * .4, exitDur, E.iC); y -= q * 118; }
+    w.style.transform = `translateY(${y}%) rotate(${r}deg)`;
+    w.style.visibility = (p <= 0 || y <= -117) ? 'hidden' : 'visible';
+  });
+}
+
+/* ---------- icons ---------- */
+const ICONS = {
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+  route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  pkg: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  swap: '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  nav: '<polygon points="3 11 22 2 13 21 11 13 3 11"/>',
+  phone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  bike: '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2, f = 'none') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${f}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+
+/* ---------- vehicles (flat illustration) ---------- */
+const wheel = (cx, cy, r) => `<g class="wh" data-c="${cx},${cy}" transform="translate(${cx},${cy})"><circle r="${r}" fill="#15161c"/><circle r="${r * .56}" fill="#d9dce3"/><path d="M${-r * .5},0H${r * .5}M0,${-r * .5}V${r * .5}" stroke="#8a8f9c" stroke-width="${r * .13}"/><circle r="${r * .15}" fill="#555a66"/></g>`;
+function carSVG(color = '#FF6B00') {
+  return `<svg viewBox="0 0 300 150" class="veh"><ellipse cx="150" cy="138" rx="132" ry="8" fill="rgba(0,0,0,.2)"/><g class="vb">
+<path d="M18,98 Q18,74 44,70 L86,64 Q112,34 150,32 L192,32 Q222,34 246,62 L270,68 Q290,72 290,94 L290,108 Q290,116 280,116 L26,116 Q18,116 18,108Z" fill="${color}"/>
+<path d="M98,64 Q120,42 150,41 L166,41 L166,64Z" fill="#1d2230"/><path d="M176,41 L192,41 Q218,43 234,64 L176,64Z" fill="#1d2230"/>
+<path d="M104,60 Q122,46 140,45" stroke="rgba(255,255,255,.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path d="M20,94 L290,94" stroke="rgba(0,0,0,.14)" stroke-width="4"/><path d="M168,66 L168,112" stroke="rgba(0,0,0,.14)" stroke-width="3"/>
+<rect x="272" y="78" width="16" height="9" rx="4" fill="#FFE8A3"/><rect x="18" y="80" width="11" height="8" rx="3" fill="#E8112D"/></g>
+${wheel(78, 114, 24)}${wheel(226, 114, 24)}</svg>`;
+}
+function motoSVG(box = false) {
+  return `<svg viewBox="0 0 300 200" class="veh"><ellipse cx="152" cy="188" rx="122" ry="7" fill="rgba(0,0,0,.2)"/><g class="vb">
+${box ? `<g><rect x="40" y="62" width="76" height="64" rx="8" fill="#FF6B00"/><rect x="40" y="62" width="76" height="16" rx="8" fill="#C2410C"/><text x="78" y="113" font-family="Poppins" font-weight="800" font-size="22" fill="#fff" text-anchor="middle">OJA</text></g>` : ''}
+<path d="M72,160 L118,124 L196,124 L232,160" stroke="#23252e" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M108,112 L205,112 Q222,112 220,124 L208,140 L118,140 Q102,138 108,112Z" fill="#FF6B00"/>
+<path d="M92,106 L170,106 Q178,106 176,114 L96,116Z" fill="#15161c"/>
+<path d="M206,120 L238,84" stroke="#23252e" stroke-width="8" stroke-linecap="round"/><rect x="230" y="76" width="26" height="9" rx="4.5" fill="#23252e"/>
+<circle cx="248" cy="100" r="8" fill="#FFE8A3"/>
+<path d="M140,104 L176,134 L188,156" stroke="#1f3a8a" stroke-width="17" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+<path d="M124,108 L146,50 Q150,42 160,44 L176,48 Q184,52 180,62 L162,108Z" fill="#FCD116"/>
+<path d="M170,60 L234,80" stroke="#FCD116" stroke-width="15" stroke-linecap="round"/><circle cx="236" cy="80" r="7" fill="#6b3f24"/>
+<circle cx="164" cy="30" r="17" fill="#6b3f24"/><path d="M145,31 A19,19 0 0 1 183,26 L186,33 L145,33Z" fill="#15161c"/></g>
+${wheel(72, 160, 27)}${wheel(232, 160, 27)}</svg>`;
+}
+function trikeSVG() {
+  return `<svg viewBox="0 0 300 190" class="veh"><ellipse cx="152" cy="176" rx="128" ry="7" fill="rgba(0,0,0,.2)"/><g class="vb">
+<path d="M36,150 L36,70 Q36,36 74,32 L196,32 Q236,36 252,74 L268,128 Q270,150 256,150Z" fill="#FF8A1F"/>
+<path d="M28,42 Q32,22 62,20 L206,20 Q234,22 242,42Z" fill="#15161c"/>
+<path d="M62,52 L146,52 L146,100 L62,100Z" fill="#1d2230"/><path d="M160,52 L214,52 Q236,58 244,100 L160,100Z" fill="#1d2230"/>
+<path d="M70,60 L96,60" stroke="rgba(255,255,255,.3)" stroke-width="4" stroke-linecap="round"/>
+<rect x="36" y="112" width="232" height="10" fill="#008751"/><rect x="36" y="122" width="232" height="6" fill="#FCD116"/><rect x="36" y="128" width="232" height="6" fill="#E8112D"/>
+<circle cx="258" cy="116" r="7" fill="#FFE8A3"/></g>
+${wheel(82, 150, 25)}${wheel(232, 150, 25)}</svg>`;
+}
+function boxSVG() {
+  return `<svg viewBox="0 0 240 240" width="100%" height="100%" style="overflow:visible"><ellipse cx="120" cy="228" rx="92" ry="11" fill="rgba(0,0,0,.22)"/>
+<path d="M120,20 L220,64 L120,108 L20,64Z" fill="#EBC08A"/><path d="M20,64 L120,108 L120,220 L20,176Z" fill="#CF9150"/><path d="M220,64 L120,108 L120,220 L220,176Z" fill="#B47A3E"/>
+<path d="M58,47 L78,38 L182,82 L162,91Z" fill="#FF6B00"/><path d="M162,91 L182,82 L182,194 L162,203Z" fill="#E85D00"/>
+<g transform="translate(40,120) skewY(24)"><rect width="58" height="34" rx="5" fill="#fff" opacity=".92"/><text x="29" y="24" font-family="Poppins" font-weight="800" font-size="19" fill="#FF6B00" text-anchor="middle">OJA</text></g></svg>`;
+}
+function spinWheels(root, deg) { el(root).querySelectorAll('.wh').forEach(w => { w.setAttribute('transform', `translate(${w.dataset.c}) rotate(${deg})`); }); }
+function bob(root, t, amp = 1.5, f = 14) { el(root).querySelectorAll('.vb').forEach(g => g.setAttribute('transform', `translate(0,${Math.sin(t * f) * amp})`)); }
+
+/* ---------- maps ---------- */
+function roads(seed, w, h, n, col = '#263044') {
+  const R = rng(seed); let s = '';
+  for (let i = 0; i < n * 3; i++) { const x = R() * w, y = R() * h, bw = 20 + R() * 60, bh = 14 + R() * 40; s += `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="3" fill="#1F2737" transform="rotate(${-18 + R() * 6},${x},${y})"/>`; }
+  for (let i = 0; i < n; i++) { const y = R() * h * 1.2 - h * .1; s += `<path d="M${-60},${y} L${w + 60},${y - w * .3 + (R() - .5) * 120}" stroke="${col}" stroke-width="${1.5 + R() * 2.5}" fill="none"/>`; }
+  for (let i = 0; i < n; i++) { const x = R() * w * 1.2 - w * .1; s += `<path d="M${x},${-60} L${x + h * .32 + (R() - .5) * 120},${h + 60}" stroke="${col}" stroke-width="${1.5 + R() * 2.5}" fill="none"/>`; }
+  return s;
+}
+function miniMap(id, seed, route) {
+  return `<svg class="abs" style="left:0;top:0" width="416" height="896" viewBox="0 0 416 896">
+<rect width="416" height="896" fill="#1A2130"/>${roads(seed, 416, 896, 22)}
+<path d="M-20,300 C120,260 260,330 440,250" stroke="#34405A" stroke-width="9" fill="none"/>
+<path d="M140,-20 C160,200 110,420 190,920" stroke="#34405A" stroke-width="9" fill="none"/>
+<path d="M-20,120 Q180,40 440,90 L440,-20 L-20,-20Z" fill="#0E1829"/>
+${route ? `<path id="${id}rt" d="${route}" stroke="#FF6B00" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : ''}
+</svg>`;
+}
+function statusBar(dark = false) {
+  const c = dark ? '#111' : '#fff';
+  return `<div class="island"></div><div class="sbar" style="color:${c}"><span>07:30</span><span style="display:flex;gap:6px;align-items:center">
+<svg width="22" height="14" viewBox="0 0 22 14"><rect x="0" y="9" width="4" height="5" rx="1" fill="${c}"/><rect x="6" y="6" width="4" height="8" rx="1" fill="${c}"/><rect x="12" y="3" width="4" height="11" rx="1" fill="${c}"/><rect x="18" y="0" width="4" height="14" rx="1" fill="${c}"/></svg>
+<svg width="30" height="14" viewBox="0 0 30 14"><rect x=".5" y=".5" width="25" height="13" rx="4" fill="none" stroke="${c}" opacity=".6"/><rect x="3" y="3" width="17" height="8" rx="2" fill="${c}"/><rect x="27" y="4.5" width="2.5" height="5" rx="1" fill="${c}" opacity=".6"/></svg></span></div>`;
+}
+const flag = (w = 60, h = 40) => `<svg width="${w}" height="${h}" viewBox="0 0 30 20" style="border-radius:4px;display:block"><rect width="12" height="20" fill="#008751"/><rect x="12" width="18" height="10" fill="#FCD116"/><rect x="12" y="10" width="18" height="10" fill="#E8112D"/></svg>`;
+Object.assign(ICONS, {
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>',
+  home: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+  map: '<path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>',
+  back: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  recycle: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
+  hand: '<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
+});
+const st0 = document.createElement('style');
+st0.textContent = `
+.ip{position:absolute;width:430px;height:900px;border-radius:74px;padding:11px;background:linear-gradient(145deg,#8d8d93,#3a3a3f 30%,#1c1c1f 60%,#77777d);box-shadow:0 0 0 2px #0c0c0e inset,0 80px 140px rgba(0,0,0,.5);transform-style:preserve-3d}
+.ip .scr{position:relative;width:408px;height:878px;border-radius:63px;overflow:hidden;background:#F6F6F6;color:#111;font-family:Inter}
+.ip .isl{position:absolute;top:12px;left:50%;width:122px;height:36px;margin-left:-61px;border-radius:20px;background:#000;z-index:20}
+.ip .glare{position:absolute;inset:0;border-radius:63px;background:linear-gradient(115deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.22) 45%,rgba(255,255,255,0) 60%);z-index:21;pointer-events:none}
+.sb{position:absolute;top:17px;left:36px;right:30px;display:flex;justify-content:space-between;font:600 17px Inter;z-index:19}
+.a-card{background:#fff;border-radius:22px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.a-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:20px;background:#fff;border:1.5px solid #ECECEC;font:600 15px Inter;white-space:nowrap}
+.a-chip.on{background:#C2410C;border-color:#C2410C;color:#fff}
+.emo{display:grid;place-items:center;font-family:'Noto Color Emoji';line-height:1}
+.stk{position:absolute;display:grid;place-items:center;border-radius:50%;background:#fff;box-shadow:0 24px 50px rgba(0,0,0,.25);font-family:'Noto Color Emoji';line-height:1;overflow:hidden}
+.stk img{width:100%;height:100%;object-fit:cover}
+.tile{position:absolute;width:380px;height:470px;border-radius:44px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.18);background:#fff;color:#111}
+.hl3{color:#FF6B00}.hly{color:#FFC83D}
+`;
+document.head.appendChild(st0);
+const stage = $('stage');
+let H = '';
+const PHOTO = { shawarma: 'assets/food_shawarma.jpg', croissant: 'assets/food_croissant.jpg' };
+// food visual: photo or emoji tile
+const fv = (k, w, h, r = 18, bg = '#FFE7D1') => PHOTO[k] ? `<div style="width:${w}px;height:${h}px;border-radius:${r}px;overflow:hidden"><img src="${PHOTO[k]}" style="width:100%;height:100%;object-fit:cover;display:block"></div>`
+  : `<div class="emo" style="width:${w}px;height:${h}px;border-radius:${r}px;background:${bg};font-size:${Math.min(w, h) * .55}px">${k}</div>`;
+const sticker = (id, k, s, x, y, bg = '#fff') => `<div id="${id}" class="stk" style="left:${x - s / 2}px;top:${y - s / 2}px;width:${s}px;height:${s}px;background:${bg};font-size:${s * .56}px">${PHOTO[k] ? `<img src="${PHOTO[k]}">` : k}</div>`;
+const sbar = (c = '#111') => `<div class="sb" style="color:${c}"><span>9:41</span><span style="display:flex;gap:6px;align-items:center"><svg width="20" height="13" viewBox="0 0 22 14"><rect x="0" y="9" width="4" height="5" rx="1" fill="${c}"/><rect x="6" y="6" width="4" height="8" rx="1" fill="${c}"/><rect x="12" y="3" width="4" height="11" rx="1" fill="${c}"/><rect x="18" y="0" width="4" height="14" rx="1" fill="${c}"/></svg><svg width="28" height="13" viewBox="0 0 30 14"><rect x=".5" y=".5" width="25" height="13" rx="4" fill="none" stroke="${c}" opacity=".6"/><rect x="3" y="3" width="17" height="8" rx="2" fill="${c}"/></svg></span></div>`;
+const iphone = (id, inner, x, y) => `<div id="${id}" class="ip" style="left:${x}px;top:${y}px"><div class="scr">${inner}<div class="isl"></div></div><div class="glare" id="${id}g"></div></div>`;
+
+const RESTOS = [['shawarma', 'Shawarma House', 'Fast food · 1,2 km', '4.8'], ['🥘', 'Maquis Chez Tanti', 'Cuisine locale · 0,8 km', '4.9'], ['croissant', 'Boulangerie du Coin', 'Viennoiseries · 1,5 km', '4.7'], ['🍔', 'Burger Station', 'Fast food · 2,1 km', '4.6'], ['🍕', 'Pizza Fidjrossè', 'Pizzeria · 2,4 km', '4.8']];
+const SHOPS = [['🛒', 'Supermarché'], ['💊', 'Pharmacie'], ['👗', 'Mode'], ['📱', 'Électronique'], ['💄', 'Beauté'], ['🏠', 'Maison']];
+function scrHome(p) {
+  return `${sbar('#fff')}
+<div class="abs" style="left:0;top:0;width:408px;height:150px;background:#FF6B00"></div>
+<div class="abs" style="left:18px;top:62px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center">${ic('grid', 24, '#fff', 2.2)}</div>
+<div class="abs" style="left:0;right:0;top:66px;display:flex;justify-content:center;align-items:center;gap:8px"><img src="assets/mk_logo.png" style="width:40px;height:40px;background:#fff;border-radius:50%;padding:2px"><span style="font:900 30px Poppins;color:#fff">OJA</span><span style="padding:3px 10px;border-radius:8px;background:rgba(255,255,255,.25);color:#fff;font:700 15px Inter">Market</span></div>
+<div class="abs" style="right:18px;top:62px;width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,.2);display:grid;place-items:center">${ic('map', 24, '#fff', 2.2)}</div>
+<div class="abs a-card" style="left:16px;right:16px;top:164px;height:56px;border:2px solid #C2410C;display:flex;align-items:center;gap:12px;padding:0 16px;font:500 16px Inter;color:#777">${ic('search', 22, '#111', 2.4)}Rechercher un plat ou une boutique</div>
+<div class="abs a-card" style="left:16px;right:16px;top:232px;height:78px;display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:48px;height:48px;border-radius:14px;background:#FFF1E6;display:grid;place-items:center">${ic('bag', 24, '#C2410C', 2.2)}</div>
+<div style="flex:1"><div style="font:800 20px Poppins">Oja Marketplace</div><div style="font:500 13px Inter;color:#666">Restaurants et boutiques proches de vous.</div></div>${ic('nav', 22, '#C2410C', 2.2, '#C2410C')}</div>
+<div class="abs a-card" style="left:16px;right:16px;top:322px;height:52px;padding:4px"><div id="${p}seg" class="abs" style="left:4px;top:4px;width:184px;height:44px;border-radius:16px;background:#C2410C"></div>
+<div class="abs" style="left:4px;top:4px;width:184px;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 16px Inter" id="${p}sr">${ic('utensils', 18, 'currentColor', 2.2)}Restaurants</div>
+<div class="abs" style="left:188px;top:4px;width:184px;height:44px;display:flex;align-items:center;justify-content:center;gap:8px;font:700 16px Inter" id="${p}sm">${ic('store', 18, 'currentColor', 2.2)}Magasins</div></div>
+<div class="abs" style="left:16px;top:388px;display:flex;gap:8px"><span class="a-chip on">Tous</span><span class="a-chip">Ouverts</span><span class="a-chip">Top notés</span><span class="a-chip">Promos</span></div>
+<div class="abs" style="left:0;top:440px;width:408px;height:350px;overflow:hidden">
+<div id="${p}rl" class="abs" style="left:16px;top:0;width:376px">${RESTOS.map(([k, n, m, r], i) => `<div class="a-card" style="position:relative;height:220px;margin-bottom:14px;overflow:hidden">${fv(k, 376, 140, 0, ['#FFE7D1', '#FFE9B8', '#FFE7D1', '#FFE0E0', '#E3F4E8'][i])}
+<div class="abs" style="right:12px;top:12px;padding:5px 12px;border-radius:14px;background:#12B76A;color:#fff;font:800 12px Inter">OUVERT</div>
+<div id="${p}hrt${i}" class="abs" style="right:14px;top:156px">${ic('heart', 26, '#999', 2.2)}</div>
+<div style="padding:12px 16px 0"><div style="font:800 19px Poppins">${n}</div><div style="font:500 13px Inter;color:#777;margin-top:2px">${m} · <span style="color:#F59E0B">★</span> ${r}</div></div></div>`).join('')}</div>
+<div id="${p}sl" class="abs" style="left:16px;top:0;width:376px;opacity:0">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${SHOPS.map(([e, n], i) => `<div id="${p}sh${i}" class="a-card" style="height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px"><div class="emo" style="font-size:42px">${e}</div><div style="font:700 13px Inter">${n}</div></div>`).join('')}</div>
+<div class="a-card" style="margin-top:12px;height:96px;display:flex;align-items:center;gap:14px;padding:0 14px"><div class="emo" style="width:68px;height:68px;border-radius:16px;background:#E3F4E8;font-size:40px">🛍️</div><div><div style="font:800 17px Poppins">Boutique Ganhi Center</div><div style="font:500 13px Inter;color:#777">Mode & accessoires · 1,1 km</div></div></div></div></div>
+<div class="abs" style="left:14px;right:14px;top:796px;height:66px;border-radius:24px;background:#1E1E22;display:flex;justify-content:space-around;align-items:center;color:#ddd;font:600 11px Inter">
+${[['home', 'Accueil'], ['recycle', 'NOVOJA'], ['car', 'Transport'], ['store', 'Market'], ['user', 'Profil']].map(([icn, lb], i) => `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;${i === 3 ? 'color:#FF8A1F' : ''}">${ic(icn, 20, i === 3 ? '#FF8A1F' : '#ddd', 2)}${lb}</div>`).join('')}</div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+const MENU = [['shawarma', 'Shawarma poulet', '2 500', '3 000'], ['croissant', 'Croissants x3', '1 000', '1 200'], ['🍗', 'Poulet braisé', '3 500', ''], ['🥤', 'Jus de bissap', '700', '']];
+function scrMenu(p) {
+  return `${sbar()}
+<div class="abs" style="left:18px;top:56px;width:52px;height:52px;border-radius:16px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);display:grid;place-items:center">${ic('back', 24, '#111', 2.4)}</div>
+<div class="abs" style="left:86px;top:66px;font:800 24px Poppins">Maquis Chez Tanti</div>
+<div class="abs a-card" style="left:16px;right:16px;top:124px;height:54px;display:flex;align-items:center;gap:12px;padding:0 16px;font:500 16px Inter;color:#777">${ic('search', 22, '#111', 2.4)}Rechercher un plat, une boisson…</div>
+<div class="abs" style="left:16px;top:192px;display:flex;gap:8px"><span class="a-chip" style="background:#111;color:#fff;border-color:#111">Tout 4</span><span class="a-chip">Promos 2</span><span class="a-chip">Disponibles 4</span></div>
+<div class="abs" style="left:16px;top:250px;width:376px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+${MENU.map(([k, n, pr, old], i) => `<div id="${p}it${i}" class="a-card" style="position:relative;height:282px;padding:10px">${fv(k, 162, 150, 16, ['#FFE7D1', '#FFE7D1', '#FFE9B8', '#FFE0E0'][i])}
+${old ? `<div class="abs" style="left:18px;top:18px;padding:4px 10px;border-radius:10px;background:#E8112D;color:#fff;font:800 12px Inter">Promo</div>` : ''}
+<div style="font:700 11px Inter;color:#888;margin-top:10px;letter-spacing:.06em">CHEZ TANTI</div><div style="font:800 16px Poppins;margin-top:2px">${n}</div>
+<div style="font:800 16px Inter;margin-top:8px;color:${old ? '#E8112D' : '#111'}">${old ? `<s style="color:#999;font-weight:600;font-size:13px">${old}</s> ` : ''}${pr} <span style="font-size:12px">XOF</span></div>
+<div class="abs" style="right:10px;bottom:10px;width:42px;height:42px;border-radius:50%;background:#FF6B00;display:grid;place-items:center">${ic('bag', 20, '#fff', 2.2)}</div></div>`).join('')}</div>
+<div id="${p}cart" class="abs" style="left:16px;right:16px;top:790px;height:66px;border-radius:22px;background:#111;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font:700 17px Inter;z-index:5">
+<span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:50%;background:#FF6B00;display:grid;place-items:center;font:800 15px Inter">1</span>Voir le panier</span><span>2 500 XOF</span></div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+function scrCheckout(p) {
+  return `${sbar()}
+<div class="abs" style="left:18px;top:56px;width:52px;height:52px;border-radius:16px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1);display:grid;place-items:center">${ic('back', 24, '#111', 2.4)}</div>
+<div class="abs" style="left:86px;top:66px;font:800 24px Poppins">Paiement OJA</div>
+<div class="abs" style="left:16px;top:124px;width:184px;height:74px;border-radius:20px;border:2px solid #FF6B00;background:#FFF1E6;padding:12px 14px"><div style="font:800 16px Inter;color:#E85D00">Livraison OJA</div><div style="font:600 14px Inter;color:#E85D00">800 XOF</div></div>
+<div class="abs a-card" style="left:208px;top:124px;width:184px;height:74px;padding:12px 14px"><div style="font:800 16px Inter">À emporter</div><div style="font:600 14px Inter;color:#777">Gratuit</div></div>
+<div class="abs" style="left:16px;right:16px;top:212px;height:70px;border-radius:20px;background:#FFE4D2;display:flex;align-items:center;gap:12px;padding:0 16px;font:700 15px Inter">${ic('lock', 24, '#111', 2.2)}Paiement Mobile Money sécurisé après validation.</div>
+<div class="abs a-card" style="left:16px;right:16px;top:296px;height:62px;display:flex;align-items:center;gap:12px;padding:0 16px;font:600 17px Inter">${ic('pin', 22, '#111', 2.2)}Haie Vive, Cotonou</div>
+<div class="abs" style="left:18px;top:376px;font:800 18px Inter">Choisissez votre mode de livraison</div>
+<div id="${p}velo" class="abs" style="left:16px;right:16px;top:410px;height:104px;border-radius:20px;border:2px solid #12B76A;background:#E7F6EF;padding:14px 16px">
+<div style="display:flex;justify-content:space-between"><b style="font:800 18px Inter">Vélo</b><b style="font:800 17px Inter;color:#12B76A">800 XOF</b></div><div style="font:500 13px Inter;color:#555;margin-top:4px;width:280px">Livraison économique confiée à un livreur à vélo.</div>
+<div class="abs" style="right:16px;top:50px;width:26px;height:26px;border-radius:50%;border:3px solid #12B76A;display:grid;place-items:center"><div style="width:12px;height:12px;border-radius:50%;background:#12B76A"></div></div></div>
+<div class="abs a-card" style="left:16px;right:16px;top:526px;height:104px;padding:14px 16px;border:1.5px solid #E2E2E2">
+<div style="display:flex;justify-content:space-between"><b style="font:800 18px Inter">Livraison OJA</b><b style="font:800 17px Inter;color:#E85D00">1 200 XOF</b></div><div style="font:500 13px Inter;color:#555;margin-top:4px;width:280px">Moto, tricycle ou voiture : OJA choisit le véhicule disponible.</div></div>
+<div class="abs a-card" style="left:16px;right:16px;top:644px;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font:700 16px Inter"><span>Commande · 1 article</span><span style="color:#E85D00">2 500 XOF</span></div>
+<div class="abs" style="left:0;right:0;top:730px;bottom:0;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px 20px">
+<div><div style="font:500 13px Inter;color:#666">Mobile Money sécurisé</div><div style="font:800 20px Inter">Total 3 300 XOF</div></div>
+<div id="${p}pay" style="position:relative;overflow:hidden;padding:18px 22px;border-radius:18px;background:#C2410C;color:#fff;font:800 17px Inter">PAYER 3 300 XOF<div id="${p}paid" class="abs" style="inset:0;background:#12B76A;display:flex;align-items:center;justify-content:center;gap:6px">${ic('check', 22, '#fff', 3)}Payé</div></div></div>
+<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.35);border:3px solid #FF6B00;opacity:0;z-index:18"></div>`;
+}
+const TRK = 'M70,470 C120,380 170,420 210,330 S300,260 330,170';
+function scrTrack(p) {
+  return `${sbar()}
+<svg class="abs" style="left:0;top:0" width="408" height="600" viewBox="0 0 408 600"><rect width="408" height="600" fill="#EDE8E1"/>
+<g stroke="#fff" stroke-width="12" fill="none"><path d="M-20,140 L430,90"/><path d="M-20,300 L430,260"/><path d="M-20,470 L430,430"/><path d="M90,-20 L130,620"/><path d="M250,-20 L300,620"/><path d="M-20,560 C120,520 280,560 430,520"/></g>
+<g stroke="#fff" stroke-width="5" fill="none" opacity=".9"><path d="M-20,210 L430,175"/><path d="M-20,385 L430,345"/><path d="M40,-20 L70,620"/><path d="M180,-20 L215,620"/><path d="M350,-20 L380,620"/></g>
+<rect x="300" y="360" width="80" height="60" rx="10" fill="#CFE8D2"/><rect x="20" y="20" width="60" height="90" rx="10" fill="#CFE8D2"/>
+<path id="${p}rt" d="${TRK}" stroke="#FF6B00" stroke-width="7" fill="none" stroke-linecap="round"/>
+<circle cx="70" cy="470" r="12" fill="#111" stroke="#fff" stroke-width="4"/>
+<g transform="translate(330,170)"><circle r="20" fill="#FF6B00" opacity=".25"/><circle r="11" fill="#FF6B00" stroke="#fff" stroke-width="4"/></g>
+<g id="${p}cur"><circle r="22" fill="#fff" stroke="#FF6B00" stroke-width="3"/><text y="9" text-anchor="middle" font-size="24" font-family="Noto Color Emoji">🛵</text></g></svg>
+<div class="abs" style="left:0;right:0;top:560px;bottom:0;border-radius:28px 28px 0 0;background:#fff;box-shadow:0 -8px 24px rgba(0,0,0,.08);padding:22px 20px">
+<div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font:800 22px Poppins">Votre commande arrive</div><div style="font:500 14px Inter;color:#777">Maquis Chez Tanti → Haie Vive</div></div><div style="font:900 30px Poppins;color:#FF6B00"><span id="${p}eta">12</span><span style="font-size:16px"> min</span></div></div>
+<div style="display:flex;gap:6px;margin-top:18px">${[0, 1, 2, 3].map(i => `<div style="flex:1;height:8px;border-radius:4px;background:#EEE;overflow:hidden"><div id="${p}st${i}" style="height:8px;width:0;background:#FF6B00"></div></div>`).join('')}</div>
+<div style="display:flex;justify-content:space-between;font:600 12px Inter;color:#888;margin-top:8px"><span>Acceptée</span><span>Préparation</span><span>En route</span><span>Livrée</span></div>
+<div style="display:flex;align-items:center;gap:12px;margin-top:18px"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#FF8A1F,#C2410C);display:grid;place-items:center;color:#fff;font:800 18px Poppins">KA</div><div><div style="font:800 17px Inter">Koffi · Livreur OJA</div><div style="font:500 13px Inter;color:#777">Moto · ★ 4,9</div></div></div></div>`;
+}
+
+
+/* ============================================================
+   OJA MERCHANT — app for restaurants & merchants (54.4 s VO + logo outro)
+   (prelude from market_body.js provides iphone(), sbar(), fv(), sticker(), scrHome()…)
+   ============================================================ */
+Object.assign(ICONS, {
+  chart: '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  bellr: '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/>',
+  clip: '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+  box: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  gear: '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+  timer: '<line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/>',
+  minus: '<path d="M5 12h14"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+});
+const OR = '#FF6B00', INK = '#0F0F12', PEARL = '#F7F5F2', DK = '#0D0D10';
+const st2 = document.createElement('style'); st2.textContent = `
+.hlo{color:${OR}}.hlk{color:${INK}}
+.glass{position:absolute;border-radius:28px;background:rgba(255,255,255,.82);border:1.5px solid rgba(255,255,255,.95);box-shadow:0 30px 70px rgba(80,40,10,.14);color:${INK}}
+.mesh{position:absolute;border-radius:50%;filter:blur(2px)}
+.kpi{font:900 44px Poppins;letter-spacing:-.02em}
+`; document.head.appendChild(st2);
+const meshBg = (id) => `<div id="${id}" class="abs" style="inset:0;background:${PEARL}">
+<div class="mesh" style="left:-240px;top:-300px;width:900px;height:900px;background:radial-gradient(circle,rgba(255,138,46,.32),rgba(255,138,46,0) 65%)"></div>
+<div class="mesh" style="left:1300px;top:500px;width:1000px;height:1000px;background:radial-gradient(circle,rgba(255,196,140,.45),rgba(255,196,140,0) 65%)"></div>
+<div class="abs" style="inset:0;background-image:linear-gradient(rgba(15,15,18,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(15,15,18,.045) 1px,transparent 1px);background-size:96px 96px"></div></div>`;
+const darkBg = `<div class="abs" style="inset:0;background:radial-gradient(ellipse at 60% 45%,#3A1E0C 0%,${DK} 62%)"></div><div class="abs" style="inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 2px,transparent 2px);background-size:46px 46px"></div>`;
+const mark = (s = 90) => `<span style="display:inline-grid;place-items:center;width:${s}px;height:${s}px;border-radius:50%;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.18)"><img src="assets/mk_logo.png" style="width:${s * .86}px"></span>`;
+const NAVM = (p, act) => `<div class="abs" style="left:0;right:0;top:800px;height:78px;background:#fff;border-top:1px solid #eee;display:flex;justify-content:space-around;align-items:center;font:600 11px Inter;color:#444">
+${[['grid', 'Accueil'], ['bell', 'Nouvelles'], ['clip', 'En cours'], ['box', 'Prêtes'], ['gear', 'Réglages']].map(([icn, lb], i) => `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;${i === act ? `color:${OR}` : ''}"><div style="padding:5px 16px;border-radius:14px;${i === act ? 'background:#FFE9DA' : ''}">${ic(icn, 21, i === act ? OR : '#444', 2)}</div>${lb}</div>`).join('')}</div>`;
+const tapEl = p => `<div id="${p}tap" class="abs" style="left:0;top:0;width:70px;height:70px;margin:-35px;border-radius:50%;background:rgba(255,107,0,.3);border:3px solid ${OR};opacity:0;z-index:18"></div>`;
+
+function scrDash(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:500 14px Inter;color:#777">Bonjour 👋</div><div style="font:800 24px Poppins">Maquis Chez Tanti</div></div>
+<div class="abs" style="right:18px;top:66px;padding:8px 14px;border-radius:16px;background:#E7F6EF;color:#0B7A5E;font:800 13px Inter;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#12B76A"></span>Ouvert</div>
+<div class="abs" style="left:16px;right:16px;top:124px;height:150px;border-radius:24px;background:linear-gradient(135deg,#FF8A1F,#E85D00);color:#fff;padding:18px 20px">
+<div style="font:600 14px Inter;opacity:.9">Ventes du jour</div><div style="font:900 36px Poppins;margin-top:2px"><span id="${p}sales">48 500</span> <span style="font-size:18px">XOF</span></div>
+<div style="font:700 13px Inter;margin-top:6px;display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:10px;background:rgba(255,255,255,.2)">${ic('up', 16, '#fff', 2.6)}+18 % vs hier</div></div>
+<div class="abs" style="left:16px;top:288px;width:182px;height:96px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:14px 16px"><div style="font:600 13px Inter;color:#777">Commandes</div><div style="font:900 30px Poppins" id="${p}ord">23</div></div>
+<div class="abs" style="left:210px;top:288px;width:182px;height:96px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:14px 16px"><div style="font:600 13px Inter;color:#777">En préparation</div><div style="font:900 30px Poppins;color:${OR}">4</div></div>
+<div class="abs" style="left:16px;right:16px;top:398px;height:200px;border-radius:22px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);padding:16px 18px"><div style="font:800 16px Inter">Ventes de la semaine</div>
+<div class="abs" style="left:18px;right:18px;bottom:18px;height:120px;display:flex;align-items:flex-end;gap:12px">${[45, 62, 50, 78, 66, 92, 100].map((h, i) => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div id="${p}bar${i}" style="width:100%;height:${h}px;border-radius:8px;background:${i === 6 ? OR : '#FFD9BF'};transform-origin:50% 100%"></div><span style="font:600 11px Inter;color:#999">${'LMMJVSD'[i]}</span></div>`).join('')}</div></div>
+<div class="abs" style="left:16px;right:16px;top:612px;height:76px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:46px;height:46px;border-radius:14px;background:#FFE9DA;display:grid;place-items:center">${ic('bellr', 22, OR, 2.2)}</div><div style="flex:1"><div style="font:800 15px Inter">Nouvelle commande</div><div style="font:500 13px Inter;color:#777">#3C24A4 · 2 articles · 5 700 XOF</div></div>${ic('arrow', 18, '#999', 2.4)}</div>
+<div class="abs" style="left:16px;right:16px;top:700px;height:76px;border-radius:20px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.06);display:flex;align-items:center;gap:14px;padding:0 16px">
+<div style="width:46px;height:46px;border-radius:14px;background:#E7F6EF;display:grid;place-items:center">${ic('wallet', 22, '#12B76A', 2.2)}</div><div style="flex:1"><div style="font:800 15px Inter">Solde disponible</div><div style="font:500 13px Inter;color:#777">125 450 XOF</div></div>${ic('arrow', 18, '#999', 2.4)}</div>
+${NAVM(p, 0)}${tapEl(p)}`;
+}
+const CAT = [['shawarma', 'Shawarma poulet', '2 500', 18], ['croissant', 'Croissants x3', '1 000', 25], ['🍗', 'Poulet braisé', '3 500', 12], ['🥤', 'Jus de bissap', '700', 40]];
+function scrCatalog(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 24px Poppins">Catalogue boutique</div><div style="font:500 13px Inter;color:#777">Produits, prix, photos et stocks</div></div>
+<div class="abs" style="left:16px;top:130px;display:flex;gap:8px"><span class="a-chip on" style="background:${INK};border-color:${INK}">Tout 4</span><span class="a-chip">Plats</span><span class="a-chip">Boissons</span><span class="a-chip">Desserts</span></div>
+<div class="abs" style="left:16px;right:16px;top:186px">${CAT.map(([k, n, pr, s], i) => `<div id="${p}r${i}" class="a-card" style="position:relative;height:104px;margin-bottom:12px;display:flex;align-items:center;gap:14px;padding:0 14px">${fv(k, 76, 76, 16, ['#FFE7D1', '#FFE7D1', '#FFE9B8', '#FFE0E0'][i])}
+<div style="flex:1"><div style="font:800 16px Poppins">${n}</div><div style="font:800 16px Inter;color:#C2410C;margin-top:2px"><span id="${p}pr${i}">${pr}</span> <span style="font-size:12px">XOF</span></div>
+<div style="display:inline-flex;align-items:center;gap:6px;margin-top:4px;padding:3px 10px;border-radius:10px;background:#F3F4F6;font:700 12px Inter;color:#444">Stock <span id="${p}st${i}">${s}</span></div></div>
+<div style="width:46px;height:28px;border-radius:14px;background:#12B76A;position:relative"><div style="position:absolute;right:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff"></div></div></div>`).join('')}</div>
+<div id="${p}add" class="abs" style="left:16px;right:16px;top:690px;height:62px;border-radius:20px;background:${OR};color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:800 18px Inter">${ic('plus', 22, '#fff', 3)}Ajouter un produit</div>
+<div id="${p}form" class="abs" style="left:0;right:0;top:200px;height:678px;border-radius:30px 30px 0 0;background:#fff;box-shadow:0 -20px 50px rgba(0,0,0,.2);padding:22px 20px;z-index:8">
+<div style="width:60px;height:5px;border-radius:3px;background:#ddd;margin:0 auto 16px"></div><div style="font:800 22px Poppins">Nouveau produit</div>
+<div style="display:flex;gap:10px;margin-top:16px"><div id="${p}fph" style="width:110px;height:110px;border-radius:20px;background:#FFE9B8;display:grid;place-items:center;overflow:hidden"><span class="emo" style="font-size:70px">🍗</span></div><div style="width:110px;height:110px;border-radius:20px;border:2px dashed #ccc;display:grid;place-items:center">${ic('camera', 30, '#aaa', 2)}</div></div>
+<div style="font:700 13px Inter;color:#777;margin-top:16px">Nom</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;padding:0 14px;font:600 17px Inter;border:1.5px solid #eee"><span id="${p}typ"></span><span id="${p}cur" style="display:inline-block;width:3px;height:22px;background:${OR};margin-left:2px"></span></div>
+<div style="display:flex;gap:10px;margin-top:14px"><div style="flex:1"><div style="font:700 13px Inter;color:#777">Prix</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;padding:0 14px;font:800 18px Inter;color:#C2410C;border:1.5px solid #eee"><span id="${p}fpr">0</span>&nbsp;XOF</div></div>
+<div style="flex:1"><div style="font:700 13px Inter;color:#777">Stock</div><div class="a-card" style="height:52px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border:1.5px solid #eee"><span style="width:32px;height:32px;border-radius:10px;background:#F3F4F6;display:grid;place-items:center">${ic('minus', 18, '#111', 2.6)}</span><b id="${p}fst" style="font:800 18px Inter">0</b><span style="width:32px;height:32px;border-radius:10px;background:${OR};display:grid;place-items:center">${ic('plus', 18, '#fff', 2.6)}</span></div></div></div>
+<div id="${p}save" style="position:relative;margin-top:22px;height:60px;border-radius:20px;background:${INK};color:#fff;display:grid;place-items:center;font:800 18px Inter;overflow:hidden">Enregistrer<div id="${p}ok" class="abs" style="inset:0;background:#12B76A;display:flex;align-items:center;justify-content:center;gap:8px">${ic('check', 22, '#fff', 3)}Produit ajouté</div></div></div>
+${NAVM(p, 4)}${tapEl(p)}`;
+}
+const STEPS = ['Reçue', 'Acceptée', 'En préparation', 'Prête', 'Livrée'];
+function scrOrder(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 24px Poppins">Nouvelles commandes</div><div style="font:500 13px Inter;color:#777">Acceptez rapidement les demandes entrantes</div></div>
+<div id="${p}card" class="abs" style="left:14px;right:14px;top:130px;border-radius:26px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.08);padding:18px">
+<div style="display:flex;align-items:center;gap:8px"><b style="font:900 20px Inter">#3C24A4</b><span style="padding:4px 10px;border-radius:12px;background:#E8F1FF;color:#1D63D8;font:700 12px Inter">🛵 Livraison</span><span style="padding:4px 10px;border-radius:12px;border:1.5px solid #12B76A;background:#E7F6EF;color:#0B7A5E;font:700 12px Inter">Payée ✓</span></div>
+<div style="margin-top:14px;border-radius:18px;background:#FFF1E6;padding:12px 14px;font:500 14px Inter">
+<div style="display:flex;justify-content:space-between"><span>2× Shawarma poulet</span><b>5 000</b></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span>1× Jus de bissap</span><b>700</b></div>
+<div style="display:flex;justify-content:space-between;margin-top:8px;color:#1D63D8"><span>Livraison prépayée Mobile Money</span><b>800</b></div>
+<div style="height:1px;background:#F2D9C8;margin:10px 0"></div><div style="display:flex;justify-content:space-between;font:800 15px Inter"><span>Votre gain</span><span style="color:#0B7A5E">5 700 XOF</span></div></div>
+<div id="${p}btns" style="display:flex;gap:10px;margin-top:14px"><div style="flex:1;height:54px;border-radius:18px;border:2px solid #E8112D;color:#E8112D;display:grid;place-items:center;font:800 16px Inter">Refuser</div><div id="${p}acc" style="flex:1;height:54px;border-radius:18px;background:#12B76A;color:#fff;display:grid;place-items:center;font:800 16px Inter">Accepter</div></div>
+<div id="${p}prog" class="abs" style="left:18px;right:18px;bottom:18px;height:54px;border-radius:18px;background:${INK};color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font:800 16px Inter">${ic('timer', 20, OR, 2.4)}<span id="${p}stat">En préparation</span></div></div>
+<div class="abs" style="left:20px;right:20px;top:540px">${STEPS.map((s, i) => `<div style="display:flex;align-items:center;gap:12px;height:46px"><div id="${p}dot${i}" style="width:30px;height:30px;border-radius:50%;background:#E5E7EB;display:grid;place-items:center">${ic('check', 16, '#fff', 3)}</div><span id="${p}lb${i}" style="font:700 15px Inter;color:#999">${s}</span></div>`).join('')}</div>
+${NAVM(p, 1)}${tapEl(p)}`;
+}
+function scrRevenue(p) {
+  return `${sbar()}
+<div class="abs" style="left:20px;top:58px"><div style="font:800 23px Poppins">Revenus & reversements</div><div style="font:500 13px Inter;color:#777">Vos gains, séparés des paiements clients</div></div>
+<div class="abs" style="left:16px;right:16px;top:124px;height:236px;border-radius:26px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.07);text-align:center;padding-top:22px">
+<div style="font:800 14px Inter;letter-spacing:.12em;color:#444">DISPONIBLE</div><div style="font:900 40px Poppins;margin-top:6px"><span id="${p}bal">0</span> <span style="font-size:20px">XOF</span></div>
+<div style="font:500 13px Inter;color:#666;margin:6px 26px 0">Commandes payées protégées jusqu'à la remise.</div>
+<div style="display:flex;gap:10px;margin:14px 18px 0"><div style="flex:1;height:50px;border-radius:16px;background:${OR};color:#fff;display:grid;place-items:center;font:800 16px Inter">Retirer</div><div style="flex:1;height:50px;border-radius:16px;border:1.5px solid #ddd;display:grid;place-items:center;font:700 16px Inter">Tout retirer</div></div></div>
+<div class="abs" style="left:20px;top:378px;font:800 18px Inter">Historique</div>
+<div class="abs" style="left:16px;right:16px;top:410px">${[['5 700', 'Commande #3C24A4', 'Il y a 2 min'], ['3 500', 'Commande #3C24A1', 'Il y a 18 min'], ['8 200', 'Commande #3C249F', 'Il y a 40 min'], ['2 500', 'Commande #3C249A', 'Il y a 1 h']].map(([a, b, c], i) => `<div id="${p}h${i}" class="a-card" style="height:80px;margin-bottom:10px;display:flex;align-items:center;gap:14px;padding:0 16px"><div style="width:44px;height:44px;border-radius:14px;background:#E7F6EF;display:grid;place-items:center">${ic('up', 20, '#12B76A', 2.6)}</div><div style="flex:1"><div style="font:800 16px Inter">+${a} XOF</div><div style="font:500 12px Inter;color:#777">${b} · ${c}</div></div><span style="font:700 12px Inter;color:#0B7A5E">Disponible</span></div>`).join('')}</div>
+${NAVM(p, 0)}${tapEl(p)}`;
+}
+Object.assign(ICONS, { up: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>', tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5"/>', arrow: '<path d="m9 18 6-6-6-6"/>', camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>' });
+
+
+/* ============================================================
+   OJA — NOVOJA « Ce qui dort chez toi vaut de l'argent », film 16:9 (1920 × 1080) and 9:16, 57 s, voice: Isac (assets/nov/voix_novoja.mp3, from 0.6 s).
+   Same brand-film style as « Une journée à Cotonou » and « Le local devient visible » (big time stamps, colour of the hour,
+   word-by-word blur-in text, bubbles, glow and bokeh, one generated hero): a man whose old fridge sleeps in his courtyard.
+   Act 1: 08 h 00 the fridge, 11 h 00 « envoie-moi d'abord les frais de transport », the memory of a seller who never
+   answered, 18 h 00 still there. Act 2 (kit NOVOJA): publish an object, chat in the app, protected payment (OJA keeps the
+   money until the buyer confirms receipt, then the seller is paid), OJA can deliver, disputes arbitrated by the OJA team,
+   gifts. No amount, no price, no figure; the seller payout channel (MoMo) is not named (MTN disbursement dependency).
+   ============================================================ */
+// VERT is set by nov_build.py: false for the 16:9 film, true for the 9:16 version (same story, positions below)
+const VERT = true;
+const VW_ = VERT ? 1080 : 1920, VH_ = VERT ? 1920 : 1080, VO = 0.6;
+const LY = (h, v) => VERT ? v : h;
+const PRE = [];
+const imgL = src => { const i = new Image(); i.src = src; PRE.push(i); return i; };
+// the hero (generated with ElevenLabs from one reference portrait), one photo per scene
+const HV = VERT ? '_v' : '';
+// (in 9:16 the dusk shot pans from the fridge to him, and the gift shot is shown as a photo card over its blurred self)
+const HER = { frigo: imgL(`assets/nov/h_frigo${HV}.jpg`), groupe: imgL(`assets/nov/h_groupe${HV}.jpg`), soir: imgL('assets/nov/h_soir.jpg'), don: imgL('assets/nov/h_don.jpg'), fin: imgL(`assets/nov/h_fin${HV}.jpg`) };
+// voice timings (seconds in the voice file), injected by nov_build.py from assets/nov/voix_novoja.mp3.json
+const W_ = {"t0": 0.144, "frigo": 2.04, "marche": 4.08, "place": 5.48, "onze": 7.92, "propose": 8.76, "inconnu": 10.4, "prends": 11.68, "histoire": 14.667, "avance": 15.96, "vendeur": 17.96, "dixhuit": 20.44, "confiance": 23.24, "siArg": 25.173, "livraison": 26.28, "surN": 27.307, "publies": 28.88, "photos": 30.107, "desc": 30.96, "ligne": 31.88, "ach": 32.827, "paie": 35.08, "garde": 35.92, "livrer": 37.6, "recoit": 39.0, "confirme": 40.16, "paye": 41.88, "souci": 42.68, "arbitre": 43.413, "rembourse": 44.827, "donne": 46.6, "donner": 47.84, "endA": 48.933, "endB": 50.52};
+const V = k => W_[k] + VO;
+const DUR2 = 57.0;
+const GR = '#12B76A', OJ = '#FF6B00';
+ICONS.unlock = '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>';
+
+/* ---------- text: words that blur in one after the other; *word* is highlighted ---------- */
+const wordsHTML = s => s.split(/(\*[^*]+\*)/).map(seg => seg.startsWith('*') ? seg.slice(1, -1).split(' ').map(w => `<span class="w" style="color:${OJ}">${w}</span>`).join(' ') : seg.split(' ').filter(Boolean).map(w => `<span class="w">${w}</span>`).join(' ')).join(' ');
+const line = (id, txt, y, size = 64, extra = '', yv, sizev) => { if (VERT) { y = yv ?? 1500; size = sizev ?? 62; extra = 'left:60px;right:60px'; } return `<div id="${id}" class="abs" style="left:120px;right:120px;top:${y}px;text-align:center;font:700 ${size}px Poppins;letter-spacing:-.015em;line-height:1.15;color:#fff;visibility:hidden;${extra}">${wordsHTML(txt)}</div>`; };
+const WCACHE = {};
+function say(id, t, a, b) {
+  const e = el(id); const on = t >= a - .05 && t < b; e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  const ws = WCACHE[id] || (WCACHE[id] = [...e.querySelectorAll('.w')]); const q = P(t, b - .35, .35, E.iC);
+  ws.forEach((w, i) => { const p = P(t, a + i * .07, .45, E.oQ); w.style.opacity = p * (1 - q); w.style.filter = `blur(${(1 - p) * 16 + q * 12}px)`; w.style.transform = `translateY(${(1 - p) * 26}px)`; });
+}
+
+/* ---------- layout ---------- */
+const avatar = (s, bg, col = '#344054') => `<div style="width:${s}px;height:${s}px;flex:none;border-radius:50%;background:${bg};display:grid;place-items:center">${ic('user', s * .55, col, 2.2)}</div>`;
+const bub = (id, txt, side, x, y, av = '') => `<div id="${id}" class="abs" style="left:${x}px;top:${y}px;display:flex;align-items:flex-end;gap:14px;visibility:hidden">${av}
+<div style="padding:22px 30px;border-radius:30px;${side === 'r' ? 'border-bottom-right-radius:8px;background:#DCF8C6' : 'border-bottom-left-radius:8px;background:#fff'};color:#111;font:600 40px Inter;line-height:1.2;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.35)">${txt}</div></div>`;
+const msg = (id, txt, side) => `<div id="${id}" style="display:flex;justify-content:${side === 'r' ? 'flex-end' : 'flex-start'};margin-top:16px;opacity:0"><div style="max-width:80%;padding:16px 24px;border-radius:24px;${side === 'r' ? 'border-bottom-right-radius:6px;background:#DCF8C6' : 'border-bottom-left-radius:6px;background:#F1F2F4'};font:600 34px Inter;line-height:1.2">${txt}${side === 'r' ? '<span style="font:600 22px Inter;color:#98A2B3;margin-left:12px">✓✓</span>' : ''}</div></div>`;
+const card = (id, x, y, w, h, inner, extra = '') => `<div id="${id}" class="abs" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:40px;background:#fff;color:#111;box-shadow:0 40px 90px rgba(0,0,0,.4);visibility:hidden;${extra}">${inner}</div>`;
+const lab = s => `<div style="font:700 22px Inter;letter-spacing:.14em;color:#8A8F98;margin-bottom:12px">${s}</div>`;
+const novMark = (s, c = OJ) => `<span style="display:inline-grid;place-items:center;flex:none;width:${s}px;height:${s}px;border-radius:${s * .3}px;background:${c}">${ic('recycle', s * .62, '#fff', 2.2)}</span>`;
+const chip = (id, txt, icn, bg, col, extra = '') => `<div id="${id}" class="abs" style="display:flex;align-items:center;gap:12px;padding:14px 26px;border-radius:40px;background:${bg};color:${col};font:800 32px Inter;white-space:nowrap;box-shadow:0 14px 34px rgba(0,0,0,.3);opacity:0;${extra}">${icn ? ic(icn, 34, col, 3) : ''}${txt}</div>`;
+const CATS = ['Électroménager', 'Meubles', 'Vêtements', 'Téléphones'];
+const DESC = 'Frigo, il marche bien.';
+// protected payment diagram: buyer, OJA, seller
+const NA = LY([380, 380], [540, 360]), NS = LY([960, 380], [540, 760]), NT = LY([1540, 380], [540, 1160]);
+const node = (id, [x, y], inner, lbl, bg = '#fff') => `<div id="${id}" class="abs" style="left:${x - 85}px;top:${y - 85}px;width:170px;height:170px;border-radius:50%;background:${bg};display:grid;place-items:center;box-shadow:0 24px 60px rgba(0,0,0,.4)">${inner}</div>
+<div class="abs" style="left:${x - 160}px;width:320px;top:${y + 100}px;text-align:center;font:800 36px Poppins;color:#fff">${lbl}</div>`;
+document.documentElement.style.width = document.body.style.width = VW_ + 'px'; document.documentElement.style.height = document.body.style.height = VH_ + 'px';
+stage.style.width = VW_ + 'px'; stage.style.height = VH_ + 'px';
+H += `<canvas id="atm" class="abs" style="left:0;top:0" width="${VW_}" height="${VH_}"></canvas>
+<div id="clk" class="abs" style="left:0;right:0;top:250px;text-align:center;color:#fff;visibility:hidden"><div id="clkd" style="font:600 30px Inter;letter-spacing:.32em;opacity:.8">SAMEDI</div><div id="clkt" style="font:800 230px Poppins;letter-spacing:-.03em;line-height:1;text-shadow:0 0 60px rgba(255,255,255,.35)">08:00</div></div>
+${line('L0', 'Le vieux frigo dort dans ta cour.', 640, 64, 'left:900px;right:60px', 1480)}${line('L1', 'Il marche encore… mais il prend toute la place.', 640, 64, 'left:900px;right:60px', 1480)}
+<div id="gch" class="abs" style="left:${LY(120, 60)}px;top:${LY(170, 960)}px;display:flex;align-items:center;gap:12px;padding:12px 24px;border-radius:30px;background:rgba(0,0,0,.55);color:#fff;font:700 28px Inter;visibility:hidden">${ic('users', 32, '#fff', 2.4)}Groupe · Ventes du quartier</div>
+${bub('g0', 'Frigo à vendre. Il marche bien.', 'r', LY(330, 330), LY(250, 1040))}${bub('g1', 'Je le prends&nbsp;!', 'l', LY(120, 60), LY(390, 1170), avatar(70, '#D0D5DD', '#667085'))}${bub('g2', 'Envoie-moi d\'abord<br>les frais de transport.', 'l', LY(120, 60), LY(510, 1290), avatar(70, '#D0D5DD', '#667085'))}
+${line('L2', 'Tu le proposes dans un groupe.', 820, 64, 'left:60px;right:960px', 1560)}
+${card('mc', LY(610, 90), LY(110, 340), LY(700, 900), LY(620, 820), `<div style="display:flex;align-items:center;gap:20px;padding:30px 36px;border-bottom:2px solid #E7E2D8">${avatar(76, '#D0D5DD', '#667085')}<div><div style="font:800 36px Poppins">Vendeur</div><div style="font:600 26px Inter;color:#8A8F98">Téléphone d'occasion</div></div></div>
+<div style="padding:10px 36px">${msg('m0', 'C\'est payé.', 'r')}${msg('m1', 'Tu livres quand&nbsp;?', 'r')}${msg('m2', 'Allô&nbsp;?', 'r')}${msg('m3', 'Tu es là&nbsp;?', 'r')}
+<div id="m4" style="text-align:center;margin-top:26px;opacity:0"><span style="padding:10px 24px;border-radius:20px;background:#E7E2D8;font:700 26px Inter;color:#6B6458">Aucune réponse</span></div></div>`, 'background:#F6F2EA;filter:grayscale(.55) sepia(.15)')}
+${line('L3', 'Tu connais l\'histoire.', 800, 64, '', 1300)}${line('L4', 'Une fois, tu as payé d\'avance…', 800, 64, '', 1300)}${line('L5', 'et le vendeur n\'a *plus jamais répondu.*', 800, 64, '', 1300)}
+${line('L6', 'Le frigo est toujours là.', 930)}${line('L7', 'Et la *confiance* est partie.', 930)}
+${line('L8', 'Et si l\'argent attendait *la livraison&nbsp;?*', 700, 84, '', 1280, 76)}
+<div id="bsh" class="abs" style="left:${LY(960, 540) - 90}px;top:${LY(450, 1040) - 200}px;width:180px;height:200px;visibility:hidden;filter:drop-shadow(0 24px 40px rgba(255,107,0,.6))"><svg width="180" height="200" viewBox="0 0 24 26"><path d="M12 1 3 4.5v7c0 6 3.8 10.6 9 12.5 5.2-1.9 9-6.5 9-12.5v-7z" fill="${OJ}" stroke="#fff" stroke-width=".9"/></svg>
+<div class="abs" style="left:50px;top:52px;width:80px;height:80px;display:grid;place-items:center">${ic('lock', 72, '#fff', 2.4)}</div></div>
+<div id="bug" class="abs" style="left:60px;top:46px;display:flex;align-items:center;gap:14px;font:900 46px Poppins;color:#fff;opacity:0"><img src="assets/mk_logo.png" style="width:66px;height:66px">OJA</div>
+${card('pc', LY(340, 60), LY(110, 200), LY(1240, 960), LY(660, 1180), `<div style="padding:${LY('40px 48px', '44px 50px')}">
+<div style="display:flex;align-items:center;gap:18px;font:800 46px Poppins">${novMark(64)}Publier un objet<span style="margin-left:auto;font:800 26px Inter;letter-spacing:.12em;color:${OJ}">NOVOJA</span></div>
+<div style="display:flex;flex-direction:${LY('row', 'column')};gap:${LY(48, 36)}px;margin-top:${LY(34, 40)}px">
+<div style="width:${LY(560, 860)}px">${lab('PHOTOS')}<div style="display:flex;gap:16px">${[1, 2, 3].map(i => `<img id="ph${i}" src="assets/nov/p${i}.jpg" style="width:${LY(160, 200)}px;height:${LY(160, 200)}px;border-radius:20px;object-fit:cover;opacity:0">`).join('')}
+<div style="width:${LY(160, 200)}px;height:${LY(160, 200)}px;border-radius:20px;border:3px dashed #D0D5DD;display:grid;place-items:center">${ic('camera', 46, '#B0B5BD', 2)}</div></div>
+<div style="height:${LY(30, 36)}px"></div>${lab('DESCRIPTION')}<div id="fds" style="height:84px;border-radius:22px;border:3px solid #E4E4E7;display:flex;align-items:center;padding:0 26px;font:700 36px Inter;color:#111"><span id="fdt"></span><span id="fcar" style="width:3px;height:44px;background:${OJ};margin-left:3px"></span></div></div>
+<div style="width:${LY(536, 860)}px">${lab('TYPE D\'ANNONCE')}<div style="display:flex;height:84px;border-radius:22px;background:#F1F2F4;padding:6px;gap:6px">${['Vendre', 'Donner'].map((s, i) => `<div id="ty${i}" style="flex:1;border-radius:18px;display:grid;place-items:center;font:800 32px Inter;color:#667085">${s}</div>`).join('')}</div>
+<div style="height:${LY(30, 36)}px"></div>${lab('CATÉGORIE')}<div style="display:flex;flex-wrap:wrap;gap:14px">${CATS.map((s, i) => `<span id="ct${i}" style="padding:12px 24px;border-radius:30px;border:3px solid #E4E4E7;font:700 28px Inter;color:#444">${s}</span>`).join('')}</div>
+<div id="onl" style="margin-top:${LY(30, 40)}px;display:inline-flex;align-items:center;gap:14px;padding:16px 30px;border-radius:40px;background:${GR};color:#fff;font:800 34px Inter;opacity:0">${ic('check', 38, '#fff', 3.2)}Annonce en ligne</div></div></div></div>`)}
+${line('L9', 'Sur NOVOJA, dans OJA, tu publies *ton objet.*', 820, 64, '', 1460)}
+${card('cc', LY(560, 90), LY(140, 360), LY(800, 900), LY(560, 700), `<div style="display:flex;align-items:center;gap:20px;padding:30px 36px;border-bottom:2px solid #EEE">${avatar(76, '#BFDBFE')}<div><div style="font:800 36px Poppins">Acheteur</div><div style="font:600 26px Inter;color:#8A8F98;display:flex;align-items:center;gap:8px">${novMark(30)}Discussion NOVOJA · Frigo</div></div></div>
+<div style="padding:16px 36px">${msg('c0', 'Il marche toujours&nbsp;?', 'l')}${msg('c1', 'Oui, il marche bien.', 'r')}${msg('c2', 'Je le prends. Je paie dans l\'appli.', 'l')}</div>`)}
+${line('L10', 'L\'acheteur discute avec toi, *dans l\'appli.*', 800, 64, '', 1260)}
+<div id="esc" class="abs" style="left:0;top:0;width:${VW_}px;height:${VH_}px;visibility:hidden">
+<svg class="abs" style="left:0;top:0" width="${VW_}" height="${VH_}"><path d="${VERT ? `M200,${NT[1]} L200,${NA[1]}` : `M${NT[0]},640 L${NA[0]},640`}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="5" stroke-dasharray="4 16" stroke-linecap="round"/>
+<path id="ln0" d="M${NA[0]},${NA[1]} L${NS[0]},${NS[1]}" stroke="rgba(255,255,255,.25)" stroke-width="4"/><path id="ln1" d="M${NS[0]},${NS[1]} L${NT[0]},${NT[1]}" stroke="rgba(255,255,255,.25)" stroke-width="4"/></svg>
+${node('nA', NA, avatar(120, '#BFDBFE'), 'Acheteur')}${node('nT', NT, avatar(120, '#FDE68A'), 'Toi')}
+<img id="moto" src="assets/moto.png" class="abs" style="left:0;top:0;width:200px;opacity:0">
+<div id="coin" class="abs" style="left:0;top:0;width:100px;height:100px;margin:-50px;border-radius:50%;background:#fff;border:6px solid ${OJ};display:grid;place-items:center;box-shadow:0 0 40px rgba(255,170,90,.8);opacity:0">${ic('wallet', 50, OJ, 2.4)}</div>
+<div id="nS" class="abs" style="left:${NS[0] - 100}px;top:${NS[1] - 112}px;width:200px;height:224px;filter:drop-shadow(0 24px 50px rgba(255,107,0,.55))"><svg width="200" height="224" viewBox="0 0 24 26"><path d="M12 1 3 4.5v7c0 6 3.8 10.6 9 12.5 5.2-1.9 9-6.5 9-12.5v-7z" fill="${OJ}" stroke="#fff" stroke-width=".8"/></svg>
+<div id="slk" class="abs" style="left:58px;top:58px;width:84px;height:84px;display:grid;place-items:center">${ic('unlock', 76, '#fff', 2.4)}</div><div id="slc" class="abs" style="left:58px;top:58px;width:84px;height:84px;display:grid;place-items:center;opacity:0">${ic('lock', 76, '#fff', 2.4)}</div></div>
+<div class="abs" style="left:${NS[0] - 160}px;width:320px;top:${NS[1] + 122}px;text-align:center;font:800 36px Poppins;color:#fff">OJA</div>
+${chip('kg', 'Argent gardé', 'lock', '#111', '#fff', VERT ? `left:${NS[0] + 130}px;top:${NS[1] - 36}px` : `left:${NS[0] - 150}px;top:${NS[1] - 200}px`)}
+${chip('kl', 'Livraison OJA', '', 'rgba(0,0,0,.6)', '#fff', VERT ? 'left:60px;top:1400px' : `left:${(NA[0] + NT[0]) / 2 - 130}px;top:690px`)}
+${chip('kr', 'Objet reçu', 'check', GR, '#fff', VERT ? `left:${NA[0] + 130}px;top:${NA[1] - 36}px` : `left:${NA[0] - 120}px;top:${NA[1] - 170}px`)}
+${chip('kp', 'Tu es payé', 'check', GR, '#fff', VERT ? `left:${NT[0] + 130}px;top:${NT[1] - 36}px` : `left:${NT[0] - 130}px;top:${NT[1] - 170}px`)}</div>
+${line('L11', 'Il paie… mais c\'est *OJA qui garde l\'argent.*', 860, 64, '', 1560)}${line('L12', 'OJA peut même *livrer.*', 860, 64, '', 1560)}${line('L13', 'Il reçoit le frigo, il confirme.', 860, 64, '', 1560)}${line('L14', 'Et là seulement, *tu es payé.*', 860, 64, '', 1560)}
+${card('dc', LY(560, 90), LY(170, 400), LY(800, 900), LY(500, 620), `<div style="padding:${LY('40px 46px', '48px 52px')}"><div style="display:flex;align-items:center;gap:20px;font:800 50px Poppins"><span style="width:84px;height:84px;border-radius:50%;background:${OJ};display:grid;place-items:center">${ic('users', 46, '#fff', 2.4)}</span>Un souci&nbsp;?</div>
+${[['shield', 'L\'équipe OJA arbitre'], ['back', 'L\'acheteur est remboursé si besoin']].map(([icn, s], i) => `<div id="dr${i}" style="display:flex;align-items:center;gap:18px;margin-top:${i ? 22 : 40}px;padding:22px 26px;border-radius:24px;background:#F6F7F9;font:700 34px Inter;opacity:0">${ic(icn, 40, OJ, 2.6)}${s}</div>`).join('')}
+<div id="dr2" style="margin-top:20px;font:600 24px Inter;color:#8A8F98;opacity:0">Remboursement au numéro qui a payé.</div></div>`)}
+${line('L15', 'Un souci&nbsp;? *L\'équipe OJA* arbitre.', 800, 64, '', 1260)}
+<div id="dph" class="abs" style="left:60px;top:330px;width:960px;height:540px;border-radius:32px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.5);visibility:hidden"><img src="assets/nov/h_don.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+<div id="dn" class="abs" style="left:${LY(1440, 60)}px;top:${LY(70, 930)}px;width:${LY(420, 960)}px;text-align:${LY('right', 'left')};visibility:hidden"><div id="dnb" style="display:inline-flex;align-items:center;gap:14px;padding:16px 32px;border-radius:40px;background:${GR};color:#fff;font:900 44px Poppins">${ic('heart', 44, '#fff', 2.8)}DON</div>
+<div style="display:flex;flex-wrap:wrap;justify-content:${LY('flex-end', 'flex-start')};gap:16px;margin-top:24px">${['Vêtements', 'Livres', 'Bébé'].map((s, i) => `<span id="dc${i}" style="padding:14px 28px;border-radius:30px;background:rgba(255,255,255,.94);color:#111;font:700 32px Inter;opacity:0">${s}</span>`).join('')}</div></div>
+${line('L16', 'Ce qui ne se vend pas, *tu peux le donner.*', 930, 64, '', 1500)}
+<div id="fin" class="abs" style="left:0;top:0;width:${VW_}px;height:${VH_}px;visibility:hidden">
+<div class="abs" style="left:${LY(1000, 70)}px;top:${LY(190, 1090)}px;width:${LY(880, 940)}px"><div style="display:flex;align-items:center;gap:26px"><span id="fl">${novMark(140)}</span><div id="fw" style="font:900 136px Poppins;letter-spacing:-.04em;line-height:1;color:#fff">NOVOJA</div></div>
+<div id="fsub" style="display:flex;align-items:center;gap:14px;margin-top:18px;font:700 40px Poppins;color:rgba(255,255,255,.85)">dans l'appli<img src="assets/mk_logo.png" style="width:54px;height:54px">OJA</div>
+<div id="fs" style="font:800 76px Poppins;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:34px">Ce qui dort chez toi<br><span style="color:${OJ}">vaut de l'argent.</span></div>
+<div id="fst" style="display:flex;gap:24px;margin-top:48px">${[['phone', 'Télécharger sur', 'App Store'], ['play', 'Disponible sur', 'Google Play']].map(([icn, sm, big]) => `<div style="width:360px;height:104px;border-radius:26px;background:#141414;border:2px solid #333;display:flex;align-items:center;gap:18px;padding:0 26px;color:#fff;white-space:nowrap;box-sizing:border-box">${ic(icn, 46, '#fff', 1.8)}<div><div style="font:500 20px Inter;opacity:.75">${sm}</div><div style="font:700 34px Poppins;line-height:1.1">${big}</div></div></div>`).join('')}</div></div>
+<div id="fm" class="abs" style="left:${LY(120, 60)}px;right:${LY(120, 60)}px;top:${LY(1000, 1790)}px;text-align:center;font:500 22px Inter;line-height:1.35;color:rgba(255,255,255,.62)">Paiement protégé NOVOJA : l'argent est remis au vendeur après confirmation de réception. Litiges arbitrés par l'équipe OJA. Personnes des images générées par IA.</div></div>
+<div id="flash" class="lay" style="width:${VW_}px;height:${VH_}px;background:radial-gradient(circle at 50% 45%,#fff,rgba(255,170,90,.85) 35%,rgba(255,107,0,0) 70%);opacity:0;z-index:40"></div>
+<div id="fade" style="width:${VW_}px;height:${VH_}px"></div>`;
+stage.innerHTML = H;
+
+/* ---------- atmosphere: palette by time of day, glow blobs, bokeh, extras ---------- */
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+const PAL = {
+  dawn: ['#1c0b03', '#a8501a', '#ff9a3c', '#ffd27a'], noon: ['#2e2210', '#a8792e', '#fff1c2', '#ffd27a'], mem: ['#07080b', '#1d2027', '#6b7280', '#9aa3b2'],
+  dusk: ['#120822', '#5a2a6e', '#c46bff', '#ff7aa8'], void: ['#000000', '#040302', '#ff6b00', '#ff9a4d'], after: ['#1f1206', '#8a4a14', '#ffb35c', '#ffd9a0'],
+  plum: ['#0b0410', '#2a0d26', '#ff6b00', '#ff9a4d'], dark: ['#0d0502', '#3d1503', '#ff6b00', '#ff9a4d']
+};
+const PKEYS = () => [[0, 'dawn'], [V('onze') - .2, 'noon'], [V('histoire') - .2, 'mem'], [V('dixhuit') - .2, 'dusk'], [V('siArg') - .2, 'void'], [V('surN') - .05, 'dark'],
+  [V('ach') - .2, 'plum'], [V('paie') - .2, 'dark'], [V('souci') - .2, 'plum'], [V('donne') - .2, 'after'], [V('endA') - .3, 'dark']];
+function palette(t) {
+  const K = PKEYS(); let i = 0; while (i + 1 < K.length && t >= K[i + 1][0]) i++;
+  const cur = PAL[K[i][1]], prv = PAL[K[Math.max(0, i - 1)][1]], k = i ? P(t, K[i][0], .8, E.ioC) : 1;
+  return [cur.map((c, j) => mix(hex(prv[j]), hex(c), k)), K[i][1], k];
+}
+const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const BOK = (() => { const r = rng(4); return Array.from({ length: 70 }, () => ({ x: r() * VW_, y: r() * VH_, z: .3 + r() * .9, s: .2 + r(), ph: r() * 6.28 })); })();
+function atmosphere(t) {
+  const c = el('atm').getContext('2d'), [p, name] = palette(t);
+  const g = c.createLinearGradient(0, 0, 0, VH_); g.addColorStop(0, rgba(p[0], 1)); g.addColorStop(1, rgba(p[1], 1)); c.fillStyle = g; c.fillRect(0, 0, VW_, VH_);
+  heroine(c, t, p);
+  c.save(); c.globalCompositeOperation = 'lighter';
+  [[.25, .3, 700, 2], [.75, .65, 800, 3], [.5, 1.05, 900, 2]].forEach(([fx, fy, R, ci], i) => {
+    const x = VW_ * fx + Math.sin(t * .23 + i * 2) * 120, y = VH_ * fy + Math.cos(t * .19 + i) * 60, gg = c.createRadialGradient(x, y, 0, x, y, R);
+    gg.addColorStop(0, rgba(p[ci], name === 'void' ? .05 : name === 'mem' ? .12 : .28)); gg.addColorStop(1, rgba(p[ci], 0)); c.fillStyle = gg; c.fillRect(x - R, y - R, 2 * R, 2 * R); });
+  BOK.forEach(b => { const x = (b.x + t * 20 * b.z) % (VW_ + 80) - 40, y = b.y + Math.sin(t * .5 + b.ph) * 20, r = 6 + b.s * 34 * b.z, a = (name === 'void' ? .05 : .2) * b.z * (.6 + .4 * Math.sin(t * 1.3 + b.ph));
+    const gg = c.createRadialGradient(x, y, 0, x, y, r); gg.addColorStop(0, rgba(p[3], a)); gg.addColorStop(.7, rgba(p[3], a * .5)); gg.addColorStop(1, rgba(p[3], 0)); c.fillStyle = gg; c.fillRect(x - r, y - r, 2 * r, 2 * r); });
+  c.restore();
+  const vis = (a, b) => P(t, a - .3, .6) * (1 - P(t, b - .3, .6));
+  // 08:00: morning sun over the courtyard
+  let a = vis(0, V('onze')); if (a > 0) { const sx = LY(1500, 760), y = LY(380, 520) - P(t, 0, 5, E.oQ) * 80, gg = c.createRadialGradient(sx, y, 0, sx, y, LY(560, 520)); gg.addColorStop(0, `rgba(255,230,170,${.5 * a})`); gg.addColorStop(.3, `rgba(255,160,70,${.22 * a})`); gg.addColorStop(1, 'rgba(255,120,40,0)'); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = gg; c.fillRect(0, 0, VW_, VH_); c.restore(); }
+  // « Et si l'argent attendait la livraison ? »: dashed vault rings turning around the shield
+  a = vis(V('siArg'), V('surN')); if (a > 0) { const cx = LY(960, 540), cy = LY(350, 940); c.save(); c.globalCompositeOperation = 'lighter'; c.lineCap = 'round';
+    [[170, 1, [6, 18]], [250, -.6, [2, 22]], [340, .4, [30, 26]]].forEach(([R, sp, dash], i) => { const k = P(t, V('siArg') + i * .2, .8, E.oQ); c.setLineDash(dash); c.lineDashOffset = -t * 40 * sp; c.strokeStyle = `rgba(255,140,60,${(.5 - i * .12) * a * k})`; c.lineWidth = 4 - i; c.beginPath(); c.arc(cx, cy, R * lerp(.7, 1, k), 0, Math.PI * 2); c.stroke(); });
+    c.setLineDash([]); const lp = P(t, V('livraison') - .1, .5, E.oB); if (lp > 0) { const R = 60 + lp * 420, gg = c.createRadialGradient(cx, cy, 0, cx, cy, R); gg.addColorStop(0, `rgba(255,200,150,${.6 * a})`); gg.addColorStop(.25, `rgba(255,120,30,${.3 * a})`); gg.addColorStop(1, 'rgba(255,107,0,0)'); c.fillStyle = gg; c.fillRect(0, 0, VW_, VH_); }
+    c.restore(); }
+  // the features: slow light rays behind
+  a = .7 * vis(V('surN') - .1, V('surN') + 1.6) + .3 * vis(V('surN') + 1.4, V('donne')); if (a > 0) { c.save(); c.globalCompositeOperation = 'lighter'; c.translate(LY(960, 540), LY(440, 860));
+    for (let k = 0; k < 18; k++) { c.rotate(Math.PI * 2 / 18); const gg = c.createLinearGradient(0, 0, 1300, 0); gg.addColorStop(0, `rgba(255,200,140,${.22 * a})`); gg.addColorStop(1, 'rgba(255,107,0,0)');
+      c.save(); c.rotate(t * .08); c.fillStyle = gg; c.beginPath(); c.moveTo(0, 0); c.lineTo(1300, -40); c.lineTo(1300, 40); c.closePath(); c.fill(); c.restore(); }
+    c.restore(); }
+}
+
+// [from, to, photo, side of the hero]
+const HSHOW = () => [[-.5, V('onze') - .1, 'frigo', 'L'], [V('onze') - .1, V('histoire') - .1, 'groupe', 'R'], [V('dixhuit') - .1, V('siArg') - .1, 'soir', 'N'], [V('donne') - .1, V('endA') - .3, 'don', 'N'], [V('endA') - .3, DUR2 + 1, 'fin', 'L']];
+function heroine(c, t, p) {
+  HSHOW().forEach(([a, b, k, side]) => {
+    const al = P(t, a - .2, .6, E.ioC) * (1 - P(t, b - .35, .45, E.iC)); if (al <= 0) return;
+    const im = HER[k], sc = 1.04 + .06 * clamp((t - a) / Math.min(b - a, 7)), w = VW_ * sc, h = VH_ * sc;
+    c.save(); c.globalAlpha = al * .95;
+    if (VERT && (k === 'soir' || k === 'don')) {
+      const s2 = VH_ / 1080 * sc, cx = k === 'soir' ? lerp(1500, 620, P(t, V('dixhuit') + .4, V('confiance') + .5 - V('dixhuit'), E.ioC)) : 960;
+      if (k === 'don') c.filter = 'blur(16px) brightness(.7)';
+      c.drawImage(im, 540 - cx * s2, (VH_ - 1080 * s2) / 2, 1920 * s2, 1080 * s2); c.filter = 'none';
+    } else c.drawImage(im, (VW_ - w) / 2 + (side === 'L' ? 20 : -20) * (1 - sc), (VH_ - h) / 2, w, h);
+    c.globalAlpha = al * (k === 'fin' ? .18 : .3); c.globalCompositeOperation = 'overlay'; c.fillStyle = rgba(p[1], 1); c.fillRect(0, 0, VW_, VH_);
+    c.globalCompositeOperation = 'source-over'; c.globalAlpha = al;
+    if (VERT) { const tg = c.createLinearGradient(0, 0, 0, 480); tg.addColorStop(0, rgba(p[0], .7)); tg.addColorStop(1, rgba(p[0], 0)); c.fillStyle = tg; c.fillRect(0, 0, VW_, 480);
+      const bg = c.createLinearGradient(0, 960, 0, VH_); bg.addColorStop(0, rgba(p[0], 0)); bg.addColorStop(.45, rgba(p[0], .75)); bg.addColorStop(1, rgba(p[0], .95)); c.fillStyle = bg; c.fillRect(0, 960, VW_, VH_ - 960); c.restore(); return; }
+    // side darkening for the texts (none on the dusk and gift shots; on the last shot it comes after a beat, so the fridge leaving is seen)
+    if (side !== 'N') { const g = side === 'L' ? c.createLinearGradient(1920, 0, 600, 0) : c.createLinearGradient(0, 0, 1320, 0);
+      g.addColorStop(0, rgba(p[0], k === 'fin' ? .94 : .9)); g.addColorStop(.45, rgba(p[0], k === 'fin' ? .72 : .55)); g.addColorStop(1, rgba(p[0], 0)); c.fillStyle = g;
+      c.globalAlpha = al * (k === 'fin' ? P(t, V('endA') + .1, .7, E.ioC) : 1); c.fillRect(0, 0, 1920, 1080); c.globalAlpha = al; }
+    const v = c.createLinearGradient(0, 600, 0, 1080); v.addColorStop(0, rgba(p[0], 0)); v.addColorStop(1, rgba(p[0], .7)); c.fillStyle = v; c.fillRect(0, 600, 1920, 480);
+    c.restore();
+  });
+}
+
+/* ---------- scene helpers ---------- */
+function pop(id, t, a, b, dy = 60) {
+  const e = el(id), on = t >= a && t < b; e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return 0;
+  const p = P(t, a, .55, E.oB), q = P(t, b - .35, .35, E.iC); e.style.opacity = clamp(p * 1.5) * (1 - q); e.style.transform = `translateY(${(1 - p) * dy}px) scale(${lerp(.85, 1, p) * lerp(1, .94, q)})`; e.style.filter = `blur(${q * 10}px)`;
+  return p;
+}
+const popIn = (e, p, s0 = .4) => { e.style.opacity = clamp(p * 1.5); e.style.transform = `scale(${lerp(s0, 1, p)})`; };
+const slideIn = (e, p) => { e.style.opacity = clamp(p * 1.5); e.style.transform = `translateY(${(1 - p) * 24}px)`; };
+function clock(t) {
+  // [from, to, time, mode, centre x in 16:9]; in 9:16 every stamp sits at the top (the photos fill the frame)
+  const S = [[V('t0') - .2, V('onze') - .15, '08:00', 'big', 1340], [V('onze') - .1, VERT ? V('propose') - .1 : V('histoire') - .15, '11:00', 'top', 640], [V('dixhuit') - .1, V('siArg') - .15, '18:00', 'top', 1110]];
+  const s = S.find(([a, b]) => t >= a && t < b), e = el('clk');
+  if (!s) { e.style.visibility = 'hidden'; return; }
+  const [a, b, txt, mode0, cx0] = s, cx = LY(cx0, 540), mode = VERT ? (txt === '18:00' ? 'vtop' : 'vlow') : mode0, p = P(t, a, .6, E.oQ), q = P(t, b - .35, .35, E.iC); e.style.visibility = 'visible'; e.style.left = (cx - 600) + 'px'; e.style.right = 'auto'; e.style.width = '1200px';
+  el('clkt').textContent = txt; el('clkt').style.fontSize = mode === 'big' ? '230px' : mode[0] === 'v' ? '160px' : '120px'; el('clkd').style.display = mode === 'top' ? 'none' : 'block';
+  e.style.top = mode === 'big' ? '250px' : mode === 'vtop' ? '110px' : mode === 'vlow' ? '1150px' : '50px'; e.style.opacity = p * (1 - q); e.style.filter = `blur(${(1 - p) * 20 + q * 14}px)`; e.style.transform = `scale(${lerp(1.08, 1, p)})`;
+}
+function group(t) {
+  const b = V('histoire') - .1, ch = el('gch'), on = t >= V('propose') - .2 && t < b; ch.style.visibility = on ? 'visible' : 'hidden'; if (on) ch.style.opacity = P(t, V('propose') - .2, .4) * (1 - P(t, b - .35, .35));
+  [['g0', V('propose') + .3], ['g1', V('prends') - .1], ['g2', V('prends') + 1.1]].forEach(([id, a]) => {
+    const e = el(id), on = t >= a && t < b; e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+    const p = P(t, a, .45, E.oB), q = P(t, b - .35, .35, E.iC); e.style.opacity = clamp(p * 1.5) * (1 - q); e.style.transform = `translateY(${(1 - p) * 40}px) scale(${lerp(.8, 1, p)})`; e.style.filter = `blur(${q * 18}px)`;
+  });
+}
+function memory(t) {
+  const p = pop('mc', t, V('histoire') - .1, V('dixhuit') - .1, 60); if (!p) return;
+  [[0, V('avance') + .5], [1, V('avance') + 1.3], [2, V('vendeur') + .2], [3, V('vendeur') + .9]].forEach(([i, a]) => slideIn(el('m' + i), P(t, a, .35, E.oB)));
+  el('m4').style.opacity = P(t, V('vendeur') + 1.6, .5);
+}
+function shieldDrop(t) {
+  const e = el('bsh'), a = V('livraison') - .45, b = V('surN') - .1, on = t >= a && t < b; e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  const k = P(t, a, .4, E.iC), bo = P(t, a + .4, .35, E.oB), q = P(t, b - .35, .35, E.iC);
+  e.style.transform = `translateY(${(1 - k) * -700}px) scale(${k < 1 ? 1 : lerp(1.15, 1, bo)},${k < 1 ? 1.1 : lerp(.85, 1, bo)})`; e.style.transformOrigin = '50% 100%'; e.style.opacity = 1 - q;
+}
+function publish(t) {
+  const p = pop('pc', t, V('surN') - .1, V('ach') + .4, 80); if (!p) return;
+  [1, 2, 3].forEach(i => popIn(el('ph' + i), P(t, V('photos') + (i - 1) * .16, .4, E.oB), .5));
+  const n = Math.round(P(t, V('desc'), .7, E.lin) * DESC.length); el('fdt').textContent = DESC.slice(0, n);
+  el('fcar').style.opacity = n < DESC.length && t > V('desc') - .4 ? (Math.floor(t * 3) % 2 === 0 ? 1 : .2) : 0; el('fds').style.borderColor = t >= V('desc') - .1 && t < V('ligne') ? OJ : '#E4E4E7';
+  const sel = t >= V('publies'); el('ty0').style.background = sel ? OJ : 'transparent'; el('ty0').style.color = sel ? '#fff' : '#667085'; el('ty1').style.background = 'transparent';
+  const cs = P(t, V('publies') + .5, .3, E.oB); CATS.forEach((_, i) => { const e = el('ct' + i), on = i === 0 && cs > 0; e.style.background = on ? OJ : '#fff'; e.style.color = on ? '#fff' : '#444'; e.style.borderColor = on ? OJ : '#E4E4E7'; e.style.transform = `scale(${on ? lerp(1.12, 1, cs) : 1})`; });
+  popIn(el('onl'), P(t, V('ligne'), .45, E.oB), .5);
+}
+function chat(t) {
+  const p = pop('cc', t, V('ach') - .1, V('paie') + .2, 80); if (!p) return;
+  [[0, V('ach') + .5], [1, V('ach') + 1.3], [2, V('paie') - .7]].forEach(([i, a]) => slideIn(el('c' + i), P(t, a, .35, E.oB)));
+}
+function escrow(t) {
+  const on = t >= V('paie') - .1 && t < V('souci') + .45, e = el('esc'); e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  e.style.opacity = P(t, V('paie') - .1, .45) * (1 - P(t, V('souci') + .1, .35));
+  ['nA', 'nS', 'nT'].forEach((id, i) => { const k = P(t, V('paie') - .1 + i * .12, .5, E.oB); el(id).style.transform = `scale(${lerp(.4, 1, k)})`; el(id).style.opacity = clamp(k * 1.5); });
+  // the money: buyer -> OJA (kept), then OJA -> seller once the buyer confirms
+  const T2 = V('confirme') + .75, k1 = P(t, V('paie') + .2, .8, E.ioC), k2 = P(t, T2, .7, E.ioC), cn = el('coin');
+  const [x, y] = k2 > 0 ? [lerp(NS[0], NT[0], k2), lerp(NS[1], NT[1], k2)] : [lerp(NA[0], NS[0], k1), lerp(NA[1], NS[1], k1)];
+  cn.style.opacity = t >= V('paie') + .1 && (k1 < 1 || k2 > 0) ? 1 : 0; cn.style.transform = `translate(${x}px,${y}px) scale(${k2 > 0 ? lerp(.7, 1, k2) : lerp(1, .7, k1)})`;
+  const locked = t >= V('garde') - .2 && t < T2 - .1; el('slc').style.opacity = locked ? 1 : 0; el('slk').style.opacity = locked ? 0 : 1;
+  el('nS').style.transform = `scale(${1 + .1 * Math.sin(Math.PI * clamp((t - V('garde') + .2) / .35)) + .1 * Math.sin(Math.PI * clamp((t - T2 + .1) / .35))})`;
+  el('ln0').style.stroke = k1 > 0 && k1 < 1 ? 'rgba(255,170,90,.9)' : 'rgba(255,255,255,.25)'; el('ln1').style.stroke = k2 > 0 && k2 < 1 ? 'rgba(255,170,90,.9)' : 'rgba(255,255,255,.25)';
+  popIn(el('kg'), P(t, V('garde') - .1, .4, E.oB), .5); el('kg').style.opacity = clamp(P(t, V('garde') - .1, .4, E.oB) * 1.5) * (1 - P(t, T2 - .1, .3));
+  // OJA delivery from the seller to the buyer
+  const km = P(t, V('livrer') - .1, V('recoit') + .5 - V('livrer'), E.ioC), mo = el('moto');
+  const mx = VERT ? 200 : lerp(NT[0], NA[0], km), my = VERT ? lerp(NT[1], NA[1], km) : 640;
+  mo.style.opacity = km > 0 && t < V('confirme') + .3 ? 1 - P(t, V('confirme'), .3) : 0; mo.style.transform = `translate(${mx - 100}px,${my - 130}px) scaleX(${VERT ? 1 : -1})`;
+  el('kl').style.opacity = P(t, V('livrer'), .4) * (1 - P(t, V('confirme'), .3));
+  popIn(el('kr'), P(t, V('confirme') - .05, .4, E.oB), .5);
+  el('nA').style.boxShadow = t >= V('confirme') ? `0 0 0 8px ${GR},0 24px 60px rgba(0,0,0,.4)` : '0 24px 60px rgba(0,0,0,.4)';
+  popIn(el('kp'), P(t, T2 + .75, .4, E.oB), .5);
+  el('nT').style.boxShadow = t >= T2 + .7 ? `0 0 0 8px ${GR},0 0 60px rgba(18,183,106,.6)` : '0 24px 60px rgba(0,0,0,.4)';
+}
+function dispute(t) {
+  const p = pop('dc', t, V('souci') + .2, V('donne') - .1, 80); if (!p) return;
+  slideIn(el('dr0'), P(t, V('arbitre'), .4, E.oB)); slideIn(el('dr1'), P(t, V('rembourse'), .4, E.oB)); el('dr2').style.opacity = P(t, V('rembourse') + .5, .4);
+}
+function gift(t) {
+  const e = el('dn'), a = V('donne') + .1, b = V('endA') - .35, on = t >= a && t < b; if (VERT) pop('dph', t, V('donne') - .1, b, 60);
+  e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  e.style.opacity = 1 - P(t, b - .35, .35); popIn(el('dnb'), P(t, a, .45, E.oB), .5);
+  [0, 1, 2].forEach(i => popIn(el('dc' + i), P(t, V('donner') - .2 + i * .15, .4, E.oB), .5));
+}
+function finale(t) {
+  const on = t >= V('endA') - .3, e = el('fin'); e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  // his smiling photo is drawn by heroine() under the glows; the texts come on the free side
+  const lp = P(t, V('endA') - .2, .6, E.oB); el('fl').style.display = 'inline-block'; el('fl').style.transform = `scale(${lerp(.5, 1, lp)})`; el('fl').style.opacity = clamp(lp * 1.5);
+  el('fw').style.clipPath = `inset(-20% ${100 - P(t, V('endA'), .5, E.oQ) * 100}% -20% 0)`;
+  const sb = P(t, V('endA') + .5, .5, E.oQ); el('fsub').style.opacity = sb; el('fsub').style.transform = `translateY(${(1 - sb) * 20}px)`;
+  const sp = P(t, V('endB'), .7, E.oQ); el('fs').style.opacity = sp; el('fs').style.transform = `translateY(${(1 - sp) * 30}px)`; el('fs').style.filter = `blur(${(1 - sp) * 12}px)`;
+  const st = P(t, V('endB') + 1.9, .6, E.oQ); el('fst').style.opacity = st; el('fst').style.transform = `translateY(${(1 - st) * 30}px)`;
+  el('fm').style.opacity = P(t, V('endB') + 2.3, .6) * .9;
+}
+
+/* ---------- master ---------- */
+window.renderAt = function (t) {
+  atmosphere(t); clock(t); group(t);
+  // A: the fridge that sleeps
+  say('L0', t, V('frigo'), V('marche') - .1); say('L1', t, V('marche'), V('onze') - .15);
+  say('L2', t, V('propose'), V('prends') - .15);
+  memory(t); say('L3', t, V('histoire'), V('avance') - .1); say('L4', t, V('avance'), V('vendeur') - .1); say('L5', t, V('vendeur'), V('dixhuit') - .15);
+  say('L6', t, V('dixhuit') + 1.0, V('confiance') - .1); say('L7', t, V('confiance'), V('siArg') - .15);
+  say('L8', t, V('siArg'), V('surN') - .15); shieldDrop(t);
+  // B: NOVOJA
+  el('bug').style.opacity = P(t, V('surN'), .6) * (1 - P(t, V('donne') - .5, .4));
+  publish(t); say('L9', t, V('surN'), V('ach') - .15);
+  chat(t); say('L10', t, V('ach'), V('paie') - .15);
+  escrow(t); say('L11', t, V('paie'), V('livrer') - .1); say('L12', t, V('livrer'), V('recoit') - .1); say('L13', t, V('recoit'), V('paye') - .1); say('L14', t, V('paye'), V('souci') - .15);
+  dispute(t); say('L15', t, V('souci'), V('donne') - .15);
+  gift(t); say('L16', t, V('donne'), V('endA') - .35);
+  finale(t);
+  let fl = 0;
+  for (const [a, d, m] of [[V('surN') - .2, .35, .7], [V('endA') - .35, .3, .3]]) fl = Math.max(fl, m * Math.sin(Math.PI * clamp((t - a) / d)));
+  O('flash', fl);
+  O('fade', Math.max(1 - P(t, 0, .4, E.lin), P(t, DUR2 - .6, .6, E.lin)));
+};
+
+/* readiness: fonts + images */
+window.ready = (async () => {
+  await document.fonts.ready;
+  await Promise.all([...document.images].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })));
+  for (const im of PRE) if (!im.complete) await new Promise(r => { im.onload = im.onerror = r; });
+  window.renderAt(0);
+  return true;
+})();
+if (location.search.includes('play')) {
+  const a = $('aud'); let t0 = null;
+  const fit = () => { const s = Math.min(innerWidth / 1080, innerHeight / 1920); stage.style.transform = `scale(${s})`; stage.style.transformOrigin = '0 0'; };
+  fit(); addEventListener('resize', fit);
+  const loop = () => { const t = a && !a.paused ? a.currentTime : (t0 === null ? 0 : (performance.now() - t0) / 1000); window.renderAt(t % DUR); requestAnimationFrame(loop); };
+  document.addEventListener('click', () => { a.currentTime = 0; a.play().catch(() => { t0 = performance.now(); }); });
+  window.ready.then(loop);
+}
+</script>
+</body>
+</html>

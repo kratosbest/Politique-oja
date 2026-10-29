@@ -64,3 +64,11 @@ LIEUX = dict(t0='Neuf heures', von='au fond', onze='Onze heures', appelle='Une c
              mots='Et on te trouve', derriere="l'atelier derrière", publics='Les lieux publics', carte='sur la carte', listep='la pharmacie, le marché', marche='le marché', arret="l'arrêt de zem", tous='Ajoutés par',
              deux='Quand deux', valide="l'équipe Odja", publie='le lieu est publié', erreur='Une erreur', signale='Tu la signales',
              endA='>Odja. Le local', endB='>Le local devient')
+
+# key phrases of the NOVOJA film voice (assets/nov/voix_novoja.txt)
+NOVOJA = dict(t0='Samedi', frigo='Le vieux frigo', marche='Il marche', place='mais il prend', onze='Onze heures', propose='Tu le proposes', inconnu='Un inconnu',
+              prends='Je le prends', histoire='Tu connais', avance='Une fois', vendeur='et le vendeur', dixhuit='Dix-huit', confiance='Et la confiance',
+              siArg="Et si l'argent", livraison='la livraison', surN='Sur Novodja', publies='tu publies', photos='quelques photos', desc='une description',
+              ligne="c'est en ligne", ach="L'acheteur discute", paie='Il paie', garde="c'est Odja qui garde", livrer='Odja peut', recoit='Il reçoit',
+              confirme='il confirme', paye='tu es payé', souci='Un souci', arbitre="L'équipe Odja", rembourse="l'acheteur est remboursé",
+              donne='Et ce qui ne', donner='tu peux le donner', endA='>Novodja, dans Odja.', endB='>Ce qui dort')

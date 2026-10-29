@@ -1,0 +1,16 @@
+ElevenLabs, model bytedance-seedream-5-pro, 2K (flow GECcukcXbohw94EK2JQ9).
+Reference portrait (2nd take kept), then each scene generated with that portrait wired in as reference image:
+
+Reference: Cinematic film still, 16:9: portrait of a Beninese man, about 30, living in Cotonou, short black hair with a neat fade, short trimmed beard, warm brown skin with natural texture, wearing a short-sleeved shirt in blue and orange wax print, a thin silver watch, expressive face, calm friendly expression looking at the camera, chest-up, standing on the left third of the frame; the right two thirds is his softly blurred family courtyard with a sandy floor, a painted wall and a gate. Soft natural morning light, shallow depth of field, 50mm lens, rich cinematic colour grading, subtle film grain. No text, no logos.
+
+Every scene starts with: Keep exactly the same man as in the reference image: same face, short hair with a fade, trimmed beard, blue and orange wax-print short-sleeved shirt, silver watch. New scene, cinematic film still 16:9:
+h_frigo.jpg: Saturday morning in his sandy family courtyard in Cotonou, an old white refrigerator stands against the wall, half covered with a faded cloth, dusty; he stands right next to it with his hands on his hips, looking at it with an annoyed, resigned frown. Left third, the old fridge just beside him.
+h_groupe.jpg: late morning, he sits on a white plastic chair in his courtyard, reading a message on his phone, very suspicious and skeptical, one eyebrow raised high, lips pursed, a "seriously?" look. Phone screen seen from behind. Right third; the old covered fridge blurred on the left.
+h_soir.jpg: dusk, he sits on the doorstep of his house, elbows on his knees, tired and disillusioned, sighing, looking at the old white fridge still standing in the courtyard. Left third; the fridge on the right in orange-to-blue dusk light.
+h_don.jpg: bright afternoon at the gate of his courtyard, he hands a bag of neatly folded children's clothes and a small stack of school books to a smiling young mother who holds her little boy's hand.
+h_fin.jpg (16:9): his tidy courtyard where the old fridge used to stand, he holds his phone and laughs at the camera; in the blurred background two men carry the old fridge out through the open gate. Left third.
+h_fin_v.jpg (9:16, generated vertical): same moment, waist up, face in the upper half, calm space at the bottom.
+(All: shallow depth of field, 50mm, rich cinematic colour grading, film grain, no readable text, no logos.)
+
+Vertical crops: h_frigo_v.jpg (648 x 1152 cut at x = 436) and h_groupe_v.jpg (cut at x = 1036), resized to 1080 x 1920. In 9:16 the dusk shot is the 16:9 image panned from the fridge to him, and the gift shot is shown as a photo card over a blurred copy of itself.
+Listing photos p1-p3.jpg: the fridge cut from h_frigo (top, with the cloth) and h_soir (whole fridge, handle detail), 240 x 240.

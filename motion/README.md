@@ -737,3 +737,38 @@ Seules des fonctions **en ligne** sont montrées : ajouter un lieu (nom, catégo
 | 38,1–43,5 s | « Quand deux personnes donnent le même nom au même endroit, ou quand l'équipe Odja le valide, le lieu est publié. » | Deux cartes « Marché du quartier » reliées à la même épingle, badge « ou validé par l'équipe OJA », tampon « PUBLIÉ » |
 | 43,5–45,9 s | « Une erreur sur une fiche ? Tu la signales. » | Fiche du lieu, bouton « Signaler une erreur » → « Signalement envoyé » |
 | 45,9–52 s | « Odja. Le local devient visible. » | La couturière rit avec une cliente, logo, slogan, stores, mention |
+
+## NOVOJA — « Ce qui dort chez toi vaut de l'argent », film (16:9 et 9:16, 57 s)
+
+Il existe deux versions :
+- `OJA_NOVOJA_CeQuiDort_16x9.mp4` (1920 × 1080) ;
+- `OJA_NOVOJA_CeQuiDort_9x16.mp4` (1080 × 1920), pour TikTok et Reels.
+
+Même style que « Une journée à Cotonou » et « Le local devient visible ». Un homme de Cotonou a un vieux frigo qui dort dans sa cour ; on lui demande « d'abord les frais de transport », il se souvient d'un vendeur payé d'avance qui n'a plus répondu. Puis NOVOJA, d'après le kit (`marketing/kit/01-produit-oja.md`, § 6) : publier un objet, discuter dans l'appli, paiement protégé (OJA garde l'argent jusqu'à la confirmation de réception, puis le vendeur est payé), livraison possible par OJA, litiges arbitrés par l'équipe OJA avec remboursement au numéro qui a payé, dons. Les deux pages (`oja_novoja_film.html` et `oja_novoja_film_9x16.html`) sont construites par `src/nov_build.py` à partir de `src/nov_body.js` (drapeau `VERT`).
+
+Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donner », « DON »). Le canal de paiement du vendeur (MoMo) n'est pas nommé.
+
+**Dépendances :**
+- Confirmer avec l'équipe que NOVOJA et son paiement protégé sont **en ligne** (point ouvert dans `marketing/sorties/verification.md`).
+- Confirmer que la livraison par OJA est ouverte.
+- Si l'on ajoute « payé sur MoMo », il faut que le décaissement MTN soit actif.
+
+- **Source :** voix Isac (`assets/nov/voix_novoja.txt`, « Novodja » / « Odja » pour la prononciation), son `src/music32.py` (tic-tac, notifications, souvenir étouffé, cadenas, pièce, moteur au loin, frappe, appareil photo, groove), le tout calé sur le minutage de la voix.
+- **Rendu 16:9 :** `VW=1920 VH=1080 src/render_video.sh oja_novoja_film.html 57 assets/soundtrack_novoja_film.m4a OJA_NOVOJA_CeQuiDort_16x9.mp4 <ffmpeg>`
+- **Rendu 9:16 :** `src/render_video.sh oja_novoja_film_9x16.html 57 assets/soundtrack_novoja_film.m4a OJA_NOVOJA_CeQuiDort_9x16.mp4 <ffmpeg>`
+- **Le héros :** généré avec ElevenLabs à partir d'un portrait de référence (même visage dans chaque scène ; prompts dans `assets/nov/prompts.txt`). Ce n'est pas une vraie personne, comme les autres personnes des images, et la mention le dit. Photos dans `assets/nov/`.
+- **Mention à l'écran :** « Paiement protégé NOVOJA : l'argent est remis au vendeur après confirmation de réception. Litiges arbitrés par l'équipe OJA. Personnes des images générées par IA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–8,5 s | « Samedi, huit heures. Le vieux frigo dort dans ta cour. Il marche encore… mais il prend toute la place. » | 08:00, lumière du matin, il regarde le frigo sous un pagne |
+| 8,5–15,3 s | « Onze heures. Tu le proposes dans un groupe. Un inconnu répond : Je le prends. Envoie-moi d'abord les frais de transport. » | 11:00, il lit son téléphone, sourcil levé ; bulles du groupe « Ventes du quartier » |
+| 15,3–21 s | « Tu connais l'histoire. Une fois, tu as payé d'avance… et le vendeur n'a plus jamais répondu. » | Souvenir en gris : discussion « C'est payé. », « Tu livres quand ? », « Allô ? »… « Aucune réponse » |
+| 21–25,8 s | « Dix-huit heures. Le frigo est toujours là. Et la confiance est partie. » | 18:00, crépuscule, assis sur le seuil face au frigo (en 9:16, panoramique du frigo vers lui) |
+| 25,8–27,9 s | « Et si l'argent attendait la livraison ? » | Noir, anneaux de coffre en pointillés, un bouclier orange avec cadenas tombe |
+| 27,9–33,4 s | « Sur Novodja, dans Odja, tu publies ton objet : quelques photos, une description, c'est en ligne. » | Éclair, carte « Publier un objet » : 3 photos du frigo, « Vendre », « Électroménager », description tapée, « Annonce en ligne » |
+| 33,4–35,7 s | « L'acheteur discute avec toi, dans l'appli. » | Carte « Discussion NOVOJA · Frigo » |
+| 35,7–43,3 s | « Il paie… mais c'est Odja qui garde l'argent. Odja peut même livrer. Il reçoit le frigo, il confirme. Et là seulement, tu es payé. » | Schéma Acheteur → bouclier OJA (cadenas, « Argent gardé ») → Toi ; livreur OJA sur le trajet, « Objet reçu », puis l'argent part vers « Toi » : « Tu es payé » |
+| 43,3–47,2 s | « Un souci ? L'équipe Odja arbitre, et l'acheteur est remboursé si besoin. » | Carte « Un souci ? » : « L'équipe OJA arbitre », « L'acheteur est remboursé si besoin », « Remboursement au numéro qui a payé. » |
+| 47,2–49,5 s | « Et ce qui ne se vend pas, tu peux le donner. » | Il donne des vêtements et des livres à une maman et son fils ; « DON », Vêtements, Livres, Bébé |
+| 49,5–57 s | « Novodja, dans Odja. Ce qui dort chez toi vaut de l'argent. » | Il rit, le frigo part par le portail ; logo NOVOJA, « dans l'appli OJA », slogan, stores, mention |
