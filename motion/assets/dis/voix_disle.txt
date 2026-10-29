@@ -1,0 +1,3 @@
+[direct] Il t'a demandé plus d'argent ? Dis-le à Odja.
+[posé] Après chaque course, Odja te pose la question. Tu réponds en un clic. Ta réponse compte.
+[chaleureux] Odja. On t'écoute.

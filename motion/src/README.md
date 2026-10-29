@@ -14,6 +14,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | OJA Marchand « Tu cuisines, OJA livre » | `oja_marchand_tucuisines.html` | `mch_body.js`, `market_body.js`, `merchant_scenes.js`, `mch_build.py` | `music21.py` + voix `assets/mch/voix_marchand.mp3` (générée avec `tts.py`) ; vélo `../velo_asset.py` |
 | OJA « Arrête de marchander » | `oja_arrete_de_marchander.html` | `amm_body.js`, `amm_build.py` (+ préludes Market/Marchand), plan d'accroche `../amm_frames.py` | `music22.py` + voix `assets/amm/voix_marchander.mp3` |
 | OJA « Le moteur a lâché » | `oja_moteur_lache.html` | `pan_body.js`, `pan_build.py` | `music23.py` + voix `assets/pan/voix_panne.mp3` |
+| OJA « Dis-le à OJA » | `oja_dis_le_a_oja.html` | `dis_body.js`, `dis_build.py` | `music24.py` + voix `assets/dis/voix_disle.mp3` |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.

@@ -27,3 +27,7 @@ MARCHANDER = dict(hook='Arrête', choisis='Avec Odja', moto='moto', tri='tricycl
 # key phrases of the « Le moteur a lâché » voice (assets/pan/voix_panne.txt)
 PANNE = dict(course='En pleine', lache='le moteur', panique='Pas de panique', autre='un autre chauffeur', fin='pour finir', prix='Et ton prix',
              franc='Pas un franc', endA='>Odja. Ton', endB='>Ton trajet')
+
+# key phrases of the « Dis-le à OJA » voice (assets/dis/voix_disle.txt)
+DISLE = dict(hook="Il t'a", argent="plus d'argent", dis='Dis-le', apres='Après chaque', quest='te pose', clic='Tu réponds',
+             compte='Ta réponse', endA='>Odja. On', endB=">On t'écoute")

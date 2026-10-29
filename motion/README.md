@@ -513,3 +513,20 @@ Idée 8 du kit marketing (sécurité, confiance). En cas de panne, OJA envoie un
 | 3,2–6,7 s | « Pas de panique : Odja t'envoie un autre chauffeur pour finir le trajet. » | La voiture en panne se range, une seconde voiture OJA arrive, son chauffeur apparaît |
 | 6,7–9,8 s | « Et ton prix total ne change pas. Pas un franc de plus. » | Deux tickets « Prix au départ » = « Prix à l'arrivée », sans chiffres, tampon « INCHANGÉ » |
 | 9,8–15 s | « Odja. Ton trajet continue. » | Logo, « OJA », slogan, boutons des stores, mention |
+
+## OJA — « Dis-le à OJA » (9:16, 14 s)
+
+Idée 2 du kit marketing (prix et confiance). À la fin de chaque course, l'appli demande : « Le chauffeur a-t-il demandé plus d'argent ? ». Cette fonction est **en ligne**, donc aucune dépendance. Le ton reste la confiance : aucun chauffeur n'est montré ni accusé. Aucun montant n'apparaît, et la vidéo ne promet aucune suite précise à la réponse (pas de remboursement ni de sanction annoncés).
+
+- **Vidéo :** `OJA_DisLeAOJA_9x16.mp4` (1080 × 1920, 24 i/s)
+- **Source :** `oja_dis_le_a_oja.html`, construite par `src/dis_build.py` à partir de `src/dis_body.js`. Voix Isac (`assets/dis/voix_disle.txt`), son `src/music24.py`, le tout calé sur le minutage de la voix.
+- **Écran :** l'écran de fin de course de l'appli (« Course terminée », question, OUI / NON, notation), recréé sans données personnelles.
+- **Mention à l'écran :** « À la fin de chaque course, l'appli OJA te demande si le chauffeur a demandé plus d'argent. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–2,2 s | « Il t'a demandé plus d'argent ? » | Ticket « Prix affiché » (sans chiffres) ; une bulle jaune « + ? » vient s'y coller |
+| 2,2–3,5 s | « Dis-le à Odja. » | Bulle de dialogue avec le logo OJA |
+| 3,5–6,2 s | « Après chaque course, Odja te pose la question. » | iPhone 3D : fin de course, zoom sur la question |
+| 6,2–9,3 s | « Tu réponds en un clic. Ta réponse compte. » | Appui sur « OUI », puis sur « Valider et fermer » |
+| 9,3–14 s | « Odja. On t'écoute. » | Logo, « OJA », slogan, boutons des stores, mention |
