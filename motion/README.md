@@ -674,7 +674,13 @@ Il n'y a aucun montant ni aucun chiffre inventé, et seules des fonctions **en l
 - **Source :** `oja_journee_cotonou.html`, construite par `src/jour_build.py` à partir de `src/jour_body.js` et `src/bj_map.js` (vraies frontières). Voix Isac (`assets/jour/voix_journee.txt`), son `src/music30.py` (tic-tac, klaxons, montée tonale, groove), le tout calé sur le minutage de la voix.
 - **Rendu 16:9 :** `VW=1920 VH=1080 src/render_video.sh oja_journee_cotonou.html 56 assets/soundtrack_journee.m4a OJA_UneJourneeACotonou_16x9.mp4 <ffmpeg>`
 - **Images :** véhicules OJA (`assets/moto.png`, `tricycle.png`, `car.png`), `assets/cs/obj_plat.png`, `obj_colis.png`, visage du zem de Cotonou découpé dans `assets/edt/moto.jpg` (généré par IA) : `assets/jour/zem_face.png`.
-- **Mention à l'écran :** « Prix calculé avant la course. OJA Market : paiement MTN MoMo. En cas de panne, le prix total de la course ne change pas. Visage du zem généré par IA. »
+- **L'héroïne :** une jeune employée de Cotonou, le « tu » du récit. Elle a été générée avec ElevenLabs, d'abord en portrait de référence, puis dans chaque scène à partir de ce portrait pour garder le même visage (prompts dans `assets/jour/prompts.txt`). Ce n'est pas une vraie personne, et la mention le dit. Les photos `assets/jour/h_*.jpg` sont dessinées sous les halos, avec un dégradé du côté du texte :
+  - exaspérée au carrefour (07:31) ;
+  - affamée à son bureau (12:40) ;
+  - inquiète au téléphone avec le colis (16:05) ;
+  - épuisée le soir (19:48) ;
+  - éclairée par son téléphone sur « Et si tout était dans une seule appli ? ».
+- **Mention à l'écran :** « Prix calculé avant la course. OJA Market : paiement MTN MoMo. En cas de panne, le prix total de la course ne change pas. Personnes des images générées par IA. »
 
 | Temps | Voix | Image |
 |---|---|---|

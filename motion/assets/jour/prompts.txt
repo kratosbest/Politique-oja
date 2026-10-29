@@ -1,0 +1,12 @@
+ElevenLabs, model bytedance-seedream-5-pro, 16:9, 2K (flow izJbW4iwoQIzcVjBorJC).
+Reference portrait (2nd take kept), then each scene generated with that portrait wired in as reference image:
+
+Reference: Cinematic film still, 16:9: portrait of a young Beninese woman, about 27, office worker in Cotonou, short natural afro hair, small gold earrings, wearing a crisp white blouse with an orange and green wax-print scarf around her neck, warm brown skin with natural texture, expressive face, calm neutral expression looking at the camera, chest-up, standing on the left third of the frame; the right two thirds is a softly blurred warm city street at morning. Soft natural light, shallow depth of field, 50mm lens, rich cinematic colour grading, subtle film grain. No text, no logos.
+
+Every scene starts with: Keep exactly the same woman as in the reference image: same face, short afro hair, gold earrings, white blouse and orange-green wax-print scarf. New scene, cinematic film still 16:9:
+h_carrefour.jpg: early morning at a busy road junction in Cotonou, she stands at the roadside haggling over the fare, one open hand raised, eyebrows raised high, mouth open mid-sentence, a very exasperated "how much?!" expression, looking towards the right of the frame. Left third; right two thirds softly blurred morning traffic with red tail lights, zem motorbikes and drivers in yellow shirts out of focus.
+h_midi.jpg: midday in a small office in Cotonou, she sits at her desk behind a laptop and piles of papers, one hand on her stomach, looking up at a wall clock with a tired, hungry, frustrated frown. Right third; left two thirds the softly blurred office with a bright window and golden noon light.
+h_colis.jpg: late afternoon by an office window, she holds a cardboard parcel box against her hip and her phone to her ear, worried expression, frowning, biting her lower lip. Left third; right two thirds a blurred window view of the city in purple and pink dusk light.
+h_soir.jpg: evening, she sits alone on a low wall at a dark street corner, completely exhausted, head tilted back, eyes closed, sighing deeply. Right third; left two thirds a dark blue night street with blurred street lamps.
+h_appli.jpg: night, almost total darkness, her face lit only by the warm orange glow of her smartphone, curious with a first hint of a hopeful smile. Close-up, right third; left two thirds deep black with tiny warm bokeh lights.
+(All: shallow depth of field, rich cinematic colour grading, film grain, no text, no logos.)

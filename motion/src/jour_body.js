@@ -10,6 +10,8 @@
 const VW_ = 1920, VH_ = 1080, VO = 0.6;
 const PRE = [];
 const imgL = src => { const i = new Image(); i.src = src; PRE.push(i); return i; };
+// the heroine of the day (generated with ElevenLabs from one reference portrait), one photo per problem scene
+const HER = { car: imgL('assets/jour/h_carrefour.jpg'), midi: imgL('assets/jour/h_midi.jpg'), colis: imgL('assets/jour/h_colis.jpg'), soir: imgL('assets/jour/h_soir.jpg'), appli: imgL('assets/jour/h_appli.jpg') };
 const IMG = { car: imgL('assets/car.png'), moto: imgL('assets/moto.png'), tri: imgL('assets/tricycle.png'), plat: imgL('assets/cs/obj_plat.png'), colis: imgL('assets/cs/obj_colis.png'), logo: imgL('assets/mk_logo.png') };
 // voice timings (seconds in the voice file), injected by jour_build.py from assets/jour/voix_journee.mp3.json
 const W_ = /*VOICE_MARKS*/{};
@@ -39,18 +41,18 @@ stage.style.width = VW_ + 'px'; stage.style.height = VH_ + 'px';
 H += `<canvas id="atm" class="abs" style="left:0;top:0" width="1920" height="1080"></canvas>
 <div id="clk" class="abs" style="left:0;right:0;top:250px;text-align:center;color:#fff;visibility:hidden"><div id="clkd" style="font:600 30px Inter;letter-spacing:.32em;opacity:.8">MARDI</div><div id="clkt" style="font:800 230px Poppins;letter-spacing:-.03em;line-height:1;text-shadow:0 0 60px rgba(255,255,255,.35)">07:12</div></div>
 <svg id="ring" class="abs" style="left:620px;top:60px;visibility:hidden" width="680" height="680" viewBox="0 0 680 680"><circle cx="340" cy="340" r="320" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="6"/><circle id="ringp" cx="340" cy="340" r="320" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-dasharray="2011" stroke-dashoffset="2011" transform="rotate(-90 340 340)"/></svg>
-${bub('b0', 'C\'est combien pour Ganhi&nbsp;?', 'r', 1000, 330)}${bub('b1', 'Ajoute un peu, c\'est l\'essence…', 'l', 330, 470, 'assets/jour/zem_face.png')}${bub('b2', 'Fais-moi un prix&nbsp;!', 'r', 1130, 620)}
-<div id="big" class="abs" style="left:0;right:0;top:250px;text-align:center;font:900 380px Poppins;letter-spacing:-.05em;line-height:1;color:#fff;visibility:hidden">10 min</div>
-<img id="iplat" src="assets/cs/obj_plat.png" class="abs" style="left:1440px;top:420px;width:400px;opacity:0;filter:blur(6px) grayscale(.4)">
-<div id="route" class="abs" style="left:300px;top:300px;width:1320px;height:420px;visibility:hidden"><img src="assets/cs/obj_colis.png" class="abs" style="left:0;top:90px;width:300px">
+${bub('b0', 'C\'est combien pour Ganhi&nbsp;?', 'r', 1250, 300)}${bub('b1', 'Ajoute un peu, c\'est l\'essence…', 'l', 1020, 450, 'assets/jour/zem_face.png')}${bub('b2', 'Fais-moi un prix&nbsp;!', 'r', 1440, 600)}
+<div id="big" class="abs" style="left:980px;right:30px;top:290px;text-align:center;font:900 270px Poppins;letter-spacing:-.05em;line-height:1;color:#fff;visibility:hidden">10 min</div>
+<img id="iplat" src="assets/cs/obj_plat.png" class="abs" style="left:1440px;top:420px;width:400px;display:none;opacity:0;filter:blur(6px) grayscale(.4)">
+<div id="route" class="abs" style="left:560px;top:300px;width:1320px;height:420px;visibility:hidden">
 <svg class="abs" style="left:300px;top:0" width="1020" height="420"><path id="rpath" d="M20,250 C300,80 650,330 900,150" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="6" stroke-dasharray="4 18" stroke-linecap="round"/></svg>
 <div class="abs" style="left:1190px;top:70px;text-align:center;font:700 38px Poppins">${'<div style="width:90px;height:90px;margin:0 auto 10px;border-radius:50%;border:4px dashed rgba(255,255,255,.8);display:grid;place-items:center;font:800 54px Poppins">?</div>'}Calavi</div></div>
 ${line('L0', 'Cotonou se réveille.', 640)}${line('L1', 'Tu dois être à *Ganhi* à 8 h.', 640)}
-${line('L2', 'Au carrefour, ça recommence.', 860)}${line('L3', 'Le prix monte, tu discutes.', 860)}<div id="L4s" class="abs" style="left:0;right:0;top:680px;text-align:center;font:700 64px Poppins;color:#fff;opacity:0">perdues.</div>
-${line('L5', 'Tu as *faim.*', 640)}${line('L6', 'Mais pas le temps de sortir.', 640)}
-${line('L7', 'Ta sœur attend un colis à *Calavi.*', 820)}${line('L8', 'Et personne pour l\'envoyer.', 820)}
-${line('L9', 'Le soir tombe.', 640)}${line('L10', 'Tu as passé la journée à te débrouiller.', 640)}
-${line('L11', 'Et si tout était dans *une seule appli&nbsp;?*', 470, 84)}
+${line('L2', 'Au carrefour, ça recommence.', 860, 64, 'left:960px;right:40px')}${line('L3', 'Le prix monte, tu discutes.', 860, 64, 'left:960px;right:40px')}<div id="L4s" class="abs" style="left:980px;right:30px;top:620px;text-align:center;font:700 64px Poppins;color:#fff;opacity:0">perdues.</div>
+${line('L5', 'Tu as *faim.*', 700, 64, 'left:60px;right:900px')}${line('L6', 'Mais pas le temps de sortir.', 700, 64, 'left:60px;right:900px')}
+${line('L7', 'Ta sœur attend un colis à *Calavi.*', 820, 64, 'left:760px;right:60px')}${line('L8', 'Et personne pour l\'envoyer.', 820, 64, 'left:760px;right:60px')}
+${line('L9', 'Le soir tombe.', 700, 64, 'left:60px;right:900px')}${line('L10', 'Tu as passé la journée à te débrouiller.', 700, 64, 'left:60px;right:900px')}
+${line('L11', 'Et si tout était dans *une seule appli&nbsp;?*', 430, 84, 'left:60px;right:860px')}
 <div id="rev" class="abs" style="left:0;right:0;top:260px;text-align:center;visibility:hidden"><img id="revl" src="assets/mk_logo.png" style="width:300px;height:300px;filter:drop-shadow(0 0 60px rgba(255,107,0,.9))"><div id="revw" style="font:900 200px Poppins;letter-spacing:-.04em;line-height:1;color:#fff;margin-top:-10px">OJA</div></div>
 <div id="bug" class="abs" style="left:60px;top:46px;display:flex;align-items:center;gap:14px;font:900 46px Poppins;color:#fff;opacity:0"><img src="assets/mk_logo.png" style="width:66px;height:66px">OJA</div>
 ${VEH.map(([src, n, w], i) => card('vc' + i, 420 + i * 380, 210, 340, 470, `<div style="height:260px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px"><img src="${src}" style="width:${w}px"></div>
@@ -78,7 +80,7 @@ ${ORB.map(([, n], i) => `<div id="on${i}" class="abs" style="left:0;right:0;top:
 <div class="abs" style="left:980px;top:200px;width:860px"><div style="display:flex;align-items:center;gap:26px"><img id="fl" src="assets/mk_logo.png" style="width:170px;height:170px"><div id="fw" style="font:900 170px Poppins;letter-spacing:-.04em;line-height:1;color:#fff">OJA</div></div>
 <div id="fs" style="font:800 76px Poppins;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:40px">Tout ton Bénin<br>dans <span style="color:${OJ}">une seule appli.</span></div>
 <div id="fst" style="display:flex;gap:24px;margin-top:56px">${[['phone', 'Télécharger sur', 'App Store'], ['play', 'Disponible sur', 'Google Play']].map(([icn, sm, big]) => `<div style="width:330px;height:104px;border-radius:26px;background:#141414;border:2px solid #333;display:flex;align-items:center;gap:18px;padding:0 26px;color:#fff">${ic(icn, 46, '#fff', 1.8)}<div><div style="font:500 20px Inter;opacity:.75">${sm}</div><div style="font:700 34px Poppins;line-height:1.1">${big}</div></div></div>`).join('')}</div></div>
-<div id="fm" class="abs" style="left:120px;right:120px;top:1000px;text-align:center;font:500 22px Inter;color:rgba(255,255,255,.6)">Prix calculé avant la course. OJA Market : paiement MTN MoMo. En cas de panne, le prix total de la course ne change pas. Visage du zem généré par IA.</div></div>
+<div id="fm" class="abs" style="left:120px;right:120px;top:1000px;text-align:center;font:500 22px Inter;color:rgba(255,255,255,.6)">Prix calculé avant la course. OJA Market : paiement MTN MoMo. En cas de panne, le prix total de la course ne change pas. Personnes des images générées par IA.</div></div>
 <div id="flash" class="lay" style="width:1920px;height:1080px;background:radial-gradient(circle at 50% 45%,#fff,rgba(255,170,90,.85) 35%,rgba(255,107,0,0) 70%);opacity:0;z-index:40"></div>
 <div id="fade" style="width:1920px;height:1080px"></div>`;
 stage.innerHTML = H;
@@ -99,10 +101,11 @@ function palette(t) {
 }
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 const BOK = (() => { const r = rng(4); return Array.from({ length: 70 }, () => ({ x: r() * 1920, y: r() * 1080, z: .3 + r() * .9, s: .2 + r(), ph: r() * 6.28 })); })();
-const STARS = (() => { const r = rng(8); return Array.from({ length: 220 }, () => [r() * 1920, r() * 760, .5 + r() * 1.8, r() * 6.28]); })();
+const STARS = (() => { const r = rng(8); return Array.from({ length: 160 }, () => [r() * 960, r() * 1080, .5 + r() * 1.8, r() * 6.28]); })();
 function atmosphere(t) {
   const c = el('atm').getContext('2d'), [p, name] = palette(t);
   const g = c.createLinearGradient(0, 0, 0, 1080); g.addColorStop(0, rgba(p[0], 1)); g.addColorStop(1, rgba(p[1], 1)); c.fillStyle = g; c.fillRect(0, 0, 1920, 1080);
+  heroine(c, t, p);
   c.save(); c.globalCompositeOperation = 'lighter';
   // soft glow blobs drifting
   [[.25, .3, 700, 2], [.75, .65, 800, 3], [.5, 1.05, 900, 2]].forEach(([fx, fy, R, ci], i) => {
@@ -116,12 +119,12 @@ function atmosphere(t) {
   // dawn: the sun rising at the bottom
   let a = vis(0, V('carref')); if (a > 0) { const y = 1180 - P(t, 0, 5, E.oQ) * 220, gg = c.createRadialGradient(960, y, 0, 960, y, 520); gg.addColorStop(0, `rgba(255,230,170,${.9 * a})`); gg.addColorStop(.25, `rgba(255,160,70,${.45 * a})`); gg.addColorStop(1, 'rgba(255,120,40,0)'); c.save(); c.globalCompositeOperation = 'lighter'; c.fillStyle = gg; c.fillRect(0, 0, 1920, 1080); c.restore(); }
   // street: horizontal light trails of the traffic
-  a = vis(V('carref'), V('midi')); if (a > 0) { c.save(); c.globalCompositeOperation = 'lighter'; const r = rng(17);
+  a = vis(V('carref'), V('midi')); if (a > 0) { c.save(); c.beginPath(); c.rect(960, 0, 960, 1080); c.clip(); c.globalCompositeOperation = 'lighter'; const r = rng(17);
     for (let k = 0; k < 40; k++) { const y = 120 + r() * 900, sp = 600 + r() * 1400, x = ((r() * 3000 + t * sp) % 3000) - 600, l = 200 + r() * 600, col = r() < .7 ? '255,80,40' : '255,230,200';
       const gg = c.createLinearGradient(x, 0, x + l, 0); gg.addColorStop(0, `rgba(${col},0)`); gg.addColorStop(1, `rgba(${col},${(.25 + r() * .4) * a})`); c.fillStyle = gg; c.fillRect(x, y, l, 2 + r() * 5); }
     c.restore(); }
   // dusk: a big pale moon on the left
-  a = vis(V('seize'), V('soir') + .4); if (a > 0) { const x = 170, y = 150 + (1 - P(t, V('seize') - .3, 2, E.oQ)) * 120, gg = c.createRadialGradient(x, y, 0, x, y, 260);
+  a = vis(V('seize'), V('soir') + .4); if (a > 0) { const x = 1720, y = 150 + (1 - P(t, V('seize') - .3, 2, E.oQ)) * 120, gg = c.createRadialGradient(x, y, 0, x, y, 260);
     gg.addColorStop(0, `rgba(255,255,255,${a})`); gg.addColorStop(.45, `rgba(255,250,245,${.95 * a})`); gg.addColorStop(.5, `rgba(255,200,230,${.35 * a})`); gg.addColorStop(1, 'rgba(255,150,220,0)'); c.fillStyle = gg; c.fillRect(x - 260, y - 260, 520, 520); }
   // night: stars
   a = vis(V('soir'), V('voici')); if (a > 0) STARS.forEach(([x, y, s, ph]) => { c.fillStyle = `rgba(255,255,255,${a * (.35 + .5 * Math.abs(Math.sin(t * 1.4 + ph)))})`; c.fillRect(x, y, s, s); });
@@ -135,6 +138,22 @@ function atmosphere(t) {
     c.restore(); }
 }
 
+// [from, to, photo, side of the heroine]
+const HSHOW = () => [[V('carref') - .1, V('midi') - .1, 'car', 'L'], [V('midi') - .1, V('seize') - .1, 'midi', 'R'], [V('seize') - .1, V('soir') - .1, 'colis', 'L'], [V('soir') - .1, V('siTout') - .1, 'soir', 'R'], [V('siTout') - .1, V('voici') - .05, 'appli', 'R']];
+function heroine(c, t, p) {
+  HSHOW().forEach(([a, b, k, side]) => {
+    const al = P(t, a - .2, .6, E.ioC) * (1 - P(t, b - .35, .45, E.iC)); if (al <= 0) return;
+    const im = HER[k], sc = 1.04 + .06 * clamp((t - a) / (b - a)), w = 1920 * sc, h = 1080 * sc;
+    c.save(); c.globalAlpha = al * (k === 'appli' ? .85 : .95); c.drawImage(im, (1920 - w) / 2 + (side === 'L' ? 20 : -20) * (1 - sc), (1080 - h) / 2, w, h);
+    c.globalAlpha = al * .35; c.globalCompositeOperation = 'overlay'; c.fillStyle = rgba(p[1], 1); c.fillRect(0, 0, 1920, 1080);
+    c.globalCompositeOperation = 'source-over'; c.globalAlpha = al;
+    const g = side === 'L' ? c.createLinearGradient(1920, 0, 600, 0) : c.createLinearGradient(0, 0, 1320, 0);
+    g.addColorStop(0, rgba(p[0], .9)); g.addColorStop(.45, rgba(p[0], .55)); g.addColorStop(1, rgba(p[0], 0)); c.fillStyle = g; c.fillRect(0, 0, 1920, 1080);
+    const v = c.createLinearGradient(0, 600, 0, 1080); v.addColorStop(0, rgba(p[0], 0)); v.addColorStop(1, rgba(p[0], .7)); c.fillStyle = v; c.fillRect(0, 600, 1920, 480);
+    c.restore();
+  });
+}
+
 /* ---------- scene helpers ---------- */
 function pop(id, t, a, b, dy = 60) {
   const e = el(id), on = t >= a && t < b; e.style.visibility = on ? 'visible' : 'hidden'; if (!on) return 0;
@@ -142,10 +161,11 @@ function pop(id, t, a, b, dy = 60) {
   return p;
 }
 function clock(t) {
-  const S = [[V('t0') - .2, V('carref') - .15, '07:12', 'big'], [V('carref'), V('midi') - .15, '07:31', 'top'], [V('midi') - .1, V('seize') - .15, '12:40', 'big'], [V('seize') - .1, V('soir') - .15, '16:05', 'top'], [V('soir') - .1, V('siTout') - .2, '19:48', 'big']];
+  const S = [[V('t0') - .2, V('carref') - .15, '07:12', 'big', 960], [V('carref'), V('midi') - .15, '07:31', 'top', 1440], [V('midi') - .1, V('seize') - .15, '12:40', 'big', 520], [V('seize') - .1, V('soir') - .15, '16:05', 'top', 1340], [V('soir') - .1, V('siTout') - .2, '19:48', 'big', 520]];
   const s = S.find(([a, b]) => t >= a && t < b), e = el('clk');
   if (!s) { e.style.visibility = 'hidden'; el('ring').style.visibility = 'hidden'; return; }
-  const [a, b, txt, mode] = s, p = P(t, a, .6, E.oQ), q = P(t, b - .35, .35, E.iC); e.style.visibility = 'visible';
+  const [a, b, txt, mode, cx] = s, p = P(t, a, .6, E.oQ), q = P(t, b - .35, .35, E.iC); e.style.visibility = 'visible'; e.style.left = (cx - 600) + 'px'; e.style.right = 'auto'; e.style.width = '1200px';
+  el('ring').style.left = (cx - 340) + 'px';
   el('clkt').textContent = txt; el('clkt').style.fontSize = mode === 'big' ? '230px' : '120px'; el('clkd').style.display = mode === 'big' ? 'block' : 'none';
   e.style.top = mode === 'big' ? '250px' : '90px'; e.style.opacity = p * (1 - q); e.style.filter = `blur(${(1 - p) * 20 + q * 14}px)`; e.style.transform = `scale(${lerp(1.08, 1, p)})`;
   const ringOn = txt === '12:40'; el('ring').style.visibility = ringOn ? 'visible' : 'hidden';
