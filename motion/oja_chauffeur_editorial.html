@@ -433,7 +433,7 @@ ${ROWS.map((h, i) => `<div id="rr${i}" style="display:flex;align-items:center;ga
 <div style="height:1px;background:${BK};opacity:.25;margin:14px 0"></div>
 <div id="rtot" style="display:flex;align-items:center;gap:16px;font:500 40px ${SERIF};visibility:hidden"><span>Total</span><span style="flex:1"></span><span style="width:190px;height:40px;border-radius:4px;background:${OR};opacity:.55;filter:blur(2.5px)"></span></div>
 <div style="font:300 22px ${THIN};color:#8a837a;margin-top:22px">Montants masqués</div></div>
-<div id="tri3" class="lay" style="display:none">${[['moto', 'Moto'], ['tri', 'Tricycle'], ['car', 'Voiture']].map(([k, n], i) => `<div id="t3${i}" class="abs" style="left:${i * 360}px;top:0;width:360px;height:1920px;overflow:hidden;border-right:${i < 2 ? `2px solid ${BK}` : 'none'}"><img src="${PH[k][0]}" class="abs" style="left:-360px;top:0;width:1080px;height:1920px;object-fit:cover;object-position:${PH[k][1]}% ${PH[k][2]}%">
+<div id="tri3" class="lay" style="display:none">${[['moto', 'Moto'], ['tri', 'Tricycle'], ['car', 'Voiture']].map(([k, n], i) => `<div id="t3${i}" class="abs" style="left:${i * 360}px;top:0;width:360px;height:1920px;overflow:hidden;border-right:${i < 2 ? `2px solid ${BK}` : 'none'}"><img src="${PH[k][0]}" class="abs" style="left:${k === 'car' ? -480 : -360}px;top:0;width:1080px;height:1920px;object-fit:cover;object-position:${PH[k][1]}% ${PH[k][2]}%">
 <div class="lay" style="width:360px;background:linear-gradient(rgba(11,11,12,.7),rgba(11,11,12,0) 26%,rgba(11,11,12,0) 50%,rgba(11,11,12,.93) 68%,rgba(11,11,12,.97))"></div>
 <div class="abs" style="left:0;right:0;top:250px;text-align:center;font:500 26px ${THIN};letter-spacing:.32em;color:${IV}">${n.toUpperCase()}</div></div>`).join('')}</div>
 <div id="tk" class="abs" style="left:560px;top:300px;width:440px;padding:26px 30px;background:${IV};color:${BK};box-shadow:0 30px 70px rgba(0,0,0,.45);visibility:hidden">
@@ -441,6 +441,7 @@ ${ROWS.map((h, i) => `<div id="rr${i}" style="display:flex;align-items:center;ga
 <div style="font:500 40px ${SERIF};margin-top:10px">avant le départ</div>
 <div style="display:flex;gap:12px;margin-top:18px">${[150, 90, 60].map(w => `<div style="width:${w}px;height:16px;background:rgba(11,11,12,.12)"></div>`).join('')}</div></div>
 <canvas id="fx" class="lay" width="1080" height="1920"></canvas>
+<div id="loc" class="abs" style="right:72px;top:140px;font:italic 500 34px ${SERIF};color:${IV};opacity:0"></div>
 <div id="brand" class="abs" style="left:72px;right:72px;top:1800px;display:flex;justify-content:space-between;font:500 22px ${THIN};letter-spacing:.32em;color:${IV};opacity:.75"><span>OJA — CHAUFFEURS</span><span id="pg">01 / 05</span></div>
 ${chap('c0', '00', 'CHAUFFEURS OJA')}${chap('c1', '01', 'LES CLIENTS')}${chap('c2', '02', 'LE PRIX')}${chap('c3', '03', 'ZONES CHAUDES', BK)}${chap('c4', '04', 'LE RELEVÉ')}${chap('c5', '05', 'TOUS LES VÉHICULES')}
 ${lines('h0', ['Arrête de', `tourner ${em('à vide.')}`], 1330, 118)}
@@ -541,6 +542,9 @@ window.renderAt = function (t) {
   rise('h5', t, V('vehic') + .1, V('inscris') - .05, 2); rise('h6', t, V('inscris'), T6, 2);
   const onMap = t >= T3 + .4 && t < T4; el('brand').style.color = onMap ? BK : IV; el('brand').style.opacity = t < T6 ? .75 : 0;
   el('pg').textContent = `0${t < T1 ? 0 : t < T2 ? 1 : t < T3 ? 2 : t < T4 ? 3 : t < T5 ? 4 : 5} / 05`;
+  // city caption, magazine style
+  const city = t < T3 ? 'Cotonou' : t >= T4 && t < T5 ? 'Porto-Novo' : '', ca = [[.3, T1], [T1 + .4, T2], [T2 + .4, T3], [T4 + .4, T5]].reduce((m, [a, b]) => Math.max(m, P(t, a, .5) * (1 - P(t, b - .3, .3))), 0);
+  el('loc').textContent = city; el('loc').style.opacity = city ? ca : 0;
   el('sEnd').style.display = t >= T6 ? 'block' : 'none'; if (t >= T6) sceneEnd(t);
   O('fade', Math.max(1 - P(t, 0, .25, E.lin), P(t, DUR2 - .45, .45, E.lin)));
 };

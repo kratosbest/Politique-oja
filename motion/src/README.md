@@ -32,3 +32,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
   - Voix habituelle : « Isac », `SomyDQQmnE7TsltdiDgp` (voix d'homme, léger accent ivoirien).
   - Toujours écrire « Odja » dans les textes, pour que la voix ne dise pas « O-J-A ».
 - **Musique :** scripts `music*.py` entièrement synthétisés (numpy). Les transitions d'écran utilisent un accord inversé (`swell`), pas de « whoosh » de souffle.
+
+## Repères visuels du Bénin
+- **Taxis-motos (zems) :** chemise jaune à Cotonou, chemise bleue à Porto-Novo. Ne jamais les habiller en orange ; l'orange OJA se met sur les autres éléments.
+- **Pas de numéro de zem ni de plaque lisible** sur les images générées (données personnelles fictives ou absentes).

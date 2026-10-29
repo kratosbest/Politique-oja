@@ -632,7 +632,12 @@ Restent volontairement hors de la vidéo : la ristourne quotidienne et le forfai
 ## OJA chauffeurs — « Arrête de tourner à vide », version éditoriale (9:16, 25 s)
 
 Nouvelle version de la vidéo chauffeurs, dans un style « magazine » plus haut de gamme. Elle garde la même voix et les mêmes avantages (en ligne, sans montant).
-- **Photos :** trois portraits de chauffeurs OJA générés avec ElevenLabs, prompts dans `assets/edt/prompts.txt` : un zem, une conductrice de tricycle et un chauffeur de voiture. Les chauffeurs ne sont pas de vraies personnes, et la mention le dit.
+- **Photos :** portraits de chauffeurs OJA générés avec ElevenLabs (prompts dans `assets/edt/prompts.txt`). Les chauffeurs ne sont pas de vraies personnes, et la mention le dit.
+  - un zem de Cotonou en chemise jaune ;
+  - une conductrice de tricycle ;
+  - un chauffeur de voiture ;
+  - un zem de Porto-Novo en chemise bleue, derrière le relevé.
+  Une petite légende en italique (« Cotonou », « Porto-Novo ») situe chaque photo. Les zems sont en jaune à Cotonou et en bleu à Porto-Novo, jamais en orange.
 - **Typographie :** titres en Playfair Display, avec les mots clés en italique orange ; étiquettes fines en Inter Tight (« N° 01 — LES CLIENTS ») ; pagination « 01 / 05 ».
 - **Mise en page :** filets fins, cartes ivoire (ticket « Prix fixé », relevé), carte au trait sur papier ivoire pour les zones chaudes, triptyque moto / tricycle / voiture, fin sur fond ivoire.
 - **Mouvement :** chaque photo est révélée par un masque qui monte, avec un zoom lent ; les lignes de titre sortent d'un masque.
@@ -646,10 +651,10 @@ Nouvelle version de la vidéo chauffeurs, dans un style « magazine » plus haut
 
 | Temps | Chapitre | Image |
 |---|---|---|
-| 0–2,7 s | N° 00 Chauffeurs OJA | Le zem, « Arrête de tourner *à vide.* » |
+| 0–2,7 s | N° 00 Chauffeurs OJA | Le zem de Cotonou (chemise jaune), « Arrête de tourner *à vide.* » |
 | 2,7–4,9 s | N° 01 Les clients | La conductrice de tricycle, « Les clients *te trouvent.* » |
 | 4,9–8,4 s | N° 02 Le prix | Le chauffeur de voiture, ticket ivoire « Prix fixé avant le départ », « Plus de bagarre pour le prix. » |
 | 8,4–13 s | N° 03 Zones chaudes | Carte au trait : Dantokpa, Akpakpa, Ganhi, Cadjèhoun ; trajet orange jusqu'à Ganhi |
-| 13–16,4 s | N° 04 Le relevé | Portrait assombri, reçu ivoire « Relevé du jour » (montants masqués) |
+| 13–16,4 s | N° 04 Le relevé | Zem de Porto-Novo (chemise bleue) assombri, reçu ivoire « Relevé du jour » (montants masqués) |
 | 16,4–19,5 s | N° 05 Tous les véhicules | Triptyque moto / tricycle / voiture, « Inscris-toi sur OJA. » |
 | 19,5–25 s | — | Fond ivoire : logo, « On roule *ensemble.* », « Deviens chauffeur OJA », stores, mention |
