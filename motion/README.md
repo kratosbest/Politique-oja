@@ -812,3 +812,31 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 | 32–38,2 s | « Ton inscription se fait depuis ton téléphone : ton nom, ton numéro, puis ta moto et tes papiers, en photo. » | Il photographie sa pièce ; écrans « Devenir chauffeur, étape 1/2 » puis « Véhicule & identité » (moto, pièce d'identité, permis, carte grise, visite technique, assurance, TVM) |
 | 38,2–50 s | « Ensuite, tu choisis ta formule. Sans pass, Odja prend une commission sur chaque course. Avec le pass illimité : zéro pour cent de commission, pour un jour, une semaine ou un mois… et chaque course est pour toi. » | Carte « Sans pass » (commission) puis « Pass illimité » : « 0 % de commission », 24 H · 7 JOURS · 1 MOIS |
 | 50–57 s | « Zémidjan, roule avec Odja. Les clients t'attendent. » | Il sourit au coucher du soleil ; « ZÉMIDJAN, ROULE AVEC OJA. », « Télécharge OJA · Je suis chauffeur », stores, mention |
+
+## OJA — « Conducteur de tricycle, avec OJA ça change », sensibilisation des tricycles (9:16, 56 s)
+
+- **Vidéo :** `OJA_Tricycle_Sensibilisation_9x16.mp4` (1080 × 1920).
+- **Histoire et style :** même histoire que le film des zems et même style « reportage ». Avant, il attend près du marché et appelle les passants (image ternie). Avec OJA, il attend tranquille, une maman commande un tricycle, il va droit vers elle et fait aussi des livraisons pour les commerçants (kit : livraison OJA par tricycle). Suivent les zones chaudes, l'inscription et les formules.
+- **Source :** `oja_tricycle.html`, construite par `src/tri_build.py` à partir de `src/tri_body.js` (moteur du film des zems). Voix Isac (`assets/tri/voix_tri.txt`), son `src/music34.py`.
+- **Rendu :** `src/render_video.sh oja_tricycle.html 56 assets/soundtrack_tri.m4a OJA_Tricycle_Sensibilisation_9x16.mp4 <ffmpeg>`
+- **Images :**
+  - Générées avec ElevenLabs, modèle **Nano Banana 2 Lite** (`gemini-3.1-flash-lite-image`, 1K) : 206 crédits le portrait de référence et 309 crédits par scène avec la référence jointe, contre 818 avec Seedream 5 Pro 2K.
+  - Le portrait de référence `assets/tri/tri_ref.jpg` est joint à chaque scène, d'où le même conducteur et le même tricycle partout.
+  - Le conducteur porte une tenue soignée : chemise bleu ciel et pantalon bleu marine.
+  - Le tricycle est le taxi-tricycle couvert du Bénin : cabine fermée, toit noir au-dessus du conducteur et pare-brise.
+  - Les images de 768 × 1376 sont agrandies en 1080 × 1920.
+  - Les prompts équivalents pour Google Flow sont dans `assets/tri/prompts_flow.md`.
+- **Mention :** la même que pour le film des zems. Aucun montant, prix des pass et taux de commission fixés par OJA.
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–13,4 s | « Conducteur de tricycle, ta journée est longue. Tu attends au bord de la route, près du marché. Tu appelles les passants… et souvent, tu roules à vide. Le temps passe, le carburant aussi. » | Image ternie : il attend près du marché en s'épongeant le front, puis il appelle les passants depuis sa cabine, banquette vide |
+| 13,4–15 s | « Avec Odja, ça change. » | Fond orange sombre, rayons, logo, « AVEC OJA, ÇA CHANGE. » |
+| 15–18,3 s | « Tu restes tranquille. Ce sont les clients qui viennent à toi. » | Couleurs vives : il se repose à l'ombre d'un manguier, de l'eau à la main |
+| 18,3–23,5 s | « Une maman et ses courses commandent un tricycle sur Odja : la course arrive sur ton téléphone, tu acceptes, » | Il sourit à son téléphone ; carte « Nouvelle course · Tricycle » Marché Dantokpa → Fidjrossè, « Course acceptée » |
+| 23,5–25 s | « et tu vas droit vers elle. » | La maman et sa fille, sacs de courses, lui font signe |
+| 25–27,3 s | « Tu peux aussi faire des livraisons pour les commerçants. » | Une commerçante lui tend un carton ; carte « Nouvelle livraison », « Livraison acceptée » |
+| 27,3–31 s | « Et Odja te montre où sont les clients : les zones chaudes de la ville. » | Carte « ZONES CHAUDES » |
+| 31–37,3 s | « Ton inscription se fait depuis ton téléphone : ton nom, ton numéro, puis ton tricycle et tes papiers, en photo. » | Il photographie sa pièce ; écrans « Devenir chauffeur » puis « Véhicule & identité » (type : Tricycle, papiers) |
+| 37,3–49 s | « Ensuite, tu choisis ta formule. Sans pass, Odja prend une commission sur chaque course. Avec le pass illimité : zéro pour cent de commission, pour un jour, une semaine ou un mois… et chaque course est pour toi. » | Cartes « Sans pass » et « Pass illimité · 0 % de commission · 24 H / 7 JOURS / 1 MOIS » |
+| 49–56 s | « Conducteur de tricycle, roule avec Odja. Les clients t'attendent. » | Il sourit au coucher du soleil sur une avenue bordée de palmiers ; « Télécharge OJA · Je suis chauffeur », stores, mention |

@@ -24,6 +24,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | OJA « Le local devient visible » (16:9 et 9:16) | `oja_lieux_visible.html`, `oja_lieux_visible_9x16.html` | `lieu_body.js`, `lieu_build.py` (photos `assets/lieux/`) | `music31.py` + voix `assets/lieux/voix_lieux.mp3` |
 | NOVOJA « Ce qui dort chez toi vaut de l'argent » (16:9 et 9:16) | `oja_novoja_film.html`, `oja_novoja_film_9x16.html` | `nov_body.js`, `nov_build.py` (photos `assets/nov/`) | `music32.py` + voix `assets/nov/voix_novoja.mp3` |
 | OJA « Zémidjan, avec OJA ça change » (9:16) | `oja_zemidjan.html` | `zem_body.js`, `zem_build.py` (photos `assets/zem/`) | `music33.py` + voix `assets/zem/voix_zem.mp3` |
+| OJA « Conducteur de tricycle, avec OJA ça change » (9:16) | `oja_tricycle.html` | `tri_body.js`, `tri_build.py` (photos `assets/tri/`) | `music34.py` + voix `assets/tri/voix_tri.mp3` |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.
@@ -42,4 +43,8 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 - **Pas de numéro de zem ni de plaque lisible** sur les images générées (données personnelles fictives ou absentes).
 
 ## Images : Google Flow
-Depuis le 30 octobre 2026, l'équipe génère les images dans Google Flow à partir des prompts de Claude, et ElevenLabs ne sert plus qu'aux voix. Le circuit et les règles sont dans `motion/flow/README.md`.
+Les images peuvent être générées de deux façons. Le circuit et les règles sont dans `motion/flow/README.md`.
+- **Par l'équipe dans Google Flow,** à partir des prompts de Claude.
+- **Par Claude dans ElevenLabs,** avec le modèle le moins cher qui garde le même visage : Nano Banana 2 Lite (`gemini-3.1-flash-lite-image`, 1K, 9:16), avec le portrait de référence joint à chaque scène. Comptez 206 crédits pour le portrait et 309 par scène.
+
+ElevenLabs sert aussi aux voix.
