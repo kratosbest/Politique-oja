@@ -40,3 +40,6 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 ## Repères visuels du Bénin
 - **Taxis-motos (zems) :** chemise jaune à Cotonou, chemise bleue à Porto-Novo. Ne jamais les habiller en orange ; l'orange OJA se met sur les autres éléments.
 - **Pas de numéro de zem ni de plaque lisible** sur les images générées (données personnelles fictives ou absentes).
+
+## Images : Google Flow
+Depuis le 30 octobre 2026, l'équipe génère les images dans Google Flow à partir des prompts de Claude, et ElevenLabs ne sert plus qu'aux voix. Le circuit et les règles sont dans `motion/flow/README.md`.
