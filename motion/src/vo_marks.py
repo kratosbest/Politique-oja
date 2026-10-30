@@ -74,9 +74,9 @@ NOVOJA = dict(t0='Samedi', frigo='Le vieux frigo', marche='Il marche', place='ma
               donne='Et ce qui ne', donner='tu peux le donner', endA='>Novodja, dans Odja.', endB='>Ce qui dort')
 
 # key phrases of the zemidjan awareness voice (assets/zem/voix_zem.txt)
-ZEM = dict(t0='Zémidjan, cette', jour='Chaque jour', tournes='Tu tournes', carrefour='au carrefour', vide='et parfois', maint='Maintenant',
-           appli="Avec l'appli", trouvent='qui te trouvent', course='Une course arrive', vois='tu la vois', acceptes='tu acceptes',
-           montre='Et Odja te montre', zones='les zones chaudes', inscr='Ton inscription', nom='ton nom', numero='ton numéro', moto='puis ta moto',
-           papiers='et tes papiers', formule='Ensuite', sans='Sans pass', commission='une commission', avec='Avec le pass', zero='zéro pour cent',
-           prends='Tu prends ton pass', jour1='un jour', semaine='une semaine', mois='un mois', pourtoi='et chaque course', gains='Et tous tes gains',
-           releve='ton relevé', endA='>Zémidjan, roule', endB="Les clients t'attendent")
+ZEM = dict(t0='Zémidjan, ton', soleil='Tu roules', cherches='tu cherches', vide='et souvent', carrefour='Au carrefour', temps='Le temps passe',
+           essence="l'essence", change='Avec Odja, ça', tranq='Tu restes', vient="C'est le client", commande='Il commande', course='la course arrive',
+           acceptes='tu acceptes', droit='et tu vas droit', attend="Il t'attend", monte='il monte', fini='Fini', montre='Et Odja te montre',
+           zones='les zones chaudes', inscr='Ton inscription', nom='ton nom', numero='ton numéro', moto='puis ta moto', papiers='et tes papiers',
+           formule='Ensuite', sans='Sans pass', commission='une commission', avec='Avec le pass', zero='zéro pour cent', jour1='pour un jour',
+           semaine='une semaine', mois='un mois', pourtoi='et chaque course', endA='>Zémidjan, roule', endB="Les clients t'attendent")

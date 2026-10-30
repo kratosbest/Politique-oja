@@ -5,6 +5,9 @@ Reference portrait (2nd take kept), then each scene generated with that portrait
 Reference: Documentary street photograph, vertical 9:16: portrait of a Beninese zemidjan (motorcycle taxi driver) in Cotonou, about 40 years old, short beard, warm brown skin with natural texture, wearing the plain yellow zemidjan work shirt over a long-sleeved light grey t-shirt, an open-face black helmet with the clear visor raised so his face is fully visible, sitting on his red motorbike, calm friendly confident expression looking at the camera. Framed from the waist up, his face in the upper half of the image. Behind him the softly blurred busy street of Cotonou with other zemidjans in yellow shirts, shops and buildings, bright daylight. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no numbers on the shirt, no visible license plates, no logos.
 
 Every scene starts with: Keep exactly the same man as in the reference image: same face, short beard, plain yellow zemidjan shirt over a long-sleeved light grey t-shirt, black open-face helmet, red motorbike. New scene, documentary street photograph, vertical 9:16:
+h_vide.jpg (the struggle): harsh midday sun, he rides alone with the back seat empty along a dusty street, scanning the sidewalks, one hand raised toward passers-by who ignore him, sweaty and frustrated.
+h_tranquille.jpg (with OJA): he sits relaxed on his parked motorbike in the shade of a big tree, a bottle of water, his phone on his knee, calm.
+h_rejoint.jpg (with OJA): over the shoulder of a smiling client waving with her phone at the roadside, he pulls up next to her with a friendly smile.
 h_trafic.jpg: he rides his red motorbike through dense midday traffic on a big avenue in Cotonou, a woman passenger wearing a helmet sits behind him, other zemidjans in yellow shirts and cars all around; focused, determined look straight ahead.
 h_attente.jpg: hot afternoon at a crowded road junction, he sits alone on his parked motorbike under the hard sun, waiting for a client, wiping sweat from his forehead, tired and worried; a row of other parked zemidjans behind him.
 h_phone.jpg: parked at the roadside, he looks at the smartphone in his hand and smiles with happy surprise; the screen is not visible.
@@ -12,4 +15,4 @@ h_papiers.jpg: sitting on his parked motorbike in a quiet shaded street, he take
 h_client.jpg: a smiling young woman client in a wax-print dress fastens a helmet and gets on the back seat; he turns toward her with a warm smile.
 h_fin.jpg: golden hour on a wide avenue, he sits on his motorbike facing the camera with a big proud smile.
 (All: waist up, face in the upper half, natural colours, shallow depth of field, 50mm, no readable text, no numbers on the shirts, no visible license plates, no logos.)
-Images resized from 1152 x 2048 to 1080 x 1920.
+Images resized from 1152 x 2048 to 1080 x 1920. In the film, h_vide and h_attente (before OJA) are graded dull (saturate .5, sepia), the rest is vivid.

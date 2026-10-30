@@ -1,7 +1,7 @@
-# OJA « Zémidjan, cette nouvelle est pour toi » (47 s, 9:16): afrobeat score + sound design + Isac voice from 0.6 s, music ducked under the voice.
+# OJA « Zémidjan, avec OJA ça change » (57 s, 9:16): afrobeat score + sound design + Isac voice from 0.6 s, music ducked under the voice.
 # usage: python3 music33.py out.wav voix_zem.mp3 ffmpeg
 import numpy as np, wave, sys, subprocess
-SR=44100; DUR=47.0; N=int(SR*DUR)
+SR=44100; DUR=57.0; N=int(SR*DUR)
 L=np.zeros(N); R=np.zeros(N)
 rng=np.random.default_rng(3333)
 def add(sig,t,pan=0.0,g=1.0,buf=None):
@@ -138,9 +138,11 @@ def horn(t0,f=420,d=.22,g=.035,pan=0):
 def bell(t0,g=.1):
     for k,f in enumerate((1318.5,1760.0,2093.0)):
         n=int(.8*SR); t2=np.arange(n)/SR; add(np.sin(2*np.pi*f*t2)*np.exp(-t2*6),t0+k*.08,g=g,pan=-.3+.3*k)
-# ---------- intro: the street (engines, horns) under a driving afrobeat from the first word ----------
-for k,(dt,p_) in enumerate(((0.0,-.6),(1.4,.5),(2.9,-.3),(4.2,.7),(6.0,-.5),(7.4,.4))): engine(dt,2.2,.03,p_,55+8*k)
-for dt,f,p_ in ((1.1,440,-.5),(3.3,392,.6),(5.2,466,.2),(5.4,466,.2),(7.0,415,-.6)): horn(dt,f,.22,.03,p_)
+# ---------- the struggle: hot street (engines, horns), a sparse tense beat, the junction clock ----------
+for k,(dt,p_) in enumerate(((0.0,-.6),(1.4,.5),(2.9,-.3),(4.2,.7),(6.0,-.5),(7.4,.4),(9.0,-.2),(11.0,.5),(12.6,-.4))): engine(dt,2.2,.03,p_,55+6*k)
+for dt,f,p_ in ((1.1,440,-.5),(3.3,392,.6),(5.2,466,.2),(5.4,466,.2),(7.0,415,-.6),(10.6,440,.3),(12.2,392,-.5)): horn(dt,f,.22,.03,p_)
+tk=V('carrefour'); n_=0
+while tk<V('change')-.3: tick(tk,.05 if n_%2 else .04,3300 if n_%2 else 2900); tk+=.5; n_+=1
 BPM=104; b=60/BPM
 def groove(T0,END,bright=1.0,full=True):
     t=T0; step=0; PROGL=[[45,57,60,64],[41,53,57,60],[43,55,59,62],[40,52,55,59]]
@@ -154,13 +156,16 @@ def groove(T0,END,bright=1.0,full=True):
         step+=1; t+=b/4
     for k in range(int((END-T0)/(4*b))+1):
         t0=T0+k*4*b; ch=PROGL[k%4]; pad(t0,min(t0+4*b,END)-.05,[m+12 for m in ch[1:]],g=.026,a=.2,rel=.3)
-groove(V('t0')-.1,V('maint')-.3,.8,full=False)
-# « Maintenant, il y a OJA »: drop out, rise, hit
-riser(V('vide')+.6,V('maint')-V('vide')-.75,110,880,.07)
-boom(V('maint')-.15,.7,85,28,2.0); shimmer(V('maint')-.15,1.0,.1,-.7,.7); chime(V('maint')-.05,(1175,1568,1976,2349),.09)
+groove(V('t0')-.1,V('carrefour')-.2,.6,full=False)
+pad(V('carrefour')-.2,V('change'),[33,45,48,52],g=.05,a=.6,rel=.3)
+# « Avec OJA, ça change »: rise, hit
+riser(V('temps'),V('change')-V('temps')-.15,110,880,.07)
+boom(V('change')-.15,.7,85,28,2.0); shimmer(V('change')-.15,1.0,.1,-.7,.7); chime(V('change')-.05,(1175,1568,1976,2349),.09)
 # ---------- OJA: full groove ----------
-groove(V('appli')-.1,V('endA')-.3,1.0,True)
-for a in (V('tournes')-.05,V('appli')-.1,V('montre')-.1,V('inscr')-.1,V('formule')-.1): pop(a,520,.08)
+groove(V('tranq')-.1,V('endA')-.3,1.0,True)
+for a in (V('carrefour')-.05,V('tranq')-.1,V('commande')-.1,V('droit')-.1,V('monte')-.05,V('fini')-.05,V('montre')-.1,V('inscr')-.1,V('formule')-.1): pop(a,520,.08)
+engine(V('droit'),1.8,.035,.3,62); horn(V('attend')-.1,520,.12,.03,.3)
+for dt in (0,.12): click(V('monte')+.2+dt,.07)
 bell(V('course')-.05,.08); click(V('acceptes')-.05,.1); success(V('acceptes')+.1,.1)
 for i in range(4): blip(V('zones')-.5+i*.15,900+i*150,.05)
 typing(V('nom')-.1,.5,.05,.05); typing(V('numero')-.05,.45,.05,.05); click(V('moto')+.3,.08)
@@ -169,11 +174,10 @@ swell(V('sans')-.15,[64,67,71],.45,.06); swell(V('avec')-.15,[69,73,76,81],.5,.0
 boom(V('zero')-.1,.45,80,30,1.2); success(V('zero')-.05,.11)
 for k in ('jour1','semaine','mois'): click(V(k)-.05,.09)
 chime(V('pourtoi'),(1567.98,2093.0,2637.0),.07)
-for i in range(4): pop(V('gains')+.2+i*.18,640+i*80,.07)
 # ---------- end ----------
 swell(V('endA')-.25,[69,73,76,81],.6,.12); boom(V('endA')-.25,.6,90,30,2.2); chime(V('endA')-.05,(1175,1760,2349,2960),.09)
 engine(V('endA')+.2,2.6,.03,.3,60); horn(V('endB')+.2,440,.18,.03,.4); horn(V('endB')+.45,440,.18,.03,.4)
-pad(V('endA')-.25,46.6,[33,45,52,57,61,64,69],g=.07,a=.2,rel=.6)
+pad(V('endA')-.25,56.6,[33,45,52,57,61,64,69],g=.07,a=.2,rel=.6)
 for k,mm in enumerate((57,61,64,69,73)): add(pluck(mm+12,1.0,.045),V('endB')+.3+k*.09,pan=-.4+.2*k)
 # ---------- reverb ----------
 irn=int(1.8*SR); ir=rng.standard_normal(irn)*np.exp(-np.arange(irn)/SR/0.5); ir=lp(ir,.25); ir/=np.abs(ir).sum()**.5*12
