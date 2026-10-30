@@ -772,3 +772,38 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 | 43,3–47,2 s | « Un souci ? L'équipe Odja arbitre, et l'acheteur est remboursé si besoin. » | Carte « Un souci ? » : « L'équipe OJA arbitre », « L'acheteur est remboursé si besoin », « Remboursement au numéro qui a payé. » |
 | 47,2–49,5 s | « Et ce qui ne se vend pas, tu peux le donner. » | Il donne des vêtements et des livres à une maman et son fils ; « DON », Vêtements, Livres, Bébé |
 | 49,5–57 s | « Novodja, dans Odja. Ce qui dort chez toi vaut de l'argent. » | Il rit, le frigo part par le portail ; logo NOVOJA, « dans l'appli OJA », slogan, stores, mention |
+
+## OJA — « Zémidjan, cette nouvelle est pour toi », sensibilisation des zems (9:16, 47 s)
+
+- **Vidéo :** `OJA_Zemidjan_Sensibilisation_9x16.mp4` (1080 × 1920), pour TikTok, Reels et les statuts.
+- **Style :** nouveau style « reportage », inspiré du post de rue envoyé par l'équipe (rien n'en est copié) :
+  - photos plein écran avec une lente avancée ;
+  - grandes lignes en majuscules, blanc puis jaune zem, avec un petit surtitre espacé ;
+  - coupes franches avec un bref éclair ;
+  - cartes d'appli recréées d'après les vrais écrans chauffeur.
+- **Source :** `oja_zemidjan.html`, construite par `src/zem_build.py` à partir de `src/zem_body.js`.
+- **Voix et son :** voix Isac (`assets/zem/voix_zem.txt`), son `src/music33.py` (moteurs et klaxons, afrobeat, tic de course, frappe, cliquetis).
+- **Rendu :** `src/render_video.sh oja_zemidjan.html 47 assets/soundtrack_zem.m4a OJA_Zemidjan_Sensibilisation_9x16.mp4 <ffmpeg>`
+- **Le zem :** généré avec ElevenLabs à partir d'un portrait de référence, avec le même visage dans chaque scène (prompts dans `assets/zem/prompts.txt`).
+  - Chemise jaune de Cotonou, sans numéro lisible ni plaque visible.
+  - Ce n'est pas une vraie personne, et la mention le dit.
+  - Le nom tapé dans l'écran d'inscription (« Koffi Agossou ») est fictif et le numéro est masqué.
+- **Formules, validées par l'équipe le 30 octobre 2026 :**
+  - **Sans pass :** OJA prend une commission sur chaque course.
+  - **Pass illimité :** 0 % de commission, pour 24 h, 7 jours ou 1 mois.
+- **À ne pas mettre à l'écran :**
+  - aucun montant de pass ni taux de commission (règle 3 de `marketing/kit/09-regles-et-mentions.md`) ;
+  - aucun canal de paiement des gains (le décaissement MTN n'est pas encore actif).
+- **Mention à l'écran :** « Inscription : pièce d'identité, permis, carte grise, visite technique, assurance et TVM demandés. Prix des pass et taux de commission fixés par OJA. Personnes des images générées par IA. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–4,8 s | « Zémidjan, cette nouvelle est pour toi. Chaque jour, tu sillonnes Cotonou. » | Le zem et sa passagère dans la circulation ; « COTONOU / ZÉMIDJAN, CETTE NOUVELLE EST POUR TOI. » |
+| 4,8–8,8 s | « Tu tournes, tu attends au carrefour… et parfois, tu roules à vide. » | Il attend au carrefour sous le soleil ; « TU TOURNES, TU ATTENDS… / ET PARFOIS, TU ROULES À VIDE. » |
+| 8,8–10,4 s | « Maintenant, il y a Odja. » | Fond orange sombre, rayons, logo, « MAINTENANT, IL Y A OJA. » |
+| 10,4–16,1 s | « Avec l'appli, ce sont les clients qui te trouvent. Une course arrive sur ton téléphone : tu la vois, tu acceptes. » | Il sourit à son téléphone ; carte « Nouvelle course » Carrefour Étoile Rouge → Marché Dantokpa, « Accepter » → « Course acceptée » |
+| 16,1–19,8 s | « Et Odja te montre où sont les clients : les zones chaudes de la ville. » | Carte de nuit « ZONES CHAUDES » : Dantokpa, Ganhi, Akpakpa, Cadjèhoun ; le point jaune du zem |
+| 19,8–25,5 s | « Ton inscription se fait depuis ton téléphone : ton nom, ton numéro, puis ta moto et tes papiers, en photo. » | Il photographie sa pièce ; écrans « Devenir chauffeur, étape 1/2 » puis « Véhicule & identité » (moto, pièce d'identité, permis, carte grise, visite technique, assurance, TVM) |
+| 25,5–37,6 s | « Ensuite, tu choisis ta formule. Sans pass, Odja prend une commission sur chaque course. Avec le pass illimité : zéro pour cent de commission. Tu prends ton pass pour un jour, une semaine ou un mois… et chaque course est pour toi. » | La cliente monte ; carte « Sans pass » (commission) puis « Pass illimité » : « 0 % de commission », 24 H · 7 JOURS · 1 MOIS |
+| 37,6–39,5 s | « Et tous tes gains sont dans ton relevé. » | Carte « Relevé » (montants masqués) |
+| 39,5–47 s | « Zémidjan, roule avec Odja. Les clients t'attendent. » | Il sourit au coucher du soleil ; « ZÉMIDJAN, ROULE AVEC OJA. », « Télécharge OJA · Je suis chauffeur », stores, mention |
