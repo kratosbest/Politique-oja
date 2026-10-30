@@ -80,3 +80,11 @@ ZEM = dict(t0='Zémidjan, ton', soleil='Tu roules', cherches='tu cherches', vide
            zones='les zones chaudes', inscr='Ton inscription', nom='ton nom', numero='ton numéro', moto='puis ta moto', papiers='et tes papiers',
            formule='Ensuite', sans='Sans pass', commission='une commission', avec='Avec le pass', zero='zéro pour cent', jour1='pour un jour',
            semaine='une semaine', mois='un mois', pourtoi='et chaque course', endA='>Zémidjan, roule', endB="Les clients t'attendent")
+
+# key phrases of the tricycle awareness voice (assets/tri/voix_tri.txt)
+TRI = dict(t0='Conducteur de tricycle, ta', attends='Tu attends', appelles='Tu appelles', vide='et souvent', temps='Le temps passe', change='Avec Odja, ça',
+           tranq='Tu restes', vient='Ce sont les clients', maman='Une maman', course='la course arrive', acceptes='tu acceptes', droit='et tu vas droit',
+           livr='Tu peux aussi', montre='Et Odja te montre', zones='les zones chaudes', inscr='Ton inscription', nom='ton nom', numero='ton numéro',
+           tri='puis ton tricycle', papiers='et tes papiers', formule='Ensuite', sans='Sans pass', commission='une commission', avec='Avec le pass',
+           zero='zéro pour cent', jour1='pour un jour', semaine='une semaine', mois='un mois', pourtoi='et chaque course', endA='>Conducteur de tricycle, roule',
+           endB="Les clients t'attendent")
