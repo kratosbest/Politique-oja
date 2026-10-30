@@ -1,33 +1,28 @@
 # Prompts Google Flow — sensibilisation des conducteurs de tricycle (9:16)
 
-**Comment faire dans Flow**
-- Format **9:16 (vertical)**, à la meilleure qualité proposée.
-- **Une seule photo par prompt.** Le prompt le demande, et si Flow propose plusieurs résultats, réglez-le sur 1 ou gardez la meilleure.
-- Générez d'abord **le portrait de référence** et gardez le meilleur.
-- Pour chaque scène, ajoutez ce portrait comme **image de référence**. Les prompts redécrivent aussi ses vêtements, pour qu'il reste le même homme, bien habillé, avec le même tricycle.
-- Nommez chaque image comme indiqué (`tri_ref.png`, `t_attente.png`…), puis envoyez-la ici en pièce jointe, ou déposez-la dans `motion/flow/in/tri/`.
-- Régénérez une image avant de l'envoyer si on y voit :
-  - un visage ou des vêtements différents ;
-  - du texte ou un logo ;
-  - une plaque lisible ;
-  - des mains déformées.
+**Pour que les images soient précises (essai du 30 octobre 2026)**
 
-Les prompts sont en anglais, c'est la langue que les modèles d'image suivent le mieux.
+Sans image de référence jointe, Nano Banana invente un homme différent à chaque fois. Le mot « auto-rickshaw » l'a même envoyé vers une rue indienne. Pour l'éviter :
+1. **Réglez le nombre d'images sur x1** (le « x2 » dans la barre de saisie). On obtient une seule photo par prompt.
+2. **Gardez un seul portrait de référence** (`tri_ref.png`).
+3. **Avant chaque scène, joignez ce portrait avec le « + »** de la barre de saisie. C'est l'étape qui garde le même visage, les mêmes vêtements et le même tricycle.
+4. **Collez le prompt de la scène.** Il demande de reprendre l'homme de l'image jointe et ne décrit que ce qui change, avec des repères de Cotonou (zems en chemise jaune, sable, wax) et « Not India ».
+5. **Régénérez** si le visage, les vêtements ou le lieu ne vont pas. Envoyez-moi ensuite les images ici ou dans `motion/flow/in/tri/`, avec les noms indiqués.
 
 ---
 
 ## 0. `tri_ref.png` — portrait de référence
 L'homme, bien habillé et soigné, est assis dans la cabine de son tricycle jaune et noir. Il regarde l'objectif, calme et souriant.
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Documentary street photograph, vertical 9:16: portrait of a well-dressed, neatly groomed Beninese auto-rickshaw tricycle driver in Cotonou, about 38 years old, short black hair with a clean cut, neatly trimmed short beard, warm brown skin with natural texture. He wears a crisp, well-ironed short-sleeved button-up shirt in light sky blue, tucked into tailored dark navy trousers with a brown leather belt, a classic silver watch, clean and smart. He is seated at the handlebar inside the open cabin of his clean yellow and black auto-rickshaw tricycle, calm, friendly, confident expression looking at the camera, a slight proud smile. Framed from the waist up, his face in the upper half of the image. Behind him a softly blurred busy market street of Cotonou, bright daylight. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Documentary street photograph, vertical 9:16: portrait of a well-dressed, neatly groomed Beninese tricycle taxi driver in Cotonou, about 38 years old, short black hair with a clean cut, neatly trimmed short beard, warm brown skin with natural texture. He wears a crisp, well-ironed short-sleeved button-up shirt in light sky blue, tucked into tailored dark navy trousers with a brown leather belt, a classic silver watch, clean and smart. He is seated at the handlebar inside the open cabin of his clean yellow and black tricycle taxi (keke), calm, friendly, confident expression looking at the camera, a slight proud smile. Framed from the waist up, his face in the upper half of the image. Behind him a softly blurred busy market street of Cotonou, bright daylight. Natural colours, crisp detail, shallow depth of field, 50mm. Black West African man, Cotonou, Benin. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
 
 ## 1. `t_attente.png` — la galère : il attend près du marché
-Image utilisée deux fois : « Tu attends au bord de la route, près du marché » et « Le temps passe, le carburant aussi ».
+« Tu attends au bord de la route, près du marché » / « Le temps passe, le carburant aussi ».
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: hot afternoon by the roadside near a big crowded market in Cotonou, he sits alone in the cabin of his parked tricycle, the passenger bench behind him empty, wiping sweat from his forehead, tired and worried, waiting for clients; people walk past without stopping. Waist up, his face in the upper half of the image. Harsh sunlight, dusty air. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: hot afternoon, his tricycle is parked by the roadside next to a crowded market; he sits alone in the driver seat, the passenger bench behind him empty, wiping sweat from his forehead, tired and worried; people walk past without stopping. West African street: sandy roadsides, zemidjan motorbike taxis with drivers in yellow shirts, market stalls with colourful wax fabrics. Harsh sunlight, dusty air. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -35,7 +30,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 2. `t_appel.png` — la galère : il appelle les passants, il roule à vide
 « Tu appelles les passants… et souvent, tu roules à vide. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: he drives his tricycle slowly along a busy street of Cotonou with the passenger bench empty, leaning out of the cabin and calling out to passers-by with one hand raised, but nobody stops; frustrated face. His face in the upper half of the image. Harsh midday sun, heat haze. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: he drives the tricycle slowly along a busy street, the passenger bench empty, leaning out of the cabin and calling to passers-by with one hand raised, nobody stops; frustrated face. West African street: sandy roadsides, zemidjan motorbike taxis with drivers in yellow shirts, market stalls with colourful wax fabrics. Harsh midday sun. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -43,7 +38,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 3. `t_tranquille.png` — avec OJA : tranquille à l'ombre
 « Tu restes tranquille. Ce sont les clients qui viennent à toi. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: he sits relaxed in the cabin of his tricycle parked in the cool shade of a big tree by a quiet street of Cotonou, holding a small bottle of water, his smartphone in his other hand, calm and peaceful, a slight easy smile. Waist up, his face in the upper half of the image. Dappled shade, soft warm light, vivid colours. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: the tricycle is parked in the cool shade of a big mango tree by a quiet sandy street; he sits relaxed in the driver seat holding a small bottle of water, his smartphone in his other hand, calm, a slight easy smile. Dappled shade, vivid warm colours. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -51,7 +46,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 4. `t_phone.png` — avec OJA : une course arrive
 « La course arrive sur ton téléphone, tu acceptes. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: seated in his parked tricycle, he looks at the smartphone in his hand and smiles with happy surprise, eyebrows raised; the phone screen faces him and is not visible to the camera. Waist up, his face in the upper half of the image; blurred street with shops behind. Bright daylight, vivid colours. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: seated in his parked tricycle, he looks at the smartphone in his hand and smiles with happy surprise, eyebrows raised; the screen faces him and is not visible. West African street: sandy roadsides, zemidjan motorbike taxis with drivers in yellow shirts, market stalls with colourful wax fabrics. Bright daylight. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -59,7 +54,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 5. `t_rejoint.png` — avec OJA : il va droit vers la cliente
 « …et tu vas droit vers elle. » La maman et ses courses lui font signe.
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: at the roadside near a market in Cotonou, a smiling young mother holding her little daughter's hand, with several full shopping bags at her feet and her phone in her other hand, waves at him; he pulls up next to her in his tricycle with a friendly smile and a nod, his face clearly visible. His face in the upper half of the image. Bright daylight, vivid colours, lively street behind. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: at the roadside near the market, a smiling young Beninese mother in a wax-print dress, holding her little daughter's hand, with full shopping bags at her feet and her phone in her other hand, waves at him; he pulls up next to her in the tricycle with a friendly smile. West African street: sandy roadsides, zemidjan motorbike taxis with drivers in yellow shirts, market stalls with colourful wax fabrics. Bright daylight. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -67,7 +62,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 6. `t_livraison.png` — avec OJA : une livraison pour une commerçante
 « Tu peux aussi faire des livraisons pour les commerçants. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: in front of a small colourful shop in Cotonou, a smiling shopkeeper woman hands him a sealed cardboard box, and he loads it onto the back of his tricycle next to two other boxes; both smile. His face in the upper half of the image. Bright daylight, vivid colours. Nothing readable on the boxes or the shop. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: in front of a small colourful shop, a smiling Beninese shopkeeper woman hands him a sealed plain cardboard box, and he loads it onto the back bench of the tricycle next to two other plain boxes; both smile. Bright daylight, vivid colours. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -75,7 +70,7 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 7. `t_papiers.png` — l'inscription : ses papiers en photo
 « …puis ton tricycle et tes papiers, en photo. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: seated in his parked tricycle in a quiet shaded street, he holds an identity card in one hand and takes a photo of it with the smartphone in his other hand, focused and serious; the card is seen at an angle, nothing on it readable. Waist up, his face in the upper half of the image. Soft shade light. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: seated in his parked tricycle in a quiet shaded street, he holds an identity card in one hand and takes a photo of it with the smartphone in his other hand, focused and serious; the card is seen at an angle, nothing on it readable. Soft shade light. His face in the upper half of the image. No readable text or signs, no logos, no license plate. Not India.
 ```
 
 ---
@@ -83,5 +78,5 @@ Generate one single photograph only (one image, no grid, no collage, no split pa
 ## 8. `t_fin.png` — la fin : fier, au coucher du soleil
 « Conducteur de tricycle, roule avec OJA. Les clients t'attendent. »
 ```
-Generate one single photograph only (one image, no grid, no collage, no split panels, no variations). Keep exactly the same well-dressed man (crisp light sky blue short-sleeved button-up shirt tucked into dark navy trousers, brown leather belt, silver watch, clean cut and trimmed beard) and the same clean yellow and black auto-rickshaw tricycle as in the reference image. Documentary street photograph, vertical 9:16: golden hour on a wide avenue in Cotonou, he sits in the cabin of his tricycle facing the camera with a big proud confident smile, relaxed; warm sunset light, blurred traffic and palm trees behind. Waist up, his face in the upper third of the image; the lower half is calm, mostly the tricycle and the road. Warm colours. Natural colours, crisp detail, shallow depth of field, 50mm. No readable text, no logos, no visible license plate.
+Use the attached reference image. Keep exactly the same Black Beninese man (same face, same short beard, same crisp light sky blue short-sleeved shirt, dark navy trousers, brown leather belt, silver watch) and exactly the same yellow and black tricycle taxi. Generate one single photo, vertical 9:16, realistic documentary photography, in Cotonou, Benin, West Africa. Scene: golden hour on a wide avenue of Cotonou lined with palm trees, he sits in the driver seat of his tricycle facing the camera with a big proud confident smile, relaxed; warm sunset light, blurred traffic. His face in the upper third of the image, the lower half calm. No readable text or signs, no logos, no license plate. Not India.
 ```
