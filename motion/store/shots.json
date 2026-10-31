@@ -1,7 +1,7 @@
 {
-  "sizes": ["iphone_6.9"],
+  "sizes": ["iphone_6.9", "ipad_13", "duo_outer", "duo_inner"],
   "shots": [
-    { "name": "market", "capture": "../assets/cot_ui/rs0.png", "kicker": "OJA Market",
-      "title": ["Restaurants et boutiques", "*près de chez vous*"] }
+    { "name": "market", "kicker": "OJA Market", "title": ["Restaurants et boutiques", "*près de chez vous*"],
+      "captures": { "iphone": "../assets/cot_ui/rs0.png" } }
   ]
 }

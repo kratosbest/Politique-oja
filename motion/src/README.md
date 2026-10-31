@@ -50,9 +50,17 @@ Les images peuvent être générées de deux façons. Le circuit et les règles 
 ElevenLabs sert aussi aux voix.
 
 ## Captures App Store
-`node src/store_build.js store/shots.json` (avec `FFMPEG=<chemin de ffmpeg>`) : pour chaque écran de `shots.json` (capture de l'app, surtitre, titre), il produit une image aux tailles exactes acceptées par App Store Connect, en PNG sans transparence, dans `store/out/<taille>/`. Dans le titre, `*mot*` passe en orange.
-- **`iphone_6.9` (1320 × 2868) :** la série iPhone principale. Apple la réduit pour les autres iPhone.
-- **`iphone_6.5` (1284 × 2778) :** série de secours, seulement si Apple la réclame.
-- **`ipad_13` (2064 × 2752) :** seulement si l'app tourne sur iPad.
+`node src/store_build.js store/shots.json` (avec `FFMPEG=<chemin de ffmpeg>`) : pour chaque écran de `shots.json` (surtitre, titre, captures), il produit une image aux tailles exactes acceptées par App Store Connect, en PNG sans transparence, dans `store/out/<taille>/`. Dans le titre, `*mot*` passe en orange. Le cadre de l'appareil s'ajuste à la forme de la capture.
+
+Chaque taille utilise la capture prise sur son propre type d'appareil (clé dans `captures`). Apple refuse les captures d'iPhone étirées pour l'iPad.
+| Taille | Pixels | Capture | Quand |
+|---|---|---|---|
+| `iphone_6.9` | 1320 × 2868 | `iphone` | Série iPhone principale, réduite par Apple pour les autres iPhone |
+| `iphone_6.5` | 1284 × 2778 | `iphone` | Série de secours, seulement si Apple la réclame |
+| `ipad_13` | 2064 × 2752 | `ipad` | L'app tourne sur iPad |
+| `duo_outer` | 1398 × 2034 | `duo_outer` | iPhone Duo plié, écran extérieur |
+| `duo_inner` | 2007 × 2853 | `duo_inner` | iPhone Duo déplié, écran intérieur |
+
+Les captures iPhone Duo se prennent dans le simulateur iPhone Duo de Xcode 27.1 (ou sur l'appareil). Apple les exigera à partir d'avril 2027 pour les apps compilées avec le SDK iOS 27.1 ou plus récent ; elles ajoutent le badge « iPhone Duo » sur la fiche du Store.
 
 Une série compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée à Apple, sans donnée personnelle visible.
