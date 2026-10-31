@@ -1,7 +1,23 @@
 {
-  "sizes": ["iphone_6.9", "ipad_13", "duo_outer", "duo_inner"],
+  "sizes": ["iphone_6.9", "iphone_6.5", "ipad_13", "duo_outer", "duo_inner", "play_phone"],
   "shots": [
+    { "name": "accueil", "kicker": "OJA", "title": ["Se déplacer, manger, vendre", "*avec une seule app*"],
+      "captures": { "phone": "captures/accueil.png" } },
+    { "name": "destination", "kicker": "OJA Transport", "title": ["Commandez votre trajet", "*en quelques secondes*"],
+      "captures": { "phone": "captures/destination.png" } },
+    { "name": "course", "kicker": "OJA Transport", "title": ["Tricycle, moto ou voiture :", "*le prix avant de partir*"],
+      "captures": { "phone": "captures/course.png" } },
     { "name": "market", "kicker": "OJA Market", "title": ["Restaurants et boutiques", "*près de chez vous*"],
-      "captures": { "iphone": "../assets/cot_ui/rs0.png" } }
+      "captures": { "phone": "captures/market.png" }, "skip": ["play_phone"] },
+    { "name": "livraison", "kicker": "Livraison", "title": ["Faites-vous livrer,", "*payez en Mobile Money*"],
+      "captures": { "phone": "captures/livraison.png" } },
+    { "name": "novoja", "kicker": "NOVOJA", "title": ["Vendez ou donnez", "*ce qui ne vous sert plus*"],
+      "captures": { "phone": "captures/novoja.png" } },
+    { "name": "discussion", "kicker": "NOVOJA", "title": ["Discutez du prix", "*avec le vendeur*"],
+      "captures": { "phone": "captures/discussion.png" } },
+    { "name": "profil", "kicker": "Votre espace", "title": ["Vos défis, vos commandes", "*et votre sécurité*"],
+      "captures": { "phone": "captures/profil.png" } },
+    { "name": "inscription", "kicker": "Inscription", "title": ["Créez votre compte", "*avec votre numéro*"],
+      "captures": { "phone": "captures/inscription.png" }, "skip": ["play_phone"] }
   ]
 }

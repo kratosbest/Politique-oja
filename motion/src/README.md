@@ -52,15 +52,18 @@ ElevenLabs sert aussi aux voix.
 ## Captures App Store
 `node src/store_build.js store/shots.json` (avec `FFMPEG=<chemin de ffmpeg>`) : pour chaque écran de `shots.json` (surtitre, titre, captures), il produit une image aux tailles exactes acceptées par App Store Connect, en PNG sans transparence, dans `store/out/<taille>/`. Dans le titre, `*mot*` passe en orange. Le cadre de l'appareil s'ajuste à la forme de la capture.
 
-Chaque taille utilise la capture prise sur son propre type d'appareil (clé dans `captures`). Apple refuse les captures d'iPhone étirées pour l'iPad.
+Chaque taille utilise la capture prise sur son propre type d'appareil (clé dans `captures`). Apple refuse les captures d'iPhone étirées pour l'iPad. `skip` retire un écran d'une taille (par exemple, de Google Play, un écran qui montre l'App Store). Dans une série, la place du titre est celle du titre le plus haut, pour que tous les téléphones aient la même taille.
 | Taille | Pixels | Capture | Quand |
 |---|---|---|---|
-| `iphone_6.9` | 1320 × 2868 | `iphone` | Série iPhone principale, réduite par Apple pour les autres iPhone |
-| `iphone_6.5` | 1284 × 2778 | `iphone` | Série de secours, seulement si Apple la réclame |
+| `iphone_6.9` | 1320 × 2868 | `phone` | Série iPhone principale, réduite par Apple pour les autres iPhone |
+| `iphone_6.5` | 1284 × 2778 | `phone` | Série de secours, seulement si Apple la réclame |
 | `ipad_13` | 2064 × 2752 | `ipad` | L'app tourne sur iPad |
 | `duo_outer` | 1398 × 2034 | `duo_outer` | iPhone Duo plié, écran extérieur |
 | `duo_inner` | 2007 × 2853 | `duo_inner` | iPhone Duo déplié, écran intérieur |
+| `play_phone` | 1080 × 1920 | `phone` | Google Play, téléphone (de 2 à 8 images) |
 
 Les captures iPhone Duo se prennent dans le simulateur iPhone Duo de Xcode 27.1 (ou sur l'appareil). Apple les exigera à partir d'avril 2027 pour les apps compilées avec le SDK iOS 27.1 ou plus récent ; elles ajoutent le badge « iPhone Duo » sur la fiche du Store.
 
-Une série compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée à Apple, sans donnée personnelle visible.
+Une série App Store compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée au Store, sans donnée personnelle visible.
+
+Les captures de `store/captures/` sont prêtes à l'emploi : les originaux restent hors du dépôt, et les adresses, le numéro de téléphone et la position sur la carte y sont floutés.
