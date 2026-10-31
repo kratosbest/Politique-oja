@@ -48,3 +48,11 @@ Les images peuvent être générées de deux façons. Le circuit et les règles 
 - **Par Claude dans ElevenLabs,** avec le modèle le moins cher qui garde le même visage : Nano Banana 2 Lite (`gemini-3.1-flash-lite-image`, 1K, 9:16), avec le portrait de référence joint à chaque scène. Comptez 206 crédits pour le portrait et 309 par scène.
 
 ElevenLabs sert aussi aux voix.
+
+## Captures App Store
+`node src/store_build.js store/shots.json` (avec `FFMPEG=<chemin de ffmpeg>`) : pour chaque écran de `shots.json` (capture de l'app, surtitre, titre), il produit une image aux tailles exactes acceptées par App Store Connect, en PNG sans transparence, dans `store/out/<taille>/`. Dans le titre, `*mot*` passe en orange.
+- **`iphone_6.9` (1320 × 2868) :** la série iPhone principale. Apple la réduit pour les autres iPhone.
+- **`iphone_6.5` (1284 × 2778) :** série de secours, seulement si Apple la réclame.
+- **`ipad_13` (2064 × 2752) :** seulement si l'app tourne sur iPad.
+
+Une série compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée à Apple, sans donnée personnelle visible.

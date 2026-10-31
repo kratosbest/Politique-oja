@@ -1,0 +1,7 @@
+{
+  "sizes": ["iphone_6.9"],
+  "shots": [
+    { "name": "market", "capture": "../assets/cot_ui/rs0.png", "kicker": "OJA Market",
+      "title": ["Restaurants et boutiques", "*près de chez vous*"] }
+  ]
+}
