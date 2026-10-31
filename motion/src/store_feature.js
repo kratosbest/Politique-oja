@@ -10,7 +10,7 @@ const APPS = [
   { out: 'store/out/play_feature.png', logo: 'assets/mk_logo.png', name: 'Oja App',
     title: ['Se déplacer, manger, vendre', '*avec une seule app*'], chips: ['Transport', 'Market', 'NOVOJA'],
     back: 'store/captures/course.png', front: 'store/captures/accueil.png' },
-  { out: 'store/merchant/out/play_feature.png', logo: 'store/merchant/out/_icon.png', round: true, name: 'Oja Merchant',
+  { out: 'store/merchant/out/play_feature.png', logo: 'store/merchant/out/_logo.png', tall: true, name: 'Oja Merchant',
     title: ['Gérez vos commandes', '*en temps réel*'], chips: ['Commandes', 'Catalogue', 'Revenus'],
     back: 'store/merchant/captures/parametres.png', front: 'store/merchant/captures/boutique.png' },
 ];
@@ -25,7 +25,7 @@ function page(a) {
   .glow{position:absolute;inset:0;background:radial-gradient(ellipse 55% 75% at 0% 0%,rgba(255,107,0,.38),rgba(255,107,0,0) 70%),radial-gradient(ellipse 45% 70% at 82% 100%,rgba(255,138,31,.30),rgba(255,138,31,0) 70%)}
   .left{position:absolute;left:64px;top:0;bottom:0;width:545px;display:flex;flex-direction:column;justify-content:center}
   .brand{display:flex;align-items:center;gap:18px}
-  .brand img{width:${a.round ? 76 : 92}px;height:${a.round ? 76 : 92}px;${a.round ? 'border-radius:50%;' : ''}object-fit:cover}
+  .brand img{${a.tall ? 'height:176px;width:auto' : 'width:92px;height:92px'}}
   .brand span{font:800 40px Inter;letter-spacing:-.02em}
   h1{margin-top:26px;font:800 40px/1.1 Inter;letter-spacing:-.025em}
   h1 em{font-style:normal;color:#FF8A1F}
@@ -43,9 +43,10 @@ function page(a) {
 }
 
 (async () => {
-  // Oja Merchant icon: the round app icon cut from the login capture (114 px circle).
-  execFileSync(FFMPEG, ['-v', 'error', '-y', '-i', path.join(ROOT, 'store/merchant/captures/connexion.png'),
-    '-vf', 'crop=114:114:403:316', path.join(ROOT, 'store/merchant/out/_icon.png')]);
+  // Oja Merchant logo (assets/merchant_logo.png): cropped to the badge, and its faint white veil (alpha < 40) cleared.
+  execFileSync(FFMPEG, ['-v', 'error', '-y', '-i', path.join(ROOT, 'assets/merchant_logo.png'), '-vf',
+    "crop=700:860:160:88,format=rgba,geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='if(lt(alpha(X,Y),40),0,alpha(X,Y))'",
+    path.join(ROOT, 'store/merchant/out/_logo.png')]);
   const browser = await chromium.launch();
   const pg = await browser.newPage({ viewport: { width: 1024, height: 500 } });
   for (const a of APPS) {
@@ -57,6 +58,6 @@ function page(a) {
     fs.unlinkSync(tmp);
     console.log(a.out);
   }
-  fs.unlinkSync(path.join(ROOT, 'store/merchant/out/_icon.png'));
+  fs.unlinkSync(path.join(ROOT, 'store/merchant/out/_logo.png'));
   await browser.close();
 })();
