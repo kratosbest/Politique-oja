@@ -67,4 +67,6 @@ Les captures iPhone Duo se prennent dans le simulateur iPhone Duo de Xcode 27.1 
 
 Une série App Store compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée au Store, sans donnée personnelle visible.
 
+Image de présentation Google Play (1024 × 500, sans transparence) : `node src/store_feature.js` produit `store/out/play_feature.png` (Oja App) et `store/merchant/out/play_feature.png` (Oja Merchant). Pas d'appel à l'action (« Télécharger »), de classement ni de prix dans cette image : Google Play les refuse.
+
 Une app par dossier : `store/` pour Oja App, `store/merchant/` pour Oja Merchant (`node src/store_build.js store/merchant/shots.json`). Les captures de `store/captures/` sont prêtes à l'emploi : les originaux restent hors du dépôt, et les adresses, le numéro de téléphone et la position sur la carte y sont floutés.
