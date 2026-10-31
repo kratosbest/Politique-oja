@@ -59,8 +59,8 @@ Chaque taille utilise la capture prise sur son propre type d'appareil (clé dans
 | `iphone_6.5` | 1284 × 2778 | `phone` | Série de secours, seulement si Apple la réclame |
 | `iphone_6.3` | 1206 × 2622 | `phone` | iPhone 6,1 et 6,3 pouces, demandée par la fiche OJA dans App Store Connect |
 | `ipad_13` | 2064 × 2752 | `ipad` | L'app tourne sur iPad. Faute de captures iPad, l'équipe a demandé de reprendre les captures iPhone (`capture_keys` dans `shots.json`), en sachant qu'Apple peut les refuser |
-| `duo_outer` | 1398 × 2034 | `duo_outer` | iPhone Duo plié, écran extérieur |
-| `duo_inner` | 2007 × 2853 | `duo_inner` | iPhone Duo déplié, écran intérieur |
+| `duo_outer` | 1398 × 2034 | `duo_outer` | iPhone Duo plié, écran extérieur. Faute de captures iPhone Duo, reprend les captures iPhone à la demande de l'équipe |
+| `duo_inner` | 2007 × 2853 | `duo_inner` | iPhone Duo déplié, écran intérieur. Faute de captures iPhone Duo, reprend les captures iPhone à la demande de l'équipe |
 | `play_phone` | 1080 × 1920 | `phone` | Google Play, téléphone (de 2 à 8 images) |
 
 Les captures iPhone Duo se prennent dans le simulateur iPhone Duo de Xcode 27.1 (ou sur l'appareil). Apple les exigera à partir d'avril 2027 pour les apps compilées avec le SDK iOS 27.1 ou plus récent ; elles ajoutent le badge « iPhone Duo » sur la fiche du Store.
