@@ -1,19 +1,22 @@
 // App Store screenshots: node src/store_build.js store/shots.json
 // Renders each shot (kicker, title, app capture in a device frame) at the exact sizes App Store Connect accepts.
-// Each size uses the capture taken on its own device class: Apple rejects iPhone captures stretched to iPad.
+// Each size uses the capture taken on its own device class: Apple may reject iPhone captures shown on iPad.
+// "capture_keys" in shots.json can still map a size to another class (e.g. ipad_13 -> phone) when the team asks for it.
 const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path'), { execFileSync } = require('child_process');
 
-// size: [width, height, capture key, frame corner radius as a share of the screen width]
+// size: [width, height, capture key]
 const SIZES = {
-  'iphone_6.9': [1320, 2868, 'phone', 0.125],   // iPhone with Dynamic Island (large display), the main iPhone set
-  'iphone_6.5': [1284, 2778, 'phone', 0.125],   // iPhone with Face ID (large display), fallback set
-  'iphone_6.3': [1206, 2622, 'phone', 0.125],   // iPhone with Dynamic Island (medium display), 6.1 and 6.3 inch
-  'ipad_13': [2064, 2752, 'ipad', 0.035],       // iPad 13-inch, required when the app runs on iPad
-  'duo_outer': [1398, 2034, 'duo_outer', 0.09], // iPhone Duo outer display (folded)
-  'duo_inner': [2007, 2853, 'duo_inner', 0.06], // iPhone Duo inner display (unfolded)
-  'play_phone': [1080, 1920, 'phone', 0.125],   // Google Play phone screenshots (9:16)
+  'iphone_6.9': [1320, 2868, 'phone'],    // iPhone with Dynamic Island (large display), the main iPhone set
+  'iphone_6.5': [1284, 2778, 'phone'],    // iPhone with Face ID (large display), fallback set
+  'iphone_6.3': [1206, 2622, 'phone'],    // iPhone with Dynamic Island (medium display), 6.1 and 6.3 inch
+  'ipad_13': [2064, 2752, 'ipad'],        // iPad 13-inch, required when the app runs on iPad
+  'duo_outer': [1398, 2034, 'duo_outer'], // iPhone Duo outer display (folded)
+  'duo_inner': [2007, 2853, 'duo_inner'], // iPhone Duo inner display (unfolded)
+  'play_phone': [1080, 1920, 'phone'],    // Google Play phone screenshots (9:16)
 };
+// Frame corner radius as a share of the screen width, per capture class.
+const RADIUS = { phone: 0.125, ipad: 0.035, duo_outer: 0.09, duo_inner: 0.06 };
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 
 function page(shot, W, H, img, radius, titleH = 0) {
@@ -53,7 +56,7 @@ function page(shot, W, H, img, radius, titleH = 0) {
   const base = path.dirname(cfgPath), outDir = path.join(base, 'out');
   const browser = await chromium.launch();
   for (const sz of cfg.sizes) {
-    const [W, H, key, radius] = SIZES[sz];
+    const [W, H] = SIZES[sz], key = (cfg.capture_keys || {})[sz] || SIZES[sz][2], radius = RADIUS[key];
     const shots = cfg.shots.filter(s => s.captures[key] && !(s.skip || []).includes(sz));
     if (!shots.length) { console.log(`${sz}: no ${key} capture, skipped`); continue; }
     fs.mkdirSync(path.join(outDir, sz), { recursive: true });
