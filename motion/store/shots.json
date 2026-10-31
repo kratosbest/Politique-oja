@@ -1,5 +1,5 @@
 {
-  "sizes": ["iphone_6.9", "iphone_6.5", "ipad_13", "duo_outer", "duo_inner", "play_phone"],
+  "sizes": ["iphone_6.3", "iphone_6.9", "iphone_6.5", "ipad_13", "duo_outer", "duo_inner", "play_phone"],
   "shots": [
     { "name": "accueil", "kicker": "OJA", "title": ["Se déplacer, manger, vendre", "*avec une seule app*"],
       "captures": { "phone": "captures/accueil.png" } },

@@ -57,6 +57,7 @@ Chaque taille utilise la capture prise sur son propre type d'appareil (clé dans
 |---|---|---|---|
 | `iphone_6.9` | 1320 × 2868 | `phone` | Série iPhone principale, réduite par Apple pour les autres iPhone |
 | `iphone_6.5` | 1284 × 2778 | `phone` | Série de secours, seulement si Apple la réclame |
+| `iphone_6.3` | 1206 × 2622 | `phone` | iPhone 6,1 et 6,3 pouces, demandée par la fiche OJA dans App Store Connect |
 | `ipad_13` | 2064 × 2752 | `ipad` | L'app tourne sur iPad |
 | `duo_outer` | 1398 × 2034 | `duo_outer` | iPhone Duo plié, écran extérieur |
 | `duo_inner` | 2007 × 2853 | `duo_inner` | iPhone Duo déplié, écran intérieur |

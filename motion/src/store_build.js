@@ -8,6 +8,7 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const SIZES = {
   'iphone_6.9': [1320, 2868, 'phone', 0.125],   // iPhone with Dynamic Island (large display), the main iPhone set
   'iphone_6.5': [1284, 2778, 'phone', 0.125],   // iPhone with Face ID (large display), fallback set
+  'iphone_6.3': [1206, 2622, 'phone', 0.125],   // iPhone with Dynamic Island (medium display), 6.1 and 6.3 inch
   'ipad_13': [2064, 2752, 'ipad', 0.035],       // iPad 13-inch, required when the app runs on iPad
   'duo_outer': [1398, 2034, 'duo_outer', 0.09], // iPhone Duo outer display (folded)
   'duo_inner': [2007, 2853, 'duo_inner', 0.06], // iPhone Duo inner display (unfolded)
