@@ -1,0 +1,16 @@
+{
+  "sizes": ["iphone_6.3", "ipad_13", "duo_outer", "duo_inner", "play_phone"],
+  "capture_keys": { "ipad_13": "phone", "duo_outer": "phone", "duo_inner": "phone" },
+  "shots": [
+    { "name": "boutique", "kicker": "Oja Merchant", "title": ["Gérez vos commandes", "*en temps réel*"],
+      "captures": { "phone": "captures/boutique.png" } },
+    { "name": "catalogue", "kicker": "Catalogue", "title": ["Produits, prix, promos :", "*vous gardez la main*"],
+      "captures": { "phone": "captures/catalogue.png" } },
+    { "name": "article", "kicker": "Catalogue", "title": ["Ajoutez un article :", "*photo, prix et promo*"],
+      "captures": { "phone": "captures/article.png" } },
+    { "name": "parametres", "kicker": "Votre boutique", "title": ["Revenus, abonnement, support :", "*tout au même endroit*"],
+      "captures": { "phone": "captures/parametres.png" } },
+    { "name": "connexion", "kicker": "Connexion", "title": ["Vos identifiants Oja App,", "*aucun nouveau compte*"],
+      "captures": { "phone": "captures/connexion.png" }, "skip": ["play_phone"] }
+  ]
+}

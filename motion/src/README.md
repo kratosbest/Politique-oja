@@ -67,4 +67,4 @@ Les captures iPhone Duo se prennent dans le simulateur iPhone Duo de Xcode 27.1 
 
 Une série App Store compte de 1 à 10 images. Utilisez uniquement des captures de la version envoyée au Store, sans donnée personnelle visible.
 
-Les captures de `store/captures/` sont prêtes à l'emploi : les originaux restent hors du dépôt, et les adresses, le numéro de téléphone et la position sur la carte y sont floutés.
+Une app par dossier : `store/` pour Oja App, `store/merchant/` pour Oja Merchant (`node src/store_build.js store/merchant/shots.json`). Les captures de `store/captures/` sont prêtes à l'emploi : les originaux restent hors du dépôt, et les adresses, le numéro de téléphone et la position sur la carte y sont floutés.
