@@ -855,15 +855,19 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 - **Source :** `oja_vendez_tranquille.html`, construite par `src/vtq_build.py` à partir de `src/vtq_body.js` (moteur du film des zems). Son : `src/music35.py`.
 - **Rendu :** `src/render_video.sh oja_vendez_tranquille.html 49.5 assets/soundtrack_vtq.m4a OJA_VendezTranquille_Vendeuses_9x16.mp4 <ffmpeg>`
 - **Images :** générées avec Nano Banana 2 Lite dans ElevenLabs. Le portrait `assets/vtq/vtq_ref.jpg` est joint à chaque scène, d'où la même vendeuse partout. Prompts dans `assets/vtq/prompts.txt`. Coût : environ 2 270 crédits pour les images et 810 pour les deux voix.
+- **Clips vidéo :** six scènes jouent des clips Veo de 8 s que l'équipe a générés dans Google Flow à partir de ces photos (prompts : `assets/vtq/prompts_flow_video.md`). Les clips sont dans `clips_vtq/` et leurs images extraites dans `assets/vtqf/`, hors du dépôt : `for c in c_live c_doute c_colere c_livreur c_tranquille c_colis; do mkdir -p assets/vtqf/$c; ffmpeg -i clips_vtq/$c.mp4 -q:v 3 assets/vtqf/$c/f%03d.jpg; done`, avant le rendu.
+  - Les lèvres suivent la voix d'Alimata : le clip du live est décalé de 0,3 s, celui de la colère est calé sur « Un autre » et « Vraiment ».
+  - Le clip du live garde l'interface de live dessinée par Veo (logo TikTok, faux commentaires), à la demande de l'équipe. La page n'ajoute donc pas son propre badge « EN DIRECT », et les sous-titres passent au-dessus de sa tête.
+  - La fin reste une photo.
 - **Écrans :** recréés avec les mots de l'appli (« Paiement Mobile Money sécurisé après validation de la commande », « Ma boutique », « Revenus & reversements », « gains retirables »). Aucun montant, aucun logo d'opérateur.
 - **Mention :** « Mise en situation, personnes des images générées par IA. La commande est payée dans l'appli ; les frais de livraison peuvent être réglés au livreur à l'arrivée. »
 
 | Temps | Voix | Image |
 |---|---|---|
-| 0–6,2 s | « Bonsoir la famille, on est en direct ! Ce wax-là, il en reste trois. Qui prend ? » | Le live : badge « EN DIRECT », commentaires, cœurs, sous-titres |
+| 0–6,2 s | « Bonsoir la famille, on est en direct ! Ce wax-là, il en reste trois. Qui prend ? » | Clip du live avec l'interface dessinée par Veo, sous-titres au-dessus de sa tête |
 | 6,2–14,4 s | « Mais je dois vous dire une chose. Un client m'envoie sa capture Mobile Money. Je vérifie… rien n'est arrivé. C'est une fausse capture ! » | Image ternie, elle regarde son téléphone ; capture « Transfert réussi » au montant masqué, « Rien reçu sur mon compte », tampon « FAUSSE CAPTURE » |
 | 14,4–17,4 s | « Un autre me dit : « Je paie quand le livreur arrive. » » | Elle parle face caméra ; le message du client |
-| 17,4–22,2 s | « Le livreur arrive… il ne décroche plus. Et le déplacement, c'est encore moi qui paie. » | Le livreur, en polo bleu marine et baskets blanches, attend sur sa moto devant le portail d'une villa et regarde sa montre ; écran d'appel « Client · Ne répond pas » |
+| 17,4–22,2 s | « Le livreur arrive… il ne décroche plus. Et le déplacement, c'est encore moi qui paie. » | Clip : le livreur en polo vert et casque attend sur sa moto devant le portail d'une villa, téléphone à l'oreille, et regarde sa montre ; écran d'appel « Client · Ne répond pas » |
 | 22,2–24,8 s | « Vraiment, on est fatiguées ! » | Elle, lasse, face caméra |
 | 24,8–26,7 s | « Avec Odja, c'est fini. » | Fond orange sombre, rayons, logo, « AVEC OJA, C'EST FINI. » |
 | 26,7–31,7 s | « Ton client commande sur Odja Market, et il paie sa commande par Mobile Money, dans l'appli. » | Elle sourit à son téléphone ; carte « Paiement OJA », « Payer par Mobile Money » puis « Paiement confirmé » |

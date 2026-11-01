@@ -398,7 +398,10 @@ Object.assign(ICONS, { up: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><po
 /* ============================================================
    OJA — « Vendez tranquille », awareness film for the women who sell live on social media, 9:16 (1080 × 1920), 49.5 s.
    Voices: the seller (Alimata, assets/vtq/voix_vendeuse.mp3, from 0.6 s), then the OJA narrator (Isac, voix_oja.mp3, from 24.6 s).
-   Photos generated with Nano Banana 2 Lite in ElevenLabs (same seller in every scene, from assets/vtq/vtq_ref.jpg).
+   Photos generated with Nano Banana 2 Lite in ElevenLabs (same seller in every scene, from assets/vtq/vtq_ref.jpg); five scenes
+   play Veo clips the team made in Google Flow from those photos (clips_vtq/, frames extracted to assets/vtqf/, see README).
+   The live clip comes with the live interface Veo drew (kept at the team's request), so the page adds no live overlay of its own;
+   the end stays a photo.
    Story: she sells live; a client sends a fake Mobile Money screenshot; another says he will pay when the courier arrives,
    then stops answering (dull grade, TikTok-style captions). With OJA (team-confirmed): the client pays the order by Mobile Money
    in the app, an unpaid order never reaches the seller's Oja Merchant, the courier leaves with an order already paid (the
@@ -412,6 +415,15 @@ const PH = { live: imgL('assets/vtq/v_live.jpg'), doute: imgL('assets/vtq/v_dout
   tranquille: imgL('assets/vtq/v_tranquille.jpg'), colis: imgL('assets/vtq/v_colis.jpg'), fin: imgL('assets/vtq/v_fin.jpg') };
 // the frauds are graded dull and dusty; the live and everything after « Avec OJA, c'est fini » are vivid
 const DULL = { doute: 1, colere: 1, livreur: 1 };
+// Veo clips (8 s, 24 fps, 188 frames each), drawn frame by frame; a frame that is not decoded yet is drawn on the next waitFrame
+const CLIP = { live: 'c_live', doute: 'c_doute', colere: 'c_colere', livreur: 'c_livreur', tranquille: 'c_tranquille', colis: 'c_colis' }, CLIPN = 188;
+const FCACHE = new Map(); let pend = null, lastT = 0;
+function frame(c, u) {
+  const i = Math.max(1, Math.min(CLIPN, Math.floor(u * 24) + 1)), src = `assets/vtqf/${c}/f${String(i).padStart(3, '0')}.jpg`;
+  let im = FCACHE.get(src); if (!im) { im = new Image(); im.src = src; FCACHE.set(src, im); if (FCACHE.size > 48) FCACHE.delete(FCACHE.keys().next().value); }
+  return im;
+}
+window.waitFrame = async () => { if (pend) { const p = pend; pend = null; await p.decode().catch(() => 0); photos(lastT); } };
 // voice timings (seconds in each voice file), injected by vtq_build.py from the .mp3.json alignments
 const WA_ = {"live": 0.08, "wax": 2.56, "qui": 4.64, "mais": 5.65, "client": 7.36, "verifie": 9.68, "rien": 11.0, "fausse": 12.15, "autre": 13.867, "paie": 15.024, "arrive": 16.86, "decroche": 18.04, "deplac": 19.24, "fatig": 21.67}, WB_ = {"fini": 0.32, "client": 2.32, "momo": 5.2, "sans": 7.24, "capt": 10.08, "livreur": 11.627, "argent": 14.187, "retires": 15.0, "vend": 16.63, "tranq": 19.32};
 const A = k => WA_[k] + VA, B = k => WB_[k] + VB;
@@ -505,16 +517,19 @@ ${title('T5', 'TES REVENUS', 'Ton argent,', 'tu le retires.')}${title('T6', 'VEN
 stage.innerHTML = H;
 
 /* ---------- photos: cover, slow push-in, punch on each cut; blurred and dimmed under the cards ---------- */
-// [from, to, photo, blur from (-1: blurred all along)]
-const SHOTS = () => [[0, A('mais') - .1, 'live'], [A('mais') - .1, A('autre') - .1, 'doute', A('client') - .1], [A('autre') - .1, A('arrive') - .1, 'colere'],
-  [A('arrive') - .1, A('fatig') - .1, 'livreur'], [A('fatig') - .1, B('fini') - .15, 'colere'], [B('client') - .2, B('livreur') - .1, 'tranquille', B('client') + .7],
-  [B('livreur') - .1, B('argent') - .1, 'colis'], [B('argent') - .1, B('vend') - .1, 'tranquille', -1], [B('vend') - .1, DUR2 + 1, 'fin']];
+// [from, to, photo, blur from (-1: blurred all along, undefined: sharp), clip time at the start of the shot (undefined: the photo)]
+// live: « Bonsoir » at 0.46 s in the clip, 0.68 s in the voice; colere: in the clip she says « Un autre » at 0.54 s and « Vraiment » at 5.86 s, so her lips follow the seller's voice
+const SHOTS = () => [[0, A('mais') - .1, 'live', undefined, -.3], [A('mais') - .1, A('autre') - .1, 'doute', A('client') - .1, 0], [A('autre') - .1, A('arrive') - .1, 'colere', undefined, .44],
+  [A('arrive') - .1, A('fatig') - .1, 'livreur', undefined, 1.2], [A('fatig') - .1, B('fini') - .15, 'colere', undefined, 5.76], [B('client') - .2, B('livreur') - .1, 'tranquille', B('momo') - .6, 0],
+  [B('livreur') - .1, B('argent') - .1, 'colis', undefined, 0], [B('argent') - .1, B('vend') - .1, 'tranquille', -1, 4], [B('vend') - .1, DUR2 + 1, 'fin']];
 const CUTS = () => SHOTS().slice(1).map(s => s[0]).concat([B('fini') - .15]);
 function photos(t) {
   const c = el('ph').getContext('2d'); c.fillStyle = '#0a0705'; c.fillRect(0, 0, FW, HH);
   const s = SHOTS().find(([a, b]) => t >= a && t < b);
   if (s) {
-    const [a, , k, bl] = s, im = PH[k], u = t - a, punch = 1 + .08 * (1 - P(t, a, .35, E.oQ)), sc = (1.02 + .05 * clamp(u / 9)) * punch, w = FW * sc, h = HH * sc;
+    const [a, , k, bl, c0] = s, u = t - a, punch = 1 + .08 * (1 - P(t, a, .35, E.oQ)), clip = c0 !== undefined && CLIP[k];
+    let im = PH[k]; if (clip) { const f = frame(CLIP[k], c0 + u); if (f.complete && f.naturalWidth) im = f; else pend = f; }
+    const sc = (clip ? 1 : 1.02 + .05 * clamp(u / 9)) * punch, w = FW * sc, h = HH * sc;
     const blur = bl === undefined ? 0 : bl < 0 ? 1 : P(t, bl, .5, E.ioC);
     c.save(); const fl = []; if (DULL[k]) fl.push('saturate(.5) sepia(.22) contrast(1.06)'); if (blur > 0) fl.push(`blur(${blur * 22}px) brightness(${1 - blur * .45})`); if (fl.length) c.filter = fl.join(' ');
     c.drawImage(im, (FW - w) / 2, (HH - h) / 2 - (sc - 1) * HH * .1, w, h); c.restore();
@@ -538,11 +553,12 @@ let capLast = -1;
 function captions(t) {
   const cs = CAPS(), i = cs.findIndex(([a, b]) => t >= a - .05 && t < b - .05), e = el('cap');
   e.style.visibility = i < 0 ? 'hidden' : 'visible'; if (i < 0) return;
+  e.style.top = (t < A('mais') - .1 ? 190 : 1270) + 'px';   // during the live clip: above her head, clear of its comments
   if (i !== capLast) { el('cap1').textContent = cs[i][2]; el('cap2').textContent = cs[i][3]; capLast = i; }
   const p = P(t, cs[i][0] - .05, .22, E.oB); e.style.transform = `scale(${lerp(.82, 1, p)})`; e.style.opacity = clamp(p * 2);
 }
 function live(t) {
-  const end = A('mais') - .1, on = t < end; el('lv').style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
+  const end = A('mais') - .1, on = t < end && !CLIP.live; el('lv').style.visibility = on ? 'visible' : 'hidden'; if (!on) return;
   el('lvdot').style.opacity = .3 + .7 * (Math.sin(t * 6) > 0 ? 1 : 0);
   const shown = COMS.filter(([a]) => t >= a).length;
   COMS.forEach(([a], i) => { const e = el('cm' + i); if (t < a) { e.style.opacity = 0; return; }
@@ -579,7 +595,7 @@ function reveal(t) {
   [...e.querySelectorAll('.ln')].forEach((l, i) => { const k = P(t, a + .25 + i * .18, .45, E.oQ); l.style.transform = `translateY(${(1 - k) * 110 - q * 110}%)`; });
 }
 function checkout(t) {
-  const p = pop('ck', t, B('client') + .7, B('sans') - .1); if (!p) return;
+  const p = pop('ck', t, B('momo') - .6, B('sans') - .1); if (!p) return;
   const tp = P(t, B('momo') + .35, .45, E.oQ), tap = el('cktap'); tap.style.opacity = tp > 0 && tp < 1 ? 1 - tp : 0; tap.style.transform = `scale(${lerp(.4, 1.6, tp)})`;
   el('ckok').style.clipPath = `circle(${P(t, B('momo') + .5, .45, E.oQ) * 80}% at 50% 50%)`;
 }
@@ -602,7 +618,7 @@ function finale(t) {
 
 /* ---------- master ---------- */
 window.renderAt = function (t) {
-  photos(t); cutFlash(t);
+  lastT = t; photos(t); cutFlash(t);
   // the seller: her live, then the frauds she denounces
   live(t); captions(t); fake(t); call(t);
   // with OJA
