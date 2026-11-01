@@ -88,3 +88,10 @@ TRI = dict(t0='Conducteur de tricycle, ta', attends='Tu attends', appelles='Tu a
            tri='puis ton tricycle', papiers='et tes papiers', formule='Ensuite', sans='Sans pass', commission='une commission', avec='Avec le pass',
            zero='zéro pour cent', jour1='pour un jour', semaine='une semaine', mois='un mois', pourtoi='et chaque course', endA='>Conducteur de tricycle, roule',
            endB="Les clients t'attendent")
+
+# key phrases of the « Vendez tranquille » film: the seller (assets/vtq/voix_vendeuse.txt), then the OJA narrator (voix_oja.txt)
+VTQ_A = dict(live='Bonsoir', wax='Ce wax', qui='Qui prend', mais='Mais je dois', client='Un client', verifie='Je vérifie', rien='rien',
+             fausse="C'est une fausse", autre='Un autre', paie='Je paie quand', arrive='Le livreur arrive', decroche='il ne décroche',
+             deplac='Et le déplacement', fatig='Vraiment')
+VTQ_B = dict(fini='Avec Odja', client='Ton client', momo='par Mobile Money', sans='Sans paiement', capt='Plus de capture',
+             livreur='Le livreur part', argent='Et ton argent', retires='tu le retires', vend='Vendeuses', tranq='Vendez tranquille')

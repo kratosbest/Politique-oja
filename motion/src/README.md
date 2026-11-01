@@ -25,6 +25,7 @@ Les pages `motion/*.html` sont générées à partir des fichiers de ce dossier.
 | NOVOJA « Ce qui dort chez toi vaut de l'argent » (16:9 et 9:16) | `oja_novoja_film.html`, `oja_novoja_film_9x16.html` | `nov_body.js`, `nov_build.py` (photos `assets/nov/`) | `music32.py` + voix `assets/nov/voix_novoja.mp3` |
 | OJA « Zémidjan, avec OJA ça change » (9:16) | `oja_zemidjan.html` | `zem_body.js`, `zem_build.py` (photos `assets/zem/`) | `music33.py` + voix `assets/zem/voix_zem.mp3` |
 | OJA « Conducteur de tricycle, avec OJA ça change » (9:16) | `oja_tricycle.html` | `tri_body.js`, `tri_build.py` (photos `assets/tri/`) | `music34.py` + voix `assets/tri/voix_tri.mp3` |
+| OJA « Vendez tranquille », vendeuses en live (9:16) | `oja_vendez_tranquille.html` | `vtq_body.js`, `vtq_build.py` (photos `assets/vtq/`) | `music35.py` + voix `assets/vtq/voix_vtq.wav` (vendeuse Alimata, puis Isac) |
 
 ## Outils
 - **ffmpeg :** `pip install imageio-ffmpeg`, puis `python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())"` donne le chemin du binaire.

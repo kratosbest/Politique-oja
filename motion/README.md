@@ -840,3 +840,34 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 | 31–37,3 s | « Ton inscription se fait depuis ton téléphone : ton nom, ton numéro, puis ton tricycle et tes papiers, en photo. » | Il photographie sa pièce ; écrans « Devenir chauffeur » puis « Véhicule & identité » (type : Tricycle, papiers) |
 | 37,3–49 s | « Ensuite, tu choisis ta formule. Sans pass, Odja prend une commission sur chaque course. Avec le pass illimité : zéro pour cent de commission, pour un jour, une semaine ou un mois… et chaque course est pour toi. » | Cartes « Sans pass » et « Pass illimité · 0 % de commission · 24 H / 7 JOURS / 1 MOIS » |
 | 49–56 s | « Conducteur de tricycle, roule avec Odja. Les clients t'attendent. » | Il sourit au coucher du soleil sur une avenue bordée de palmiers ; « Télécharge OJA · Je suis chauffeur », stores, mention |
+
+## OJA — « Vendez tranquille », pour les vendeuses en live (9:16, 49,5 s)
+
+- **Vidéo :** `OJA_VendezTranquille_Vendeuses_9x16.mp4` (1080 × 1920).
+- **Histoire :** une vendeuse de wax vend en live. Un client lui envoie une fausse capture Mobile Money ; un autre dit qu'il paiera à l'arrivée du livreur, puis ne décroche plus. Elle le dénonce face caméra (style TikTok, sous-titres, image ternie). Puis « Avec OJA, c'est fini ».
+- **Ce que le film affirme (confirmé par l'équipe) :**
+  - le client paie sa commande par Mobile Money dans l'appli ;
+  - sans paiement, la commande n'arrive pas dans Oja Merchant ;
+  - le livreur part avec une commande déjà payée ;
+  - la vendeuse retire son argent dans Oja Merchant, car les reversements fonctionnent.
+  - Les frais de livraison peuvent encore se régler au livreur à l'arrivée : c'est écrit dans la mention.
+- **Voix :** la vendeuse est « Alimata », voix africaine francophone de la bibliothèque ElevenLabs (`assets/vtq/voix_vendeuse.txt`). La partie OJA est dite par Isac (`voix_oja.txt`), 24 s après le début de la voix de la vendeuse. Les deux voix sont assemblées dans `assets/vtq/voix_vtq.wav` ; la retranscription de contrôle correspond mot pour mot au texte.
+- **Source :** `oja_vendez_tranquille.html`, construite par `src/vtq_build.py` à partir de `src/vtq_body.js` (moteur du film des zems). Son : `src/music35.py`.
+- **Rendu :** `src/render_video.sh oja_vendez_tranquille.html 49.5 assets/soundtrack_vtq.m4a OJA_VendezTranquille_Vendeuses_9x16.mp4 <ffmpeg>`
+- **Images :** générées avec Nano Banana 2 Lite dans ElevenLabs. Le portrait `assets/vtq/vtq_ref.jpg` est joint à chaque scène, d'où la même vendeuse partout. Prompts dans `assets/vtq/prompts.txt`. Coût : environ 2 270 crédits pour les images et 810 pour les deux voix.
+- **Écrans :** recréés avec les mots de l'appli (« Paiement Mobile Money sécurisé après validation de la commande », « Ma boutique », « Revenus & reversements », « gains retirables »). Aucun montant, aucun logo d'opérateur.
+- **Mention :** « Mise en situation, personnes des images générées par IA. La commande est payée dans l'appli ; les frais de livraison peuvent être réglés au livreur à l'arrivée. »
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–6,2 s | « Bonsoir la famille, on est en direct ! Ce wax-là, il en reste trois. Qui prend ? » | Le live : badge « EN DIRECT », commentaires, cœurs, sous-titres |
+| 6,2–14,4 s | « Mais je dois vous dire une chose. Un client m'envoie sa capture Mobile Money. Je vérifie… rien n'est arrivé. C'est une fausse capture ! » | Image ternie, elle regarde son téléphone ; capture « Transfert réussi » au montant masqué, « Rien reçu sur mon compte », tampon « FAUSSE CAPTURE » |
+| 14,4–17,4 s | « Un autre me dit : « Je paie quand le livreur arrive. » » | Elle parle face caméra ; le message du client |
+| 17,4–22,2 s | « Le livreur arrive… il ne décroche plus. Et le déplacement, c'est encore moi qui paie. » | Le zem attend devant un portail ; écran d'appel « Client · Ne répond pas » |
+| 22,2–24,8 s | « Vraiment, on est fatiguées ! » | Elle, lasse, face caméra |
+| 24,8–26,7 s | « Avec Odja, c'est fini. » | Fond orange sombre, rayons, logo, « AVEC OJA, C'EST FINI. » |
+| 26,7–31,7 s | « Ton client commande sur Odja Market, et il paie sa commande par Mobile Money, dans l'appli. » | Elle sourit à son téléphone ; carte « Paiement OJA », « Payer par Mobile Money » puis « Paiement confirmé » |
+| 31,7–36,1 s | « Sans paiement, la commande n'arrive même pas chez toi. Plus de capture à vérifier ! » | « Ma boutique » (Oja Merchant) : Nouvelles 0 → 1, « Nouvelle commande · Payée » |
+| 36,1–38,7 s | « Le livreur part avec une commande déjà payée. » | Elle remet le colis au livreur ; « Commande déjà payée » |
+| 38,7–41,1 s | « Et ton argent, tu le retires dans Odja Marchand. » | Carte « Revenus & reversements », « Retirer mes gains » |
+| 41,1–49,5 s | « Vendeuses, mettez votre boutique sur Odja. Vendez tranquille ! » | Elle, fière dans sa boutique ; « Vendez tranquille. », « Crée ta boutique dans Oja App », stores, mention |
