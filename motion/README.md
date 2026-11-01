@@ -863,7 +863,7 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 | 0–6,2 s | « Bonsoir la famille, on est en direct ! Ce wax-là, il en reste trois. Qui prend ? » | Le live : badge « EN DIRECT », commentaires, cœurs, sous-titres |
 | 6,2–14,4 s | « Mais je dois vous dire une chose. Un client m'envoie sa capture Mobile Money. Je vérifie… rien n'est arrivé. C'est une fausse capture ! » | Image ternie, elle regarde son téléphone ; capture « Transfert réussi » au montant masqué, « Rien reçu sur mon compte », tampon « FAUSSE CAPTURE » |
 | 14,4–17,4 s | « Un autre me dit : « Je paie quand le livreur arrive. » » | Elle parle face caméra ; le message du client |
-| 17,4–22,2 s | « Le livreur arrive… il ne décroche plus. Et le déplacement, c'est encore moi qui paie. » | Le zem attend devant un portail ; écran d'appel « Client · Ne répond pas » |
+| 17,4–22,2 s | « Le livreur arrive… il ne décroche plus. Et le déplacement, c'est encore moi qui paie. » | Le livreur, en polo bleu marine et baskets blanches, attend sur sa moto devant le portail d'une villa et regarde sa montre ; écran d'appel « Client · Ne répond pas » |
 | 22,2–24,8 s | « Vraiment, on est fatiguées ! » | Elle, lasse, face caméra |
 | 24,8–26,7 s | « Avec Odja, c'est fini. » | Fond orange sombre, rayons, logo, « AVEC OJA, C'EST FINI. » |
 | 26,7–31,7 s | « Ton client commande sur Odja Market, et il paie sa commande par Mobile Money, dans l'appli. » | Elle sourit à son téléphone ; carte « Paiement OJA », « Payer par Mobile Money » puis « Paiement confirmé » |
