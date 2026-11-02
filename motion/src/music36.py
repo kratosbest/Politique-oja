@@ -1,8 +1,9 @@
-# NOVOJA « Une seconde vie » reel (18 s, 9:16): music only, no voice. Helpers copied from music35.py (no whoosh).
-# Logo hit in sparks, groove from the first scene, a soft accent on each scene change, UI pops, logo hit at the end.
-# usage: python3 music36.py out.wav
+# NOVOJA « Une seconde vie » reel (21 s, 9:16): music + Isac's voice (from 0.5 s), music ducked under the voice.
+# Helpers copied from music35.py (no whoosh). Events are placed on the 18 s design timeline and mapped with W() onto
+# the voice, like the page (WARP_D / WARP_R in oja_novoja_reel.html).
+# usage: python3 music36.py out.wav assets/nvr/voix_reel.mp3 ffmpeg
 import numpy as np, wave, sys, subprocess
-SR=44100; DUR=18.0; N=int(SR*DUR)
+SR=44100; DUR=21.0; N=int(SR*DUR)
 L=np.zeros(N); R=np.zeros(N)
 rng=np.random.default_rng(3636)
 def add(sig,t,pan=0.0,g=1.0,buf=None):
@@ -152,38 +153,49 @@ def groove(T0,END,bright=1.0,full=True,gain=1.0):
     for k in range(int((END-T0)/(4*b))+1):
         t0=T0+k*4*b; ch=PROGL[k%4]; pad(t0,min(t0+4*b,END)-.05,[m+12 for m in ch[1:]],g=.026*gain,a=.2,rel=.3)
 BPM=120; b=60/BPM
+WD=[0,2.5,3.25,4.5,7.0,9.0,11.0,13.0,14.05,15.0,15.62,18.0]
+WR=[0,2.5,3.85,4.85,6.75,8.8,11.45,13.05,15.45,16.2,16.85,21.0]
+W=lambda d: float(np.interp(d,WD,WR))
 # ---------- intro: the logo lands in sparks ----------
 pad(0.0,2.5,[45,57,64,69],g=.05,a=.5,rel=.5)
 riser(0.0,.45,220,880,.05)
 boom(.45,.42,95,32,1.6); chime(.5,(1760,2637,3520),.1)
 for k,mm in enumerate((57,61,64,69,73,76)): add(pluck(mm+12,.6,.04),.9+k*.12,pan=-.5+.2*k)
-for k in range(8): shaker(.5+k*b/2*2,.025,pan=.3 if k%2 else -.3)
+for k in range(8): shaker(.5+k*b,.025,pan=.3 if k%2 else -.3)
 swell(2.45,[57,61,64,69],.4,.08)
 # ---------- groove through the scenes ----------
-groove(2.5,15.0,bright=1.2,full=True,gain=1.7)
-for tc in (4.5,7.0,9.0,11.0,13.0): boom(tc,.28,80,36,.9)
-click(6.05,.12); chime(6.2,(1567.98,2093.0,2637.0),.08)          # Publier, En ligne
-for tc in (7.4,7.8): pop(tc,700,.14)
-pop(8.2,520,.14); click(8.2,.08)                                  # bubbles, secure payment request
-boom(9.38,.35,70,30,.7); click(9.38,.1)                           # the parcel lands
-pop(10.1,560,.13); ping(9.85,.06)                                  # money kept
-pop(11.6,640,.12); ping(12.6,.08)                                  # route, arrival
-success(13.45,.12); bell(14.05,.08)                               # received, notification
+groove(2.5,W(15.0),bright=1.2,full=True,gain=1.7)
+for tc in (4.5,7.0,9.0,11.0,13.0): boom(W(tc),.28,80,36,.9)
+click(W(6.05),.12); chime(W(6.2),(1567.98,2093.0,2637.0),.08)          # Publier, En ligne
+for tc in (7.4,7.8): pop(W(tc),700,.14)
+pop(W(8.2),520,.14); click(W(8.2),.08)                                  # bubbles, secure payment request
+boom(W(9.38),.35,70,30,.7); click(W(9.38),.1)                           # the parcel lands
+pop(W(10.1),560,.13); ping(W(9.85),.06)                                  # money kept
+pop(W(11.6),640,.12); ping(W(12.6),.08)                                  # route, arrival
+success(W(13.45),.12); bell(W(14.05),.08)                               # received, notification
 # ---------- end: tiles spiral into the logo ----------
-riser(15.0,.6,180,720,.06)
-boom(15.62,.48,95,30,2.0); chime(15.65,(1175,1760,2349,2960),.1)
-groove(15.62,17.4,bright=.9,full=False,gain=1.2)
-pad(15.62,17.6,[33,45,52,57,61,64,69],g=.07,a=.15,rel=.5)
-for k,mm in enumerate((57,61,64,69,73)): add(pluck(mm+12,1.0,.045),15.95+k*.09,pan=-.4+.2*k)
+riser(W(15.0),W(15.62)-W(15.0),180,720,.06)
+boom(W(15.62),.48,95,30,2.0); chime(W(15.65),(1175,1760,2349,2960),.1)
+groove(W(15.62),20.2,bright=.9,full=False,gain=1.2)
+pad(W(15.62),20.6,[33,45,52,57,61,64,69],g=.07,a=.15,rel=.5)
+for k,mm in enumerate((57,61,64,69,73)): add(pluck(mm+12,1.0,.045),W(15.95)+k*.09,pan=-.4+.2*k)
 # ---------- reverb + master ----------
 irn=int(1.6*SR); ir=rng.standard_normal(irn)*np.exp(-np.arange(irn)/SR/0.45); ir=lp(ir,.25); ir/=np.abs(ir).sum()**.5*12
 def conv(x,irx=ir):
     m=len(x)+len(irx); F=1<<(m-1).bit_length()
     return np.fft.irfft(np.fft.rfft(x,F)*np.fft.rfft(irx,F),F)[:len(x)]
 L=L+conv(L)*.38; R=R+conv(R)*.38
-fade=np.ones(N); k=int(.7*SR); fade[-k:]=np.linspace(1,0,k)**1.5
 pk=max(np.abs(L).max(),np.abs(R).max()); L=np.tanh(1.6*L/pk)/np.tanh(1.6); R=np.tanh(1.6*R/pk)/np.tanh(1.6)
-pk=max(np.abs(L).max(),np.abs(R).max()); L=L/pk*.95*fade; R=R/pk*.95*fade
+# ---------- voice + ducking ----------
+VO_AT=0.5; FF=sys.argv[3]
+v=np.frombuffer(subprocess.run([FF,'-v','error','-i',sys.argv[2],'-ac','1','-ar',str(SR),'-f','f32le','-'],capture_output=True).stdout,np.float32).astype(float)
+VOc=np.zeros(N); i=int(VO_AT*SR); VOc[i:i+len(v)]=v[:N-i]
+VOc=VOc/np.abs(VOc).max()*.9; VOc=VOc+conv(VOc,ir[:int(.6*SR)])*.06
+e=np.abs(VOc); k=int(.03*SR); e=np.convolve(e,np.ones(k)/k,'same'); e=lp(e,.0015)
+duck=1-.55*np.clip(e/.06,0,1)
+fade=np.ones(N); k=int(.7*SR); fade[-k:]=np.linspace(1,0,k)**1.5
+L=(L*.5*duck+VOc*.95)*fade; R=(R*.5*duck+VOc*.95)*fade
+pk=max(np.abs(L).max(),np.abs(R).max()); L/=pk/.95; R/=pk/.95
 st=(np.stack([L,R],1)*32767).astype(np.int16)
 with wave.open(sys.argv[1],'wb') as w: w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(st.tobytes())
 print('ok')

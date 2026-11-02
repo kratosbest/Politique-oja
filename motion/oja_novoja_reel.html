@@ -2,9 +2,10 @@
 <html lang="fr"><head><meta charset="utf-8"><title>NOVOJA — Une seconde vie (reel 9:16)</title>
 <link rel="stylesheet" href="fonts/local.css">
 <style>
-/* NOVOJA « Une seconde vie », reel 9:16 (1080 x 1920), 18 s. Same rhythm as a 3D brand reel: logo in sparks, a silk ribbon
+/* NOVOJA « Une seconde vie », reel 9:16 (1080 x 1920), 21 s, voice: Isac (assets/nvr/voix_reel.mp3, from 0.5 s). Same rhythm as a 3D brand reel: logo in sparks, a silk ribbon
    that ties the scenes, floating objects, « Publie-le », chat, parcel, route on a map, « Reçu », logo + tagline.
-   Every frame is a pure function of time: renderAt(t). Render: src/render_video.sh oja_novoja_reel.html 18 <m4a> <mp4> <ffmpeg> */
+   Every frame is a pure function of time: renderAt(t). The scenes are designed on an 18 s timeline and stretched onto the voice (WARP).
+   Render: src/render_video.sh oja_novoja_reel.html 21 <m4a> <mp4> <ffmpeg> */
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;overflow:hidden;background:#0A0604}
 body{position:relative;font-family:Inter,sans-serif;color:#fff}
@@ -25,7 +26,11 @@ canvas{position:absolute;left:0;top:0}
 <canvas id="fx" width="1080" height="1920"></canvas>
 <div id="caps"></div>
 <script>
-const W = 1080, H = 1920, DUR = 18;
+const W = 1080, H = 1920, DUR = 18, REAL_DUR = 21;
+// design time (18 s storyboard) -> real time on the voice: each scene starts just before its phrase
+const WARP_D = [0, 2.5, 3.25, 4.5, 7.0, 9.0, 11.0, 13.0, 14.05, 15.0, 15.62, 18.0];
+const WARP_R = [0, 2.5, 3.85, 4.85, 6.75, 8.8, 11.45, 13.05, 15.45, 16.2, 16.85, 21.0];
+const toDesign = t => { for (let i = 1; i < WARP_R.length; i++) if (t <= WARP_R[i]) return WARP_D[i - 1] + (WARP_D[i] - WARP_D[i - 1]) * (t - WARP_R[i - 1]) / (WARP_R[i] - WARP_R[i - 1]); return DUR; };
 const OR = '#FF6B00', OR2 = '#FF8A1F', GR = '#12B76A';
 const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lin = (t, a, b) => cl((t - a) / (b - a));
@@ -56,10 +61,10 @@ const S = { s1: [0, 2.5], s2: [2.5, 4.5], s3: [4.5, 7.0], s4: [7.0, 9.0], s5: [9
 // captions: [scene, size, lines], a line is [[text, orange?, at]]
 const CAPS = [
   ['s2', 92, [[['Ce qui dort', 0, 2.6]], [['chez toi…', 0, 2.85]], [['vaut de l\'argent.', 1, 3.25]]]],
-  ['s3', 128, [[['Publie-le.', 0, 4.6]]]],
+  ['s3', 104, [[['Prends-le', 0, 4.6]], [['en photo,', 0, 4.85]], [['publie-le.', 1, 6.0]]]],
   ['s4', 112, [[['Discute', 0, 7.1]], [['dans l\'appli.', 0, 7.3]]]],
   ['s5', 86, [[['L\'acheteur paie.', 0, 9.1]], [['OJA garde', 1, 9.85]], [['l\'argent.', 1, 10.0]]]],
-  ['s6', 128, [[['En route.', 0, 11.1]]]],
+  ['s6', 112, [[['OJA peut', 0, 11.1]], [['même livrer.', 1, 11.4]]]],
   ['s7', 96, [[['Il reçoit,', 0, 13.1]], [['il confirme.', 0, 13.35]], [['Tu es payé.', 1, 14.05]]]],
 ];
 
@@ -112,8 +117,8 @@ stage.innerHTML = `
     <canvas id="s6c" width="1000" height="1000" style="border-radius:60px"></canvas>
     <img id="s6k" class="abs" src="${IMG.colis}" style="width:170px;left:0;top:0;transform-origin:50% 100%">
   </div>
-  <div id="s6s" class="abs" style="left:0;right:0;top:340px;text-align:center;font:700 42px Inter;color:rgba(255,255,255,.8)">Livraison possible avec <b style="color:${OR2}">OJA</b></div>
-  <div id="s6l" class="pill" style="left:330px;top:470px;background:#15171C;border:3px solid #2E323B;color:#fff">${ic('truck', 38, OR2, 2.4)}Livraison OJA</div>
+  <div id="s6s" class="abs" style="display:none;left:0;right:0;top:340px;text-align:center;font:700 42px Inter;color:rgba(255,255,255,.8)">Livraison possible avec <b style="color:${OR2}">OJA</b></div>
+  <div id="s6l" class="pill" style="left:330px;top:500px;background:#15171C;border:3px solid #2E323B;color:#fff">${ic('truck', 38, OR2, 2.4)}Livraison OJA</div>
 </div>
 <div id="s7" class="sc">
   <img id="s7c" class="abs" src="${IMG.colis}" style="width:520px;left:280px;top:820px;filter:drop-shadow(0 60px 60px rgba(0,0,0,.6))">
@@ -266,7 +271,8 @@ const show = (id, t) => { const [a, b] = S[id]; const v = t >= a && t < b; $(id)
 const exitK = (t, id, d = .3) => lin(t, S[id][1] - d, S[id][1]);
 function pop(e, t, t0, d = .45, extra = '') { const p = lin(t, t0, t0 + d), k = bk(p); st(e, { opacity: cl(p * 2.2), transform: `scale(${.4 + .6 * k}) ${extra}` }); }
 
-function renderAt(t) {
+function renderAt(tr) {
+  const t = toDesign(tr);
   drawBg(t); drawRibbons(t); drawFx(t);
   // S1: logo
   if (show('s1', t)) {
@@ -346,6 +352,6 @@ function renderAt(t) {
 }
 window.waitFrame = () => Promise.all([...document.images].filter(i => !i.complete).map(i => i.decode().catch(() => 0)));
 window.ready = (async () => { await document.fonts.load('900 100px Poppins'); await document.fonts.load('800 40px Inter'); await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); renderAt(0); })();
-if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % REAL_DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
 </script>
 </body></html>
