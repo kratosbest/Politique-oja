@@ -44,4 +44,4 @@
 - Zems en chemise jaune à Cotonou, en bleu à Porto-Novo.
 
 ## Fonction mise en avant en premier
-- **Mettre son entreprise sur la carte** : boutique, atelier, restaurant, petit business. Au Bénin, se faire trouver sans adresse précise est un casse-tête ; sur OJA, on trouve un lieu par le nom que les gens lui donnent, et le commerçant revendique sa fiche (« C'est mon commerce »).
+- **Mettre son entreprise sur la carte** : boutique, atelier, restaurant, petit business. Au Bénin, se faire trouver sans adresse précise est un casse-tête ; sur OJA, on ajoute son lieu (nom, catégorie, point exact, photos) et on le trouve par le nom que les gens lui donnent. « C'est mon commerce » (revendiquer sa fiche) arrive avec la prochaine version : ne pas le promouvoir avant.

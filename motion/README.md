@@ -908,3 +908,34 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
   - la musique et le mixage de la voix dans `src/music36.py`, qui produit `assets/soundtrack_novoja_reel.m4a`. Le script baisse la musique sous la voix et ne contient aucun bruit de « whoosh ».
 - **Son :** `python3 src/music36.py out.wav assets/nvr/voix_reel.mp3 ffmpeg`, puis encodage en m4a.
 - **Rendu :** `src/render_video.sh oja_novoja_reel.html 21 assets/soundtrack_novoja_reel.m4a OJA_NOVOJA_UneSecondeVie_9x16.mp4 ffmpeg`
+
+## OJA — « Ton business sur la carte », reel (9:16, 23 s)
+
+`OJA_TonBusinessSurLaCarte_9x16.mp4` (1080 × 1920) reprend le style du reel NOVOJA « Une seconde vie » : logo dans des étincelles, ruban de soie orange, cartes en 3D, vignettes qui tournent jusqu'au logo. Il porte sur la fonction mise en avant en premier : mettre son business sur la carte.
+
+**Fonctions montrées :** seulement celles qui sont en ligne, comme dans « Le local devient visible » :
+- ajouter un lieu (nom, catégorie, point exact, photos) ;
+- être trouvé avec les mots de tous les jours.
+
+« C'est mon commerce » n'apparaît pas : il arrive avec la prochaine version.
+
+**Voix off :** Isac, `assets/crt/voix_carte.mp3`, à partir de 0,5 s. La transcription de contrôle donne bien « Oja ». Les temps des scènes sont en secondes réelles, posés sur la voix.
+
+| Temps | Voix | Image |
+|---|---|---|
+| 0–2,4 s | « Ton business, sur la carte. » | Logo OJA dans des étincelles, « Ton business sur la carte » |
+| 2,4–5,35 s | « Au Bénin, trouver une adresse… c'est un casse-tête. » | Post-it d'indications (« Derrière la boutique bleue… », « Après le grand manguier »…) et points d'interrogation |
+| 5,35–8,75 s | « Avec Odja, ajoute ton lieu : le nom, la catégorie… » | Carte « Ajouter un lieu » : nom tapé, catégorie « Couture » |
+| 8,75–10,9 s | « …le point exact, quelques photos. » | Carte inclinée, l'épingle OJA tombe, « Point exact », trois photos |
+| 10,9–14,55 s | « Et tes clients te trouvent avec les mots de tous les jours : l'atelier derrière la pharmacie… » | Barre de recherche, requête tapée, résultats |
+| 14,55–15,75 s | « …trouvé ! » | Fiche « Atelier Couture Grâce », « Trouvé ! » |
+| 15,75–18,65 s | « Boutique, atelier, maquis : tous sur la carte. » | Épingles Boutique, Atelier, Maquis, Pharmacie, puis des dizaines d'autres |
+| 18,65–23 s | « Odja. Le local devient visible. » | Vignettes qui tournent jusqu'au logo, slogan, stores, mention |
+
+- **Mention à l'écran :** « Nom de lieu fictif. Personnes des images générées par IA. »
+- **Photos :** celles de l'atelier, tirées du film lieux (`assets/lieux/`). Ce sont des intérieurs, sans rue.
+- **Sources :**
+  - la page `oja_carte_reel.html` ;
+  - le son `src/music37.py`, qui produit `assets/soundtrack_carte_reel.m4a` (musique, voix et mixage ; aucun bruit de « whoosh »).
+- **Son :** `python3 src/music37.py out.wav assets/crt/voix_carte.mp3 ffmpeg`, puis encodage en m4a.
+- **Rendu :** `src/render_video.sh oja_carte_reel.html 23 assets/soundtrack_carte_reel.m4a OJA_TonBusinessSurLaCarte_9x16.mp4 ffmpeg`

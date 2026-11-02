@@ -13,8 +13,8 @@ Merci pour votre message ! L'équipe OJA n'est pas disponible pour le moment. No
 ## Réponses rapides
 **/carte**
 Votre boutique, atelier ou restaurant *sur la carte* avec OJA 📍
-Vos clients vous trouvent par le nom de votre lieu, même sans adresse précise.
-Dans Oja App, enregistrez votre lieu, puis revendiquez sa fiche avec « C'est mon commerce ».
+Dans Oja App, ajoutez votre lieu : le nom, la catégorie, le point exact et quelques photos.
+Vos clients vous trouvent avec les mots de tous les jours, même sans adresse précise.
 
 **/appli**
 Téléchargez *Oja App* sur Play Store (Android) ou App Store (iPhone) : cherchez « Oja App ».
