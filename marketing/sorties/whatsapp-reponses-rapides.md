@@ -1,0 +1,58 @@
+# WhatsApp Business : réponses rapides OJA
+
+Pour les enregistrer dans WhatsApp Business, ouvrez *Outils professionnels*, puis *Réponses rapides*, puis *+*. Dans une discussion, tapez ensuite « / » suivi du raccourci.
+
+## Message d'accueil
+Bonjour et bienvenue chez *OJA* 👋
+Transport, livraison, Market, NOVOJA… et votre business sur la carte, dans une seule app.
+Dites-nous comment on peut vous aider.
+
+## Message d'absence
+Merci pour votre message ! L'équipe OJA n'est pas disponible pour le moment. Nous vous répondons dès notre retour.
+
+## Réponses rapides
+**/carte**
+Votre boutique, atelier ou restaurant *sur la carte* avec OJA 📍
+Vos clients vous trouvent par le nom de votre lieu, même sans adresse précise.
+Dans Oja App, enregistrez votre lieu, puis revendiquez sa fiche avec « C'est mon commerce ».
+
+**/appli**
+Téléchargez *Oja App* sur Play Store (Android) ou App Store (iPhone) : cherchez « Oja App ».
+
+**/course**
+Avec OJA, le prix de la course s'affiche avant de commander : pas de marchandage.
+Moto, tricycle ou voiture, avec paiement en espèces ou par MTN Mobile Money.
+
+**/vendre**
+Vous vendez en ligne ? Créez votre boutique dans *Oja App*.
+La commande n'arrive chez vous qu'une fois payée : fini les fausses captures et les clients qui ne décrochent plus.
+
+**/novoja**
+Sur *NOVOJA*, l'acheteur paie, mais OJA garde l'argent jusqu'à ce qu'il confirme avoir reçu l'objet. Ensuite seulement, le vendeur est payé.
+
+**/ambassadeur**
+Merci pour votre intérêt ! Envoyez-nous :
+- votre nom ;
+- votre ville et votre quartier ;
+- vos réseaux, avec vos pseudos et votre nombre d'abonnés ;
+- vos disponibilités.
+
+L'équipe vous recontacte.
+
+**/chauffeur**
+Pour rejoindre OJA comme chauffeur, envoyez-nous :
+- votre nom ;
+- votre ville et votre quartier ;
+- votre véhicule (moto, tricycle ou voiture).
+
+L'équipe vous rappelle.
+
+**/probleme**
+Désolé pour ce souci 🙏
+Envoyez-nous votre numéro de commande, ou la date et l'heure de la course, puis décrivez le problème : un conseiller s'en occupe.
+
+**/securite**
+OJA ne vous demandera *jamais* votre code secret Mobile Money, votre mot de passe ni un code reçu par SMS. Ne les partagez avec personne.
+
+**/merci**
+Merci d'avoir choisi OJA 🧡 Bonne journée !
