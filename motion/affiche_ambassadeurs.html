@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — Recrutement des ambassadeurs</title>
+<link rel="stylesheet" href="fonts/editorial.css">
+<style>
+/* Poster « Deviens ambassadeur OJA »: #story = 1080 x 1920 (statuts, stories), #feed = 1080 x 1350 (publications). Rendered by src/affiche_build.js. */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--or:#FF6B00;--or2:#FF8A1F;--ink:#0E0F14}
+body{width:1080px;height:var(--H);overflow:hidden;position:relative;background:var(--ink);font-family:Inter,sans-serif;color:#fff}
+body.story{--H:1920px}body.feed{--H:1350px}
+.photo{position:absolute;inset:0;background:url(assets/amb/amb_hero.jpg) center/cover no-repeat}
+.story .photo{background-size:125% auto;background-position:50% 0}
+.feed .photo{background-position:50% 8%}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,15,20,.9) 0%,rgba(14,15,20,.6) 20%,rgba(14,15,20,0) 36%),linear-gradient(0deg,rgba(14,15,20,.97) 0%,rgba(14,15,20,.92) 30%,rgba(14,15,20,0) 54%)}
+.feed .shade{background:linear-gradient(180deg,rgba(14,15,20,.92) 0%,rgba(14,15,20,.6) 26%,rgba(14,15,20,0) 40%),linear-gradient(0deg,rgba(14,15,20,.98) 0%,rgba(14,15,20,.92) 30%,rgba(14,15,20,0) 52%)}
+.bar{position:absolute;left:64px;right:64px;top:64px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:16px;font:900 52px 'Inter Display',Inter;letter-spacing:-.02em}
+.brand img{width:76px;height:76px}
+.hire{padding:16px 30px;border-radius:50px;background:var(--or);font:800 28px Inter;letter-spacing:.16em}
+.head{position:absolute;left:64px;right:64px;top:170px}
+.feed .head{top:150px}
+.h1{font:900 120px/1 'Inter Display',Inter;letter-spacing:-.02em;text-transform:uppercase}
+.h2{font:italic 500 136px/.95 'Playfair Display',serif;color:var(--or2);margin:6px 0 2px -4px}
+.feed .h1{font-size:84px}.feed .h2{font-size:96px}
+.city{margin-bottom:14px;font:800 26px Inter;letter-spacing:.24em;text-transform:uppercase;color:var(--or2)}
+.feed .city{display:none}
+.story .fc{display:none}
+.foot{position:absolute;left:64px;right:64px;bottom:64px}
+.feed .foot{bottom:44px}
+.lead{font:800 46px/1.18 Inter;letter-spacing:-.01em}
+.lead em{font-style:normal;color:var(--or2)}
+.feed .lead{font-size:34px}
+.miss{margin-top:24px;display:grid;gap:14px}
+.feed .miss{margin-top:20px;gap:12px}
+.miss div{display:flex;align-items:center;gap:22px;font:600 33px/1.2 Inter}
+.feed .miss div{font-size:29px;gap:18px}
+.miss b{flex:none;width:56px;height:56px;border-radius:50%;background:var(--or);display:grid;place-items:center;font:900 30px Inter}
+.feed .miss b{width:46px;height:46px;font-size:25px}
+.chips{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px}
+.chips span{padding:14px 24px;border-radius:40px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);font:700 26px Inter}
+.chips span.o{background:rgba(255,107,0,.18);border-color:var(--or2);color:#FFD2B0}
+.feed .chips{display:none}
+.cta{margin-top:28px;padding:24px 36px;border-radius:30px;background:var(--or);display:flex;align-items:center;justify-content:space-between;gap:20px}
+.feed .cta{margin-top:24px;padding:20px 30px}
+.cta small{display:block;font:700 26px Inter;opacity:.9}
+.cta strong{display:block;font:900 50px 'Inter Display',Inter;letter-spacing:.01em}
+.feed .cta small{font-size:22px}.feed .cta strong{font-size:40px}
+.cta svg{flex:none}
+.ai{margin-top:18px;text-align:center;font:500 20px Inter;color:rgba(255,255,255,.5)}
+.feed .ai{margin-top:12px;font-size:17px}
+</style></head>
+<body>
+<div class="photo"></div><div class="shade"></div>
+<div class="bar"><div class="brand"><img src="assets/mk_logo.png" alt="">OJA</div><div class="hire">ON RECRUTE</div></div>
+<div class="head"><div class="h1">Deviens</div><div class="h2">ambassadeur</div><div class="h1">OJA</div></div>
+<div class="foot">
+<div class="city">Cotonou · Abomey-Calavi</div>
+<div class="lead">Tu fais bouger tes réseaux ?<br><em>Fais découvrir OJA</em> autour de toi.</div>
+<div class="miss"><div><b>1</b>Teste l'appli</div><div><b>2</b>Publie nos vidéos en statut</div><div><b>3</b>Inscris chauffeurs, restos et boutiques avec ton code</div></div>
+<div class="chips"><span>TikTok · Instagram · Facebook · WhatsApp</span><span class="o">Mission rémunérée</span><span>Formation et kit fournis</span></div>
+<div class="cta"><div><small>Candidate sur WhatsApp<span class="fc"> · Cotonou et Abomey-Calavi</span></small><strong>+229 XX XX XX XX</strong></div>
+<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+<div class="ai">Image générée par IA.</div>
+</div>
+<script>document.body.className = location.hash === '#feed' ? 'feed' : 'story';</script>
+</body></html>
