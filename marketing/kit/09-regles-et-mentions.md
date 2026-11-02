@@ -38,3 +38,10 @@
   course. »
 - « Paiement protégé NOVOJA : l'argent est remis au vendeur après
   confirmation de réception. »
+
+## Images générées par IA (consigne de l'équipe, novembre 2026)
+- Montrer le Cotonou d'aujourd'hui : rues goudronnées, propres et bien entretenues, trottoirs nets, belles motos récentes, commerces soignés. Pas de rues en terre défoncées ni de décor délabré.
+- Zems en chemise jaune à Cotonou, en bleu à Porto-Novo.
+
+## Fonction mise en avant en premier
+- **Mettre son entreprise sur la carte** : boutique, atelier, restaurant, petit business. Au Bénin, se faire trouver sans adresse précise est un casse-tête ; sur OJA, on trouve un lieu par le nom que les gens lui donnent, et le commerçant revendique sa fiche (« C'est mon commerce »).
