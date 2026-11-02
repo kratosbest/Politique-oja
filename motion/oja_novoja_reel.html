@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>NOVOJA — Une seconde vie (reel 9:16)</title>
+<link rel="stylesheet" href="fonts/local.css">
+<style>
+/* NOVOJA « Une seconde vie », reel 9:16 (1080 x 1920), 18 s. Same rhythm as a 3D brand reel: logo in sparks, a silk ribbon
+   that ties the scenes, floating objects, « Publie-le », chat, parcel, route on a map, « Reçu », logo + tagline.
+   Every frame is a pure function of time: renderAt(t). Render: src/render_video.sh oja_novoja_reel.html 18 <m4a> <mp4> <ffmpeg> */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0A0604}
+body{position:relative;font-family:Inter,sans-serif;color:#fff}
+canvas{position:absolute;left:0;top:0}
+.abs{position:absolute}
+.sc{position:absolute;inset:0;visibility:hidden}
+.cap{position:absolute;left:60px;right:60px;top:190px;text-align:center;font-family:Poppins;font-weight:900;letter-spacing:-.03em;line-height:1.02;visibility:hidden}
+.cap .w{display:inline-block;white-space:pre}
+.cap .o{color:#FF8A1F}
+.pill{position:absolute;display:flex;align-items:center;gap:14px;padding:18px 30px;border-radius:50px;font:800 34px Inter;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.card{position:absolute;border-radius:44px;background:#15171C;border:2px solid #2A2D35;box-shadow:0 50px 120px rgba(0,0,0,.6)}
+.lab{font:700 22px Inter;letter-spacing:.14em;color:#8A8F98;margin-bottom:12px}
+</style></head><body>
+<canvas id="bg" width="1080" height="1920"></canvas>
+<canvas id="ribB" width="1080" height="1920"></canvas>
+<div id="stage"></div>
+<canvas id="ribF" width="1080" height="1920"></canvas>
+<canvas id="fx" width="1080" height="1920"></canvas>
+<div id="caps"></div>
+<script>
+const W = 1080, H = 1920, DUR = 18;
+const OR = '#FF6B00', OR2 = '#FF8A1F', GR = '#12B76A';
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.9; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = id => document.getElementById(id);
+const st = (e, o) => { for (const k in o) e.style[k] = o[k]; };
+function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const ICONS = {
+  recycle: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  phone: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>',
+  play: '<path d="m6 3 14 9-14 9V3z"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>`;
+const mark = (s, c = OR) => `<span style="display:inline-grid;place-items:center;flex:none;width:${s}px;height:${s}px;border-radius:${s * .3}px;background:${c};box-shadow:0 ${s * .12}px ${s * .4}px rgba(255,107,0,.35)">${ic('recycle', s * .62, '#fff', 2.2)}</span>`;
+const IMG = { radio: 'assets/cs/obj_occasion.png', reveil: 'assets/cs/obj_reveil.png', colis: 'assets/cs/obj_colis.png',
+  chat: 'store/captures/discussion.png', nov: 'store/captures/novoja.png' };
+
+/* ---------- scenes: [id, start, end] ---------- */
+const S = { s1: [0, 2.5], s2: [2.5, 4.5], s3: [4.5, 7.0], s4: [7.0, 9.0], s5: [9.0, 11.0], s6: [11.0, 13.0], s7: [13.0, 15.0], s8: [15.0, DUR] };
+// captions: [scene, size, lines], a line is [[text, orange?, at]]
+const CAPS = [
+  ['s2', 92, [[['Ce qui dort', 0, 2.6]], [['chez toi…', 0, 2.85]], [['vaut de l\'argent.', 1, 3.25]]]],
+  ['s3', 128, [[['Publie-le.', 0, 4.6]]]],
+  ['s4', 112, [[['Discute', 0, 7.1]], [['dans l\'appli.', 0, 7.3]]]],
+  ['s5', 86, [[['L\'acheteur paie.', 0, 9.1]], [['OJA garde', 1, 9.85]], [['l\'argent.', 1, 10.0]]]],
+  ['s6', 128, [[['En route.', 0, 11.1]]]],
+  ['s7', 96, [[['Il reçoit,', 0, 13.1]], [['il confirme.', 0, 13.35]], [['Tu es payé.', 1, 14.05]]]],
+];
+
+const stage = $('stage');
+stage.innerHTML = `
+<div id="s1" class="sc">
+  <div id="s1in" class="abs" style="left:0;right:0;top:0;bottom:0">
+    <div id="s1m" class="abs" style="left:445px;top:610px">${mark(190)}</div>
+    <div id="s1w" class="abs" style="left:0;right:0;top:830px;text-align:center;font:900 196px Poppins;letter-spacing:-.045em;line-height:1">${[...'NOVOJA'].map((c, i) => `<span id="s1l${i}" style="display:inline-block">${c}</span>`).join('')}</div>
+    <div id="s1t" class="abs" style="left:0;right:0;top:1080px;text-align:center;font:600 46px Inter;color:rgba(255,255,255,.78)">dans l'appli <b style="color:#fff">OJA</b></div>
+  </div>
+</div>
+<div id="s2" class="sc">
+  <img id="s2r" class="abs" src="${IMG.reveil}" style="width:250px;left:70px;top:1360px;filter:drop-shadow(0 40px 50px rgba(0,0,0,.55))">
+  <img id="s2a" class="abs" src="${IMG.radio}" style="width:800px;left:140px;top:820px;filter:drop-shadow(0 60px 70px rgba(0,0,0,.6))">
+</div>
+<div id="s3" class="sc" style="perspective:1700px">
+  <div id="s3c" class="card" style="left:120px;top:640px;width:840px;padding:40px 44px 44px;transform-origin:50% 50%">
+    <div style="display:flex;align-items:center;gap:18px;font:800 44px Poppins">${mark(64)}Publier un objet<span style="margin-left:auto;font:800 24px Inter;letter-spacing:.14em;color:${OR2}">NOVOJA</span></div>
+    <div id="s3p" style="position:relative;margin-top:34px;height:430px;border-radius:30px;overflow:hidden;background:#22252C">
+      <div id="s3cam" class="abs" style="inset:0;display:grid;place-items:center">${ic('camera', 90, '#555B66', 2)}</div>
+      <div id="s3img" class="abs" style="inset:0;background:radial-gradient(circle at 40% 45%,#3A2A1E,#1B1512 70%);opacity:0"><img src="${IMG.radio}" style="position:absolute;width:1080px;left:-60px;top:-250px"></div>
+      <div id="s3fl" class="abs" style="inset:0;background:#fff;opacity:0"></div>
+    </div>
+    <div id="s3tg" style="display:flex;height:84px;margin-top:30px;border-radius:24px;background:#22252C;padding:6px;gap:6px;opacity:0">
+      <div style="flex:1;border-radius:19px;display:grid;place-items:center;font:800 32px Inter;background:${OR};color:#fff">À vendre</div>
+      <div style="flex:1;border-radius:19px;display:grid;place-items:center;font:800 32px Inter;color:#8A8F98">À donner</div></div>
+    <div id="s3f" style="margin-top:22px;height:84px;border-radius:24px;border:3px solid #2E323B;display:flex;align-items:center;padding:0 28px;font:700 36px Inter;opacity:0"><span id="s3ft"></span><span id="s3car" style="width:3px;height:42px;background:${OR};margin-left:3px"></span></div>
+    <div id="s3ch" style="display:flex;gap:14px;margin-top:22px;opacity:0">${['Électronique', 'Maison', 'Mode'].map((s, i) => `<span style="padding:12px 24px;border-radius:30px;font:700 28px Inter;${i ? 'border:3px solid #2E323B;color:#8A8F98' : `background:rgba(255,107,0,.16);border:3px solid ${OR};color:#FFB277`}">${s}</span>`).join('')}</div>
+    <div id="s3b" style="margin-top:30px;height:100px;border-radius:28px;background:${OR};display:grid;place-items:center;font:800 38px Inter;opacity:0">Publier</div>
+  </div>
+  <div id="s3ok" class="pill" style="left:620px;top:600px;background:${GR};color:#fff;opacity:0">${ic('check', 36, '#fff', 3.4)}En ligne</div>
+</div>
+<div id="s4" class="sc" style="perspective:1800px">
+  <div id="s4p" class="abs" style="left:280px;top:640px;width:520px;padding:14px;border-radius:74px;background:#0D0E11;border:3px solid #2A2D35;box-shadow:0 60px 140px rgba(0,0,0,.7)">
+    <img src="${IMG.chat}" style="display:block;width:100%;border-radius:60px"></div>
+  <div id="s4b0" class="abs" style="left:60px;top:1010px"><div style="padding:24px 34px;border-radius:34px;border-bottom-left-radius:8px;background:#fff;color:#111;font:700 42px Inter;white-space:nowrap;box-shadow:0 30px 70px rgba(0,0,0,.5)">Elle marche toujours ?</div></div>
+  <div id="s4b1" class="abs" style="left:520px;top:1170px"><div style="padding:24px 34px;border-radius:34px;border-bottom-right-radius:8px;background:#DCF8C6;color:#111;font:700 42px Inter;white-space:nowrap;box-shadow:0 30px 70px rgba(0,0,0,.5)">Oui, comme neuve !</div></div>
+  <div id="s4b2" class="abs" style="left:110px;top:1360px;width:860px;padding:30px 34px;border-radius:34px;background:#15171C;border:3px solid ${OR};display:flex;align-items:center;gap:24px;box-shadow:0 30px 80px rgba(0,0,0,.6)">
+    <span style="flex:none;width:84px;height:84px;border-radius:24px;background:rgba(255,107,0,.18);display:grid;place-items:center">${ic('lock', 46, OR2, 2.6)}</span>
+    <div><div style="font:800 38px Inter">Demande de paiement sécurisée</div><div style="font:600 28px Inter;color:#9AA0AA;margin-top:6px">envoyée par le vendeur</div></div></div>
+</div>
+<div id="s5" class="sc">
+  <svg id="s5v" class="abs" style="left:140px;top:780px" width="800" height="800" viewBox="0 0 800 800"><circle cx="400" cy="400" r="370" fill="none" stroke="rgba(255,138,31,.55)" stroke-width="6" stroke-dasharray="3 22" stroke-linecap="round"/><circle cx="400" cy="400" r="320" fill="none" stroke="rgba(255,138,31,.25)" stroke-width="3"/></svg>
+  <img id="s5c" class="abs" src="${IMG.colis}" style="width:560px;left:260px;top:900px;filter:drop-shadow(0 60px 60px rgba(0,0,0,.6))">
+  <div id="s5k" class="pill" style="left:150px;top:1560px;background:#15171C;border:3px solid ${OR};color:#fff">${ic('lock', 38, OR2, 2.8)}Argent gardé jusqu'à la réception</div>
+</div>
+<div id="s6" class="sc" style="perspective:1500px">
+  <div id="s6m" class="abs" style="left:40px;top:720px;width:1000px;height:1000px;transform-style:preserve-3d;transform:rotateX(54deg) rotateZ(-16deg)">
+    <canvas id="s6c" width="1000" height="1000" style="border-radius:60px"></canvas>
+    <img id="s6k" class="abs" src="${IMG.colis}" style="width:170px;left:0;top:0;transform-origin:50% 100%">
+  </div>
+  <div id="s6s" class="abs" style="left:0;right:0;top:340px;text-align:center;font:700 42px Inter;color:rgba(255,255,255,.8)">Livraison possible avec <b style="color:${OR2}">OJA</b></div>
+  <div id="s6l" class="pill" style="left:330px;top:470px;background:#15171C;border:3px solid #2E323B;color:#fff">${ic('truck', 38, OR2, 2.4)}Livraison OJA</div>
+</div>
+<div id="s7" class="sc">
+  <img id="s7c" class="abs" src="${IMG.colis}" style="width:520px;left:280px;top:820px;filter:drop-shadow(0 60px 60px rgba(0,0,0,.6))">
+  <div id="s7r" class="pill" style="left:300px;top:1340px;background:${GR};color:#fff">${ic('check', 38, '#fff', 3.4)}Objet reçu</div>
+  <div id="s7n" class="abs" style="left:60px;top:1470px;width:960px;padding:28px 32px;border-radius:40px;background:rgba(245,246,248,.97);color:#111;display:flex;gap:24px;align-items:center;box-shadow:0 40px 90px rgba(0,0,0,.55)">
+    ${mark(92)}<div style="flex:1"><div style="display:flex;font:800 34px Inter">NOVOJA<span style="margin-left:auto;font:600 26px Inter;color:#8A8F98">maintenant</span></div>
+    <div style="font:600 32px Inter;color:#333;margin-top:6px;line-height:1.25">Paiement libéré : l'acheteur a confirmé la réception.</div></div></div>
+</div>
+<div id="s8" class="sc">
+  <div id="s8t" class="abs" style="left:0;top:0"></div>
+  <div id="s8in" class="abs" style="left:0;right:0;top:0;bottom:0">
+    <div id="s8m" class="abs" style="left:465px;top:560px">${mark(150)}</div>
+    <div id="s8w" class="abs" style="left:0;right:0;top:740px;text-align:center;font:900 188px Poppins;letter-spacing:-.045em;line-height:1">${[...'NOVOJA'].map((c, i) => `<span id="s8l${i}" style="display:inline-block">${c}</span>`).join('')}</div>
+    <div id="s8g" class="abs" style="left:0;right:0;top:965px;text-align:center;font:800 76px Poppins;letter-spacing:-.02em;color:${OR2}">Une seconde vie.</div>
+    <div id="s8a" class="abs" style="left:0;right:0;top:1210px;text-align:center;font:600 44px Inter;color:rgba(255,255,255,.8)">Vends, achète, donne dans l'appli <b style="color:#fff">OJA</b></div>
+    <div id="s8s" class="abs" style="left:0;right:0;top:1310px;display:flex;justify-content:center;gap:24px">${[['phone', 'Télécharger sur', 'App Store'], ['play', 'Disponible sur', 'Google Play']].map(([n, a, b]) => `<div style="width:360px;height:110px;border-radius:28px;background:#141414;border:2px solid #3A3A3A;display:flex;align-items:center;gap:18px;padding:0 28px">${ic(n, 46, '#fff', 1.8)}<div><div style="font:500 21px Inter;opacity:.75">${a}</div><div style="font:700 36px Poppins;line-height:1.1">${b}</div></div></div>`).join('')}</div>
+    <div id="s8f" class="abs" style="left:80px;right:80px;top:1500px;text-align:center;font:500 25px Inter;line-height:1.4;color:rgba(255,255,255,.6)">Paiement protégé NOVOJA : l'argent est remis au vendeur après confirmation de réception.</div>
+  </div>
+</div>`;
+
+// end collage: tiles that spiral into the logo
+const TILES = [IMG.radio, IMG.colis, IMG.reveil, IMG.nov, IMG.radio, IMG.chat];
+$('s8t').innerHTML = TILES.map((src, i) => `<div id="s8t${i}" class="abs" style="width:300px;height:300px;border-radius:40px;overflow:hidden;background:#1B1D22;border:3px solid #2E323B;box-shadow:0 40px 80px rgba(0,0,0,.6)"><img src="${src}" style="width:100%;height:100%;object-fit:${i === 3 || i === 5 ? 'cover;object-position:top' : 'contain'};padding:${i === 3 || i === 5 ? 0 : 24}px"></div>`).join('');
+
+// captions
+$('caps').innerHTML = CAPS.map(([sc, size, lines], k) => `<div id="cap${k}" class="cap" style="font-size:${size}px">${lines.map((ln, j) => `<div>${ln.map(([txt, o], i) => `<span id="cw${k}_${j}_${i}" class="w${o ? ' o' : ''}">${txt}</span>`).join('')}</div>`).join('')}</div>`).join('');
+
+/* ---------- canvases ---------- */
+const bg = $('bg').getContext('2d'), rB = $('ribB').getContext('2d'), rF = $('ribF').getContext('2d'), fx = $('fx').getContext('2d');
+const BOKEH = (() => { const r = rng(7); return Array.from({ length: 34 }, () => ({ x: r() * W, y: r() * 2100, rad: 4 + r() * 22, a: .04 + r() * .14, v: 18 + r() * 60, ph: r() * 6 })); })();
+function drawBg(t) {
+  bg.fillStyle = '#0A0604'; bg.fillRect(0, 0, W, H);
+  const pulse = .85 + .15 * Math.sin(t * 2.4);
+  let g = bg.createRadialGradient(540, 900, 0, 540, 900, 1050);
+  g.addColorStop(0, `rgba(255,107,0,${.34 * pulse})`); g.addColorStop(.45, 'rgba(160,52,0,.16)'); g.addColorStop(1, 'rgba(10,6,4,0)');
+  bg.fillStyle = g; bg.fillRect(0, 0, W, H);
+  g = bg.createRadialGradient(900, 1900, 0, 900, 1900, 900);
+  g.addColorStop(0, 'rgba(255,138,31,.18)'); g.addColorStop(1, 'rgba(10,6,4,0)');
+  bg.fillStyle = g; bg.fillRect(0, 0, W, H);
+  for (const b of BOKEH) {
+    const y = ((b.y - t * b.v) % 2100 + 2100) % 2100 - 90, x = b.x + Math.sin(t * .7 + b.ph) * 30;
+    bg.fillStyle = `rgba(255,170,90,${b.a * (.7 + .3 * Math.sin(t * 1.3 + b.ph))})`;
+    bg.beginPath(); bg.arc(x, y, b.rad, 0, Math.PI * 2); bg.fill();
+  }
+}
+
+/* silk ribbon: a band along a Catmull-Rom curve, twisting (the visible width and the light follow the twist) */
+function spline(P) {
+  return s => {
+    const n = P.length - 1, f = cl(s) * n, i = Math.min(n - 1, Math.floor(f)), u = f - i;
+    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(n, i + 2)];
+    const c = (a, b, c2, d) => .5 * (2 * b + (-a + c2) * u + (2 * a - 5 * b + 4 * c2 - d) * u * u + (-a + 3 * b - 3 * c2 + d) * u * u * u);
+    return [c(p0[0], p1[0], p2[0], p3[0]), c(p0[1], p1[1], p2[1], p3[1])];
+  };
+}
+const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+const C_DARK = [110, 36, 0], C_LIGHT = [255, 190, 120], C_BACK0 = [60, 18, 0], C_BACK1 = [200, 86, 16];
+function ribbon(ctx, P, s0, s1, width, t, ph = 0, alpha = 1) {
+  if (s1 - s0 < .004) return;
+  const f = spline(P), N = 170, pts = [];
+  for (let i = 0; i <= N; i++) { const s = s0 + (s1 - s0) * i / N; pts.push(f(s)); }
+  ctx.globalAlpha = alpha;
+  for (let i = 0; i < N; i++) {
+    const s = s0 + (s1 - s0) * (i + .5) / N, u = (i + .5) / N;
+    const th = s * Math.PI * 3.2 + t * 2.1 + ph, c = Math.cos(th);
+    const taper = Math.min(1, u / .07, (1 - u) / .07);
+    const hw = width / 2 * (.16 + .84 * Math.abs(c)) * Math.sqrt(Math.max(0, taper));
+    const a = pts[i], b = pts[i + 1], pa = pts[Math.max(0, i - 1)], pb = pts[Math.min(N, i + 2)];
+    let nx = -(b[1] - pa[1]), ny = b[0] - pa[0], l = Math.hypot(nx, ny) || 1; nx /= l; ny /= l;
+    let mx = -(pb[1] - a[1]), my = pb[0] - a[0], m = Math.hypot(mx, my) || 1; mx /= m; my /= m;
+    const light = Math.pow(.5 + .5 * Math.cos(th - .9), 1.6);
+    const col = c >= 0 ? mix(C_DARK, C_LIGHT, light) : mix(C_BACK0, C_BACK1, light * .8);
+    ctx.fillStyle = ctx.strokeStyle = `rgb(${col})`; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(a[0] + nx * hw, a[1] + ny * hw); ctx.lineTo(b[0] + mx * hw, b[1] + my * hw);
+    ctx.lineTo(b[0] - mx * hw, b[1] - my * hw); ctx.lineTo(a[0] - nx * hw, a[1] - ny * hw); ctx.closePath(); ctx.fill(); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+}
+const ell = (cx, cy, rx, ry, rot, a0, a1, n = 14) => Array.from({ length: n }, (_, i) => { const a = a0 + (a1 - a0) * i / (n - 1), x = Math.cos(a) * rx, y = Math.sin(a) * ry; return [cx + x * Math.cos(rot) - y * Math.sin(rot), cy + x * Math.sin(rot) + y * Math.cos(rot)]; });
+// [front?, t0, t1, points, width, head [a,b], tail [a,b], phase]
+const RIBBONS = [
+  [1, 1.85, 2.62, [[-260, 1560], [120, 1300], [540, 1010], [930, 760], [1360, 420]], 170, [1.85, 2.3], [2.15, 2.62], 0],
+  [0, 2.5, 4.6, [[1300, 640], [820, 760], [260, 960], [150, 1300], [520, 1560], [960, 1420], [1330, 1640]], 110, [2.5, 3.3], [3.95, 4.6], 1],
+  [1, 4.15, 5.05, [[1320, 260], [760, 560], [280, 1080], [700, 1520], [-260, 1940]], 190, [4.15, 4.6], [4.5, 5.05], 2],
+  [0, 4.9, 7.0, [[-240, 1840], [160, 1660], [820, 1720], [1140, 1480], [1320, 1300]], 90, [4.9, 5.7], [6.6, 7.0], 3],
+  [0, 9.0, 11.0, ell(540, 1190, 470, 190, -.2, 2.6, 2.6 + 5.6), 84, [9.15, 10.0], [10.6, 11.0], 4],
+  [1, 12.65, 13.35, [[-260, 300], [300, 700], [760, 1100], [400, 1600], [1340, 1900]], 190, [12.65, 13.05], [12.95, 13.35], 5],
+  [0, 15.0, 16.2, ell(540, 960, 520, 520, 0, 0, 5.2, 18).map(([x, y], i, A) => { const k = i / (A.length - 1); return [540 + (x - 540) * (1 - k * .75), 960 + (y - 960) * (1 - k * .75)]; }), 120, [15.0, 15.5], [15.6, 16.2], 6],
+  [1, 15.9, DUR, [[170, 1112], [400, 1132], [680, 1104], [930, 1074]], 30, [15.9, 16.6], [99, 99], 7],
+];
+function drawRibbons(t) {
+  rB.clearRect(0, 0, W, H); rF.clearRect(0, 0, W, H);
+  for (const [front, t0, t1, P, w, hd, tl, ph] of RIBBONS) {
+    if (t < t0 || t >= t1) continue;
+    const s1 = eo(lin(t, hd[0], hd[1])), s0 = eio(lin(t, tl[0], tl[1]));
+    ribbon(front ? rF : rB, P, s0, s1, w, t, ph);
+  }
+}
+
+/* sparks */
+const BURSTS = [[.5, 540, 930, 120], [6.2, 820, 640, 60], [13.45, 540, 1100, 70], [14.05, 540, 1600, 60], [15.62, 540, 840, 140]];
+const SPARK = BURSTS.map(([t0, x, y, n], k) => { const r = rng(100 + k); return Array.from({ length: n }, () => ({ a: r() * Math.PI * 2, v: 500 + r() * 1500, life: .45 + r() * .8, w: 2 + r() * 4, hue: r() })); });
+function drawFx(t) {
+  fx.clearRect(0, 0, W, H); fx.lineCap = 'round';
+  BURSTS.forEach(([t0, ox, oy], k) => {
+    const dt = t - t0; if (dt < 0 || dt > 1.4) return;
+    for (const p of SPARK[k]) {
+      if (dt > p.life) continue;
+      const pos = d => { const r = p.v * (1 - Math.exp(-d * 3.2)) / 3.2; return [ox + Math.cos(p.a) * r, oy + Math.sin(p.a) * r + 260 * d * d]; };
+      const [x1, y1] = pos(dt), [x0, y0] = pos(Math.max(0, dt - .035)), k2 = 1 - dt / p.life;
+      fx.strokeStyle = p.hue < .55 ? `rgba(255,${150 + p.hue * 120 | 0},60,${k2})` : `rgba(255,240,215,${k2})`;
+      fx.lineWidth = p.w * k2 + .5; fx.beginPath(); fx.moveTo(x0, y0); fx.lineTo(x1, y1); fx.stroke();
+    }
+  });
+}
+
+/* map for the route scene */
+const ROUTE = [[170, 820], [300, 640], [470, 600], [560, 430], [740, 330], [830, 170]];
+const mapCtx = $('s6c').getContext('2d');
+function drawMap(p) {
+  const c = mapCtx, r = rng(55);
+  c.clearRect(0, 0, 1000, 1000);
+  const g = c.createRadialGradient(500, 500, 100, 500, 500, 720); g.addColorStop(0, '#1B1E25'); g.addColorStop(1, '#0E1014');
+  c.fillStyle = g; c.fillRect(0, 0, 1000, 1000);
+  c.fillStyle = 'rgba(40,90,140,.35)'; c.beginPath(); c.moveTo(0, 930); c.bezierCurveTo(300, 860, 600, 990, 1000, 900); c.lineTo(1000, 1000); c.lineTo(0, 1000); c.fill();
+  c.strokeStyle = '#262A33'; c.lineWidth = 6;
+  for (let i = 0; i < 16; i++) { const y = 40 + i * 62 + r() * 20; c.beginPath(); c.moveTo(0, y); c.bezierCurveTo(330, y + r() * 60 - 30, 660, y + r() * 60 - 30, 1000, y + r() * 40 - 20); c.stroke(); }
+  for (let i = 0; i < 16; i++) { const x = 30 + i * 64 + r() * 20; c.beginPath(); c.moveTo(x, 0); c.bezierCurveTo(x + r() * 60 - 30, 330, x + r() * 60 - 30, 660, x + r() * 40 - 20, 1000); c.stroke(); }
+  c.strokeStyle = '#363B46'; c.lineWidth = 16;
+  c.beginPath(); c.moveTo(0, 700); c.bezierCurveTo(300, 600, 650, 520, 1000, 260); c.stroke();
+  c.beginPath(); c.moveTo(420, 0); c.bezierCurveTo(470, 300, 520, 650, 620, 1000); c.stroke();
+  // route
+  const f = spline(ROUTE), N = 120, k = Math.floor(N * p);
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  for (const [w, col] of [[30, 'rgba(255,107,0,.25)'], [12, OR], [4, '#FFD2B0']]) {
+    c.strokeStyle = col; c.lineWidth = w; c.beginPath();
+    for (let i = 0; i <= k; i++) { const [x, y] = f(i / N); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke();
+  }
+  const pin = ([x, y], col, ring) => {
+    if (ring > 0) { c.strokeStyle = `rgba(255,138,31,${1 - ring})`; c.lineWidth = 6; c.beginPath(); c.arc(x, y, 20 + ring * 90, 0, Math.PI * 2); c.stroke(); }
+    c.fillStyle = col; c.beginPath(); c.arc(x, y, 24, 0, Math.PI * 2); c.fill(); c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 9, 0, Math.PI * 2); c.fill();
+  };
+  pin(ROUTE[0], OR, 0);
+  pin(ROUTE[ROUTE.length - 1], p >= 1 ? GR : '#5B6170', p >= 1 ? 0 : 0);
+  return f(p);
+}
+
+/* ---------- per-frame ---------- */
+const show = (id, t) => { const [a, b] = S[id]; const v = t >= a && t < b; $(id).style.visibility = v ? 'visible' : 'hidden'; return v; };
+const exitK = (t, id, d = .3) => lin(t, S[id][1] - d, S[id][1]);
+function pop(e, t, t0, d = .45, extra = '') { const p = lin(t, t0, t0 + d), k = bk(p); st(e, { opacity: cl(p * 2.2), transform: `scale(${.4 + .6 * k}) ${extra}` }); }
+
+function renderAt(t) {
+  drawBg(t); drawRibbons(t); drawFx(t);
+  // S1: logo
+  if (show('s1', t)) {
+    const m = lin(t, .1, .6); st($('s1m'), { transform: `scale(${bk(m)}) rotate(${(1 - eo(m)) * -30}deg)`, opacity: cl(m * 3) });
+    for (let i = 0; i < 6; i++) { const p = eo(lin(t, .32 + i * .07, .32 + i * .07 + .45)); st($('s1l' + i), { opacity: p, transform: `translateY(${(1 - p) * 70}px) scale(${1.45 - .45 * p})`, filter: `blur(${(1 - p) * 16}px)` }); }
+    const tg = eo(lin(t, 1.0, 1.4)); st($('s1t'), { opacity: tg, transform: `translateY(${(1 - tg) * 30}px)` });
+    const x = eio(exitK(t, 's1', .35)); st($('s1in'), { transform: `scale(${1 + x * .4 + t * .02})`, filter: `blur(${x * 18}px)`, opacity: 1 - x });
+  }
+  // S2: what sleeps at home
+  if (show('s2', t)) {
+    const a = eo(lin(t, 2.5, 3.1)), x = eio(exitK(t, 's2', .35)), d = t - 2.5;
+    st($('s2a'), { opacity: a * (1 - x), transform: `translateY(${(1 - a) * 160 + Math.sin(d * 2.2) * 14}px) scale(${(.75 + .25 * a) * (1 + d * .035) * (1 + x * .3)}) rotate(${Math.sin(d * 1.6) * 1.6}deg)`, filter: `blur(${(1 - a) * 14 + x * 16}px) drop-shadow(0 60px 70px rgba(0,0,0,.6))` });
+    const r = eo(lin(t, 2.8, 3.4));
+    st($('s2r'), { opacity: r * (1 - x), transform: `translateY(${(1 - r) * 240 + Math.sin(d * 2.6 + 1) * 18}px) rotate(${-12 + Math.sin(d * 2) * 4}deg) scale(${1 + d * .05})`, filter: `blur(${2 + x * 14}px) drop-shadow(0 40px 50px rgba(0,0,0,.55))` });
+  }
+  // S3: publish
+  if (show('s3', t)) {
+    const a = eo(lin(t, 4.5, 5.15)), x = eio(exitK(t, 's3', .35));
+    st($('s3c'), { opacity: cl(a * 2) * (1 - x), transform: `translateX(${x * 700}px) rotateY(${-55 * (1 - a) - 8 + Math.sin(t * 1.4) * 2 + x * 45}deg) rotateX(${6 - 4 * a}deg) scale(${.85 + .15 * a})` });
+    const sh = lin(t, 5.05, 5.25); $('s3fl').style.opacity = sh > 0 && sh < 1 ? (1 - sh) * .9 : 0;
+    $('s3img').style.opacity = t >= 5.05 ? 1 : 0; $('s3cam').style.opacity = t >= 5.05 ? 0 : 1;
+    $('s3img').firstChild.style.transform = `scale(${1.08 - .08 * eo(lin(t, 5.05, 6.6))})`;
+    for (const [id, t0] of [['s3tg', 5.3], ['s3f', 5.42], ['s3ch', 5.55], ['s3b', 5.7]]) { const p = eo(lin(t, t0, t0 + .3)); st($(id), { opacity: p, transform: `translateY(${(1 - p) * 26}px)` }); }
+    const txt = 'Radio rétro', n = Math.floor(txt.length * lin(t, 5.5, 5.95)); $('s3ft').textContent = txt.slice(0, n);
+    $('s3car').style.opacity = (Math.floor(t * 4) % 2 || t < 5.5) ? 1 : 0;
+    const pr = lin(t, 6.05, 6.25); $('s3b').style.transform = `scale(${1 - .05 * Math.sin(pr * Math.PI)})`;
+    pop($('s3ok'), t, 6.2, .45, `rotate(${-6 + 6 * eo(lin(t, 6.2, 6.6))}deg)`); if (x) $('s3ok').style.opacity *= 1 - x;
+  }
+  // S4: chat
+  if (show('s4', t)) {
+    const a = eo(lin(t, 7.0, 7.55)), x = eio(exitK(t, 's4', .3));
+    st($('s4p'), { opacity: cl(a * 2) * (1 - x), transform: `translateY(${(1 - a) * 300}px) rotateY(${22 * (1 - a) - 8 + Math.sin(t * 1.2) * 2}deg) rotateX(${8 * (1 - a) + 4}deg) scale(${(.9 + .1 * a) * (1 - x * .15)})` });
+    [7.4, 7.8, 8.2].forEach((t0, i) => { const e = $('s4b' + i); pop(e, t, t0, .42, `translateY(${Math.sin(t * 2 + i) * 6}px)`); e.style.transformOrigin = i === 1 ? '100% 100%' : '0 100%'; if (x) e.style.opacity *= 1 - x; });
+  }
+  // S5: the money waits
+  if (show('s5', t)) {
+    const a = lin(t, 9.0, 9.5), x = eio(exitK(t, 's5', .3));
+    const drop = a < 1 ? -700 * Math.pow(1 - eo(a), 2) : 0, bounce = Math.sin(lin(t, 9.35, 9.7) * Math.PI) * -26;
+    st($('s5c'), { opacity: cl(a * 3) * (1 - x), transform: `translateY(${drop + bounce + Math.sin(t * 2) * 8}px) rotate(${Math.sin(t * 1.5) * 3}deg) scale(${1 - x * .4})` });
+    const v = eo(lin(t, 9.75, 10.2)); st($('s5v'), { opacity: v * (1 - x), transform: `rotate(${t * 18}deg) scale(${.7 + .3 * v})` });
+    pop($('s5k'), t, 10.1, .45); if (x) $('s5k').style.opacity *= 1 - x;
+  }
+  // S6: on the way
+  if (show('s6', t)) {
+    const a = eo(lin(t, 11.0, 11.5)), x = eio(exitK(t, 's6', .3)), p = eio(lin(t, 11.35, 12.6));
+    const [px, py] = drawMap(p);
+    st($('s6m'), { opacity: cl(a * 2) * (1 - x), transform: `translateY(${(1 - a) * 260}px) rotateX(${54 + (1 - a) * 12}deg) rotateZ(${-16 + t * 2 - 22}deg) scale(${.92 + .08 * a + (t - 11) * .02})` });
+    const hop = Math.abs(Math.sin(t * 9)) * 10;
+    st($('s6k'), { transform: `translate(${px - 85}px,${py - 150}px) translateZ(${40 + hop}px) rotateZ(${16 - t * 2 + 22}deg) rotateX(-54deg)` });
+    const s = eo(lin(t, 11.35, 11.75)); st($('s6s'), { opacity: s * (1 - x), transform: `translateY(${(1 - s) * 20}px)` });
+    pop($('s6l'), t, 11.6, .45); if (x) $('s6l').style.opacity *= 1 - x;
+  }
+  // S7: received, seller paid
+  if (show('s7', t)) {
+    const a = eo(lin(t, 13.0, 13.45)), x = eio(exitK(t, 's7', .3)), j = Math.sin(lin(t, 13.4, 13.65) * Math.PI) * -30;
+    st($('s7c'), { opacity: a * (1 - x), transform: `translateY(${(1 - a) * 120 + j}px) scale(${.8 + .2 * a}) rotate(${Math.sin(t * 1.4) * 2}deg)` });
+    pop($('s7r'), t, 13.45, .4); if (x) $('s7r').style.opacity *= 1 - x;
+    const n = eo(lin(t, 14.05, 14.45)); st($('s7n'), { opacity: n * (1 - x), transform: `translateY(${(1 - n) * 120}px) scale(${.94 + .06 * n})` });
+  }
+  // S8: collage into the logo
+  if (show('s8', t)) {
+    TILES.forEach((_, i) => {
+      const p = eio(lin(t, 15.0, 15.75)), ang = i / TILES.length * Math.PI * 2 + p * 2.6, rad = 620 * (1 - p) + 40;
+      const e = $('s8t' + i); st(e, { left: (540 - 150 + Math.cos(ang) * rad) + 'px', top: (900 - 150 + Math.sin(ang) * rad * 1.15) + 'px', opacity: 1 - eo(lin(t, 15.45, 15.8)), transform: `rotate(${(i % 2 ? 1 : -1) * (14 - 14 * p) + p * 30}deg) scale(${1 - .7 * p})` });
+    });
+    const m = lin(t, 15.55, 15.95); st($('s8m'), { transform: `scale(${bk(m)})`, opacity: cl(m * 3) });
+    for (let i = 0; i < 6; i++) { const p = eo(lin(t, 15.62 + i * .05, 15.62 + i * .05 + .4)); st($('s8l' + i), { opacity: p, transform: `translateY(${(1 - p) * 60}px) scale(${1.4 - .4 * p})`, filter: `blur(${(1 - p) * 14}px)` }); }
+    for (const [id, t0] of [['s8g', 15.95], ['s8a', 16.35], ['s8s', 16.55], ['s8f', 16.75]]) { const p = eo(lin(t, t0, t0 + .4)); st($(id), { opacity: p, transform: `translateY(${(1 - p) * 26}px)` }); }
+    st($('s8in'), { transform: `scale(${1 + (t - 15) * .012})` });
+  }
+  // captions
+  CAPS.forEach(([sc, , lines], k) => {
+    const [a, b] = S[sc], v = t >= a && t < b, e = $('cap' + k); e.style.visibility = v ? 'visible' : 'hidden'; if (!v) return;
+    const x = eio(lin(t, b - .28, b));
+    lines.forEach((ln, j) => ln.forEach(([, , t0], i) => { const p = eo(lin(t, t0, t0 + .38)); st($(`cw${k}_${j}_${i}`), { opacity: p * (1 - x), transform: `translateY(${(1 - p) * 60 - x * 50}px)`, filter: `blur(${(1 - p) * 12 + x * 8}px)` }); }));
+  });
+}
+window.waitFrame = () => Promise.all([...document.images].filter(i => !i.complete).map(i => i.decode().catch(() => 0)));
+window.ready = (async () => { await document.fonts.load('900 100px Poppins'); await document.fonts.load('800 40px Inter'); await document.fonts.ready; await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); renderAt(0); })();
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+</script>
+</body></html>

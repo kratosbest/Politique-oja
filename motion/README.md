@@ -875,3 +875,33 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
 | 36,1–38,7 s | « Le livreur part avec une commande déjà payée. » | Elle remet le colis au livreur ; « Commande déjà payée » |
 | 38,7–41,1 s | « Et ton argent, tu le retires dans Odja Marchand. » | Carte « Revenus & reversements », « Retirer mes gains » |
 | 41,1–49,5 s | « Vendeuses, mettez votre boutique sur Odja. Vendez tranquille ! » | Elle, fière dans sa boutique ; « Vendez tranquille. », « Crée ta boutique dans Oja App », stores, mention |
+
+## NOVOJA — « Une seconde vie », reel (9:16, 18 s)
+
+`OJA_NOVOJA_UneSecondeVie_9x16.mp4` (1080 × 1920), pour Reels, TikTok et les statuts WhatsApp. Il reprend le rythme d'un reel de marque en 3D :
+- le logo apparaît dans des étincelles ;
+- un ruban de soie orange relie les scènes ;
+- les objets flottent, puis on enchaîne « Publie-le », la discussion, le colis, le trajet sur la carte et « Reçu » ;
+- les vignettes tournent jusqu'au logo final.
+
+Musique seule, sans voix off.
+
+| Temps | Image |
+|---|---|
+| 0–2,5 s | Logo NOVOJA dans des étincelles, « dans l'appli OJA », le ruban traverse l'écran |
+| 2,5–4,5 s | « Ce qui dort chez toi… vaut de l'argent. » : radio, baskets, lampe et réveil qui flottent |
+| 4,5–7 s | « Publie-le. » : carte « Publier un objet » (photo, À vendre, « Radio rétro », Électronique, Publier), « En ligne » |
+| 7–9 s | « Discute dans l'appli. » : vrai écran de discussion NOVOJA, bulles, « Demande de paiement sécurisée » |
+| 9–11 s | « L'acheteur paie. OJA garde l'argent. » : le colis tombe, « Argent gardé jusqu'à la réception » |
+| 11–13 s | « En route. » : carte inclinée, trajet orange, « Livraison possible avec OJA » |
+| 13–15 s | « Il reçoit, il confirme. Tu es payé. » : « Objet reçu », notification « Paiement libéré » |
+| 15–18 s | Les vignettes tournent jusqu'au logo, « Une seconde vie. », stores, mention |
+
+- **Mention à l'écran :** « Paiement protégé NOVOJA : l'argent est remis au vendeur après confirmation de réception. »
+- **Ce qui n'apparaît pas :** aucun prix, aucun montant, et aucun canal de paiement du vendeur nommé.
+- **Sources :**
+  - la page `oja_novoja_reel.html` (sans étape de construction) ;
+  - les objets détourés dans `assets/cs/obj_*.png` ;
+  - les écrans réels dans `store/captures/` ;
+  - la musique `src/music36.py`, qui produit `assets/soundtrack_novoja_reel.m4a`.
+- **Rendu :** `src/render_video.sh oja_novoja_reel.html 18 assets/soundtrack_novoja_reel.m4a OJA_NOVOJA_UneSecondeVie_9x16.mp4 ffmpeg`
