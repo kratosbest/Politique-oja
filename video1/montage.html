@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — Vidéo 1, mettre son business sur la carte</title>
+<style>
+/* Video 1 (video1/CLAUDE.md): Derrick to camera, one shot, every visual is an overlay. 1080 x 1920, rendered at 30 fps.
+   Frames of the edit: work/frames/fNNNN.jpg (24 fps) + person masks mNNNN.png (src/masks.py), so that titles can sit behind him.
+   Safe zones kept clear: 250 px top, 420 px bottom, 160 px right. One type family (Inter). No emoji anywhere.
+   Render: ../motion/src/render_video.sh style, see README: node ../motion/render.js 30 0 N out.mp4 ffmpeg with PAGE=../video1/montage.html */
+@font-face { font-family: InterV; src: local('Inter'), local('Inter Regular'); }
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{position:relative;font-family:Inter,sans-serif;color:#fff}
+canvas{position:absolute;left:0;top:0}
+.abs{position:absolute}
+.fx{position:absolute;inset:0;visibility:hidden}
+#sub{position:absolute;left:60px;right:160px;top:1250px;text-align:center;font:800 76px/1.08 Inter;letter-spacing:-.02em;text-shadow:0 6px 26px rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.55)}
+#sub em{font-style:normal;color:#FF6B00}
+#tag{position:absolute;left:40px;top:262px;display:flex;align-items:center;gap:12px;padding:10px 20px 10px 10px;border-radius:28px;background:rgba(23,33,38,.72);font:700 26px Inter}
+#tag b{padding:5px 12px;border-radius:16px;background:#FF6B00;font:800 24px Inter;font-variant-numeric:tabular-nums}
+.phone{position:absolute;width:380px;height:800px;border-radius:58px;background:#0B0D0F;border:3px solid #2E343A;box-shadow:0 40px 100px rgba(0,0,0,.6);padding:12px;overflow:hidden}
+.scr{position:absolute;inset:12px;border-radius:46px;background:#121619;overflow:hidden;color:#fff}
+.scr .hd{height:96px;background:#FF6B00;display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;font:800 26px Inter}
+.scr .hd2{height:96px;background:#172126;display:flex;align-items:flex-end;padding:0 0 18px 22px;gap:14px;font:800 24px Inter}
+.lab{font:700 14px Inter;letter-spacing:.1em;text-transform:uppercase;color:#8C969C;margin:14px 0 8px}
+.fld{height:48px;border-radius:14px;border:2px solid #2C353B;display:flex;align-items:center;padding:0 14px;font:600 17px Inter;color:#E8ECEE;white-space:nowrap;overflow:hidden}
+.btn{height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:8px;font:800 16px Inter}
+.pillv{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;font:800 15px Inter}
+.chk{display:flex;align-items:center;gap:18px;padding:16px 22px;border-radius:22px;background:rgba(23,33,38,.82);font:800 34px Inter;margin-top:14px;border:2px solid rgba(255,255,255,.08)}
+.chk .bx{width:46px;height:46px;border-radius:12px;border:3px solid #6B767C;display:grid;place-items:center;flex:none}
+.chk.on .bx{background:#159A69;border-color:#159A69}
+.tick{width:26px;height:26px}
+</style></head><body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="ui"></div>
+<div id="sub"></div>
+<div id="tag"><b id="tagn">01/24</b><span id="tagt"></span></div>
+<script src="data/montage_data.js"></script>
+<script>
+const W = 1080, H = 1920, FPS_SRC = 24, DUR = 92;
+const OR = '#FF6B00', ORD = '#B94700', INK = '#172126', GRN = '#159A69', RED = '#D92D20', LIGHT = '#F7F8FA', BJ = ['#008751', '#FCD116', '#E8112D'];
+const NF = Math.round(EDIT_DUR * FPS_SRC) - 1;
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.9; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const win = (t, a, b, fi = .25, fo = .25) => Math.min(eo(lin(t, a, a + fi)), 1 - eio(lin(t, b - fo, b)));   // fade in and out of a window
+const $ = id => document.getElementById(id);
+const st = (e, o) => { for (const k in o) e.style[k] = o[k]; };
+function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const tickSvg = (c = '#fff', s = 26) => `<svg class="tick" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+const ICON = {
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  back: '<path d="m15 18-6-6 6-6"/>',
+  share: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/>',
+  star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICON[n]}</svg>`;
+const LOGO = 'assets/logo-oja-carte.png', PIN = '../motion/assets/mk_pin.png';
+const PLACE = 'Atelier Vulcanisation Gbèto';
+
+/* ---------- storefront illustration (placeholder until a royalty-free photo is supplied) ---------- */
+const shop = (() => { const c = document.createElement('canvas'); c.width = 720; c.height = 480; const x = c.getContext('2d');
+  let g = x.createLinearGradient(0, 0, 0, 480); g.addColorStop(0, '#9FD3F2'); g.addColorStop(.55, '#D9EEF8'); g.addColorStop(.56, '#C9B69A'); g.addColorStop(1, '#A8936F'); x.fillStyle = g; x.fillRect(0, 0, 720, 480);
+  x.fillStyle = '#EDE4D3'; x.fillRect(60, 120, 600, 270); x.fillStyle = '#2E6F8E'; x.fillRect(60, 110, 600, 22);
+  x.fillStyle = OR; x.beginPath(); x.moveTo(40, 132); x.lineTo(680, 132); x.lineTo(650, 190); x.lineTo(70, 190); x.closePath(); x.fill();
+  for (let i = 0; i < 8; i++) { x.fillStyle = i % 2 ? '#FFFFFF' : OR; x.beginPath(); x.moveTo(70 + i * 72.5, 190); x.lineTo(142 + i * 72.5, 190); x.lineTo(132 + i * 72.5, 212); x.lineTo(80 + i * 72.5, 212); x.fill(); }
+  x.fillStyle = INK; x.fillRect(150, 52, 420, 58); x.fillStyle = '#fff'; x.font = '900 34px Inter'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('VULCANISATION', 360, 82);
+  x.fillStyle = '#3B4247'; x.fillRect(250, 228, 220, 162); x.fillStyle = '#1F2427'; x.fillRect(262, 240, 196, 150);
+  const tyre = (cx, cy, r) => { x.fillStyle = '#1E1F21'; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill(); x.fillStyle = '#3A3D40'; x.beginPath(); x.arc(cx, cy, r * .55, 0, 7); x.fill(); x.fillStyle = '#B8BCC0'; x.beginPath(); x.arc(cx, cy, r * .3, 0, 7); x.fill(); };
+  [[130, 352, 40], [130, 280, 40], [210, 360, 34], [560, 350, 42], [630, 364, 30], [590, 284, 36]].forEach(p => tyre(...p));
+  x.fillStyle = '#C0392B'; x.fillRect(480, 300, 40, 70); x.fillStyle = '#7F8C8D'; x.fillRect(486, 288, 28, 14);
+  return c.toDataURL('image/jpeg', .9); })();
+
+/* ---------- image cache (large frames: small LRU) ---------- */
+const CACHE = new Map(), PENDING = new Set();
+function need(src, keep = false) {
+  let im = CACHE.get(src);
+  if (im) { CACHE.delete(src); CACHE.set(src, im); return im.complete && im.naturalWidth ? im : null; }
+  im = new Image(); im.src = src; im.keep = keep; CACHE.set(src, im);
+  const p = im.decode().catch(() => 0); PENDING.add(p); p.then(() => PENDING.delete(p));
+  if (CACHE.size > 50) for (const [k, v] of CACHE) { if (CACHE.size <= 50) break; if (!v.keep) CACHE.delete(k); }
+  return null;
+}
+const pad4 = n => String(n).padStart(4, '0');
+const frameIdx = t => Math.max(0, Math.min(NF - 1, Math.floor(Math.min(t, EDIT_DUR - .05) * FPS_SRC)));
+const FR = i => `work/frames/f${pad4(i + 1)}.jpg`, MK = i => `work/frames/m${pad4(i + 1)}.png`;
+
+/* ---------- canvases ---------- */
+const cv = $('cv'), ctx = cv.getContext('2d');
+const mkc = (w, h, o) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', o)]; };
+const [pc, px] = mkc(W, H), [tc, tx] = mkc(W, H), [sc, sx] = mkc(54, 96, { willReadFrequently: true });
+function person(fr, mk) { px.globalCompositeOperation = 'source-over'; px.clearRect(0, 0, W, H); px.drawImage(fr, 0, 0, W, H); px.globalCompositeOperation = 'destination-in'; px.drawImage(mk, 0, 0, W, H); px.globalCompositeOperation = 'source-over'; return pc; }
+function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function text(c, s, x, y, size, weight, fill, o = {}) { c.save(); c.font = `${weight} ${size}px Inter`; c.textAlign = o.align || 'center'; c.textBaseline = 'middle'; if (o.ls) c.letterSpacing = o.ls + 'px'; if (o.glow) { c.shadowColor = o.glow; c.shadowBlur = o.blur || 40; } if (o.shadow) { c.shadowColor = 'rgba(0,0,0,.5)'; c.shadowBlur = 30; c.shadowOffsetY = 12; } c.fillStyle = fill; c.translate(x, y); if (o.sy) c.scale(1, o.sy); c.fillText(s, 0, 0); c.restore(); }
+
+/* zoom: 100 % then about 115 % at every cut, to hide the jump cuts (centre on the face) */
+const ZC = [540, 900];
+const zoomAt = t => { let k = 0; for (const c of CUTS) if (t >= c) k++; return k % 2 ? 1.14 : 1.0; };
+function withZoom(z, fn, dx = 0) { ctx.save(); ctx.translate(ZC[0] + dx, ZC[1]); ctx.scale(z, z); ctx.translate(-ZC[0], -ZC[1]); fn(); ctx.restore(); }
+
+/* ---------- backgrounds drawn behind Derrick ---------- */
+const MAPLINES = (() => { const r = rng(12), L = []; for (let i = 0; i < 18; i++) L.push({ h: r() < .5, p: r() * 1.2 - .1, a: r() * .35 - .17, w: r() < .25 ? 22 : 9 }); return L; })();
+function mapBg(alpha, t) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H);
+  ctx.translate(540, 900); ctx.rotate(-.12 + t * .004); ctx.translate(-540, -900);
+  for (const l of MAPLINES) { ctx.strokeStyle = l.w > 10 ? '#33454F' : '#24343C'; ctx.lineWidth = l.w; ctx.beginPath();
+    if (l.h) { const y = l.p * H; ctx.moveTo(-200, y); ctx.lineTo(W + 200, y + l.a * W); } else { const x = l.p * W; ctx.moveTo(x, -200); ctx.lineTo(x + l.a * H, H + 200); } ctx.stroke(); }
+  ctx.fillStyle = 'rgba(21,154,105,.25)'; rrect(ctx, 90, 380, 260, 180, 30); ctx.fill(); rrect(ctx, 700, 1180, 300, 200, 30); ctx.fill();
+  ctx.restore();
+}
+function pinAt(x, y, s, alpha = 1, drop = 0) { const im = need(PIN, true); if (!im) return; ctx.save(); ctx.globalAlpha = alpha; ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 12; ctx.drawImage(im, x - s / 2, y - s - drop, s, s); ctx.restore(); }
+function benin(alpha, t, t0) {
+  const [x0, y0, x1, y1] = BENIN.box, s = 1150 / (y1 - y0), w = (x1 - x0) * s, ox = 540 - w / 2 - x0 * s - 40, oy = 330 - y0 * s;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H);
+  ctx.translate(ox, oy); ctx.scale(s, s); const p = new Path2D(BENIN.d);
+  ctx.fillStyle = '#22333B'; ctx.fill(p); ctx.lineWidth = 6 / s; ctx.strokeStyle = OR; ctx.stroke(p); ctx.restore();
+  const r = rng(31); for (let i = 0; i < 26; i++) { const px2 = x0 + (x1 - x0) * (.25 + r() * .5), py2 = y0 + (y1 - y0) * (.08 + r() * .84), tt = t0 + i * .06; if (t > tt) pinAt(ox + px2 * s, oy + py2 * s, 54 * bk(lin(t, tt, tt + .3)), alpha); }
+}
+function collageBg(alpha) {
+  ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = '#C9A26B'; ctx.fillRect(0, 0, W, H);
+  ctx.translate(540, 900); for (let i = 0; i < 24; i++) { ctx.rotate(Math.PI / 12); ctx.fillStyle = i % 2 ? 'rgba(120,80,30,.22)' : 'rgba(255,240,210,.12)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(1500, -190); ctx.lineTo(1500, 190); ctx.fill(); } ctx.setTransform(1, 0, 0, 1, 0, 0);
+  // postcard with the flag colours, a stamp, a plane ticket: paper pieces, no photos
+  const paper = (x, y, w, h, r, draw) => { ctx.save(); ctx.translate(x, y); ctx.rotate(r); ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 10; ctx.fillStyle = '#F5EFE2'; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.shadowColor = 'transparent'; draw(w, h); ctx.restore(); };
+  paper(250, 520, 380, 250, -.1, (w, h) => { ctx.fillStyle = BJ[0]; ctx.fillRect(-w / 2 + 20, -h / 2 + 20, 90, h - 40); ctx.fillStyle = BJ[1]; ctx.fillRect(-w / 2 + 110, -h / 2 + 20, w - 130, (h - 40) / 2); ctx.fillStyle = BJ[2]; ctx.fillRect(-w / 2 + 110, 0, w - 130, (h - 40) / 2); });
+  paper(810, 560, 300, 200, .12, (w, h) => { ctx.strokeStyle = RED; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(0, 0, 70, 0, 7); ctx.stroke(); text(ctx, 'BÉNIN', 0, 0, 40, 900, RED); });
+  paper(840, 1380, 340, 160, -.08, (w, h) => { text(ctx, 'BIENVENUE', 0, -24, 38, 900, INK); ctx.fillStyle = '#9A9283'; ctx.fillRect(-120, 20, 240, 10); ctx.fillRect(-120, 44, 180, 10); });
+  ctx.restore();
+}
+function outline(pp) { tx.clearRect(0, 0, W, H); for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2; tx.drawImage(pp, Math.cos(a) * 14, Math.sin(a) * 14); } tx.globalCompositeOperation = 'source-in'; tx.fillStyle = '#fff'; tx.fillRect(0, 0, W, H); tx.globalCompositeOperation = 'source-over'; return tc; }
+function clock(x, y, r, t, speed) {
+  ctx.save(); ctx.translate(x, y); ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 30; ctx.fillStyle = LIGHT; ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = INK; ctx.lineWidth = r * .06; ctx.beginPath(); ctx.arc(0, 0, r * .92, 0, 7); ctx.stroke();
+  for (let i = 0; i < 12; i++) { ctx.save(); ctx.rotate(i * Math.PI / 6); ctx.fillStyle = INK; ctx.fillRect(-r * .02, -r * .84, r * .04, r * .12); ctx.restore(); }
+  const m = t * speed, h = m / 12; ctx.lineCap = 'round';
+  ctx.save(); ctx.rotate(h); ctx.strokeStyle = INK; ctx.lineWidth = r * .07; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -r * .5); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.rotate(m); ctx.strokeStyle = OR; ctx.lineWidth = r * .045; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -r * .78); ctx.stroke(); ctx.restore();
+  ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(0, 0, r * .07, 0, 7); ctx.fill(); ctx.restore();
+}
+
+/* ---------- DOM overlays ---------- */
+const ui = $('ui');
+const phoneScreens = `
+<div id="ps_add" class="scr">
+  <div class="hd2">${ic('back', 26, '#fff', 2.6)}Enregistrer un lieu</div>
+  <div style="padding:6px 18px">
+    <div class="lab">Ajouter des photos</div>
+    <div id="pa_ph0" style="display:flex;gap:10px"><div class="btn" style="flex:1;background:#1E262B;border:2px solid #2C353B">${ic('camera', 18, OR, 2.4)}Prendre une photo</div></div>
+    <div id="pa_ph1" style="display:none;position:relative;height:150px;border-radius:16px;overflow:hidden;background:url(${shop}) center/cover"><span class="pillv" style="position:absolute;left:10px;top:10px;background:${OR};color:#fff">COUVERTURE</span></div>
+    <div class="lab">Informations générales</div>
+    <div class="fld" id="pa_nm" style="color:#7C878D">Nom de l'entreprise / Lieu</div>
+    <div class="fld" style="margin-top:8px;color:#7C878D">Catégorie</div>
+    <div class="fld" style="margin-top:8px;color:#7C878D">Téléphone principal</div>
+    <div id="pa_map" style="margin-top:12px;height:110px;border-radius:16px;background:#1B2A31;position:relative;overflow:hidden">
+      <div style="position:absolute;left:-20px;right:-20px;top:46px;height:8px;background:#2D3F48;transform:rotate(-8deg)"></div><div style="position:absolute;left:150px;top:-20px;bottom:-20px;width:8px;background:#2D3F48;transform:rotate(12deg)"></div>
+      <img id="pa_pin" src="${PIN}" style="position:absolute;left:150px;top:10px;width:64px;height:64px;opacity:0"></div>
+    <div class="btn" id="pa_go" style="margin-top:14px;background:${OR}">ENREGISTRER LE LIEU</div>
+    <div id="pa_ok" style="margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(21,154,105,.18);border:2px solid ${GRN};font:700 15px/1.35 Inter;color:#D8F3E8;opacity:0">Merci ! Votre lieu est en ligne : tout le monde peut maintenant le trouver sur OJA.</div>
+  </div>
+</div>
+<div id="ps_home" class="scr">
+  <div class="hd"><img src="${LOGO}" style="width:44px;height:44px;margin-right:8px">OJA</div>
+  <div style="padding:16px 16px">
+    <div style="height:46px;border-radius:23px;background:#1E262B;display:flex;align-items:center;padding:0 18px;font:600 16px Inter;color:#8C969C">Rechercher...</div>
+    <div id="ph_card" style="margin-top:18px;border-radius:24px;background:#1A2024;overflow:hidden;border:2px solid #252D32">
+      <div style="position:relative;height:210px;background:url(${shop}) center/cover"><span class="pillv" style="position:absolute;left:12px;top:12px;background:rgba(23,33,38,.8);color:#fff">${ic('wrench', 15, '#fff', 2.4)}RÉPARATION</span><span style="position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;background:rgba(23,33,38,.8);display:grid;place-items:center">${ic('heart', 20, '#fff', 2.2)}</span></div>
+      <div style="padding:14px 16px 16px"><div style="font:800 20px Inter">${PLACE}</div><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font:600 15px Inter;color:#9AA4AA">${ic('pin', 16, '#9AA4AA', 2.2)}Cotonou</div></div>
+    </div>
+    <div style="margin-top:16px;height:160px;border-radius:24px;background:#1A2024;border:2px solid #252D32"></div>
+  </div>
+</div>
+<div id="ps_fiche" class="scr">
+  <div style="position:relative;height:300px;background:url(${shop}) center/cover"><span style="position:absolute;left:16px;top:44px;width:42px;height:42px;border-radius:50%;background:rgba(23,33,38,.75);display:grid;place-items:center">${ic('back', 22, '#fff', 2.6)}</span></div>
+  <div style="padding:18px 20px">
+    <div style="font:800 23px/1.2 Inter">${PLACE}</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:10px"><span id="pf_open" class="pillv" style="background:rgba(21,154,105,.2);color:#3DDC9A;border:2px solid ${GRN}">OUVERT</span><span style="font:600 15px Inter;color:#9AA4AA">Réparation · Cotonou</span></div>
+    <div class="lab" style="margin-top:16px">Horaires d'ouverture</div>
+    <div style="height:10px;border-radius:5px;background:#252D32;width:80%"></div><div style="height:10px;border-radius:5px;background:#252D32;width:60%;margin-top:8px"></div>
+    <div style="display:flex;gap:10px;margin-top:18px"><div id="pf_call" class="btn" style="flex:1;background:#1E262B;border:2px solid #2C353B">${ic('phone', 18, '#fff', 2.2)}Appeler</div><div class="btn" style="flex:1;background:#1E262B;border:2px solid #2C353B">${ic('route', 18, '#fff', 2.2)}Itinéraire</div></div>
+    <div id="pf_go" class="btn" style="margin-top:12px;height:56px;background:${OR};font-size:18px">S'Y RENDRE AVEC OJA</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:16px;font:700 15px Inter;color:#9AA4AA">${ic('star', 18, '#9AA4AA', 2)}Notez ce commerce</div>
+  </div>
+</div>`;
+ui.innerHTML = `
+<div id="o_title" class="fx"></div>
+<div id="o_meter" class="fx"><div id="mt" class="abs" style="left:60px;top:330px;padding:16px 28px;border-radius:40px;background:${OR};font:900 44px Inter;box-shadow:0 20px 50px rgba(0,0,0,.45)">à quelques mètres</div></div>
+<div id="o_name" class="fx"><div id="nm" class="abs" style="left:60px;top:1330px;width:760px;border-radius:22px;overflow:hidden;background:rgba(23,33,38,.92);box-shadow:0 20px 50px rgba(0,0,0,.45)">
+  <div style="display:flex;height:8px">${BJ.map((c, i) => `<span style="flex:${i ? 1 : .6};background:${c}"></span>`).join('')}</div>
+  <div style="padding:20px 28px 22px;display:flex;align-items:center;gap:20px"><img src="${LOGO}" style="width:74px;height:74px"><div><div style="font:900 48px Inter;letter-spacing:-.02em">Derrick Dodoo</div><div style="font:700 30px Inter;color:#FFB27A">fondateur d'OJA</div></div></div></div>
+  <div id="lk" class="abs" style="width:400px;height:460px">${[0, 1, 2, 3].map(i => `<div class="abs" style="width:80px;height:80px;border-color:${OR};border-style:solid;${['left:0;top:0;border-width:8px 0 0 8px', 'right:0;top:0;border-width:8px 8px 0 0', 'left:0;bottom:0;border-width:0 0 8px 8px', 'right:0;bottom:0;border-width:0 8px 8px 0'][i]}"></div>`).join('')}</div></div>
+<div id="o_stamp" class="fx"><div id="sp" class="abs" style="left:110px;top:300px;width:740px;text-align:center;padding:20px 10px;border:12px solid ${RED};border-radius:24px;color:${RED};font:900 92px/1.02 Inter;letter-spacing:.01em;background:rgba(247,248,250,.08)">ABSENT<br>AU TRAVAIL</div></div>
+<div id="o_bill" class="fx"><div id="bl" class="abs" style="left:150px;top:330px;width:560px;padding:44px 40px 64px;background:${LIGHT};color:${INK};font:600 30px Inter;line-height:1.7;box-shadow:0 40px 90px rgba(0,0,0,.5);clip-path:polygon(0 0,100% 0,100% 96%,95% 100%,90% 96%,85% 100%,80% 96%,75% 100%,70% 96%,65% 100%,60% 96%,55% 100%,50% 96%,45% 100%,40% 96%,35% 100%,30% 96%,25% 100%,20% 96%,15% 100%,10% 96%,5% 100%,0 96%)">
+  <div style="text-align:center;font:900 34px Inter">OJA · SUR LA CARTE</div><div style="text-align:center;color:#6B767C;font-size:24px">Ajout d'un commerce</div>
+  <div style="border-top:3px dashed #A9B1B5;margin:16px 0"></div>
+  ${['Votre commerce', 'Sur la carte', 'Visible par tous', 'Quelques minutes'].map(s => `<div style="display:flex;justify-content:space-between;align-items:center">${s}${tickSvg(GRN, 28)}</div>`).join('')}
+  <div style="border-top:3px dashed #A9B1B5;margin:16px 0"></div>
+  <div style="display:flex;justify-content:space-between;font:900 38px Inter"><span>TOTAL</span><span style="color:${OR}">GRATUIT</span></div></div>
+  <div id="gr" class="abs" style="left:190px;top:760px;padding:12px 40px;border:12px solid ${OR};border-radius:24px;color:${OR};font:900 110px/1 Inter;background:rgba(247,248,250,.92)">GRATUIT</div></div>
+<div id="o_phone" class="fx">
+  <div id="chk" class="abs" style="left:590px;top:960px;width:330px">
+    <div style="display:flex;align-items:center;gap:12px;font:900 30px Inter;text-shadow:0 4px 20px rgba(0,0,0,.6)">Sur la carte <span id="chn" style="padding:6px 14px;border-radius:16px;background:${OR};font:900 30px Inter;font-variant-numeric:tabular-nums">0/4</span></div>
+    ${['Photo', 'Nom', 'Position', 'Visible'].map((s, i) => `<div id="ck${i}" class="chk" style="font-size:30px;padding:12px 18px;margin-top:10px"><span class="bx">${tickSvg('#fff')}</span>${s}</div>`).join('')}
+  </div>
+  <div id="ph" class="phone" style="left:40px;top:300px;transform-origin:0 0">${phoneScreens}</div>
+</div>
+<div id="o_who" class="fx"><div id="wo" class="abs" style="left:60px;top:420px;width:820px">
+  <div style="font:900 40px Inter;text-shadow:0 4px 20px rgba(0,0,0,.6);margin-bottom:12px">Ce lieu vous appartient-il ?</div>
+  ${['Oui, je suis propriétaire', 'Non, je référence ce lieu'].map((s, i) => `<div id="wo${i}" class="chk" style="font-size:36px"><span class="bx" style="border-radius:50%"></span>${s}</div>`).join('')}</div></div>
+<div id="o_share" class="fx"><div id="sh" class="abs" style="left:290px;top:300px;display:flex;align-items:center;gap:16px;padding:20px 40px;border-radius:50px;background:${OR};font:900 46px Inter;box-shadow:0 20px 50px rgba(0,0,0,.45)">${ic('share', 44, '#fff', 2.6)}Partagez</div></div>
+<div id="o_dl" class="fx"><div id="dl" class="abs" style="left:0;right:160px;top:300px;text-align:center">
+  <img src="${LOGO}" style="width:220px;height:220px"><div style="font:900 70px Inter;letter-spacing:-.02em;text-shadow:0 6px 24px rgba(0,0,0,.5)">Oja App</div>
+  <div id="badges" style="margin-top:14px;font:700 32px Inter;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6)">App Store · Google Play</div></div></div>
+<div id="o_end" class="fx">
+  <div id="e1" class="abs" style="left:0;right:160px;top:470px;text-align:center"><img src="${LOGO}" style="width:300px;height:300px"></div>
+  <div id="e2" class="abs" style="left:0;right:160px;top:800px;text-align:center;font:900 78px Inter;letter-spacing:-.02em">Oja App</div>
+  <div id="e3" class="abs" style="left:0;right:160px;top:910px;text-align:center;font:700 32px Inter;color:rgba(255,255,255,.85)">App Store · Google Play</div>
+  <div id="e4" class="abs" style="left:60px;right:220px;top:1060px;text-align:center;font:900 84px/1.04 Inter;letter-spacing:-.025em">Mettons le Bénin<br><span style="color:${OR}">sur la carte.</span></div>
+</div>`;
+
+/* ---------- timeline: [name, t0, t1, counter label] (seconds on the edit) ---------- */
+const CUES = [
+  ['dots', 0.0, 0.6, 'Révélation'], ['backword', 0.48, 4.0, 'Titre derrière'], ['map', 4.0, 8.9, 'Carte'], ['meter', 7.2, 8.9, 'À quelques mètres'],
+  ['name', 9.8, 14.55, 'Bandeau'], ['moody', 14.6, 36.9, 'Ambiance'], ['clock', 16.0, 19.8, 'Horloge'], ['punch', 19.0, 19.85, 'Zoom'],
+  ['clockfast', 27.3, 29.0, 'Des heures'], ['stamp', 30.7, 32.0, 'Tampon'], ['pinlate', 32.0, 37.0, 'L\'épingle'], ['collage', 37.15, 44.0, 'Collage'],
+  ['logo', 44.6, 46.1, 'OJA'], ['oja', 46.15, 50.6, 'Ọjà'], ['pocket', 50.7, 52.6, 'Dans la poche'], ['four', 52.7, 56.4, 'Mots géants'],
+  ['carte', 56.45, 59.3, 'Sur la carte'], ['bill', 59.3, 61.95, 'Le ticket'], ['phone', 61.95, 74.95, 'Dans l\'appli'], ['vertigo', 75.0, 76.6, 'Vertigo'],
+  ['benin', 76.6, 78.3, 'Le Bénin sur la carte'], ['dl', 78.3, 79.9, 'Téléchargez'], ['who', 79.9, 85.2, 'Ajoutez un commerce'], ['share', 85.2, 88.9, 'Partagez'], ['end', 88.9, DUR, ''],
+];
+const COUNTED = CUES.filter(c => c[3]);
+const active = t => CUES.filter(([, a, b]) => t >= a && t < b);
+
+/* ---------- subtitles: groups of 2 to 3 words, what he really says ---------- */
+const FIX = { 'Dodo,': 'Dodoo.', 'Oja.': 'OJA.', 'Oja,': 'OJA,', 'Oja': 'OJA', 'marcher.': '« marché ».', 'Béninois,': 'béninois,' };
+const KEY = /perdu|réparateur|invisible|OJA|Ọjà|marché|gratuit|visible|carte|Bénin|ouvert|course|porte|commerce|partagez|minutes|tourisme/i;
+const GROUPS = (() => { const G = []; let cur = []; WORDS.forEach(([w, s, e], i) => { let txt = FIX[w] || w; if (i === WORDS.findIndex(x => x[1] > 46 && x[0].startsWith('Oja'))) txt = 'Ọjà';
+  cur.push([txt, s, e]); const next = WORDS[i + 1]; if (cur.length >= 3 || /[,.!?:]$/.test(txt) || !next || next[1] - e > .3) { G.push(cur); cur = []; } }); if (cur.length) G.push(cur); return G; })();
+const HIDE_SUB = ['four', 'end', 'dl'];
+
+/* ---------- frame ---------- */
+let CUR = 0, DRAWN = false;
+function draw(t) {
+  const fi = frameIdx(t), fr = need(FR(fi)), mk = need(MK(fi)); need(FR(Math.min(NF - 1, fi + 1))); need(MK(Math.min(NF - 1, fi + 1)));
+  if (!fr || !mk) return false;
+  const on = active(t), has = n => on.find(c => c[0] === n), A = n => has(n) ? win(t, has(n)[1], has(n)[2]) : 0;
+  const z = has('punch') ? 1.0 + .25 * eo(lin(t, 19.0, 19.15)) : has('clockfast') ? 1.08 : zoomAt(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
+  // 1) background: the real shot, or a background drawn behind him
+  const grade = has('moody') ? `saturate(${1 - .4 * A('moody')}) brightness(${1 - .14 * A('moody')})` : 'none';
+  const ph = has('phone') ? eio(Math.min(lin(t, 61.95, 62.45), 1 - lin(t, 74.55, 74.95))) : 0, vz = z * (1 + .3 * ph), vdx = 150 * ph;
+  ctx.filter = grade; withZoom(vz, () => ctx.drawImage(fr, 0, 0, W, H), vdx); ctx.filter = 'none';
+  let behind = false;
+  if (has('map')) { mapBg(A('map'), t); behind = true; }
+  if (has('pinlate')) { mapBg(.85 * A('pinlate'), t); behind = true; }
+  if (has('collage')) { collageBg(A('collage')); behind = true; }
+  if (has('benin')) { benin(A('benin'), t, 76.9); behind = true; }
+  if (has('backword')) { const k = eo(lin(t, .48, .8)), k2 = eo(lin(t, 1.66, 1.95)); ctx.fillStyle = `rgba(23,33,38,${.55 * A('backword')})`; ctx.fillRect(0, 0, W, H);
+    text(ctx, 'UNE JOURNÉE', 460, 450, 116 * (.8 + .2 * k), 900, `rgba(255,255,255,${k * A('backword')})`, { sy: 1.15, ls: -4 }); text(ctx, 'PERDUE', 460, 610, 210 * (.8 + .2 * k2), 900, `rgba(255,107,0,${k2 * A('backword')})`, { sy: 1.15, ls: -6 }); behind = true; }
+  if (has('oja')) { const k = eo(lin(t, 46.2, 46.6)); ctx.fillStyle = `rgba(23,33,38,${.62 * A('oja')})`; ctx.fillRect(0, 0, W, H); text(ctx, 'ỌJÀ', 470, 560, 380 * (.8 + .2 * k), 900, `rgba(255,107,0,${k * A('oja')})`, { glow: 'rgba(255,107,0,.6)', blur: 50, ls: -10 }); behind = true; }
+  if (has('carte')) { const k = eo(lin(t, 58.0, 58.4)); ctx.fillStyle = `rgba(23,33,38,${.6 * A('carte')})`; ctx.fillRect(0, 0, W, H); text(ctx, 'SUR LA', 470, 470, 170, 900, `rgba(255,255,255,${k * A('carte')})`, { sy: 1.1 }); text(ctx, 'CARTE', 470, 650, 240, 900, `rgba(255,107,0,${k * A('carte')})`, { sy: 1.1 }); behind = true; }
+  if (has('vertigo')) { const s = 1.3 - .28 * eio(lin(t, 75.0, 76.6)); ctx.filter = 'blur(1.5px)'; withZoom(s, () => ctx.drawImage(fr, 0, 0, W, H)); ctx.filter = 'none'; behind = true; }
+  if (has('collage')) { const k = eo(lin(t, 38.74, 39.1)); text(ctx, 'TOURISME', 460, 640, 176, 900, `rgba(255,255,255,${k * A('collage')})`, { shadow: 1, sy: 1.1 }); }
+  if (has('dots')) { sx.drawImage(fr, 0, 0, 54, 96); const d = sx.getImageData(0, 0, 54, 96).data, k = lin(t, 0, .6); ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H);
+    for (let y = 0; y < 96; y++) for (let x = 0; x < 54; x++) { const i = (y * 54 + x) * 4, l = (d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11) / 255; ctx.fillStyle = `rgb(${d[i]},${d[i + 1]},${d[i + 2]})`; ctx.beginPath(); ctx.arc(x * 20 + 10, y * 20 + 10, 1 + 9.5 * l, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = eo(k); withZoom(z, () => ctx.drawImage(fr, 0, 0, W, H)); ctx.globalAlpha = 1; }
+  // pins and marks that belong to the map, behind him
+  if (has('map')) { const d0 = lin(t, 4.78, 5.1), drop = d0 < 1 ? 700 * Math.pow(1 - d0, 2) : Math.sin(lin(t, 5.1, 5.35) * Math.PI) * 24; if (t > 4.78) pinAt(300, 760, 190, A('map'), drop);
+    const m = lin(t, 7.26, 7.8); if (m > 0) { ctx.save(); ctx.globalAlpha = A('map'); ctx.setLineDash([18, 16]); ctx.lineWidth = 8; ctx.strokeStyle = OR; ctx.beginPath(); ctx.moveTo(300, 740); ctx.lineTo(300 + (540 - 300) * eo(m), 740 + (980 - 740) * eo(m)); ctx.stroke(); ctx.restore(); } }
+  if (has('pinlate')) { const fade = 1 - eo(lin(t, 36.12, 36.8)); pinAt(300, 760, 190, A('pinlate') * fade); }
+  // 2) Derrick in front of the drawn backgrounds (paper outline during the collage)
+  if (behind) { const pp = person(fr, mk); if (has('collage')) { ctx.save(); ctx.globalAlpha = A('collage'); withZoom(z, () => { ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 30; ctx.drawImage(outline(pp), 0, 0); }); ctx.restore(); }
+    ctx.filter = grade; withZoom(z, () => ctx.drawImage(pp, 0, 0)); ctx.filter = 'none'; }
+  // 3) things in front of him
+  if (has('clock')) { const k = bk(lin(t, 16.0, 16.4)) * A('clock'); if (k > 0) clock(230, 470, 140 * k, t, 6); }
+  if (has('clockfast')) { const k = bk(lin(t, 27.3, 27.6)) * A('clockfast'); if (k > 0) clock(470, 560, 230 * k, t, 40); }
+  if (has('logo')) { const im = need(LOGO, true), k = bk(lin(t, 44.7, 45.1)) * A('logo'); if (im && k > 0) { ctx.drawImage(im, 470 - 170 * k, 430 - 170 * k, 340 * k, 340 * k); } }
+  if (has('oja')) { const k = eo(lin(t, 48.08, 48.4)); text(ctx, '= MARCHÉ', 470, 820, 120, 900, `rgba(255,255,255,${k * A('oja')})`, { shadow: 1 }); }
+  if (has('pocket')) { const a = A('pocket'), p = eio(lin(t, 50.9, 51.9)), py = 380 + 760 * p, im = need(LOGO, true);
+    ctx.save(); ctx.globalAlpha = a; ctx.beginPath(); ctx.rect(0, 0, W, 1230); ctx.clip(); ctx.translate(470, py); ctx.rotate(.15 - .15 * p);
+    ctx.fillStyle = '#0B0D0F'; rrect(ctx, -110, -220, 220, 440, 34); ctx.fill(); ctx.fillStyle = OR; rrect(ctx, -98, -208, 196, 416, 26); ctx.fill(); if (im) ctx.drawImage(im, -70, -90, 140, 140); ctx.restore();
+    ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#3D6EA5'; ctx.beginPath(); ctx.moveTo(300, 1230); ctx.lineTo(640, 1230); ctx.lineTo(620, 1480); ctx.quadraticCurveTo(470, 1540, 320, 1480); ctx.closePath(); ctx.fill();
+    ctx.setLineDash([14, 10]); ctx.strokeStyle = '#E8B86A'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(316, 1250); ctx.lineTo(624, 1250); ctx.stroke(); ctx.restore(); }
+  if (has('four')) { const ws = [['Artisans', 52.74], ['Ateliers', 53.78], ['Boutiques', 54.8], ['Maquis', 55.58]]; let cur = ws[0]; for (const w of ws) if (t >= w[1] - .05) cur = w;
+    const k = bk(lin(t, cur[1] - .05, cur[1] + .2)); ctx.fillStyle = `rgba(23,33,38,${.35 * A('four')})`; ctx.fillRect(0, 0, W, H); text(ctx, cur[0].toUpperCase(), 470, 1000, 150 * (.6 + .4 * k), 900, '#fff', { shadow: 1 });
+    ws.forEach((w, i) => { ctx.fillStyle = t >= w[1] - .05 ? OR : 'rgba(255,255,255,.35)'; ctx.beginPath(); ctx.arc(380 + i * 60, 1120, 12, 0, 7); ctx.fill(); }); }
+  if (has('share') && t > 87.85) { const k = eio(lin(t, 87.85, 88.6)), n = 1 + Math.round(k * 2); const cw = W / (2 * n + 1) * 2;   // the video multiplies, like a share
+    const g = 3 * k + 1; ctx.fillStyle = INK; ctx.fillRect(0, 0, W, H); const cols = Math.ceil(g), w = (W - 40) / cols, h = w * 16 / 9;
+    for (let r = 0; r * h < H; r++) for (let c = 0; c < cols; c++) { ctx.save(); rrect(ctx, 20 + c * w + 6, 20 + r * (h + 12), w - 12, h, 18); ctx.clip(); ctx.drawImage(fr, 20 + c * w + 6, 20 + r * (h + 12), w - 12, h); ctx.restore(); } }
+  if (has('end')) { ctx.filter = 'blur(20px) brightness(.4)'; withZoom(1.1, () => ctx.drawImage(fr, 0, 0, W, H)); ctx.filter = 'none'; }
+
+  overlays(t, on, has, A, mk);
+  // counter « NN/24 » and the subtitles
+  const k = COUNTED.filter(c => t >= c[1]).length, cue = [...COUNTED].reverse().find(c => t >= c[1]);
+  $('tag').style.visibility = cue && !has('end') ? 'visible' : 'hidden'; $('tagn').textContent = String(k).padStart(2, '0') + '/' + COUNTED.length; $('tagt').textContent = cue ? cue[3] : '';
+  const g = GROUPS.find((gr, i) => t >= gr[0][1] - .05 && t < (GROUPS[i + 1] ? GROUPS[i + 1][0][1] - .05 : gr[gr.length - 1][2] + .6));
+  const subHidden = HIDE_SUB.some(n => has(n)) || (has('share') && t > 87.85);
+  $('sub').innerHTML = g && !subHidden ? g.map(([w]) => KEY.test(w) ? `<em>${w}</em>` : w).join(' ') : '';
+  $('sub').style.top = has('name') ? '1170px' : has('phone') ? '1410px' : '1250px';
+  return true;
+}
+
+function overlays(t, on, has, A, mk) {
+  for (const e of ui.children) e.style.visibility = 'hidden';
+  const show = (id, a) => { const e = $(id); e.style.visibility = 'visible'; e.style.opacity = a; return e; };
+  if (has('meter')) { show('o_meter', A('meter')); const k = bk(lin(t, 7.26, 7.6)); st($('mt'), { transform: `scale(${k})` }); }
+  if (has('name')) { show('o_name', 1); const k = eo(lin(t, 9.86, 10.3)), x = 1 - eio(lin(t, 14.2, 14.55)); st($('nm'), { opacity: k * x, transform: `translateX(${(1 - k) * -300}px)` });
+    sx.clearRect(0, 0, 54, 96); sx.drawImage(mk, 0, 0, 54, 96); const d = sx.getImageData(0, 0, 54, 96).data; let y0 = 0; for (let y = 0; y < 96 && !y0; y++) for (let x = 0; x < 54; x++) if (d[(y * 54 + x) * 4 + 3] > 128) { y0 = y; break; }
+    const z = zoomAt(t), fx = 540, fy = ZC[1] + ((y0 + 9) * 20 - ZC[1]) * z, lk = eo(lin(t, 9.86, 10.2)), w = (360 + 400 * (1 - lk)) * z, h = (420 + 460 * (1 - lk)) * z;
+    st($('lk'), { left: (fx - w / 2) + 'px', top: (fy - h / 2) + 'px', width: w + 'px', height: h + 'px', opacity: lk * (1 - eo(lin(t, 11.4, 11.9))) }); }
+  if (has('stamp')) { show('o_stamp', A('stamp')); const s = lin(t, 30.76, 30.96); st($('sp'), { transform: `rotate(-10deg) scale(${s > 0 ? 2.4 - 1.4 * eo(s) : 2.4})`, opacity: s > 0 ? 1 : 0 }); $('o_stamp').style.transform = s >= 1 ? `translate(${Math.sin(t * 90) * 8 * (1 - lin(t, 30.96, 31.2))}px,0)` : 'none'; }
+  if (has('bill')) { show('o_bill', A('bill')); const k = eo(lin(t, 59.3, 59.9)); st($('bl'), { transform: `translateY(${(1 - k) * -900}px) rotate(-3deg)` }); const s = lin(t, 59.52, 59.72); st($('gr'), { opacity: s > 0 ? 1 : 0, transform: `rotate(-14deg) scale(${s > 0 ? 2.2 - 1.2 * eo(s) : 2.2})` }); }
+  if (has('phone')) {
+    show('o_phone', A('phone')); const ph = $('ph'), k = eo(lin(t, 61.95, 62.4)), res = t >= 66.5, rk = eo(lin(t, 66.5, 67.0));
+    st(ph, { transform: `translateX(${(1 - k) * -520}px) scale(${1 + rk * .1}) rotate(${(1 - k) * -8}deg)` });
+    const steps = [62.34, 63.34, 64.26, 65.78], n = steps.filter(s => t >= s).length;
+    st($('chk'), { opacity: res ? 1 - rk : 1, transform: `translateX(${(1 - k) * 420}px)` }); $('chn').textContent = n + '/4';
+    steps.forEach((s, i) => { const e = $('ck' + i); e.classList.toggle('on', t >= s); e.style.transform = `scale(${t >= s ? 1 + .08 * Math.sin(lin(t, s, s + .3) * Math.PI) : 1})`; e.style.opacity = cl(lin(t, 62.0 + i * .08, 62.3 + i * .08) * 1.5); });
+    // which screen
+    const scr = t < 66.5 ? 'add' : t < 68.85 ? 'home' : 'fiche'; ['add', 'home', 'fiche'].forEach(s => $('ps_' + s).style.visibility = s === scr ? 'visible' : 'hidden');
+    $('pa_ph0').style.display = t >= 62.34 ? 'none' : 'flex'; $('pa_ph1').style.display = t >= 62.34 ? 'block' : 'none';
+    const nm = Math.floor(PLACE.length * lin(t, 63.34, 63.95)); $('pa_nm').textContent = nm ? PLACE.slice(0, nm) : "Nom de l'entreprise / Lieu"; $('pa_nm').style.color = nm ? '#fff' : '#7C878D';
+    const pp = lin(t, 64.26, 64.5); st($('pa_pin'), { opacity: pp > 0 ? 1 : 0, transform: `translateY(${-60 * Math.pow(1 - pp, 2)}px)` });
+    $('pa_go').style.transform = `scale(${1 - .05 * Math.sin(lin(t, 65.5, 65.75) * Math.PI)})`; st($('pa_ok'), { opacity: eo(lin(t, 65.78, 66.1)) });
+    const cardK = bk(lin(t, 66.66, 67.0)); $('ph_card').style.transform = `scale(${t >= 66.66 ? cardK : .8})`;
+    const op = lin(t, 68.9, 69.2); $('pf_open').style.transform = `scale(${1 + .25 * Math.sin(op * Math.PI)})`;
+    const hl = (e, a, b) => { const on2 = t >= a && t < b; e.style.boxShadow = on2 ? `0 0 0 4px #fff, 0 0 30px ${OR}` : 'none'; e.style.transform = `scale(${on2 ? 1 + .04 * Math.sin((t - a) * 8) : 1})`; };
+    hl($('pf_call'), 69.84, 71.2); hl($('pf_go'), 71.3, 75.0);
+  }
+  if (has('dl')) { show('o_dl', A('dl')); const k = bk(lin(t, 78.38, 78.75)); st($('dl'), { transform: `scale(${.6 + .4 * k})` }); }
+  if (has('who')) { show('o_who', A('who')); [79.96, 80.3].forEach((s, i) => { const e = $('wo' + i), p = eo(lin(t, s, s + .35)); e.style.opacity = p; e.style.transform = `translateX(${(1 - p) * -200}px)`; });
+    const sel = t >= 82.26; const b = $('wo1').querySelector('.bx'); b.style.background = sel ? OR : 'transparent'; b.style.borderColor = sel ? OR : '#6B767C'; $('wo1').style.borderColor = sel ? OR : 'rgba(255,255,255,.08)'; }
+  if (has('share') && t <= 87.85) { show('o_share', A('share')); const k = bk(lin(t, 85.5, 85.85)); st($('sh'), { transform: `scale(${k})` }); }
+  if (has('end')) { show('o_end', 1); [['e1', 89.0], ['e2', 89.25], ['e3', 89.4], ['e4', 89.7]].forEach(([id, t0]) => { const p = eo(lin(t, t0, t0 + .4)); st($(id), { opacity: p, transform: `translateY(${(1 - p) * 30}px)` }); }); }
+}
+function renderAt(t) { CUR = t; DRAWN = draw(t); }
+window.waitFrame = async () => { for (let n = 0; n < 12 && (!DRAWN || PENDING.size); n++) { await Promise.all([...PENDING]); DRAWN = draw(CUR); } };
+window.ready = (async () => { await document.fonts.load('900 100px Inter'); await document.fonts.load('800 40px Inter'); await document.fonts.ready; need(PIN, true); need(LOGO, true); await Promise.all([...PENDING]); renderAt(0); await window.waitFrame(); })();
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+</script>
+</body></html>

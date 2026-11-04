@@ -18,3 +18,4 @@ motion/assets/fxf/
 # video 1: raw footage and the third-party reference reel stay out of git
 video1/rushes/
 video1/reference/
+video1/work/
