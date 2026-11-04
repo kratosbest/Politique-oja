@@ -17,7 +17,7 @@ La consigne complète est dans `CLAUDE.md`.
 
 ## Version principale (première version, à valider par Derrick)
 
-`exports/OJA-video1-principale.mp4` : 92 s, 1080 × 1920, 30 i/s, H.264, son AAC 48 kHz, voix à −16 LUFS.
+`exports/OJA-video1-principale.mp4` : 96 s (fin prolongée de 4 s, musique forte après « Merci »), 1080 × 1920, 30 i/s, H.264, son AAC 48 kHz, voix à −16 LUFS.
 
 **Montage**
 - Une seule prise (`rushes/IMG_1012.mp4`, envoyée en deux parties).
@@ -61,7 +61,7 @@ La consigne complète est dans `CLAUDE.md`.
 
 **Musique :**
 - C'est maintenant le son fourni par Derrick, extrait de sa vidéo (`work/fond_sonore.wav`, non versionné). Derrick confirme avoir le droit de l'utiliser.
-- `src/music_from_file.py` le met en boucle avec un fondu enchaîné de 3 s pour tenir 92 s. Il le rend plus doux pendant l'histoire et plus fort à l'appel, avec un fondu de fin.
+- `src/music_from_file.py` le met en boucle avec un fondu enchaîné de 3 s pour tenir 96 s. Il le rend plus doux pendant l'histoire et plus fort à l'appel. Après « Merci », il le pousse fort (environ −15 LUFS) jusqu'au fondu de fin de 2 s.
 - `src/mix.sh` le place environ 21 dB sous la voix.
 
 **En attente :** les versions 60 s et accroche, à faire après validation.
