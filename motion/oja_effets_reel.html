@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — 23 effets, une seule vidéo (reel 9:16)</title>
+<link rel="stylesheet" href="fonts/local.css">
+<link rel="stylesheet" href="fonts/editorial.css">
+<style>
+/* « Vends tranquille » — 23 video effects on one clip, reel 9:16 (1080 x 1920), 23 s, voice: Alimata (assets/fx/voix_fx.mp3, from 0.4 s).
+   The seller of « Vendez tranquille » (Veo clips c_tranquille, c_doute, c_colere), cut out frame by frame (src/fx_masks.py, rembg
+   u2net_human_seg) so that words, shadows and cards can pass behind her. Each effect lasts about one second, on the voice.
+   Frames: assets/fxf/<clip>/fNNN.jpg + mNNN.png (not in git; rebuild with ffmpeg + src/fx_masks.py, see README).
+   Render: src/render_video.sh oja_effets_reel.html 23 assets/soundtrack_effets_reel.m4a OJA_Effets_VendsTranquille_9x16.mp4 ffmpeg */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{position:relative;font-family:Inter,sans-serif;color:#fff}
+canvas{position:absolute;left:0;top:0}
+.abs{position:absolute}
+.fx{position:absolute;inset:0;visibility:hidden}
+.glass{position:absolute;border-radius:36px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.45);backdrop-filter:blur(22px) saturate(1.3);-webkit-backdrop-filter:blur(22px) saturate(1.3);box-shadow:0 30px 60px rgba(0,0,0,.25);color:#fff}
+.pill{position:absolute;display:flex;align-items:center;gap:14px;padding:16px 28px;border-radius:50px;font:800 32px Inter;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+#tag{position:absolute;left:36px;top:150px;display:flex;align-items:center;gap:12px;padding:12px 22px 12px 14px;border-radius:30px;background:rgba(0,0,0,.55);font:700 28px Inter;backdrop-filter:blur(10px)}
+#tag b{padding:6px 12px;border-radius:16px;background:#FF6B00;font:800 24px Inter}
+#word{position:absolute;left:0;right:0;top:1250px;text-align:center;font:800 84px Inter;letter-spacing:-.02em;text-shadow:0 6px 24px rgba(0,0,0,.55),0 2px 4px rgba(0,0,0,.5)}
+.mono{font-family:'DejaVu Sans Mono',monospace}
+.flip{display:inline-grid;place-items:center;width:200px;height:250px;border-radius:26px;background:linear-gradient(#202228 50%,#17181C 50%);font:900 190px Poppins;color:#fff;box-shadow:0 20px 50px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.flip:after{content:'';position:absolute;left:0;right:0;top:50%;height:4px;background:#0B0C0E}
+.tier{display:flex;align-items:center;height:96px;border-bottom:3px solid #111}
+.tier b{width:96px;height:96px;display:grid;place-items:center;font:900 52px Poppins;color:#111;flex:none}
+.tier span{padding:0 22px;font:800 30px Inter;color:#fff;white-space:nowrap}
+</style></head><body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="ui"></div>
+<div id="word"></div>
+<div id="tag"><b id="tagn">01/23</b><span id="tagt"></span></div>
+<script>
+const W = 1080, H = 1920, DUR = 23, VO_AT = 0.4, FPS = 24, NF = 188;
+const OR = '#FF6B00', OR2 = '#FF8A1F', GR = '#12B76A';
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.9; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = id => document.getElementById(id);
+const st = (e, o) => { for (const k in o) e.style[k] = o[k]; };
+function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const pad3 = n => String(n).padStart(3, '0');
+
+/* ---------- voice words (assets/fx/voix_fx_words.json, + VO_AT) ---------- */
+const WORDS = /*WORDS*/[["Moi,",0.16,0.48],["je",0.56,0.68],["vends",0.8,1.04],["mes",1.08,1.2],["pagnes",1.24,1.56],["en",1.6,1.68],["live.",1.76,2.2],["Avant",2.69,3.08],["?",3.36,3.36],["Les",3.41,3.56],["fausses",3.6,3.8],["captures…",3.84,4.6],["les",4.72,4.88],["clients",4.96,5.12],["qui",5.16,5.24],["ne",5.28,5.36],["décrochent",5.4,5.88],["plus…",5.92,6.4],["Vraiment,",6.43,6.88],["on",6.92,7.0],["était",7.04,7.48],["fatiguées",7.52,8.28],["!",8.32,8.32],["Maintenant,",8.4,9.04],["avec",9.08,9.24],["Odja,",9.28,9.8],["la",9.84,9.96],["commande",10.0,10.28],["arrive",10.32,10.68],["déjà",10.72,11.0],["payée.",11.04,11.68],["Je",11.72,11.8],["prépare,",11.84,12.48],["le",12.52,12.6],["livreur",12.64,13.0],["passe…",13.04,13.64],["et",13.68,13.8],["moi,",13.84,14.16],["je",14.2,14.28],["suis",14.32,14.56],["tranquille.",14.6,15.36],["Mes",15.4,15.6],["reversements",15.64,16.28],["?",16.32,16.32],["Je",16.37,16.44],["les",16.48,16.6],["suis",16.64,16.72],["dans",16.76,16.88],["l'appli.",16.91,17.64],["Crée",17.68,17.88],["ta",17.92,18.08],["boutique",18.12,18.4],["dans",18.43,18.6],["Odja",18.64,18.92],["App.",18.96,19.48],["Et",19.52,19.64],["vends",19.68,19.88],["tranquille",19.92,20.48],["!",20.52,20.52]];
+
+/* ---------- effects timeline (real seconds) ---------- */
+const FX = [
+  ['glass', 0.0, 0.95, 'Widgets en verre'], ['vertigo', 0.95, 1.6, 'Vertigo'], ['orbit', 1.6, 2.75, 'Orbite'],
+  ['moody', 2.75, 3.7, 'Ambiance'], ['stamp', 3.7, 4.95, 'Tampon'], ['shadow', 4.95, 5.7, 'Ombres chinoises'],
+  ['camcorder', 5.7, 6.6, 'Zoom caméscope'], ['giant', 6.6, 7.75, 'Sous-titres géants'], ['ascii', 7.75, 8.6, 'ASCII'],
+  ['rain', 8.6, 9.45, 'Pluie de touches'], ['backdrop', 9.45, 10.25, 'Mot en fond'], ['bill', 10.25, 11.25, 'Le ticket'],
+  ['glitter', 11.25, 12.1, 'Projecteur à paillettes'], ['paper', 12.1, 12.9, 'Papier découpé'], ['countdown', 12.9, 13.95, 'Compte à rebours'],
+  ['lock', 13.95, 14.55, 'Verrouillage'], ['dots', 14.55, 15.15, 'Points'], ['neon', 15.15, 15.95, 'Néon'],
+  ['appui', 15.95, 16.85, 'Interface appli'], ['tier', 16.85, 17.95, 'Classement'], ['rabbit', 17.95, 18.8, 'Terrier'],
+  ['wall', 18.8, 19.75, 'Mur de vidéos'], ['pullback', 19.75, 21.0, 'Recul'], ['end', 21.0, DUR, ''],
+];
+// which clip plays when: [from, to, clip, clipTime(t)]
+const CLIPS = [
+  [0, 2.75, 'tranquille', t => t], [2.75, 6.6, 'doute', t => t - 2.75 + 2.5], [6.6, 8.6, 'colere', t => t - .97],
+  [8.6, 15.95, 'tranquille', t => t - 8.6 + .4], [15.95, 17.95, 'doute', t => t - 15.95], [17.95, DUR, 'tranquille', t => Math.max(2.4, 7.75 - (t - 17.95))],
+];
+const clipAt = t => { const c = CLIPS.find(c => t >= c[0] && t < c[1]) || CLIPS[CLIPS.length - 1]; return [c[2], Math.max(0, Math.min(NF - 1, Math.round(c[3](t) * FPS)))]; };
+const F = (c, i) => `assets/fxf/${c}/f${pad3(i + 1)}.jpg`, M = (c, i) => `assets/fxf/${c}/m${pad3(i + 1)}.png`;
+
+/* ---------- image cache (frames are large: keep a small LRU) ---------- */
+const CACHE = new Map(), PENDING = new Set();
+function need(src, keep = false) {
+  let im = CACHE.get(src);
+  if (im) { CACHE.delete(src); CACHE.set(src, im); return im.complete && im.naturalWidth ? im : null; }
+  im = new Image(); im.src = src; im.keep = keep; CACHE.set(src, im);
+  const p = im.decode().catch(() => 0); PENDING.add(p); p.then(() => PENDING.delete(p));
+  if (CACHE.size > 60) for (const [k, v] of CACHE) { if (CACHE.size <= 60) break; if (!v.keep) CACHE.delete(k); }
+  return null;
+}
+const STILLS = { live: 'assets/vtq/v_live.jpg', tranq: 'assets/vtq/v_tranquille.jpg', doute: 'assets/vtq/v_doute.jpg', colere: 'assets/vtq/v_colere.jpg', fin: 'assets/vtq/v_fin.jpg',
+  market: 'store/captures/market.png', nov: 'store/captures/novoja.png', bout: 'store/merchant/captures/boutique.png', cat: 'store/merchant/captures/catalogue.png', logo: 'assets/mk_logo.png' };
+
+/* ---------- canvases ---------- */
+const cv = $('cv'), ctx = cv.getContext('2d');
+const mkc = (w, h, opt) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d', opt)]; };
+const [pc, px] = mkc(W, H), [sc, sx] = mkc(90, 160, { willReadFrequently: true }), [mc, mx] = mkc(54, 96, { willReadFrequently: true }), [tc, tx] = mkc(W, H);
+function person(fr, mk) {
+  px.globalCompositeOperation = 'source-over'; px.clearRect(0, 0, W, H); px.drawImage(fr, 0, 0, W, H);
+  px.globalCompositeOperation = 'destination-in'; px.drawImage(mk, 0, 0, W, H); px.globalCompositeOperation = 'source-over'; return pc;
+}
+function face(mk) {   // rough face box from the mask: top of the head and the centre of the upper rows
+  mx.clearRect(0, 0, 54, 96); mx.drawImage(mk, 0, 0, 54, 96); const d = mx.getImageData(0, 0, 54, 96).data;
+  let y0 = -1; for (let y = 0; y < 96 && y0 < 0; y++) for (let x = 0; x < 54; x++) if (d[(y * 54 + x) * 4 + 3] > 128) { y0 = y; break; }
+  let sx2 = 0, n = 0; for (let y = y0 + 3; y < y0 + 14; y++) for (let x = 0; x < 54; x++) if (d[(y * 54 + x) * 4 + 3] > 128) { sx2 += x; n++; }
+  return { x: (n ? sx2 / n : 27) * 20, y: (y0 + 9) * 20 };
+}
+const scaled = (fn, s, cx, cy) => { ctx.save(); ctx.translate(cx, cy); ctx.scale(s, s); ctx.translate(-cx, -cy); fn(); ctx.restore(); };
+function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function card(c, img, x, y, w, h, r = 28, border = 6) {
+  c.save(); c.shadowColor = 'rgba(0,0,0,.45)'; c.shadowBlur = 40; c.shadowOffsetY = 18; c.fillStyle = '#fff'; rrect(c, x - border, y - border, w + border * 2, h + border * 2, r + border); c.fill(); c.restore();
+  c.save(); rrect(c, x, y, w, h, r); c.clip(); if (img) { const s = Math.max(w / img.naturalWidth, h / img.naturalHeight); c.drawImage(img, x + (w - img.naturalWidth * s) / 2, y + (h - img.naturalHeight * s) * .25, img.naturalWidth * s, img.naturalHeight * s); } c.restore();
+}
+function bigText(c, txt, x, y, size, font, fill, glow = 0, align = 'center') {
+  c.save(); c.font = `${font} ${size}px ${font.includes('italic') ? 'Playfair Display' : 'Poppins'}`; c.textAlign = align; c.textBaseline = 'middle';
+  if (glow) { c.shadowColor = fill; c.shadowBlur = glow; } c.fillStyle = fill; c.fillText(txt, x, y); c.restore();
+}
+
+/* ---------- DOM overlays ---------- */
+const ui = $('ui');
+ui.innerHTML = `
+<div id="o_glass" class="fx">
+  <div id="g0" class="glass" style="left:50px;top:250px;width:330px;padding:26px 30px"><div style="font:900 120px Poppins;line-height:1">23</div><div style="font:700 30px Inter;opacity:.9">effets<br>une seule vidéo</div></div>
+  <div id="g1" class="glass" style="left:640px;top:250px;width:390px;padding:24px 28px;display:flex;align-items:center;gap:16px"><span style="width:20px;height:20px;border-radius:50%;background:#FF3B30;box-shadow:0 0 14px #FF3B30"></span><div><div style="font:800 32px Inter">En direct</div><div style="font:600 24px Inter;opacity:.85">Pagnes wax · Cotonou</div></div></div>
+  <div id="g2" class="glass" style="left:50px;top:1420px;width:420px;padding:24px 28px"><div style="font:700 24px Inter;opacity:.85">Commandes de la semaine</div><div style="display:flex;align-items:flex-end;gap:14px;height:120px;margin-top:14px">${[40, 62, 50, 78, 70, 96, 120].map(h => `<span style="flex:1;height:${h}px;border-radius:8px;background:linear-gradient(#FFB36B,#FF6B00)"></span>`).join('')}</div></div>
+  <div id="g3" class="glass" style="left:620px;top:1460px;width:410px;padding:24px 28px;display:flex;align-items:center;gap:18px"><img src="${STILLS.logo}" style="width:84px;height:84px"><div><div style="font:800 32px Inter">Ma boutique</div><div style="font:600 24px Inter;opacity:.85">dans Oja App</div></div></div>
+</div>
+<div id="o_stamp" class="fx">
+  <div id="sc" class="abs" style="left:200px;top:300px;width:680px;padding:40px;border-radius:40px;background:#fff;color:#111;box-shadow:0 40px 100px rgba(0,0,0,.5)">
+    <div style="display:flex;align-items:center;gap:18px"><span style="width:80px;height:80px;border-radius:50%;background:#12B76A;display:grid;place-items:center;font:900 48px Inter;color:#fff">✓</span><div><div style="font:800 40px Inter">Transfert réussi</div><div style="font:600 26px Inter;color:#8A8F98">Capture envoyée par un « client »</div></div></div>
+    <div style="margin-top:30px;height:22px;border-radius:11px;background:#EEF0F3;width:80%"></div><div style="margin-top:16px;height:22px;border-radius:11px;background:#EEF0F3;width:60%"></div><div style="margin-top:16px;height:22px;border-radius:11px;background:#EEF0F3;width:70%"></div>
+  </div>
+  <div id="ss" class="abs" style="left:150px;top:420px;width:780px;text-align:center;padding:18px 10px;border:12px solid #E5262B;border-radius:24px;color:#E5262B;font:900 92px Poppins;letter-spacing:.02em;line-height:1.05;transform-origin:50% 50%">FAUSSE<br>CAPTURE</div>
+</div>
+<div id="o_cam" class="fx">
+  <div class="abs mono" style="left:70px;top:270px;display:flex;align-items:center;gap:16px;font:700 40px 'DejaVu Sans Mono'"><span id="rec" style="width:30px;height:30px;border-radius:50%;background:#FF3B30"></span>REC</div>
+  <div id="tc" class="abs mono" style="right:70px;top:270px;font:700 40px 'DejaVu Sans Mono'">00:00:05:12</div>
+  <div id="zm" class="abs mono" style="right:70px;top:1700px;font:700 44px 'DejaVu Sans Mono'">x1.0</div>
+  <div class="abs mono" style="left:70px;top:1700px;font:700 34px 'DejaVu Sans Mono';opacity:.85">▮▮▮▯ 4K</div>
+  ${[[60, 240, '0 0'], [960, 240, '0 0'], [60, 1720, '0 0'], [960, 1720, '0 0']].map(([x, y], i) => `<div class="abs" style="left:${x}px;top:${y}px;width:60px;height:60px;border:${i % 2 ? '0 6px' : '0 0'};border-style:solid;border-color:#fff;${['border-width:6px 0 0 6px', 'border-width:6px 6px 0 0', 'border-width:0 0 6px 6px', 'border-width:0 6px 6px 0'][i]}"></div>`).join('')}
+  <div class="abs" style="left:490px;top:900px;width:100px;height:100px;border:4px solid rgba(255,255,255,.8);border-radius:50%"></div>
+</div>
+<div id="o_bill" class="fx">
+  <div id="bl" class="abs mono" style="left:250px;top:-40px;width:580px;padding:50px 46px 70px;background:#FBFAF6;color:#1A1A1A;font:500 30px 'DejaVu Sans Mono';line-height:1.6;box-shadow:0 40px 90px rgba(0,0,0,.5);clip-path:polygon(0 0,100% 0,100% 97%,95% 100%,90% 97%,85% 100%,80% 97%,75% 100%,70% 97%,65% 100%,60% 97%,55% 100%,50% 97%,45% 100%,40% 97%,35% 100%,30% 97%,25% 100%,20% 97%,15% 100%,10% 97%,5% 100%,0 97%)">
+    <div style="text-align:center;font:700 40px 'DejaVu Sans Mono'">OJA · BOUTIQUE</div><div style="text-align:center;opacity:.7">Pagnes wax · Cotonou</div>
+    <div style="border-top:3px dashed #999;margin:18px 0"></div>
+    <div>1 x Pagne wax ...... ✓</div><div>Commande .......... OK</div><div>Paiement ...... <b>PAYÉE</b></div><div>Livraison ........ OJA</div>
+    <div style="border-top:3px dashed #999;margin:18px 0"></div>
+    <div style="text-align:center;font:700 36px 'DejaVu Sans Mono'">DÉJÀ PAYÉE ✓</div><div style="text-align:center;opacity:.7">Merci pour votre achat</div>
+  </div>
+</div>
+<div id="o_count" class="fx">
+  <div class="abs" style="left:0;right:0;top:250px;display:flex;justify-content:center;align-items:center;gap:20px"><span id="c0" class="flip">0</span><span id="c1" class="flip">2</span><span style="font:900 150px Poppins;color:#fff">:</span><span id="c2" class="flip">0</span><span id="c3" class="flip">0</span></div>
+  <div class="abs" style="left:0;right:0;top:540px;text-align:center"><span class="pill" style="position:static;display:inline-flex;background:rgba(0,0,0,.6)">Livreur OJA · en route</span></div>
+</div>
+<div id="o_lock" class="fx">
+  <div id="lk" class="abs" style="width:420px;height:480px">${[0, 1, 2, 3].map(i => `<div class="abs" style="width:90px;height:90px;border-color:${OR};border-style:solid;${['left:0;top:0;border-width:8px 0 0 8px', 'right:0;top:0;border-width:8px 8px 0 0', 'left:0;bottom:0;border-width:0 0 8px 8px', 'right:0;bottom:0;border-width:0 8px 8px 0'][i]}"></div>`).join('')}</div>
+  <div id="lkl" class="pill" style="background:${OR};color:#fff">◉ Moi · tranquille</div>
+</div>
+<div id="o_app" class="fx">
+  <div id="ap" class="abs" style="left:110px;top:1080px;width:860px;padding:34px 38px;border-radius:40px;background:#15171C;border:2px solid #2A2D35;box-shadow:0 40px 100px rgba(0,0,0,.6)">
+    <div style="display:flex;align-items:center;gap:18px;font:800 40px Poppins"><img src="${STILLS.logo}" style="width:64px;height:64px">Revenus &amp; reversements</div>
+    ${['Reversement effectué', 'Reversement effectué', 'Commande payée'].map((s, i) => `<div id="ap${i}" style="display:flex;align-items:center;gap:20px;margin-top:22px;padding:20px 24px;border-radius:24px;background:#1E2128"><span style="width:56px;height:56px;border-radius:50%;background:rgba(18,183,106,.18);display:grid;place-items:center;color:${GR};font:900 34px Inter">✓</span><div style="flex:1;font:700 32px Inter">${s}</div><span style="font:600 26px Inter;color:#9AA0AA">${['Aujourd\'hui', 'Hier', 'Hier'][i]}</span></div>`).join('')}
+  </div>
+</div>
+<div id="o_tier" class="fx">
+  <div id="tl" class="abs" style="left:40px;top:1120px;width:700px;border-radius:24px;overflow:hidden;background:rgba(10,10,12,.78);border:3px solid #111">
+    ${[['S', '#FF7F7F', 'Payé dans l\'appli OJA'], ['A', '#FFBF7F', 'Livraison OJA'], ['B', '#FFDF7F', ''], ['C', '#BFFF7F', 'Capture d\'écran'], ['D', '#7FBFFF', '« Je paie à l\'arrivée »']].map(([k, c, s], i) => `<div class="tier"><b style="background:${c}">${k}</b><span id="tr${i}">${s}</span></div>`).join('')}
+  </div>
+</div>
+<div id="o_end" class="fx">
+  <div id="e0" class="glass" style="left:70px;top:260px;width:360px;padding:26px 30px"><div style="font:900 120px Poppins;line-height:1">23</div><div style="font:700 30px Inter;opacity:.9">effets<br>une seule vidéo</div></div>
+  <div id="e1" class="abs" style="left:0;right:0;top:820px;text-align:center"><img src="${STILLS.logo}" style="width:220px;height:220px"></div>
+  <div id="e2" class="abs" style="left:0;right:0;top:1060px;text-align:center;font:900 92px Poppins;letter-spacing:-.03em;line-height:1.05">Vends<br><span style="color:${OR2}">tranquille.</span></div>
+  <div id="e3" class="abs" style="left:0;right:0;top:1330px;text-align:center;font:700 44px Inter">Crée ta boutique dans <b>Oja App</b></div>
+  <div id="e4" class="abs" style="left:0;right:0;top:1440px;text-align:center"><span id="fol" style="display:inline-flex;align-items:center;gap:14px;padding:22px 56px;border-radius:50px;background:${OR};font:800 40px Inter;box-shadow:0 20px 50px rgba(255,107,0,.45)">Suivre OJA</span></div>
+  <div id="e5" class="abs" style="left:80px;right:80px;top:1640px;text-align:center;font:500 24px Inter;color:rgba(255,255,255,.7)">Mise en situation, personne de l'image générée par IA.</div>
+</div>`;
+
+/* ---------- effects (each draws the video, then its own layers) ---------- */
+const KEYS = ['esc', 'ctrl', 'z', 'OJA', 'tab', 'enter', 'MoMo', '⌘', 'alt', 'shift', 'suppr', 'OK'];
+const RAIN = (() => { const r = rng(9); return Array.from({ length: 26 }, (_, i) => ({ k: KEYS[i % KEYS.length], x: 60 + r() * 960, d: r() * .45, v: 1800 + r() * 900, rot: (r() - .5) * 60, w: 120 + r() * 60 })); })();
+const SPARK = (() => { const r = rng(4); return Array.from({ length: 40 }, () => ({ x: r() * W, y: 120 + r() * 1300, s: 8 + r() * 26, ph: r() * 6, f: 2 + r() * 4 })); })();
+const star = (c, x, y, s, a) => { c.save(); c.globalAlpha = a; c.fillStyle = '#FFF4D6'; c.shadowColor = '#FFD27A'; c.shadowBlur = 20; c.beginPath(); for (let i = 0; i < 8; i++) { const r = i % 2 ? s * .22 : s, an = i * Math.PI / 4; c.lineTo(x + Math.cos(an) * r, y + Math.sin(an) * r); } c.fill(); c.restore(); };
+const ORBIT = ['live', 'market', 'bout', 'nov', 'cat'];
+const WALL = ['live', 'tranq', 'doute', 'colere', 'fin', 'live', 'tranq', 'doute', 'colere', 'fin', 'tranq', 'live'];
+
+function video(fr, s = 1, cx = 540, cy = 960, filter = 'none') { ctx.save(); ctx.filter = filter; scaled(() => ctx.drawImage(fr, 0, 0, W, H), s, cx, cy); ctx.restore(); }
+function overPerson(fr, mk, s = 1, cx = 540, cy = 960, filter = 'none') { const p = person(fr, mk); ctx.save(); ctx.filter = filter; scaled(() => ctx.drawImage(p, 0, 0), s, cx, cy); ctx.restore(); }
+function ascii(fr, mode) {   // 68 x 120 characters, 16 px cells
+  sx.drawImage(fr, 0, 0, 68, 120); const d = sx.getImageData(0, 0, 68, 120).data, R = ' .:-=+*#%@';
+  ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, W, H); ctx.font = "700 20px 'DejaVu Sans Mono'"; ctx.textBaseline = 'top';
+  for (let y = 0; y < 120; y++) for (let x = 0; x < 68; x++) { const i = (y * 68 + x) * 4, l = Math.pow((d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11) / 255, .6);
+    ctx.fillStyle = mode ? `rgb(${Math.min(255, d[i] * 1.7)},${Math.min(255, d[i + 1] * 1.7)},${Math.min(255, d[i + 2] * 1.7)})` : `rgba(255,${160 + l * 90 | 0},${80 + l * 120 | 0},${.55 + l * .45})`; ctx.fillText(R[Math.min(9, l * 10 | 0)], x * 16, y * 16); }
+}
+function dots(fr, k) {
+  sx.drawImage(fr, 0, 0, 54, 96); const d = sx.getImageData(0, 0, 54, 96).data;
+  ctx.fillStyle = '#120A05'; ctx.fillRect(0, 0, W, H);
+  for (let y = 0; y < 96; y++) for (let x = 0; x < 54; x++) { const i = (y * 54 + x) * 4, l = (d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11) / 255; ctx.fillStyle = `rgb(${d[i]},${d[i + 1] * .9 | 0},${d[i + 2] * .8 | 0})`; ctx.beginPath(); ctx.arc(x * 20 + 10, y * 20 + 10, 1 + 9.5 * l * k + (1 - k) * 0, 0, Math.PI * 2); ctx.fill(); }
+}
+
+function drawFx(name, t, a, b, fr, mk) {
+  const p = lin(t, a, b), lt = t - a;
+  switch (name) {
+    case 'glass': video(fr); break;
+    case 'vertigo': {   // dolly zoom: background backs off, she stays the same size
+      const fc = face(mk), s = 1.32 - .3 * eio(p);
+      video(fr, s, fc.x, fc.y + 260, 'blur(1px)'); overPerson(fr, mk, 1.32, fc.x, fc.y + 260); break; }
+    case 'orbit': {
+      video(fr); const ims = ORBIT.map(k => need(STILLS[k], true)), A = ORBIT.map((_, i) => i / ORBIT.length * Math.PI * 2 + lt * 2.4);
+      const drawCard = (i, an) => { const z = Math.sin(an), s = .75 + .25 * (z + 1) / 2, w = 250 * s, h = 330 * s; card(ctx, ims[i], 540 + Math.cos(an) * 430 - w / 2, 860 + z * 120 - h / 2, w, h, 26 * s, 5); };
+      A.forEach((an, i) => { if (Math.sin(an) < 0) drawCard(i, an); }); ctx.save(); ctx.globalAlpha = 1; overPerson(fr, mk); ctx.restore();
+      A.forEach((an, i) => { if (Math.sin(an) >= 0) drawCard(i, an); }); break; }
+    case 'moody': {
+      const sx2 = W * (1 - eio(lin(t, a + .05, b - .1)));
+      video(fr); ctx.save(); ctx.beginPath(); ctx.rect(sx2, 0, W - sx2, H); ctx.clip(); video(fr, 1, 540, 960, 'saturate(.35) brightness(.72) contrast(1.2) hue-rotate(-12deg)');
+      ctx.fillStyle = 'rgba(20,40,80,.28)'; ctx.fillRect(0, 0, W, H); ctx.restore();
+      ctx.fillStyle = '#fff'; ctx.fillRect(sx2 - 3, 0, 6, H); ctx.beginPath(); ctx.arc(sx2, 960, 38, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.font = '800 30px Inter'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('‹ ›', sx2, 962); break; }
+    case 'stamp': video(fr, 1, 540, 960, 'saturate(.6) brightness(.8)'); break;
+    case 'shadow': {
+      video(fr, 1, 540, 960, 'brightness(.5) sepia(.3)');
+      const lg = ctx.createRadialGradient(540, 620, 60, 540, 620, 640); lg.addColorStop(0, 'rgba(255,214,150,.75)'); lg.addColorStop(.7, 'rgba(255,190,110,.35)'); lg.addColorStop(1, 'rgba(255,190,110,0)'); ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H);
+      ctx.save(); ctx.filter = 'blur(5px)'; ctx.fillStyle = 'rgba(12,6,2,.9)'; ctx.translate(0, 0);
+      const bx = 150 + lt * 300, by = 430 + Math.sin(lt * 9) * 30, wing = Math.sin(lt * 14) * 90;   // a bird of shadow crosses the wall
+      ctx.save(); ctx.translate(bx, by); ctx.scale(1.5, 1.5); ctx.translate(-bx, -by);
+      ctx.beginPath(); ctx.moveTo(bx - 150, by - wing); ctx.quadraticCurveTo(bx - 60, by - 30, bx, by); ctx.quadraticCurveTo(bx + 60, by - 30, bx + 150, by - wing); ctx.quadraticCurveTo(bx + 40, by + 10, bx, by + 40); ctx.quadraticCurveTo(bx - 40, by + 10, bx - 150, by - wing); ctx.fill(); ctx.restore();
+      const hx = 900 - lt * 140; ctx.save(); ctx.translate(hx, 760); ctx.scale(1.4, 1.4); ctx.translate(-hx, -760); ctx.beginPath(); ctx.ellipse(hx, 760, 120, 90, -.3, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.moveTo(hx + 40, 690); ctx.lineTo(hx + 90, 560); ctx.lineTo(hx + 120, 700); ctx.fill(); ctx.beginPath(); ctx.moveTo(hx - 30, 680); ctx.lineTo(hx - 10, 560); ctx.lineTo(hx + 30, 680); ctx.fill(); ctx.restore();
+      ctx.restore(); overPerson(fr, mk, 1, 540, 960, 'brightness(.95)');
+      const g = ctx.createRadialGradient(540, 900, 200, 540, 900, 1100); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.6)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); break; }
+    case 'camcorder': {
+      const fc = face(mk), z = 1 + (lt > .3 ? .5 : 0) + (lt > .6 ? .5 : 0); video(fr, z, fc.x, fc.y, 'contrast(1.1) saturate(.9)');
+      ctx.fillStyle = 'rgba(255,255,255,.035)'; for (let y = 0; y < H; y += 6) ctx.fillRect(0, y, W, 2); break; }
+    case 'giant': {
+      video(fr, 1, 540, 960, 'brightness(.8)');
+      const w1 = lin(t, 6.83, 7.0), w2 = lin(t, 7.92, 8.1);
+      ctx.save(); ctx.translate(540, 520); ctx.scale(1, 1.35); bigText(ctx, 'VRAIMENT', 0, 0, 205 * (.7 + .3 * eo(w1)), '900', `rgba(255,225,90,${cl(w1 * 2)})`); ctx.restore();
+      overPerson(fr, mk);
+      bigText(ctx, 'on était', 540, 1460, 150, 'italic 500', `rgba(255,255,255,${cl(lin(t, 7.32, 7.5) * 2)})`); break; }
+    case 'ascii': { ascii(fr, p > .55); if (p > .55) { const k = eo(lin(p, .55, 1)); ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H * k); ctx.clip(); video(fr); ctx.restore(); } break; }
+    case 'rain': {
+      video(fr); ctx.save(); ctx.font = '800 40px Inter'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const k of RAIN) { const d = lt - k.d; if (d < 0) continue; const y = Math.min(1720, -120 + k.v * d * d * 1.6 + 300 * d), land = y >= 1720; ctx.save(); ctx.translate(k.x, y); ctx.rotate((land ? k.rot * .4 : k.rot + d * 200) * Math.PI / 180);
+        ctx.fillStyle = '#F4F5F7'; ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 20; ctx.shadowOffsetY = 10; rrect(ctx, -k.w / 2, -55, k.w, 110, 22); ctx.fill(); ctx.shadowColor = 'transparent';
+        ctx.fillStyle = '#D9DBE0'; rrect(ctx, -k.w / 2, 38, k.w, 17, 10); ctx.fill(); ctx.fillStyle = k.k === 'OJA' || k.k === 'MoMo' ? OR : '#222'; ctx.fillText(k.k, 0, -4); ctx.restore(); }
+      ctx.restore(); break; }
+    case 'backdrop': {
+      video(fr, 1, 540, 960, 'brightness(.65)'); const k = eo(lin(t, a, a + .3));
+      ctx.save(); ctx.translate(540, 640); ctx.scale(1, 1.1); bigText(ctx, 'OJA', 0, 0, 470 * (.8 + .2 * k), '900', `rgba(255,107,0,${k})`, 60); ctx.restore(); overPerson(fr, mk); break; }
+    case 'bill': video(fr, 1, 540, 960, 'brightness(.85)'); break;
+    case 'glitter': {
+      video(fr, 1, 540, 960, 'brightness(.35) saturate(.7)');
+      bigText(ctx, 'Payée', 540, 560, 300, 'italic 500', '#F6D38A', 40);
+      const p2 = person(fr, mk); ctx.save(); ctx.globalCompositeOperation = 'source-over'; ctx.filter = 'brightness(1.08)'; ctx.drawImage(p2, 0, 0); ctx.restore();
+      const g = ctx.createRadialGradient(560, 900, 120, 560, 900, 900); g.addColorStop(0, 'rgba(255,220,150,.22)'); g.addColorStop(1, 'rgba(0,0,0,.35)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      for (const s of SPARK) star(ctx, s.x, s.y, s.s, Math.pow(.5 + .5 * Math.sin(lt * s.f * 3 + s.ph), 3)); break; }
+    case 'paper': {
+      ctx.fillStyle = '#C9A26B'; ctx.fillRect(0, 0, W, H);
+      ctx.save(); ctx.translate(540, 960); for (let i = 0; i < 24; i++) { ctx.rotate(Math.PI / 12); ctx.fillStyle = i % 2 ? 'rgba(120,80,30,.25)' : 'rgba(255,240,210,.12)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(1400, -180); ctx.lineTo(1400, 180); ctx.fill(); } ctx.restore();
+      [[90, 260, -6, 'VENTE EN LIVE'], [620, 330, 5, 'PAGNES WAX'], [120, 1380, 4, 'COMMANDE PAYÉE']].forEach(([x, y, r, h]) => { ctx.save(); ctx.translate(x, y); ctx.rotate(r * Math.PI / 180); ctx.fillStyle = '#EFE8D8'; ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 20; ctx.fillRect(0, 0, 380, 300); ctx.shadowColor = 'transparent'; ctx.fillStyle = '#222'; ctx.font = '900 40px Poppins'; ctx.fillText(h, 20, 60); ctx.fillStyle = '#9A9283'; for (let i = 0; i < 7; i++) ctx.fillRect(20, 100 + i * 26, 340 - (i % 3) * 40, 10); ctx.restore(); });
+      const pp = person(fr, mk); tx.clearRect(0, 0, W, H); for (let i = 0; i < 16; i++) { const an = i / 16 * Math.PI * 2; tx.drawImage(pp, Math.cos(an) * 14, Math.sin(an) * 14); }
+      tx.globalCompositeOperation = 'source-in'; tx.fillStyle = '#fff'; tx.fillRect(0, 0, W, H); tx.globalCompositeOperation = 'source-over';
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 16; ctx.drawImage(tc, 0, 0); ctx.restore(); ctx.drawImage(pp, 0, 0); break; }
+    case 'countdown': video(fr); break;
+    case 'lock': video(fr, 1 + .06 * eo(p), face(mk).x, face(mk).y); break;
+    case 'dots': { const k = lin(p, .55, 1); dots(fr, 1); if (k > 0) { ctx.save(); ctx.globalAlpha = eo(k); video(fr); ctx.restore(); } break; }
+    case 'neon': {
+      video(fr, 1, 540, 960, 'brightness(.55)'); const on = lt < .12 ? (Math.floor(lt * 60) % 2) : 1;
+      ctx.save(); ctx.translate(540, 600); ctx.scale(1, 1.25); bigText(ctx, 'TRANQUILLE', 0, 0, 150, '900', on ? '#FFE45C' : 'rgba(255,228,92,.3)', on ? 50 : 0); ctx.restore();
+      overPerson(fr, mk); break; }
+    case 'appui': {
+      ctx.fillStyle = '#0E0F13'; ctx.fillRect(0, 0, W, H); const k = eo(lin(t, a, a + .35)), s = 1 - .5 * k;
+      ctx.save(); ctx.translate(540, 560 * k + 960 * (1 - k)); ctx.scale(s, s); rrect(ctx, -540, -960, W, H, 60 / s * k); ctx.clip(); ctx.drawImage(fr, -540, -960, W, H); ctx.restore(); break; }
+    case 'tier': video(fr); break;
+    case 'rabbit': {
+      const z = Math.pow(1.6, lin(t, a, b) * 2.2);   // endless zoom into nested frames
+      ctx.fillStyle = '#111'; ctx.fillRect(0, 0, W, H);
+      for (let i = 0; i <= 6; i++) { const s = z * Math.pow(.62, i), w = W * s, h = H * s; if (w > W * 3) continue; ctx.save(); ctx.translate(540, 960); ctx.rotate((i * 5 - lt * 6) * Math.PI / 180); ctx.fillStyle = '#fff'; ctx.fillRect(-w / 2 - 10, -h / 2 - 10, w + 20, h + 20); ctx.drawImage(fr, -w / 2, -h / 2, w, h); ctx.restore(); }
+      break; }
+    case 'wall': {
+      ctx.fillStyle = '#0E0F13'; ctx.fillRect(0, 0, W, H); const k = eio(lin(t, a, a + .55)), cw = 340, ch = 520, gx = 20;
+      const z = 3.15 - 2.15 * k; ctx.save(); ctx.translate(540, 1000); ctx.scale(z, z); ctx.translate(-540, -1000);
+      ctx.fillStyle = '#fff'; ctx.font = '800 40px Inter'; ctx.textAlign = 'center'; ctx.fillText('Ma boutique · vidéos', 540, 245);
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { const i = r * 3 + c, x = 15 + c * (cw + gx) / 1.0 - 0, y = 270 + r * (ch + gx); const img = i === 4 ? fr : need(STILLS[WALL[i]], true); ctx.save(); rrect(ctx, x, y, cw - 10, ch, 18); ctx.clip(); if (img) { const iw = img.naturalWidth || W, ih = img.naturalHeight || H, s = Math.max((cw - 10) / iw, ch / ih); ctx.drawImage(img, x + (cw - 10 - iw * s) / 2, y + (ch - ih * s) / 2, iw * s, ih * s); } ctx.restore(); }
+      ctx.restore(); break; }
+    case 'pullback': {
+      ctx.fillStyle = '#0B0C0F'; ctx.fillRect(0, 0, W, H); const k = eio(lin(t, a, a + .9)), s = 1 - .58 * k;
+      const ph = (x, y, sc, img, live) => { const w = W * sc, h = H * sc; ctx.save(); ctx.fillStyle = '#1C1E24'; rrect(ctx, x - w / 2 - 14 * sc * 2, y - h / 2 - 14 * sc * 2, w + 56 * sc, h + 56 * sc, 90 * sc); ctx.fill(); rrect(ctx, x - w / 2, y - h / 2, w, h, 70 * sc); ctx.clip(); if (img) ctx.drawImage(img, x - w / 2, y - h / 2, w, h); ctx.restore(); };
+      const side = ['live', 'fin', 'doute', 'colere'];
+      if (k > .2) side.forEach((n, i) => { const kk = eo(lin(k, .2 + i * .1, .7 + i * .1)); ph(540 + (i % 2 ? 1 : -1) * 560 * (i < 2 ? 1 : 1.1), 960 + (i < 2 ? -120 : 380) * kk, s * .9, need(STILLS[n], true)); });
+      ph(540, 960, s, fr, true); break; }
+    case 'end': { video(fr, 1.05, 540, 960, 'blur(18px) brightness(.45)'); break; }
+  }
+}
+
+function overlays(name, t, a, b, mk) {
+  const show = id => { $(id).style.visibility = 'visible'; return $(id); };
+  for (const e of ui.children) e.style.visibility = 'hidden';
+  const lt = t - a;
+  if (name === 'glass') { show('o_glass'); [0, 1, 2, 3].forEach(i => { const p = eo(lin(t, .05 + i * .1, .4 + i * .1)), x = 1 - eio(lin(t, b - .15, b)); st($('g' + i), { opacity: p * x, transform: `translateY(${(1 - p) * 40}px) scale(${.9 + .1 * p})` }); }); }
+  if (name === 'stamp') { show('o_stamp'); const c = eo(lin(t, a, a + .35)), s = lin(t, a + .55, a + .75); st($('sc'), { transform: `translateY(${(1 - c) * -500}px) rotate(${-4 + 4 * c}deg)`, opacity: 1 }); st($('ss'), { opacity: s > 0 ? 1 : 0, transform: `rotate(-12deg) scale(${s > 0 ? 2.4 - 1.4 * eo(s) : 2.4})` }); if (s >= 1) $('o_stamp').style.transform = `translate(${Math.sin(t * 90) * 8 * (1 - lin(t, a + .75, a + 1.0))}px,0)`; else $('o_stamp').style.transform = 'none'; }
+  if (name === 'camcorder') { show('o_cam'); $('rec').style.opacity = Math.floor(t * 3) % 2 ? .2 : 1; const fr2 = Math.floor(t * 24) % 24; $('tc').textContent = `00:00:${String(5 + Math.floor(lt)).padStart(2, '0')}:${String(fr2).padStart(2, '0')}`; $('zm').textContent = lt > .6 ? 'x2.0' : lt > .3 ? 'x1.5' : 'x1.0'; }
+  if (name === 'bill') { show('o_bill'); const k = lin(t, a, b - .2); st($('bl'), { transform: `translateY(${-900 + 1220 * eo(Math.min(1, k * 1.3)) + Math.sin(k * 40) * 4 * (1 - k)}px)` }); }
+  if (name === 'countdown') { show('o_count'); const left = Math.max(0, Math.round(120 * (1 - lin(t, a + .1, b - .15)))), mm = Math.floor(left / 60), ss = left % 60; const D = [Math.floor(mm / 10), mm % 10, Math.floor(ss / 10), ss % 10]; D.forEach((d, i) => $('c' + i).textContent = d); }
+  if (name === 'lock') { show('o_lock'); const fc = face(mk), k = eo(lin(t, a, a + .3)), w = 420 + 500 * (1 - k), h = 480 + 560 * (1 - k); st($('lk'), { left: (fc.x - w / 2) + 'px', top: (fc.y - h / 2 - 20) + 'px', width: w + 'px', height: h + 'px', opacity: cl(k * 2) }); st($('lkl'), { left: (fc.x - 190) + 'px', top: (fc.y + 270) + 'px', opacity: lin(t, a + .25, a + .4) }); }
+  if (name === 'appui') { show('o_app'); const k = eo(lin(t, a + .15, a + .5)); st($('ap'), { opacity: k, transform: `translateY(${(1 - k) * 200}px)` }); [0, 1, 2].forEach(i => { const p = eo(lin(t, a + .35 + i * .12, a + .6 + i * .12)); st($('ap' + i), { opacity: p, transform: `translateX(${(1 - p) * 60}px)` }); }); }
+  if (name === 'tier') { show('o_tier'); const k = eo(lin(t, a, a + .25)); st($('tl'), { opacity: k, transform: `translateX(${(1 - k) * -300}px)` }); [0, 1, 3, 4].forEach((i, j) => { const p = bk(lin(t, a + .2 + j * .18, a + .45 + j * .18)); st($('tr' + i), { opacity: cl(p * 2), display: 'inline-block', transform: `scale(${p})` }); }); }
+  if (name === 'end') { show('o_end'); [['e0', 21.05], ['e1', 21.1], ['e2', 21.25], ['e3', 21.45], ['e4', 21.65], ['e5', 21.9]].forEach(([id, t0]) => { const p = eo(lin(t, t0, t0 + .35)); st($(id), { opacity: p, transform: `translateY(${(1 - p) * 30}px)` }); });
+    const f = lin(t, 22.2, 22.4); $('fol').textContent = f > .5 ? '✓ Abonné' : 'Suivre OJA'; $('fol').style.background = f > .5 ? '#2A2D35' : OR; $('fol').style.transform = `scale(${1 - .08 * Math.sin(f * Math.PI)})`; }
+}
+
+/* ---------- frame ---------- */
+let CUR = 0, DRAWN = false;
+function draw(t) {
+  const [clip, fi] = clipAt(t), fr = need(F(clip, fi)), mk = need(M(clip, fi));
+  need(F(clip, Math.min(NF - 1, fi + 1))); need(M(clip, Math.min(NF - 1, fi + 1)));
+  if (!fr || !mk) return false;
+  const k = FX.findIndex(f => t >= f[1] && t < f[2]), [name, a, b, label] = FX[k < 0 ? FX.length - 1 : k];
+  ctx.save(); ctx.clearRect(0, 0, W, H); drawFx(name, t, a, b, fr, mk); ctx.restore();
+  overlays(name, t, a, b, mk);
+  const tag = $('tag'); tag.style.visibility = label ? 'visible' : 'hidden'; $('tagn').textContent = String(k + 1).padStart(2, '0') + '/23'; $('tagt').textContent = label;
+  // spoken word, centred (not over the giant words or the end card)
+  const w = WORDS.find(([, s, e], i) => t >= s + VO_AT - .02 && t < (WORDS[i + 1] ? WORDS[i + 1][1] : e + .4) + VO_AT - .02);
+  const hideW = ['giant', 'end', 'tier', 'appui'].includes(name);
+  $('word').textContent = w && !hideW ? w[0].replace(/[,.…!?]+$/, '').replace('Odja', 'OJA') : '';
+  return true;
+}
+function renderAt(t) { CUR = t; DRAWN = draw(t); }
+window.waitFrame = async () => { for (let n = 0; n < 12 && (!DRAWN || PENDING.size); n++) { await Promise.all([...PENDING]); DRAWN = draw(CUR); } };
+window.ready = (async () => {
+  await document.fonts.load('900 100px Poppins'); await document.fonts.load('800 40px Inter'); await document.fonts.load("italic 500 100px 'Playfair Display'"); await document.fonts.load("700 30px 'DejaVu Sans Mono'"); await document.fonts.ready;
+  Object.values(STILLS).forEach(s => need(s, true)); await Promise.all([...PENDING]); renderAt(0); await window.waitFrame();
+})();
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+</script>
+</body></html>

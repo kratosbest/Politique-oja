@@ -939,3 +939,47 @@ Aucun montant, aucun prix, aucun chiffre ; pas de « gratuit » (on dit « donne
   - le son `src/music37.py`, qui produit `assets/soundtrack_carte_reel.m4a` (musique, voix et mixage ; aucun bruit de « whoosh »).
 - **Son :** `python3 src/music37.py out.wav assets/crt/voix_carte.mp3 ffmpeg`, puis encodage en m4a.
 - **Rendu :** `src/render_video.sh oja_carte_reel.html 23 assets/soundtrack_carte_reel.m4a OJA_TonBusinessSurLaCarte_9x16.mp4 ffmpeg`
+
+## OJA — « Vends tranquille », 23 effets sur une seule vidéo (9:16, 23 s)
+
+`OJA_Effets_VendsTranquille_9x16.mp4` (1080 × 1920) applique sur une même vidéo les effets d'un reel de référence. La vendeuse du film « Vendez tranquille » raconte son histoire avec la voix d'Alimata (`assets/fx/voix_fx.mp3`, à partir de 0,4 s). Pendant ce temps, un effet différent s'enchaîne à peu près chaque seconde. Une étiquette en haut à gauche donne le numéro et le nom de l'effet (« 07/23 Zoom caméscope »), et le mot prononcé s'affiche au centre.
+
+**Effets, dans l'ordre :**
+1. Widgets en verre
+2. Vertigo
+3. Orbite
+4. Ambiance (avant/après)
+5. Tampon « FAUSSE CAPTURE »
+6. Ombres chinoises
+7. Zoom caméscope
+8. Sous-titres géants
+9. ASCII
+10. Pluie de touches
+11. Mot en fond (« OJA » derrière elle)
+12. Le ticket « DÉJÀ PAYÉE »
+13. Projecteur à paillettes (« Payée »)
+14. Papier découpé
+15. Compte à rebours
+16. Verrouillage sur le visage
+17. Points
+18. Néon « TRANQUILLE »
+19. Interface appli (« Revenus & reversements »)
+20. Classement S à D
+21. Terrier (cadres à l'infini)
+22. Mur de vidéos
+23. Recul
+
+L'écran de fin montre « 23 effets, une seule vidéo », « Vends tranquille. », « Crée ta boutique dans Oja App » et le bouton « Suivre OJA ».
+
+**Détourage :** chaque image des trois plans Veo (`clips_vtq/c_tranquille`, `c_doute`, `c_colere`) est détourée par `src/fx_masks.py` (rembg, modèle `u2net_human_seg`). C'est ce qui permet aux mots, aux ombres et aux cartes de passer derrière elle. Les images et les masques sont dans `assets/fxf/` ; ce dossier n'est pas versionné. Pour le refaire :
+- `ffmpeg -i clips_vtq/c_<plan>.mp4 -vf fps=24,scale=1080:1920 -q:v 3 assets/fxf/<plan>/f%03d.jpg`
+- puis `python src/fx_masks.py assets/fxf/<plan>` (dans un environnement Python qui contient `rembg`).
+
+**Contenu :**
+- Aucun montant à l'écran.
+- Le ticket et l'interface n'affichent que « payée », « reversement effectué » et des dates.
+- Mention de fin : « Mise en situation, personne de l'image générée par IA. »
+
+**Son :** `python3 src/music38.py out.wav assets/fx/voix_fx.mp3 ffmpeg`, puis encodage en m4a vers `assets/soundtrack_effets_reel.m4a`. La musique a un petit accent à chaque changement d'effet, baisse sous la voix et ne contient aucun bruit de « whoosh ».
+
+**Rendu :** `src/render_video.sh oja_effets_reel.html 23 assets/soundtrack_effets_reel.m4a OJA_Effets_VendsTranquille_9x16.mp4 ffmpeg`
