@@ -1,0 +1,215 @@
+<title>Prompteur OJA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Studio prompter: black glass, one reading line in the upper third (closest to the lens), the script scrolls through it.
+   Single dark look on purpose: a prompter is always white on black, whatever the viewer's theme. */
+:root {
+  --glass: #050607;      /* prompter glass */
+  --ink: #F4F2EC;        /* script text */
+  --dim: #6E7276;        /* lines away from the reading line, notes */
+  --cue: #FF6B00;        /* OJA orange: reading line, block names */
+  --panel: #14171A;      /* control bar */
+  --edge: #2A2F34;
+  --ok: #159A69;
+  --font-script: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --font-num: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --size: 56px;          /* script size, set by the slider */
+  --line: 28%;           /* reading line, from the top */
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--glass); color: var(--ink); font-family: var(--font-ui); overflow: hidden; -webkit-user-select: none; user-select: none; }
+#stage { position: fixed; inset: 0; overflow: hidden; cursor: pointer; touch-action: none; }
+#scroller { position: absolute; left: 0; right: 0; top: 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); will-change: transform; }
+#text { max-width: 30ch; margin: 0 auto; font-family: var(--font-script); font-size: var(--size); line-height: 1.38; font-weight: 700; letter-spacing: .005em; }
+#text.mirror { transform: scaleX(-1); }
+.block { padding-block: .2em 1.4em; }
+.bname { display: flex; align-items: baseline; gap: .5em; font: 700 .42em/1.2 var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--cue); margin-bottom: .6em; }
+.bname i { font-style: normal; font-family: var(--font-num); letter-spacing: 0; }
+.note { display: block; font: italic 400 .5em/1.3 var(--font-script); color: var(--dim); margin: -.2em 0 .7em; }
+.l { display: block; margin-bottom: .45em; }
+.pause { display: flex; align-items: center; gap: .6em; margin: .1em 0 .55em; font: 700 .4em/1 var(--font-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--cue); }
+.pause:before, .pause:after { content: ""; flex: 1; border-top: 3px dotted var(--cue); }
+.tail { height: 70vh; }
+/* reading line + fade above and below it */
+#veil { position: fixed; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(5,6,7,.92) 0%, rgba(5,6,7,.55) calc(var(--line) - 9%), rgba(5,6,7,0) calc(var(--line) - 4%), rgba(5,6,7,0) calc(var(--line) + 10%), rgba(5,6,7,.6) calc(var(--line) + 30%), rgba(5,6,7,.9) 100%); }
+#mark { position: fixed; left: 0; right: 0; top: var(--line); height: 0; pointer-events: none; }
+#mark:before, #mark:after { content: ""; position: absolute; top: -18px; border: 18px solid transparent; }
+#mark:before { left: calc(env(safe-area-inset-left, 0px) + 4px); border-left: 26px solid var(--cue); }
+#mark:after { right: calc(env(safe-area-inset-right, 0px) + 4px); border-right: 26px solid var(--cue); }
+#mark span { position: absolute; left: 44px; right: 44px; top: -1px; border-top: 2px solid rgba(255,107,0,.35); }
+/* top status */
+#top { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: calc(env(safe-area-inset-top, 0px) + 10px); padding-bottom: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); font: 600 15px var(--font-num); color: var(--dim); pointer-events: none; transition: opacity .4s; }
+#top b { color: var(--ink); font-weight: 600; }
+#top > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 640px) { #rec { font-size: 0; } #top { font-size: 13px; } }
+#rec { display: inline-flex; align-items: center; gap: 8px; }
+#rec:before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--dim); }
+body.playing #rec:before { background: #E5262B; }
+/* control bar */
+#bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--panel); border-top: 1px solid var(--edge); padding-top: 12px; padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); transition: transform .35s ease, opacity .35s; }
+body.playing.hidebar #bar { transform: translateY(100%); opacity: 0; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; max-width: 980px; margin: 0 auto; }
+.row + .row { margin-top: 10px; }
+button { font: 700 16px var(--font-ui); color: var(--ink); background: #1F2328; border: 1px solid var(--edge); border-radius: 12px; padding: 11px 16px; cursor: pointer; min-height: 44px; }
+button:hover { border-color: #3A4148; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--cue); outline-offset: 2px; }
+button.main { background: var(--cue); border-color: var(--cue); color: #160A00; min-width: 128px; font-size: 17px; }
+button[aria-pressed="true"] { background: #2A2F35; border-color: var(--cue); color: #FFD7BA; }
+.blocks { display: flex; flex-wrap: wrap; gap: 6px; }
+.blocks button { min-width: 44px; padding: 10px 12px; font-family: var(--font-num); }
+.blocks button.on { border-color: var(--cue); color: var(--cue); }
+label.ctl { display: flex; align-items: center; gap: 10px; font-size: 15px; color: #B9BDC2; }
+label.ctl output { font: 600 15px var(--font-num); color: var(--ink); min-width: 2.2em; }
+input[type=range] { width: 130px; accent-color: var(--cue); }
+.sp { flex: 1; }
+.hint { font-size: 13px; color: var(--dim); }
+/* overlays: countdown and end of block */
+#count { position: fixed; inset: 0; display: grid; place-items: center; font: 600 34vmin/1 var(--font-num); color: var(--cue); background: rgba(5,6,7,.75); pointer-events: none; }
+#stop { position: fixed; left: 50%; top: calc(var(--line) + 70px); transform: translateX(-50%); width: min(560px, calc(100% - 32px)); background: var(--panel); border: 1px solid var(--edge); border-radius: 18px; padding: 22px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+#stop p { font-size: 19px; margin: 0 0 16px; color: #D7DADF; }
+#stop p b { color: var(--cue); }
+#stop .row { justify-content: center; }
+@media (max-width: 640px) { input[type=range] { width: 96px; } .hint { display: none; } button.main { min-width: 104px; } }
+@media (prefers-reduced-motion: reduce) { #bar, #top { transition: none; } }
+</style>
+
+<div id="stage" aria-label="Texte du prompteur. Touchez pour lancer ou mettre en pause.">
+  <div id="scroller"><div id="text"></div></div>
+</div>
+<div id="veil"></div>
+<div id="mark"><span></span></div>
+<div id="top"><span id="rec">PROMPTEUR · VIDÉO 1</span><span><b id="tblock">Bloc 1/7</b> · <b id="tclock">00:00</b></span></div>
+<div id="count" hidden></div>
+<div id="stop" hidden>
+  <p id="stopmsg"></p>
+  <div class="row"><button id="redo" type="button">Refaire ce bloc</button><button id="next" class="main" type="button">Bloc suivant</button></div>
+</div>
+<div id="bar">
+  <div class="row">
+    <button id="play" class="main" type="button">Lancer</button>
+    <button id="restart" type="button">Au début</button>
+    <div class="blocks" id="blocks" aria-label="Aller au bloc"></div>
+    <span class="sp"></span>
+    <span class="hint">Espace : lancer · flèches : vitesse et taille</span>
+  </div>
+  <div class="row">
+    <label class="ctl" for="speed">Vitesse <input id="speed" type="range" min="1" max="10" step="0.5" value="4"><output id="speedv">4</output></label>
+    <label class="ctl" for="size">Taille <input id="size" type="range" min="32" max="110" step="2" value="56"><output id="sizev">56</output></label>
+    <button id="mirror" type="button" aria-pressed="false">Miroir</button>
+    <button id="stopblk" type="button" aria-pressed="true">Arrêt à chaque bloc</button>
+    <button id="cd" type="button" aria-pressed="true">Compte à rebours</button>
+    <button id="fs" type="button">Plein écran</button>
+  </div>
+</div>
+
+<script>
+// The script of video 1 (video1/texte-a-dire.md), block by block. "~" marks the real pause before « invisible ».
+const SCRIPT = [
+  ['Accroche', '', ["J'ai perdu une journée entière de travail…", "à cause d'un réparateur qui était à quelques mètres de moi."]],
+  ['Présentation', '', ["Je m'appelle Derrick Dodoo.", "Je suis béninois, né et grandi au Bénin."]],
+  ['Histoire', 'Plus lentement, c\'est le moment sincère.', ["Un matin, très tôt, en allant au boulot, j'ai crevé.", "Je ne connaissais personne dans le coin.", "Tout le monde était pressé, et ceux qui s'arrêtaient ne connaissaient aucun réparateur.", "J'ai perdu des heures, et ce jour-là, je ne suis même pas arrivé au travail.", "Le réparateur était juste là…", "~", "mais invisible."]],
+  ['Vision', '', ["Le Bénin mise sur le tourisme.", "Ce serait dommage que nos visiteurs vivent la même chose.", "C'est de là qu'est née OJA.", "Ọjà, en yoruba, ça veut dire « marché ».", "Parce que tout est plus facile quand on a le marché dans sa poche."]],
+  ['Comment', '', ["Artisans, ateliers, boutiques, maquis :", "avec OJA, vous mettez votre business sur la carte.", "C'est gratuit, et ça prend quelques minutes.", "Une photo, un nom, votre position…", "et vous êtes visible."]],
+  ['Résultat', '', ["Les clients vous trouvent, voient si vous êtes ouvert, vous appellent,", "et peuvent même commander une course OJA jusqu'à votre porte."]],
+  ['Appel', 'Plus d\'énergie, avec le sourire.', ["Alors aidez-moi à mettre le Bénin sur la carte.", "Téléchargez OJA, ajoutez votre commerce,", "ou celui du réparateur de votre quartier,", "et partagez cette vidéo.", "Merci !"]],
+];
+const $ = id => document.getElementById(id);
+const text = $('text'), scroller = $('scroller'), stage = $('stage');
+text.innerHTML = SCRIPT.map(([name, note, lines], i) => `<section class="block" data-b="${i}"><div class="bname"><i>${String(i + 1).padStart(2, '0')}</i>${name}</div>${note ? `<span class="note">${note}</span>` : ''}${lines.map(l => l === '~' ? '<div class="pause" data-hold="1.6">pause</div>' : `<span class="l">${l}</span>`).join('')}</section>`).join('') + '<div class="tail"></div>';
+$('blocks').innerHTML = SCRIPT.map((_, i) => `<button type="button" data-go="${i}" aria-label="Bloc ${i + 1} : ${SCRIPT[i][0]}">${i + 1}</button>`).join('');
+
+const store = { get(k, d) { try { const v = localStorage.getItem('prompteur-oja-' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('prompteur-oja-' + k, JSON.stringify(v)); } catch (e) {} } };
+let speed = store.get('speed', 4), size = store.get('size', innerWidth < 600 ? 40 : 56), mirror = store.get('mirror', false), stopEach = store.get('stopEach', true), countOn = store.get('count', true);
+let pos = 0, playing = false, last = 0, clock = 0, hold = 0, holds = new Set(), stopAt = null, wake = null, hideT = 0;
+
+const lineY = () => stage.clientHeight * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--line')) / 100;
+const blocks = () => [...text.querySelectorAll('.block')];
+const topOf = el => el.offsetTop * 1;                       // position inside #text
+const blockStart = i => topOf(blocks()[i]) - lineY() + 4;  // scroll so the block name sits on the reading line
+function curBlock() { const y = pos + lineY(); let k = 0; blocks().forEach((b, i) => { if (topOf(b) <= y + 2) k = i; }); return k; }
+function apply() {
+  document.documentElement.style.setProperty('--size', size + 'px');
+  text.classList.toggle('mirror', mirror);
+  $('speed').value = speed; $('speedv').textContent = speed; $('size').value = size; $('sizev').textContent = size;
+  $('mirror').setAttribute('aria-pressed', mirror); $('stopblk').setAttribute('aria-pressed', stopEach); $('cd').setAttribute('aria-pressed', countOn);
+}
+function render() {
+  scroller.style.transform = `translateY(${-pos}px)`;
+  const k = curBlock(); $('tblock').textContent = `Bloc ${k + 1}/7 · ${SCRIPT[k][0]}`;
+  [...$('blocks').children].forEach((b, i) => b.classList.toggle('on', i === k));
+  const s = Math.floor(clock); $('tclock').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+function maxPos() { return text.offsetHeight - lineY() - stage.clientHeight * .4; }
+
+function tick(now) {
+  if (!playing) return;
+  const dt = Math.min(.1, (now - last) / 1000); last = now; clock += dt;
+  if (hold > 0) hold -= dt;
+  else {
+    pos += speed * 11 * (size / 56) * dt;
+    // the real pause before « invisible »
+    text.querySelectorAll('.pause').forEach(p => { if (!holds.has(p) && topOf(p) <= pos + lineY()) { holds.add(p); hold = +p.dataset.hold; } });
+    // stop at the end of each block
+    if (stopEach) { const nb = blocks().find(b => topOf(b) > stopAt && topOf(b) <= pos + lineY() + 4); if (stopAt !== null && nb) { const i = +nb.dataset.b; pos = blockStart(i); pause(); showStop(i); render(); return; } }
+    if (pos >= maxPos()) { pos = maxPos(); pause(); }
+  }
+  render(); requestAnimationFrame(tick);
+}
+async function keepAwake() { try { wake = await navigator.wakeLock?.request('screen'); } catch (e) { wake = null; } }
+function start() {
+  $('stop').hidden = true; playing = true; document.body.classList.add('playing'); $('play').textContent = 'Pause';
+  stopAt = topOf(blocks()[curBlock()]); last = performance.now(); keepAwake(); requestAnimationFrame(tick); scheduleHide();
+}
+function play() {
+  if (playing) return pause();
+  if (!countOn) return start();
+  let n = 3; const c = $('count'); c.hidden = false; c.textContent = n;
+  const iv = setInterval(() => { n--; if (n <= 0) { clearInterval(iv); c.hidden = true; start(); } else c.textContent = n; }, 800);
+}
+function pause() { playing = false; document.body.classList.remove('playing'); $('play').textContent = 'Lancer'; try { wake?.release(); } catch (e) {} }
+function go(i) { pause(); $('stop').hidden = true; pos = Math.max(0, blockStart(i)); holds = new Set([...holds].filter(p => topOf(p) < pos + lineY())); render(); }
+function showStop(i) { $('stopmsg').innerHTML = `Fin du bloc ${i}. Prochain : <b>${SCRIPT[i][0]}</b>`; $('stop').hidden = false; $('stop').dataset.next = i; }
+function scheduleHide() { clearTimeout(hideT); document.body.classList.remove('hidebar'); hideT = setTimeout(() => { if (playing) document.body.classList.add('hidebar'); }, 2200); }
+
+$('play').onclick = e => { e.stopPropagation(); play(); };
+$('restart').onclick = () => { holds.clear(); clock = 0; go(0); };
+$('blocks').onclick = e => { const b = e.target.closest('[data-go]'); if (b) go(+b.dataset.go); };
+$('redo').onclick = () => { const i = +$('stop').dataset.next - 1; holds = new Set(); go(Math.max(0, i)); };
+$('next').onclick = () => { $('stop').hidden = true; play(); };
+$('speed').oninput = e => { speed = +e.target.value; store.set('speed', speed); apply(); };
+$('size').oninput = e => { const k = curBlock(), rel = pos - blockStart(k); size = +e.target.value; store.set('size', size); apply(); pos = Math.max(0, blockStart(k) + rel * 0); render(); };
+$('mirror').onclick = () => { mirror = !mirror; store.set('mirror', mirror); apply(); };
+$('stopblk').onclick = () => { stopEach = !stopEach; store.set('stopEach', stopEach); apply(); };
+$('cd').onclick = () => { countOn = !countOn; store.set('count', countOn); apply(); };
+$('fs').onclick = async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch (e) { $('fs').textContent = 'Plein écran indisponible'; } };
+
+// tap the script to start or pause; drag to move it by hand
+let drag = null;
+stage.addEventListener('pointerdown', e => { drag = { y: e.clientY, p: pos, moved: false }; });
+stage.addEventListener('pointermove', e => { if (!drag) return; const dy = e.clientY - drag.y; if (Math.abs(dy) > 6) drag.moved = true; if (drag.moved) { pos = Math.max(0, Math.min(maxPos(), drag.p - dy * (mirror ? 1 : 1))); render(); } });
+stage.addEventListener('pointerup', () => { if (drag && !drag.moved) { if (!$('stop').hidden) { $('stop').hidden = true; play(); } else play(); } drag = null; });
+stage.addEventListener('wheel', e => { pos = Math.max(0, Math.min(maxPos(), pos + e.deltaY)); render(); }, { passive: true });
+document.addEventListener('pointermove', () => playing && scheduleHide());
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && !['Space', 'Escape'].includes(e.code)) return;
+  if (e.code === 'Space') { e.preventDefault(); if (!$('stop').hidden) { $('stop').hidden = true; } play(); }
+  else if (e.code === 'ArrowUp') { speed = Math.min(10, speed + .5); store.set('speed', speed); apply(); }
+  else if (e.code === 'ArrowDown') { speed = Math.max(1, speed - .5); store.set('speed', speed); apply(); }
+  else if (e.code === 'ArrowRight') { size = Math.min(110, size + 4); store.set('size', size); apply(); render(); }
+  else if (e.code === 'ArrowLeft') { size = Math.max(32, size - 4); store.set('size', size); apply(); render(); }
+  else if (e.key === 'm' || e.key === 'M') $('mirror').click();
+  else if (e.key === 'r' || e.key === 'R') $('restart').click();
+  else if (/^[1-7]$/.test(e.key)) go(+e.key - 1);
+  scheduleHide();
+});
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && playing) keepAwake(); });
+window.addEventListener('resize', render);
+apply(); render();
+document.fonts?.ready.then(render);
+</script>
