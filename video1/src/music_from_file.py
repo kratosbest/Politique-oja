@@ -1,18 +1,21 @@
-"""Background music from an audio file supplied by Derrick (work/fond_sonore.wav): looped with a 3 s crossfade to 96 s.
+"""Background music from an audio file supplied by Derrick (work/fond_sonore.wav): the clean part only (no song ending, no TikTok jingle), looped with a 1.5 s crossfade to 96 s.
 Written at its final level for src/mix.sh: about 21 dB under the voice (-37 LUFS), softer during the story, a little
 louder for the call, then loud on its own (about -15 LUFS) once Derrick has said « Merci », until a 2 s fade out.
 usage: python3 src/music_from_file.py work/fond_sonore.wav work/music.wav"""
 import subprocess, sys, wave
 import numpy as np
-SR, DUR, XF = 48000, 96.0, 3.0
+SR, DUR, XF = 48000, 96.0, 1.5
+CLEAN_END, LOOP_FROM = 58.2, 12.0   # the song ends at 60.5 s and the TikTok jingle plays at 61.2 s: never used.
+# The intro (0-12 s) has short stops, so the loop restarts in the steady part (12-58.2 s).
 MERCI = 89.6   # end of « Merci » on the edit timeline
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', sys.argv[1], '-ac', '2', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
 x = np.frombuffer(raw, np.float32).reshape(-1, 2).astype(float)
 n, xf = int(DUR * SR), int(XF * SR)
-out = x.copy()
-while len(out) < n:                                    # loop with an equal-power crossfade
+part = x[int(LOOP_FROM * SR):int(CLEAN_END * SR)]
+out = x[:int(CLEAN_END * SR)].copy()
+while len(out) < n:                                    # loop the steady part, equal-power crossfade
     k = np.linspace(0, 1, xf)[:, None]
-    out = np.concatenate([out[:-xf], out[-xf:] * np.cos(k * np.pi / 2) + x[:xf] * np.sin(k * np.pi / 2), x[xf:]])
+    out = np.concatenate([out[:-xf], out[-xf:] * np.cos(k * np.pi / 2) + part[:xf] * np.sin(k * np.pi / 2), part[xf:]])
 out = out[:n]
 def lufs(a):
     tmp = sys.argv[2] + '.tmp.wav'
