@@ -59,6 +59,11 @@ La consigne complète est dans `CLAUDE.md`.
 - L'écran d'accueil reprend le vrai haut de l'app (`../motion/store/captures/accueil.png`).
 - « Enregistrer un lieu » et la fiche du commerce restent en maquette, avec les libellés exacts : il n'existe pas encore de vraie capture de ces écrans.
 
+**Musique :**
+- C'est maintenant le son fourni par Derrick, extrait de sa vidéo (`work/fond_sonore.wav`, non versionné). Derrick confirme avoir le droit de l'utiliser.
+- `src/music_from_file.py` le met en boucle avec un fondu enchaîné de 3 s pour tenir 92 s. Il le rend plus doux pendant l'histoire et plus fort à l'appel, avec un fondu de fin.
+- `src/mix.sh` le place environ 21 dB sous la voix.
+
 **En attente :** les versions 60 s et accroche, à faire après validation.
 
 **Refaire :**
