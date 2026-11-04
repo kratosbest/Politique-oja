@@ -14,7 +14,7 @@ canvas{position:absolute;left:0;top:0}
 .fx{position:absolute;inset:0;visibility:hidden}
 #sub{position:absolute;left:60px;right:160px;top:1250px;text-align:center;font:800 76px/1.08 Inter;letter-spacing:-.02em;text-shadow:0 6px 26px rgba(0,0,0,.6),0 2px 4px rgba(0,0,0,.55)}
 #sub em{font-style:normal;color:#FF6B00}
-#tag{position:absolute;left:40px;top:262px;display:flex;align-items:center;gap:12px;padding:10px 20px 10px 10px;border-radius:28px;background:rgba(23,33,38,.72);font:700 26px Inter}
+#tag{display:none;position:absolute;left:40px;top:262px;display:flex;align-items:center;gap:12px;padding:10px 20px 10px 10px;border-radius:28px;background:rgba(23,33,38,.72);font:700 26px Inter}
 #tag b{padding:5px 12px;border-radius:16px;background:#FF6B00;font:800 24px Inter;font-variant-numeric:tabular-nums}
 .phone{position:absolute;width:380px;height:800px;border-radius:58px;background:#0B0D0F;border:3px solid #2E343A;box-shadow:0 40px 100px rgba(0,0,0,.6);padding:12px;overflow:hidden}
 .scr{position:absolute;inset:12px;border-radius:46px;background:#121619;overflow:hidden;color:#fff}
@@ -64,18 +64,8 @@ const ic = (n, s = 24, c = 'currentColor', w = 2) => `<svg width="${s}" height="
 const LOGO = 'assets/logo-oja-carte.png', PIN = '../motion/assets/mk_pin.png';
 const PLACE = 'Atelier Vulcanisation Gbèto';
 
-/* ---------- storefront illustration (placeholder until a royalty-free photo is supplied) ---------- */
-const shop = (() => { const c = document.createElement('canvas'); c.width = 720; c.height = 480; const x = c.getContext('2d');
-  let g = x.createLinearGradient(0, 0, 0, 480); g.addColorStop(0, '#9FD3F2'); g.addColorStop(.55, '#D9EEF8'); g.addColorStop(.56, '#C9B69A'); g.addColorStop(1, '#A8936F'); x.fillStyle = g; x.fillRect(0, 0, 720, 480);
-  x.fillStyle = '#EDE4D3'; x.fillRect(60, 120, 600, 270); x.fillStyle = '#2E6F8E'; x.fillRect(60, 110, 600, 22);
-  x.fillStyle = OR; x.beginPath(); x.moveTo(40, 132); x.lineTo(680, 132); x.lineTo(650, 190); x.lineTo(70, 190); x.closePath(); x.fill();
-  for (let i = 0; i < 8; i++) { x.fillStyle = i % 2 ? '#FFFFFF' : OR; x.beginPath(); x.moveTo(70 + i * 72.5, 190); x.lineTo(142 + i * 72.5, 190); x.lineTo(132 + i * 72.5, 212); x.lineTo(80 + i * 72.5, 212); x.fill(); }
-  x.fillStyle = INK; x.fillRect(150, 52, 420, 58); x.fillStyle = '#fff'; x.font = '900 34px Inter'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('VULCANISATION', 360, 82);
-  x.fillStyle = '#3B4247'; x.fillRect(250, 228, 220, 162); x.fillStyle = '#1F2427'; x.fillRect(262, 240, 196, 150);
-  const tyre = (cx, cy, r) => { x.fillStyle = '#1E1F21'; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill(); x.fillStyle = '#3A3D40'; x.beginPath(); x.arc(cx, cy, r * .55, 0, 7); x.fill(); x.fillStyle = '#B8BCC0'; x.beginPath(); x.arc(cx, cy, r * .3, 0, 7); x.fill(); };
-  [[130, 352, 40], [130, 280, 40], [210, 360, 34], [560, 350, 42], [630, 364, 30], [590, 284, 36]].forEach(p => tyre(...p));
-  x.fillStyle = '#C0392B'; x.fillRect(480, 300, 40, 70); x.fillStyle = '#7F8C8D'; x.fillRect(486, 288, 28, 14);
-  return c.toDataURL('image/jpeg', .9); })();
+/* ---------- storefront: AI photo of the fictitious « Atelier Vulcanisation Gbèto » (ElevenLabs, Nano Banana 2 Lite) ---------- */
+const shop = 'assets/devanture-gbeto.jpg';
 
 /* ---------- image cache (large frames: small LRU) ---------- */
 const CACHE = new Map(), PENDING = new Set();
@@ -151,7 +141,7 @@ const phoneScreens = `
   <div style="padding:6px 18px">
     <div class="lab">Ajouter des photos</div>
     <div id="pa_ph0" style="display:flex;gap:10px"><div class="btn" style="flex:1;background:#1E262B;border:2px solid #2C353B">${ic('camera', 18, OR, 2.4)}Prendre une photo</div></div>
-    <div id="pa_ph1" style="display:none;position:relative;height:150px;border-radius:16px;overflow:hidden;background:url(${shop}) center/cover"><span class="pillv" style="position:absolute;left:10px;top:10px;background:${OR};color:#fff">COUVERTURE</span></div>
+    <div id="pa_ph1" style="display:none;position:relative;height:150px;border-radius:16px;overflow:hidden;background:url(${shop}) 50% 55%/cover"><span class="pillv" style="position:absolute;left:10px;top:10px;background:${OR};color:#fff">COUVERTURE</span></div>
     <div class="lab">Informations générales</div>
     <div class="fld" id="pa_nm" style="color:#7C878D">Nom de l'entreprise / Lieu</div>
     <div class="fld" style="margin-top:8px;color:#7C878D">Catégorie</div>
@@ -164,18 +154,17 @@ const phoneScreens = `
   </div>
 </div>
 <div id="ps_home" class="scr">
-  <div class="hd"><img src="${LOGO}" style="width:44px;height:44px;margin-right:8px">OJA</div>
-  <div style="padding:16px 16px">
-    <div style="height:46px;border-radius:23px;background:#1E262B;display:flex;align-items:center;padding:0 18px;font:600 16px Inter;color:#8C969C">Rechercher...</div>
-    <div id="ph_card" style="margin-top:18px;border-radius:24px;background:#1A2024;overflow:hidden;border:2px solid #252D32">
-      <div style="position:relative;height:210px;background:url(${shop}) center/cover"><span class="pillv" style="position:absolute;left:12px;top:12px;background:rgba(23,33,38,.8);color:#fff">${ic('wrench', 15, '#fff', 2.4)}RÉPARATION</span><span style="position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;background:rgba(23,33,38,.8);display:grid;place-items:center">${ic('heart', 20, '#fff', 2.2)}</span></div>
-      <div style="padding:14px 16px 16px"><div style="font:800 20px Inter">${PLACE}</div><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font:600 15px Inter;color:#9AA4AA">${ic('pin', 16, '#9AA4AA', 2.2)}Cotonou</div></div>
+  <div style="height:178px;background:url(../motion/store/captures/accueil.png) 0 0/100% auto no-repeat"></div>
+  <div style="padding:6px 14px">
+    <div id="ph_card" style="border-radius:24px;background:#1C2023;overflow:hidden;border:2px solid #262C30">
+      <div style="position:relative;height:200px;background:url(${shop}) 50% 55%/cover"><span class="pillv" style="position:absolute;left:12px;top:12px;background:rgba(30,34,38,.85);color:#fff;font-size:13px;letter-spacing:.06em">${ic('wrench', 15, '#fff', 2.4)}RÉPARATION</span><span style="position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;background:rgba(30,34,38,.85);display:grid;place-items:center">${ic('heart', 20, '#fff', 2.2)}</span></div>
+      <div style="padding:14px 16px 16px"><div style="font:800 21px Inter">${PLACE}</div><div style="display:flex;align-items:center;gap:6px;margin-top:6px;font:600 15px Inter;color:#9AA4AA">${ic('pin', 16, '#9AA4AA', 2.2)}Cotonou</div></div>
     </div>
-    <div style="margin-top:16px;height:160px;border-radius:24px;background:#1A2024;border:2px solid #252D32"></div>
+    <div style="margin-top:14px;height:170px;border-radius:24px;background:#1C2023;border:2px solid #262C30"></div>
   </div>
 </div>
 <div id="ps_fiche" class="scr">
-  <div style="position:relative;height:300px;background:url(${shop}) center/cover"><span style="position:absolute;left:16px;top:44px;width:42px;height:42px;border-radius:50%;background:rgba(23,33,38,.75);display:grid;place-items:center">${ic('back', 22, '#fff', 2.6)}</span></div>
+  <div style="position:relative;height:300px;background:url(${shop}) 50% 50%/cover"><span style="position:absolute;left:16px;top:44px;width:42px;height:42px;border-radius:50%;background:rgba(23,33,38,.75);display:grid;place-items:center">${ic('back', 22, '#fff', 2.6)}</span></div>
   <div style="padding:18px 20px">
     <div style="font:800 23px/1.2 Inter">${PLACE}</div>
     <div style="display:flex;align-items:center;gap:10px;margin-top:10px"><span id="pf_open" class="pillv" style="background:rgba(21,154,105,.2);color:#3DDC9A;border:2px solid ${GRN}">OUVERT</span><span style="font:600 15px Inter;color:#9AA4AA">Réparation · Cotonou</span></div>
@@ -212,14 +201,14 @@ ui.innerHTML = `
   <div style="font:900 40px Inter;text-shadow:0 4px 20px rgba(0,0,0,.6);margin-bottom:12px">Ce lieu vous appartient-il ?</div>
   ${['Oui, je suis propriétaire', 'Non, je référence ce lieu'].map((s, i) => `<div id="wo${i}" class="chk" style="font-size:36px"><span class="bx" style="border-radius:50%"></span>${s}</div>`).join('')}</div></div>
 <div id="o_share" class="fx"><div id="sh" class="abs" style="left:290px;top:300px;display:flex;align-items:center;gap:16px;padding:20px 40px;border-radius:50px;background:${OR};font:900 46px Inter;box-shadow:0 20px 50px rgba(0,0,0,.45)">${ic('share', 44, '#fff', 2.6)}Partagez</div></div>
-<div id="o_dl" class="fx"><div id="dl" class="abs" style="left:0;right:160px;top:300px;text-align:center">
-  <img src="${LOGO}" style="width:220px;height:220px"><div style="font:900 70px Inter;letter-spacing:-.02em;text-shadow:0 6px 24px rgba(0,0,0,.5)">Oja App</div>
-  <div id="badges" style="margin-top:14px;font:700 32px Inter;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.6)">App Store · Google Play</div></div></div>
+<div id="o_dl" class="fx"><div id="dl" class="abs" style="left:0;right:160px;top:270px;text-align:center">
+  <img src="${LOGO}" style="width:150px;height:150px"><div style="font:900 56px Inter;letter-spacing:-.02em;text-shadow:0 6px 24px rgba(0,0,0,.5)">Oja App</div>
+  <div id="badges"><div style="display:inline-flex;gap:18px;margin-top:12px"><span style="width:150px;height:150px;border-radius:32px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 20px 50px rgba(0,0,0,.4)"><img src="assets/store-app-store.png" style="width:88px;height:88px"><span style="font:800 19px Inter;color:#172126">App Store</span></span><span style="width:150px;height:150px;border-radius:32px;background:#fff;display:grid;place-items:center;box-shadow:0 20px 50px rgba(0,0,0,.4)"><img src="assets/store-google-play.png" style="height:126px"></span></div></div></div></div>
 <div id="o_end" class="fx">
-  <div id="e1" class="abs" style="left:0;right:160px;top:470px;text-align:center"><img src="${LOGO}" style="width:300px;height:300px"></div>
-  <div id="e2" class="abs" style="left:0;right:160px;top:800px;text-align:center;font:900 78px Inter;letter-spacing:-.02em">Oja App</div>
-  <div id="e3" class="abs" style="left:0;right:160px;top:910px;text-align:center;font:700 32px Inter;color:rgba(255,255,255,.85)">App Store · Google Play</div>
-  <div id="e4" class="abs" style="left:60px;right:220px;top:1060px;text-align:center;font:900 84px/1.04 Inter;letter-spacing:-.025em">Mettons le Bénin<br><span style="color:${OR}">sur la carte.</span></div>
+  <div id="e1" class="abs" style="left:0;right:160px;top:420px;text-align:center"><img src="${LOGO}" style="width:260px;height:260px"></div>
+  <div id="e2" class="abs" style="left:0;right:160px;top:690px;text-align:center;font:900 78px Inter;letter-spacing:-.02em">Oja App</div>
+  <div id="e3" class="abs" style="left:0;right:160px;top:880px;text-align:center"><div style="display:inline-flex;gap:22px;margin-top:0"><span style="width:200px;height:200px;border-radius:40px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:0 20px 50px rgba(0,0,0,.4)"><img src="assets/store-app-store.png" style="width:120px;height:120px"><span style="font:800 24px Inter;color:#172126">App Store</span></span><span style="width:200px;height:200px;border-radius:40px;background:#fff;display:grid;place-items:center;box-shadow:0 20px 50px rgba(0,0,0,.4)"><img src="assets/store-google-play.png" style="height:168px"></span></div></div>
+  <div id="e4" class="abs" style="left:60px;right:220px;top:1130px;text-align:center;font:900 84px/1.04 Inter;letter-spacing:-.025em">Mettons le Bénin<br><span style="color:${OR}">sur la carte.</span></div>
 </div>`;
 
 /* ---------- timeline: [name, t0, t1, counter label] (seconds on the edit) ---------- */
@@ -295,7 +284,7 @@ function draw(t) {
   overlays(t, on, has, A, mk);
   // counter « NN/24 » and the subtitles
   const k = COUNTED.filter(c => t >= c[1]).length, cue = [...COUNTED].reverse().find(c => t >= c[1]);
-  $('tag').style.visibility = cue && !has('end') ? 'visible' : 'hidden'; $('tagn').textContent = String(k).padStart(2, '0') + '/' + COUNTED.length; $('tagt').textContent = cue ? cue[3] : '';
+  $('tag').style.display = 'none'; $('tagn').textContent = String(k).padStart(2, '0') + '/' + COUNTED.length; $('tagt').textContent = cue ? cue[3] : '';
   const g = GROUPS.find((gr, i) => t >= gr[0][1] - .05 && t < (GROUPS[i + 1] ? GROUPS[i + 1][0][1] - .05 : gr[gr.length - 1][2] + .6));
   const subHidden = HIDE_SUB.some(n => has(n)) || (has('share') && t > 87.85);
   $('sub').innerHTML = g && !subHidden ? g.map(([w]) => KEY.test(w) ? `<em>${w}</em>` : w).join(' ') : '';
@@ -320,7 +309,7 @@ function overlays(t, on, has, A, mk) {
     st($('chk'), { opacity: res ? 1 - rk : 1, transform: `translateX(${(1 - k) * 420}px)` }); $('chn').textContent = n + '/4';
     steps.forEach((s, i) => { const e = $('ck' + i); e.classList.toggle('on', t >= s); e.style.transform = `scale(${t >= s ? 1 + .08 * Math.sin(lin(t, s, s + .3) * Math.PI) : 1})`; e.style.opacity = cl(lin(t, 62.0 + i * .08, 62.3 + i * .08) * 1.5); });
     // which screen
-    const scr = t < 66.5 ? 'add' : t < 68.85 ? 'home' : 'fiche'; ['add', 'home', 'fiche'].forEach(s => $('ps_' + s).style.visibility = s === scr ? 'visible' : 'hidden');
+    const scr = t < 66.5 ? 'add' : t < 68.85 ? 'home' : 'fiche'; ['add', 'home', 'fiche'].forEach(s => $('ps_' + s).style.display = s === scr ? 'block' : 'none');
     $('pa_ph0').style.display = t >= 62.34 ? 'none' : 'flex'; $('pa_ph1').style.display = t >= 62.34 ? 'block' : 'none';
     const nm = Math.floor(PLACE.length * lin(t, 63.34, 63.95)); $('pa_nm').textContent = nm ? PLACE.slice(0, nm) : "Nom de l'entreprise / Lieu"; $('pa_nm').style.color = nm ? '#fff' : '#7C878D';
     const pp = lin(t, 64.26, 64.5); st($('pa_pin'), { opacity: pp > 0 ? 1 : 0, transform: `translateY(${-60 * Math.pow(1 - pp, 2)}px)` });

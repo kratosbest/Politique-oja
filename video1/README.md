@@ -29,7 +29,7 @@ La consigne complète est dans `CLAUDE.md`.
 - Ils suivent ce que Derrick dit vraiment, par groupes de 2 à 3 mots, avec les mots clés en orange.
 - Corrections d'orthographe : « Dodoo », « OJA », « Ọjà », « marché ».
 
-**Incrustations** (`montage.html`), avec un compteur « NN/24 » :
+**Incrustations** (`montage.html`) :
 1. « UNE JOURNÉE PERDUE » derrière Derrick.
 2. La carte stylisée, l'épingle et « à quelques mètres ».
 3. Le bandeau « Derrick Dodoo, fondateur d'OJA », avec le filet aux couleurs du Bénin.
@@ -52,11 +52,14 @@ La consigne complète est dans `CLAUDE.md`.
 
 **Musique :** générée par `src/music_v1.py`, donc libre de droits, et mixée environ 21 dB sous la voix par `src/mix.sh`.
 
-**En attente**
-- Les badges officiels des stores : pour l'instant, l'écran de fin affiche le texte « App Store · Google Play ».
-- Une vraie photo de devanture libre de droits : les maquettes utilisent une illustration.
-- Les enregistrements d'écran de l'app : les écrans sont pour l'instant des maquettes avec les libellés exacts.
-- Les versions 60 s et accroche, à faire après validation.
+**Version 2 (retours de Derrick)**
+- Le compteur « NN/24 » en haut est retiré.
+- Les logos App Store et Google Play envoyés par Derrick sont dans `assets/store-app-store.png` et `assets/store-google-play.png`. Ils apparaissent sur « Téléchargez OJA » et sur l'écran de fin.
+- La devanture d'« Atelier Vulcanisation Gbèto » est une photo générée par IA (ElevenLabs, Nano Banana 2 Lite) : `assets/devanture-gbeto.jpg`. On y voit une rue propre de Cotonou.
+- L'écran d'accueil reprend le vrai haut de l'app (`../motion/store/captures/accueil.png`).
+- « Enregistrer un lieu » et la fiche du commerce restent en maquette, avec les libellés exacts : il n'existe pas encore de vraie capture de ces écrans.
+
+**En attente :** les versions 60 s et accroche, à faire après validation.
 
 **Refaire :**
 1. `python3 src/cut.py work/rush_stt.json`
