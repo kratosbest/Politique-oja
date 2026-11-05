@@ -25,15 +25,15 @@ Les questions s'affichent en grand à l'écran. Un ami peut aussi les poser hors
 
 Les idées, dites sans insister :
 - on s'enregistre depuis sa place ou sa boutique, et OJA nous met sur la carte à cet endroit ;
-- le client arrive sans se perdre, appelle, ou écrit sur WhatsApp ;
+- c'est pour les **nouveaux** clients, ceux qui ne vous connaissent pas encore (les clients habituels, eux, savent déjà où vous trouver ou vous appellent) : ils vous trouvent sur la carte, arrivent sans se perdre, appellent ou écrivent sur WhatsApp ;
 - la fin appelle à un geste collectif, dont on peut être fier : une maman, puis sa voisine, puis tout le marché.
 
-1. *« Derrick, pourquoi je vais télécharger OJA ? »*
-   « Tu as une boutique, un atelier, un maquis… ou une place au marché ? Demain, un client va te chercher. Et s'il ne te trouve pas… *(pause)* il va chez le voisin. »
+1. *« Derrick, mes clients me connaissent déjà. Pourquoi je vais télécharger OJA ? »*
+   « Tes clients, oui. Mais les nouveaux ? Celui qui vient d'un autre quartier… celui qui arrive au Bénin… celui qui cherche exactement ce que tu vends. Lui, il ne te connaît pas. Et s'il ne te trouve pas… *(pause)* il achète ailleurs. »
 2. *« Mais moi, je vends au marché. Il n'y a pas d'adresse. »*
    « Justement. Maman de Tokpa, toi qui vends dans les nouveaux marchés : reste à ta place. Tu ouvres OJA, tu enregistres ton commerce : ton nom, ce que tu vends, tes photos, ton repère (la rangée, la porte…) et OJA te place sur la carte, exactement là où tu es. C'est en ligne tout de suite. Gratuitement. »
-3. *« Et le client, il me trouve comment ? »*
-   « Il tape ton nom, il voit si tu es ouvert… et il arrive jusqu'à ta place sans se perdre. Il peut t'appeler, ou même t'écrire sur WhatsApp. »
+3. *« Et ce nouveau client, il me trouve comment ? »*
+   « Il ouvre la carte OJA. Il voit ta place, ce que tu vends, si tu es ouvert… et il arrive jusqu'à toi sans se perdre. Il peut t'appeler, ou même t'écrire sur WhatsApp. »
 4. *« Et pourquoi je te ferais confiance ? »*
    « Parce que je suis Derrick, je suis béninois, comme toi. Nos mamans font vivre ce pays. Et OJA, on l'a faite ici… *(pause)* pour nous. »
 5. **Imagine** (plus lentement, c'est le moment de fierté)
@@ -59,9 +59,9 @@ Ce que Derrick a confirmé le 5 novembre 2026 :
 
 | Bloc | Écran | Titre | Étiquette |
 |---|---|---|---|
-| 1 | La question en grand sur fond orange, puis votre visage avec le bandeau « Derrick Dodoo, fondateur d'OJA » | « Pourquoi télécharger OJA ? » | aucune |
+| 1 | La question en grand sur fond orange, puis votre visage avec le bandeau « Derrick Dodoo, fondateur d'OJA » ; « Mais les nouveaux ? » en grand ; trois silhouettes (un autre quartier, un visiteur, quelqu'un qui cherche) | « Mais les nouveaux clients ? » | aucune |
 | 2 | Une maman à sa place au marché (avec son accord) ; « Enregistrer un lieu », puis « Commerce », « Description / Service proposé », « Indice de localisation / Quartier », la galerie photos, « ENREGISTRER LE LIEU » et « Votre lieu est en ligne » ; un point qui se pose sur la carte | « Depuis ta place » | « Gratuit » |
-| 3 | La fiche : OUVERT, Horaires, Itinéraire, Appeler, WhatsApp, S'Y RENDRE AVEC OJA (zoom sur Appeler et WhatsApp) | « On arrive sans se perdre » | « Appel · WhatsApp » |
+| 3 | « Carte des lieux Oja » avec un zoom jusqu'à la place (noms floutés), puis la fiche : OUVERT, Horaires, Itinéraire, Appeler, WhatsApp, S'Y RENDRE AVEC OJA (zoom sur Appeler et WhatsApp) | « On arrive sans se perdre » | « Appel · WhatsApp » |
 | 4 | Votre visage, lent zoom | aucun | aucune |
 | 5 | Vue du marché, puis une carte où les points apparaissent un à un, de plus en plus nombreux | « Imagine » | « Tokpa · nouveaux marchés » |
 | 6 | « 1 maman », puis « 2 », puis « tout le marché », et les points qui se multiplient | « Ensemble » | aucune |
