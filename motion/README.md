@@ -983,3 +983,35 @@ L'écran de fin montre « 23 effets, une seule vidéo », « Vends tranquille. �
 **Son :** `python3 src/music38.py out.wav assets/fx/voix_fx.mp3 ffmpeg`, puis encodage en m4a vers `assets/soundtrack_effets_reel.m4a`. La musique a un petit accent à chaque changement d'effet, baisse sous la voix et ne contient aucun bruit de « whoosh ».
 
 **Rendu :** `src/render_video.sh oja_effets_reel.html 23 assets/soundtrack_effets_reel.m4a OJA_Effets_VendsTranquille_9x16.mp4 ffmpeg`
+
+## OJA — « Deux formules » (9:16, 60 s)
+
+`OJA_DeuxFormules_9x16.mp4` (1080 × 1920, 30 fps) reprend le rythme et la structure du texte d'une pub VTC de référence envoyée par l'équipe : fond sombre, mots qui sortent d'un flou, pastilles, téléphones en 3D, calendrier et carte finale avec les stores. Le texte a été réécrit avec les seules fonctions réelles d'OJA. La voix est celle d'Isac (`assets/frm/voix_forfaits.mp3`, à partir de 0,5 s ; texte dans `voix_forfaits.txt`).
+
+**Scènes :**
+1. « Découvrez », logo, accueil de l'appli.
+2. Chauffeurs, deux formules :
+   - pass illimité : 0 % de commission, pour 24 h, 7 jours ou 1 mois ;
+   - sans pass : 15 % seulement par course, « moins que les autres applis » (aucun concurrent n'est nommé ni chiffré).
+3. Réserver à l'avance ou commander tout de suite (calendrier).
+4. Prix affiché avant le départ : vraie capture « Choisissez votre course », prix floutés.
+5. La carte : fini les recherches interminables. Recherche d'un lieu fictif, « Atelier Vulcanisation Gbèto ».
+6. Moto, tricycle, voiture.
+7. La qualité :
+   - fiche chauffeur (exemple fictif) ;
+   - espèces ou Mobile Money ;
+   - en cas de panne, un autre chauffeur au même prix.
+8. « Voyager l'esprit tranquille ».
+9. « Simple, clair, sans marchandage ».
+10. Carte « Oja App, Téléchargez », logos des stores, téléphones, « OJA, on roule ensemble ! ».
+
+**Mention à l'écran :** « Pass illimité : 24 h, 7 jours ou 1 mois · Prix des pass fixés par OJA ». Aucun montant n'apparaît à l'écran.
+
+**Captures :** dans `assets/frm/` :
+- `course_m.jpg` : prix et durées floutés, bandeau carte et logo Google retirés ;
+- `accueil_m.jpg` : la fiche de test est remplacée par la fiche fictive ;
+- `tricycle.jpg`.
+
+**Son :** `python3 src/music39.py assets/frm/music_mix.wav assets/frm/voix_forfaits.mp3 ffmpeg`, puis `loudnorm=I=-14` en m4a vers `assets/soundtrack_forfaits_reel.m4a`. Pas de « whoosh ».
+
+**Rendu :** `src/forfaits_render.sh` (depuis `motion/`).

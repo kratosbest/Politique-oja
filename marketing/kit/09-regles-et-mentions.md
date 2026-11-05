@@ -45,3 +45,10 @@
 
 ## Fonction mise en avant en premier
 - **Mettre son entreprise sur la carte** : boutique, atelier, restaurant, petit business. Au Bénin, se faire trouver sans adresse précise est un casse-tête ; sur OJA, on ajoute son lieu (nom, catégorie, point exact, photos) et on le trouve par le nom que les gens lui donnent. « C'est mon commerce » (revendiquer sa fiche) arrive avec la prochaine version : ne pas le promouvoir avant.
+
+## Commission chauffeurs (chiffres donnés par Derrick, 5 novembre 2026)
+- **Pass illimité** : 0 % de commission pendant 24 h, 7 jours ou 1 mois.
+- **Sans pass** : 15 % de commission par course.
+- On peut dire « moins que les autres applis », sans nommer ni chiffrer un concurrent.
+- Ne pas afficher le prix des pass. Écrire « Prix des pass fixés par OJA ».
+- Vérifier que le Centre de contrôle est bien réglé sur 15 % au Bénin avant chaque diffusion.
