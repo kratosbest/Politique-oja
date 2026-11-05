@@ -155,12 +155,27 @@ Fichier : `exports/OJA-video3-pourquoi-telecharger.mp4`, en 1080 × 1920, 30 fps
   - la « Carte des lieux », avec les noms floutés et le logo Google retiré.
   - Le message vert « Votre lieu est en ligne » est refait à l'identique.
 - **Plats** : photos générées par IA, Nano Banana 2 Lite (`assets/plats/`, environ 4 100 crédits). On les remplace par de vrais plans dès qu'il y en a.
-- **Musique** : le même son que la vidéo 1 (`src/music.py`), forte après « Merci ».
+- **Musique** : le son TikTok envoyé par Derrick le 5 novembre, une chanson sur le Bénin.
+  - Il est extrait de `reference/fond_tiktok2.mp4` vers `work/fond2.wav`, deux dossiers non suivis par git.
+  - Le jingle TikTok (à 59,75 s) n'est jamais utilisé.
+  - Sous la voix, la musique est à environ -41 LUFS, avec un creux d'égaliseur pour que les paroles chantées ne gênent pas la voix.
+  - Après « Merci », on entend « Le Bénin est beau, c'est beau… » en fort (`src/music.py`).
+  - Ce morceau contient la phrase « Le pays de Talon » (à 30 s du morceau). Elle n'est audible que sous la voix, très bas.
+- **Voix** : -14 LUFS (plus forte, demandé par Derrick) ; questions à -15 LUFS.
+- **Effets** :
+  - grands mots derrière Derrick, avec un contour blanc : NOUVEAUX, TOKPA, TOI AUSSI, BÉNINOIS, IMAGINE, ENSEMBLE, FIERS. Les silhouettes sont calculées avec `src/masks.py`, seulement pour ces passages, sans lissage d'une coupe à l'autre ;
+  - zooms « coup de poing » sur les mots clés et lente avancée après chaque coupe ;
+  - flash et lumière orange à chaque nouveau bloc ;
+  - glitch quand une question s'ouvre ou se ferme ;
+  - tremblement sur « il achète ailleurs » ;
+  - étincelles sur « gratuit » ;
+  - confettis aux couleurs du Bénin sur « fiers » ;
+  - couleurs plus chaudes et vignettage.
 - **Refaire** (depuis `video3/`) :
   1. `python3 src/cut.py`
-  2. `python3 src/music.py ../video1/work/fond_sonore.wav work/music.wav`
+  2. `ffmpeg -i reference/fond_tiktok2.mp4 -vn -ac 2 -ar 48000 work/fond2.wav`, puis `python3 src/music.py work/fond2.wav work/music.wav`
   3. `src/mix.sh`
-  4. `ffmpeg -i work/edit.mp4 -vf fps=24 -q:v 3 work/frames/f%04d.jpg`
+  4. `ffmpeg -i work/edit.mp4 -vf fps=24 -q:v 3 work/frames/f%04d.jpg`, puis les masques : `python src/masks.py work/frames A B` (dans le venv rembg) pour 168-216, 544-626, 1101-1128, 1994-2042, 2195-2232 et 2771-2882
   5. le petit script de `data/montage_data.js` (voir l'historique git)
   6. `src/render.sh`
 - **Après validation** : couper la version courte (blocs 1, 2, 3, 7 et 8).

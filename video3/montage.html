@@ -85,7 +85,7 @@ const T = {
   ensemble: wt(8, 'ensemble'), fiers: wt(8, 'fiers'), telecharge: wt(8, 'téléchargez'), compte: wt(8, 'compte'), merci: wt(8, 'merci'),
 };
 const PH2 = [T.ouvrez - .35, be(2) - .25], PH4 = [T.ouvrent - .35, be(4) - .25];
-const SP3 = [T.atassi - .45, be(3) - .25], SP6 = [T.imagine - .3, be(6) + .1], SP7 = [be(6) + .1, be(7) - .25];
+const SP3 = [T.atassi - .45, be(3) - .25], SP6 = [T.tokpa + .05, be(6) + .1], SP7 = [be(6) + .1, be(7) - .25];
 
 /* ---------- image cache (frames: small LRU) ---------- */
 const CACHE = new Map(), PENDING = new Set();
@@ -99,10 +99,34 @@ function need(src, keep = false) {
 }
 const pad4 = n => String(n).padStart(4, '0');
 const frameIdx = t => Math.max(0, Math.min(NF - 1, Math.floor(Math.min(t, DUR - .05) * FPS_SRC)));
-const FR = i => `work/frames/f${pad4(i + 1)}.jpg`;
+const FR = i => `work/frames/f${pad4(i + 1)}.jpg`, MK = i => `work/frames/m${pad4(i + 1)}.png`;
+/* ---------- effects ---------- */
+// big titles behind Derrick (person masks from src/masks.py, only for these moments)
+const BEN5 = wt(5, 'béninois');
+const BEHIND = [[T.nouveaux - .1, T.nouveaux + 1.7, 'NOUVEAUX', 'or'], [T.maman - .1, T.restez - .15, 'TOKPA', 'or'], [T.toi - .1, T.atassi - .5, 'TOI AUSSI', 'wh'],
+  [BEN5 - .1, BEN5 + 1.6, 'BÉNINOIS', 'flag'], [T.imagine - .1, T.tokpa + .25, 'IMAGINE', 'or'], [T.ensemble - .1, T.fiers - .1, 'ENSEMBLE', 'or'], [T.fiers - .1, T.telecharge - .15, 'FIERS', 'flag']];
+const PUNCH = [T.nouveaux, T.achete, T.maman, T.restez, T.gratuit, T.atassi, T.mets, T.whatsapp, T.derrick, T.imagine, T.monde, T.ensemble, T.fiers, T.merci];
+const FLASH = [1, 2, 3, 4, 5, 6, 7, 8].map(b => bs(b)).concat([END]);
+const punch = t => { let a = 0; for (const p of PUNCH) { const k = t - p; if (k > -.05 && k < .6) a = Math.max(a, k < .08 ? eo((k + .05) / .13) : 1 - eio((k - .08) / .52)); } return 1 + .09 * a; };
+const [oc, ox] = (() => { const c = document.createElement('canvas'); c.width = W; c.height = H; return [c, c.getContext('2d')]; })();
+const [pc, px] = (() => { const c = document.createElement('canvas'); c.width = W; c.height = H; return [c, c.getContext('2d')]; })();
+const [hc, hx] = (() => { const c = document.createElement('canvas'); c.width = W; c.height = H; return [c, c.getContext('2d')]; })();
+function hard(mk) { hx.clearRect(0, 0, W, H); for (let i = 0; i < 5; i++) hx.drawImage(mk, 0, 0, W, H); return hc; }   // stacks the soft mask: the white shirt stays solid
+function person(fr, mk) { px.globalCompositeOperation = 'source-over'; px.clearRect(0, 0, W, H); px.drawImage(fr, 0, 0, W, H); px.globalCompositeOperation = 'destination-in'; px.drawImage(mk, 0, 0, W, H); px.globalCompositeOperation = 'source-over'; return pc; }
+function outline(mk, w = 9) { ox.globalCompositeOperation = 'source-over'; ox.clearRect(0, 0, W, H); for (let a = 0; a < 12; a++) ox.drawImage(mk, Math.cos(a / 12 * 6.283) * w, Math.sin(a / 12 * 6.283) * w);
+  ox.globalCompositeOperation = 'source-in'; ox.fillStyle = '#fff'; ox.fillRect(0, 0, W, H); ox.globalCompositeOperation = 'destination-out'; ox.drawImage(mk, 0, 0); ox.globalCompositeOperation = 'source-over'; return oc; }
+function bigWord(txt, kind, t, a, b) { const n = txt.length; ctx.save(); ctx.font = '900 100px Inter'; const size = Math.min(300, 100 * 1000 / (ctx.measureText(txt).width * .98)); ctx.font = `900 ${size}px Inter`; ctx.textBaseline = 'middle';
+  const tw = ctx.measureText(txt).width + (n - 1) * -size * .02, x0 = 540 - tw / 2, y = 720, out = eio(lin(t, b - .25, b)); let x = x0;
+  for (let i = 0; i < n; i++) { const ch = txt[i], w = ctx.measureText(ch).width - size * .02, p = eo(lin(t, a + i * .035, a + i * .035 + .35));
+    let col = kind === 'wh' ? '#fff' : OR; if (kind === 'flag') col = i < n * .34 ? BJ[0] : i < n * .67 ? BJ[1] : BJ[2];
+    ctx.globalAlpha = p * (1 - out); ctx.fillStyle = col; ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 30;
+    ctx.save(); ctx.translate(x + w / 2, y + (1 - p) * 160 - out * 40); ctx.scale(1 + (1 - p) * .4 + out * .15, 1 + (1 - p) * .4 + out * .15); ctx.fillText(ch, -w / 2, 0); ctx.restore(); x += w; }
+  ctx.restore(); }
+const CONF = (() => { const r = rng(55); return Array.from({ length: 140 }, () => ({ x: r() * W, d: r() * .6, v: 500 + r() * 700, s: 10 + r() * 16, c: BJ[Math.floor(r() * 3)], w: r() * 6.283, sp: 2 + r() * 6 })); })();
+const SPARK = (() => { const r = rng(66); return Array.from({ length: 40 }, () => ({ a: r() * 6.283, v: 300 + r() * 600, c: r() < .5 ? '#FFD27A' : '#fff' })); })();
 const cv = $('cv'), ctx = cv.getContext('2d');
 const ZC = [540, 820];
-const zoomAt = t => { let k = 0; for (const [c, big] of EDIT.cuts) if (t >= c && big) k++; return k % 2 ? 1.1 : 1.0; };
+const zoomAt = t => { let k = 0, lc = 0; for (const [c, big] of EDIT.cuts) if (t >= c && big) { k++; lc = c; } return (k % 2 ? 1.1 : 1.0) * (1 + .035 * cl((t - lc) / 5)); };
 
 /* ---------- stylized map (top panel) and pins ---------- */
 const MAPC = document.createElement('canvas'); MAPC.width = 1080; MAPC.height = 960;
@@ -208,13 +232,24 @@ function draw(t) {
   const ph = Math.max(eio(Math.min(lin(t, PH2[0], PH2[0] + .5), 1 - lin(t, PH2[1] - .4, PH2[1]))), eio(Math.min(lin(t, PH4[0], PH4[0] + .5), 1 - lin(t, PH4[1] - .4, PH4[1]))));
   const sp = Math.max(...[SP3, SP6, SP7].map(([a, b]) => eio(Math.min(lin(t, a, a + .5), 1 - lin(t, b - .4, b)))), t >= SP6[0] && t < SP7[1] ? 1 : 0) * (t >= SP6[0] + .5 && t < SP7[1] - .4 ? 1 : 1);
   const spv = t >= SP6[0] && t <= SP7[1] ? Math.min(eio(lin(t, SP6[0], SP6[0] + .5)), 1 - eio(lin(t, SP7[1] - .4, SP7[1]))) : Math.max(...[SP3].map(([a, b]) => eio(Math.min(lin(t, a, a + .5), 1 - lin(t, b - .4, b)))));
-  const z = zoomAt(t) * (q ? 1.06 + .03 * lin(t, q[0], q[1]) : 1) * (t >= bs(5) && t < be(5) ? 1 + .05 * lin(t, bs(5), be(5)) : 1);
+  const z = punch(t) * zoomAt(t) * (q ? 1.06 + .03 * lin(t, q[0], q[1]) : 1) * (t >= bs(5) && t < be(5) ? 1 + .05 * lin(t, bs(5), be(5)) : 1);
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
   // video: phone mode reframes Derrick to the right, split mode moves him down under the top panel
   const vz = z * (1 + .32 * ph), vdx = 165 * ph, vdy = 400 * spv + 60 * ph;
   const qa = q ? Math.min(eo(lin(t, q[0] - .05, q[0] + .25)), 1 - eo(lin(t, q[1] - .1, q[1] + .3))) : 0;
-  ctx.filter = qa || endA ? `blur(${18 * Math.max(qa, endA)}px) brightness(${1 - .58 * Math.max(qa, endA)})` : 'none';
-  ctx.save(); ctx.translate(ZC[0] + vdx, ZC[1] + vdy); ctx.scale(vz, vz); ctx.translate(-ZC[0], -ZC[1]); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
+  const GRADE = 'contrast(1.07) saturate(1.12)';
+  const sh = t > T.achete - .05 && t < T.achete + .6 ? 1 - lin(t, T.achete, T.achete + .6) : 0, shx = sh * 14 * Math.sin(t * 90), shy = sh * 9 * Math.cos(t * 77);
+  ctx.filter = qa || endA ? `blur(${18 * Math.max(qa, endA)}px) brightness(${1 - .58 * Math.max(qa, endA)})` : GRADE;
+  const place = () => { ctx.translate(ZC[0] + vdx + shx, ZC[1] + vdy + shy); ctx.scale(vz, vz); ctx.translate(-ZC[0], -ZC[1]); };
+  ctx.save(); place(); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
+  // a title behind Derrick: the frame, the big word, then Derrick cut out on top with a white paper outline
+  const bh = !q && !endA ? BEHIND.find(([a, b]) => t >= a && t < b) : null;
+  if (bh) { const mk0 = need(MK(fi)); if (!mk0) return false; const mk = hard(mk0); bigWord(bh[2], bh[3], t, bh[0], bh[1]);
+    const oa = eo(lin(t, bh[0], bh[0] + .3)) * (1 - eio(lin(t, bh[1] - .25, bh[1])));
+    ctx.save(); place(); ctx.globalAlpha = oa; ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 24; ctx.drawImage(outline(mk), 0, 0); ctx.restore();
+    ctx.save(); place(); ctx.filter = GRADE; ctx.drawImage(person(fr, mk), 0, 0); ctx.restore(); ctx.filter = 'none'; }
+  // vignette
+  { const vg = ctx.createRadialGradient(540, 860, 520, 540, 860, 1250); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.42)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); }
   // soft dark gradient at the top so the chips read on the chandelier light
   const g = ctx.createLinearGradient(0, 0, 0, 760); g.addColorStop(0, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, 760);
   // top panel (split mode)
@@ -251,6 +286,19 @@ function draw(t) {
     }
     ctx.restore(); ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(0, ph_ - 3, W, 3);
   }
+  // flash + orange light leak at every new block
+  for (const f of FLASH) { const k = t - f; if (k >= -.02 && k < .7) { ctx.fillStyle = `rgba(255,255,255,${.5 * (1 - lin(k, 0, .22))})`; ctx.fillRect(0, 0, W, H);
+    const lx = -300 + 1700 * eio(lin(k, 0, .7)), lg = ctx.createRadialGradient(lx, 700, 0, lx, 700, 700); lg.addColorStop(0, `rgba(255,140,40,${.38 * (1 - lin(k, .3, .7))})`); lg.addColorStop(1, 'rgba(255,140,40,0)');
+    ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over'; } }
+  // glitch when a question card opens and closes
+  for (const [a, b] of QS) for (const g0 of [a, b]) { const k = t - g0; if (k > -.05 && k < .22) { const r = rng(Math.floor(t * 30) + 7); for (let i = 0; i < 7; i++) { const y = r() * H, h = 20 + r() * 90, dx = (r() - .5) * 90; ctx.drawImage(cv, 0, y, W, h, dx, y, W, h); }
+    ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = 'rgba(255,0,80,.10)'; ctx.fillRect(6, 0, W, H); ctx.fillStyle = 'rgba(0,200,255,.08)'; ctx.fillRect(-6, 0, W, H); ctx.globalCompositeOperation = 'source-over'; } }
+  // confetti in the colors of Benin on « fiers »
+  { const k = t - T.fiers + .05; if (k > 0 && k < 3) CONF.forEach(c => { const u = k - c.d; if (u <= 0) return; const y = -40 + c.v * u, x = c.x + Math.sin(u * c.sp + c.w) * 40; if (y > H) return;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(u * c.sp); ctx.globalAlpha = 1 - lin(k, 2.2, 3); ctx.fillStyle = c.c; ctx.fillRect(-c.s / 2, -c.s / 4, c.s, c.s / 2); ctx.restore(); }); }
+  // sparks around the « GRATUIT » stamp
+  { const k = t - T.gratuit; if (k > 0 && k < .9) SPARK.forEach(p => { const d = p.v * k * (1 - k * .5); ctx.globalAlpha = 1 - k / .9; ctx.strokeStyle = p.c; ctx.lineWidth = 4; ctx.beginPath();
+    ctx.moveTo(470 + Math.cos(p.a) * d * .7, 1210 + Math.sin(p.a) * d * .7); ctx.lineTo(470 + Math.cos(p.a) * d, 1210 + Math.sin(p.a) * d); ctx.stroke(); }); ctx.globalAlpha = 1; }
   // phone content (canvas inside the phone): crisp pins on the blurred real map
   pcx.clearRect(0, 0, 396, 861);
   // ---------------- DOM ----------------
@@ -295,12 +343,12 @@ function draw(t) {
     st(e, { visibility: 'visible', opacity: cl(p * 4) * (1 - out), transform: `translateY(${(1 - bk(p)) * -420 - out * 200}px) rotate(${r * bk(p)}deg) scale(${1 - out * .3})` }); });
   show('sf', t > SP3[0] && t < SP3[1] ? win(t, T.coins - .1, SP3[1]) : 0);
   // Imagine / Ensemble
-  const bigTxt = t >= T.imagine - .1 && t < T.tokpa + .4 ? 'Imagine' : ''; $('big').textContent = bigTxt; show('big', bigTxt ? win(t, T.imagine - .1, T.tokpa + .4) : 0);
+  const bigTxt = ''; $('big').textContent = bigTxt; show('big', bigTxt ? win(t, T.imagine - .1, T.tokpa + .4) : 0);
   show('tag6', t >= T.tokpa && t < SP7[1] ? win(t, T.tokpa, SP7[1]) : 0);
   show('lbl6a', win(t, T.chaque + .3, T.monde - .1)); show('lbl6b', win(t, T.nouv6 + .2, T.monde - .1));
   const ct = t < SP7[0] || t >= SP7[1] ? '' : t < T.voisine ? '1 place' : t < T.une ? '+ ta voisine' : t < T.deux ? '1 maman' : t < T.tout7 ? '2 mamans' : 'Tout le marché';
   $('count').innerHTML = ct.replace('Tout le marché', `Tout le <span style="color:#FF8A3D">marché</span>`); show('count', ct && t >= T.mettez - .1 ? win(t, T.mettez - .1, SP7[1]) : 0, `scale(${1 + .06 * Math.sin(lin(t, T.tout7, T.tout7 + .4) * Math.PI)})`);
-  show('ens', win(t, T.ensemble - .1, END)); show('flag', win(t, T.fiers - .2, END), `scaleX(${eo(lin(t, T.fiers - .2, T.fiers + .4))})`); $('flag').style.transformOrigin = '0 50%';
+  show('ens', win(t, T.telecharge - .3, END)); show('flag', win(t, T.fiers - .2, END), `scaleX(${eo(lin(t, T.fiers - .2, T.fiers + .4))})`); $('flag').style.transformOrigin = '0 50%';
   show('stores', win(t, T.telecharge - .1, END));
   // question card
   if (q) { setQ(q[2]); const a = Math.min(eo(lin(t, q[0], q[0] + .35)), 1 - eio(lin(t, q[1] - .05, q[1] + .3)));
