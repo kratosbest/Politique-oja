@@ -111,13 +111,13 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
 <script>
 // The script of video 3 (video3/README.md): a friend asks (note in italics), Derrick answers. "~" marks a real pause.
 const SCRIPT = [
-  ['Pourquoi ?', 'On vous demande : « Derrick, pourquoi je vais télécharger OJA ? »', ["Tu as une boutique, un atelier, un maquis ?", "Demain, un client va te chercher.", "Et s'il ne te trouve pas…", "~", "il va chez le voisin."]],
-  ['Pas d\'adresse', 'On vous demande : « Mais moi, je n\'ai pas d\'adresse. »', ["Pas besoin.", "Tu es dans ta boutique ? Reste là.", "Tu ouvres OJA, tu enregistres ton commerce : le nom, tes photos…", "et OJA te place sur la carte, exactement là où tu es.", "C'est en ligne tout de suite. Gratuitement."]],
-  ['Le client', 'On vous demande : « Et le client, il me trouve comment ? »', ["Il tape ton nom, il voit si tu es ouvert…", "et il arrive chez toi sans se perdre.", "Il peut t'appeler,", "ou même t'écrire sur WhatsApp, directement depuis ta fiche."]],
-  ['Déjà du monde', 'On vous demande : « Il y a déjà du monde dessus ? »', ["Regarde la carte : ils sont déjà nombreux.", "Il ne manque plus que toi."]],
-  ['Et encore', 'On vous demande : « C\'est tout ? »', ["Non.", "Dans la même appli, tu te déplaces au prix affiché avant de partir,", "tu envoies un colis, tu commandes un repas."]],
-  ['Confiance', 'On vous demande : « Et pourquoi je te ferais confiance ? » Plus lentement, sincère.', ["Parce que je suis Derrick, je suis béninois, comme toi.", "Et OJA, on l'a faite ici…", "~", "pour nous."]],
-  ['Appel', 'Avec le sourire, droit dans l\'objectif.', ["Alors, reste dans ta boutique,", "télécharge Oja App…", "et mets-toi sur la carte.", "Je t'attends."]],
+  ["Pourquoi ?", "On vous demande : « Derrick, pourquoi je vais télécharger OJA ? »", ["Tu as une boutique, un atelier, un maquis…", "ou une place au marché ?", "Demain, un client va te chercher.", "Et s'il ne te trouve pas…", "~", "il va chez le voisin."]],
+  ["Au marché", "On vous demande : « Mais moi, je vends au marché. Il n'y a pas d'adresse. »", ["Justement.", "Maman de Tokpa, toi qui vends dans les nouveaux marchés :", "reste à ta place.", "Tu ouvres OJA, tu enregistres ton commerce :", "ton nom, ce que tu vends, tes photos, ton repère — la rangée, la porte…", "et OJA te place sur la carte, exactement là où tu es.", "C'est en ligne tout de suite. Gratuitement."]],
+  ["Le client", "On vous demande : « Et le client, il me trouve comment ? »", ["Il tape ton nom, il voit si tu es ouvert…", "et il arrive jusqu'à ta place sans se perdre.", "Il peut t'appeler,", "ou même t'écrire sur WhatsApp."]],
+  ["Confiance", "On vous demande : « Et pourquoi je te ferais confiance ? »", ["Parce que je suis Derrick, je suis béninois, comme toi.", "Nos mamans font vivre ce pays.", "Et OJA, on l'a faite ici…", "~", "pour nous."]],
+  ["Imagine", "Plus lentement, voix posée. C'est le moment de fierté.", ["Maintenant, imagine.", "Tokpa, l'un des plus grands marchés d'Afrique de l'Ouest…", "avec chaque place, chaque maman, visible sur la carte.", "Et nos nouveaux marchés aussi.", "Le monde entier verra ce qu'on sait faire, ici, au Bénin."]],
+  ["Ensemble", "Droit dans l'objectif, plus d'énergie.", ["Alors voilà ce que je te demande.", "Aujourd'hui, mets ta place sur la carte.", "Ensuite, aide ta voisine à faire pareil.", "Une maman, puis deux…", "~", "puis tout le marché."]],
+  ["Appel", "Avec le sourire, fier.", ["Ensemble, on met nos marchés sur la carte.", "Et on en sera fiers.", "Télécharge Oja App.", "Je compte sur toi."]],
 ];
 const $ = id => document.getElementById(id);
 const text = $('text'), scroller = $('scroller'), stage = $('stage');

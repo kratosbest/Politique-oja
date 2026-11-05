@@ -19,25 +19,37 @@ Derrick face caméra répond à une seule question, « Pourquoi télécharger OJ
 - On revient souvent sur son visage. C'est lui qui fait la confiance.
 - La fin a du sens (« par nous-mêmes et pour nous-mêmes »), puis vient une carte « Télécharge… » avec les stores et le slogan.
 
-## Texte à dire (environ 60 s) : un ami pose les questions, Derrick répond
+## Texte à dire (environ 70 s) : on interpelle les commerçants, jusqu'aux mamans de Tokpa
 
-Les questions s'affichent en grand à l'écran. Un ami peut aussi les poser hors champ : ce sera pratique pour la version en goun. L'idée, dite sans insister : on enregistre son commerce **depuis sa boutique**, OJA le place sur la carte à cet endroit, et les clients arrivent sans se perdre, appellent ou écrivent sur WhatsApp.
+Les questions s'affichent en grand à l'écran. Un ami peut aussi les poser hors champ, ce qui sera pratique pour la version en goun.
+
+Les idées, dites sans insister :
+- on s'enregistre depuis sa place ou sa boutique, et OJA nous met sur la carte à cet endroit ;
+- le client arrive sans se perdre, appelle, ou écrit sur WhatsApp ;
+- la fin appelle à un geste collectif, dont on peut être fier : une maman, puis sa voisine, puis tout le marché.
 
 1. *« Derrick, pourquoi je vais télécharger OJA ? »*
-   « Tu as une boutique, un atelier, un maquis ? Demain, un client va te chercher. Et s'il ne te trouve pas… *(pause)* il va chez le voisin. »
-2. *« Mais moi, je n'ai pas d'adresse. »*
-   « Pas besoin. Tu es dans ta boutique ? Reste là. Tu ouvres OJA, tu enregistres ton commerce : le nom, tes photos… et OJA te place sur la carte, exactement là où tu es. C'est en ligne tout de suite. Gratuitement. »
+   « Tu as une boutique, un atelier, un maquis… ou une place au marché ? Demain, un client va te chercher. Et s'il ne te trouve pas… *(pause)* il va chez le voisin. »
+2. *« Mais moi, je vends au marché. Il n'y a pas d'adresse. »*
+   « Justement. Maman de Tokpa, toi qui vends dans les nouveaux marchés : reste à ta place. Tu ouvres OJA, tu enregistres ton commerce : ton nom, ce que tu vends, tes photos, ton repère (la rangée, la porte…) et OJA te place sur la carte, exactement là où tu es. C'est en ligne tout de suite. Gratuitement. »
 3. *« Et le client, il me trouve comment ? »*
-   « Il tape ton nom, il voit si tu es ouvert… et il arrive chez toi sans se perdre. Il peut t'appeler, ou même t'écrire sur WhatsApp, directement depuis ta fiche. »
-4. *« Il y a déjà du monde dessus ? »*
-   « Regarde la carte : ils sont déjà nombreux. Il ne manque plus que toi. »
-5. *« C'est tout ? »*
-   « Non. Dans la même appli, tu te déplaces au prix affiché avant de partir, tu envoies un colis, tu commandes un repas. »
-6. *« Et pourquoi je te ferais confiance ? »* (plus lentement)
-   « Parce que je suis Derrick, je suis béninois, comme toi. Et OJA, on l'a faite ici… *(pause)* pour nous. »
-7. **Appel** (avec le sourire) : « Alors, reste dans ta boutique, télécharge Oja App… et mets-toi sur la carte. Je t'attends. »
+   « Il tape ton nom, il voit si tu es ouvert… et il arrive jusqu'à ta place sans se perdre. Il peut t'appeler, ou même t'écrire sur WhatsApp. »
+4. *« Et pourquoi je te ferais confiance ? »*
+   « Parce que je suis Derrick, je suis béninois, comme toi. Nos mamans font vivre ce pays. Et OJA, on l'a faite ici… *(pause)* pour nous. »
+5. **Imagine** (plus lentement, c'est le moment de fierté)
+   « Maintenant, imagine. Tokpa, l'un des plus grands marchés d'Afrique de l'Ouest… avec chaque place, chaque maman, visible sur la carte. Et nos nouveaux marchés aussi. Le monde entier verra ce qu'on sait faire, ici, au Bénin. »
+6. **Ensemble** (plus d'énergie)
+   « Alors voilà ce que je te demande. Aujourd'hui, mets ta place sur la carte. Ensuite, aide ta voisine à faire pareil. Une maman, puis deux… *(pause)* puis tout le marché. »
+7. **Appel** (avec le sourire, fier)
+   « Ensemble, on met nos marchés sur la carte. Et on en sera fiers. Télécharge Oja App. Je compte sur toi. »
 
-Version courte : les blocs 1, 2, 3, 4 et 7.
+Version courte : les blocs 1, 2, 3, 6 et 7.
+
+Pourquoi chaque phrase est juste :
+- « ton repère » correspond au champ « Indice de localisation / Quartier ».
+- « ce que tu vends » correspond au champ « Description / Service proposé ».
+- On peut aider sa voisine, parce qu'on peut enregistrer un lieu qui n'est pas le sien (« Non, je référence ce lieu »).
+- Le bloc « Imagine » montre une carte qui se remplit, avec le mot « Imagine » à l'écran : c'est une projection, pas un chiffre réel.
 
 Ce que Derrick a confirmé le 5 novembre 2026 :
 - Après « ENREGISTRER LE LIEU », l'appli affiche « Votre lieu est en ligne ».
@@ -48,12 +60,12 @@ Ce que Derrick a confirmé le 5 novembre 2026 :
 | Bloc | Écran | Titre | Étiquette |
 |---|---|---|---|
 | 1 | La question en grand sur fond orange, puis votre visage avec le bandeau « Derrick Dodoo, fondateur d'OJA » | « Pourquoi télécharger OJA ? » | aucune |
-| 2 | Vous dans la boutique ; « Enregistrer un lieu », puis « Commerce », la galerie photos, « ENREGISTRER LE LIEU » et « Votre lieu est en ligne » ; un point qui se pose sur la carte, là où vous êtes | « Depuis ta boutique » | « Gratuit » |
+| 2 | Une maman à sa place au marché (avec son accord) ; « Enregistrer un lieu », puis « Commerce », « Description / Service proposé », « Indice de localisation / Quartier », la galerie photos, « ENREGISTRER LE LIEU » et « Votre lieu est en ligne » ; un point qui se pose sur la carte | « Depuis ta place » | « Gratuit » |
 | 3 | La fiche : OUVERT, Horaires, Itinéraire, Appeler, WhatsApp, S'Y RENDRE AVEC OJA (zoom sur Appeler et WhatsApp) | « On arrive sans se perdre » | « Appel · WhatsApp » |
-| 4 | « Carte des lieux Oja », remplie de points (noms floutés) | « Ils sont déjà sur la carte » | « Partout au Bénin » |
-| 5 | « Choisissez votre course » (prix floutés), livraison, Market | « Tout dans une seule appli » | « Moto · Tricycle · Voiture » |
-| 6 | Votre visage, lent zoom | aucun | aucune |
-| 7 | Carte « Oja App », Téléchargez, App Store et Google Play | « Mets-toi sur la carte » | aucune |
+| 4 | Votre visage, lent zoom | aucun | aucune |
+| 5 | Vue du marché, puis une carte où les points apparaissent un à un, de plus en plus nombreux | « Imagine » | « Tokpa · nouveaux marchés » |
+| 6 | « 1 maman », puis « 2 », puis « tout le marché », et les points qui se multiplient | « Ensemble » | aucune |
+| 7 | Carte « Oja App », Téléchargez, App Store et Google Play | « On met nos marchés sur la carte » | aucune |
 
 Retouches sur les captures :
 - **Fiche** : les fiches de test (« shawarma », « bxbbxjx ») sont remplacées par un commerce réel avec accord écrit, ou par l'exemple fictif « Atelier Vulcanisation Gbèto ».
@@ -71,7 +83,7 @@ Retouches sur les captures :
    - « Carte des lieux Oja » : un glissement sur la carte, un zoom.
    - Une commande de course, jusqu'à « Choisissez votre course ».
 3. **Un vrai commerce avec l'accord écrit du propriétaire**, pour la fiche. Sinon, je garde l'exemple fictif. Ne créez pas de faux commerce dans l'appli : il resterait en ligne.
-4. **Si possible, tournez les blocs 2 et 7 dans une vraie boutique**, avec l'accord écrit du propriétaire. On comprend alors tout de suite l'idée : « je reste ici et je m'enregistre ».
+4. **Si possible, tournez les blocs 2, 6 et 7 au marché (Tokpa ou un nouveau marché)**, avec l'accord écrit des commerçantes filmées. Le mieux : vous enregistrez la place d'une maman devant la caméra, avec elle. Prenez aussi quelques plans du marché (allées, étals, mamans qui saluent), là encore avec leur accord.
 
 ## Au montage
 - Le rythme de la référence : votre visage, puis l'écran, puis votre visage. Un titre en haut, une étiquette en bas, et le logo OJA en petit en haut à droite sur les plans de vous.
