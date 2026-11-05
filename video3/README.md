@@ -134,3 +134,33 @@ Retouches sur les captures :
 - Les sous-titres suivent ce que vous dites.
 - La même musique de fond que la vidéo 1.
 - Ensuite, la version en goun, avec les mêmes images, sans sous-titres.
+
+## Montage (version principale, 2 min 10 s)
+Fichier : `exports/OJA-video3-pourquoi-telecharger.mp4`, en 1080 × 1920, 30 fps, AAC 48 kHz.
+
+- **Prises utilisées**, toutes dans `rushes/`, qui n'est pas suivi par git :
+  - bloc 1 : IMG_1035 ;
+  - bloc 2 : IMG_1037 (IMG_1036 est un faux départ, et « comme à Tokpa » est retiré parce qu'il répète « maman de Tokpa ») ;
+  - bloc 3 : IMG_1043 ;
+  - bloc 4 : la 1re phrase d'IMG_1044, puis IMG_1038 ;
+  - bloc 5 : IMG_1039 ;
+  - bloc 6 : IMG_1040 ;
+  - bloc 7 : IMG_1041 ;
+  - bloc 8 : IMG_1042.
+- **Questions** : cartes à l'écran et voix d'Alimata (`assets/q/`), environ 190 crédits.
+- **Rythme** : les silences sont raccourcis et les réponses passent 10 % plus vite. Le zoom change à chaque grosse coupe.
+- **Écrans réels** (`assets/app/`) :
+  - « Enregistrer un lieu » et « Galerie photos » ;
+  - la fiche, où la fiche de test est remplacée par l'exemple fictif « Chez Maman Rose » ;
+  - la « Carte des lieux », avec les noms floutés et le logo Google retiré.
+  - Le message vert « Votre lieu est en ligne » est refait à l'identique.
+- **Plats** : photos générées par IA, Nano Banana 2 Lite (`assets/plats/`, environ 4 100 crédits). On les remplace par de vrais plans dès qu'il y en a.
+- **Musique** : le même son que la vidéo 1 (`src/music.py`), forte après « Merci ».
+- **Refaire** (depuis `video3/`) :
+  1. `python3 src/cut.py`
+  2. `python3 src/music.py ../video1/work/fond_sonore.wav work/music.wav`
+  3. `src/mix.sh`
+  4. `ffmpeg -i work/edit.mp4 -vf fps=24 -q:v 3 work/frames/f%04d.jpg`
+  5. le petit script de `data/montage_data.js` (voir l'historique git)
+  6. `src/render.sh`
+- **Après validation** : couper la version courte (blocs 1, 2, 3, 7 et 8).

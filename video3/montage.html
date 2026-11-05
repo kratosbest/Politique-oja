@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — Vidéo 3, pourquoi télécharger OJA</title>
+<link rel="stylesheet" href="../motion/fonts/local.css">
+<style>
+/* Video 3 (video3/README.md): a market woman's questions (cards + Alimata's voice), Derrick answers to camera.
+   Frames of the edit: work/frames/fNNNN.jpg (24 fps, src/cut.py). Rendered at 30 fps, 1080 x 1920 (src/render.sh).
+   Safe zones kept clear: 250 px top, 420 px bottom, 160 px right (except decorative edges). One type family (Inter). No emoji. */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{position:relative;font-family:Inter,sans-serif;color:#fff}
+canvas{position:absolute;left:0;top:0}
+.abs{position:absolute}
+.v{visibility:hidden}
+#sub{position:absolute;left:60px;right:160px;top:1300px;text-align:center;font:800 74px/1.08 Inter;letter-spacing:-.02em;text-shadow:0 6px 26px rgba(0,0,0,.65),0 2px 4px rgba(0,0,0,.6)}
+#sub em{font-style:normal;color:#FF7A1A}
+.pill{position:absolute;display:inline-flex;align-items:center;gap:16px;padding:18px 32px;border-radius:60px;font:800 44px Inter;white-space:nowrap;box-shadow:0 20px 50px rgba(0,0,0,.45);letter-spacing:-.01em}
+.or{background:linear-gradient(135deg,#FF9A3C,#FF6B00);color:#fff}
+.wh{background:#fff;color:#14171A}
+.dk{background:rgba(20,24,28,.86);color:#fff;border:2px solid rgba(255,255,255,.12)}
+.phone{position:absolute;left:40px;top:470px;width:428px;border-radius:62px;background:#0B0D0F;padding:16px;box-shadow:0 50px 120px rgba(0,0,0,.65),inset 0 0 0 3px #2E343A}
+.scr{position:relative;width:396px;height:861px;border-radius:48px;overflow:hidden;background:#111}
+.scr img.s{position:absolute;left:0;top:0;width:396px;display:none}
+.hl{position:absolute;border:6px solid #FF6B00;border-radius:22px;box-shadow:0 0 0 6px rgba(255,107,0,.25),0 0 40px rgba(255,107,0,.6);visibility:hidden}
+.pol{position:absolute;width:440px;padding:16px 16px 0;border-radius:20px;background:#fff;color:#14171A;box-shadow:0 30px 70px rgba(0,0,0,.55);visibility:hidden}
+.pol img{display:block;width:408px;height:228px;object-fit:cover;border-radius:12px}
+.pol div{font:800 38px/1 Inter;padding:18px 4px 20px;letter-spacing:-.01em}
+#q{position:absolute;inset:0;visibility:hidden}
+#qcard{position:absolute;left:80px;right:80px;top:700px;padding:44px 48px 52px;border-radius:44px;background:#fff;color:#14171A;box-shadow:0 50px 120px rgba(0,0,0,.6)}
+#qcard:after{content:"";position:absolute;left:90px;bottom:-34px;border:36px solid transparent;border-top-color:#fff;border-bottom:0}
+#qlab{display:flex;align-items:center;gap:18px;font:700 30px Inter;color:#6B7280;margin-bottom:26px}
+#qtext{font:800 66px/1.12 Inter;letter-spacing:-.02em}
+#qtext span{display:inline-block;white-space:pre}
+#qhead{position:absolute;left:60px;right:60px;top:330px;text-align:center;font:900 96px/1.02 Inter;letter-spacing:-.035em;text-shadow:0 10px 40px rgba(0,0,0,.5)}
+#end{position:absolute;inset:0;visibility:hidden}
+</style></head><body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="ui"></div>
+<div id="sub"></div>
+<script src="data/montage_data.js"></script>
+<script>
+const W = 1080, H = 1920, FPS_SRC = 24, DUR = EDIT.dur;
+const OR = '#FF6B00', GRN = '#159A69', BJ = ['#008751', '#FCD116', '#E8112D'];
+const NF = 3153;
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.9; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const win = (t, a, b, fi = .3, fo = .3) => Math.min(eo(lin(t, a, a + fi)), 1 - eio(lin(t, b - fo, b)));
+const $ = id => document.getElementById(id);
+const st = (e, o) => { for (const k in o) e.style[k] = o[k]; };
+function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const ICON = {
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  plane: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  out: '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M2 7h20"/><path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7"/>',
+  fire: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2.2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICON[n]}</svg>`;
+const LOGO = '../video1/assets/logo-oja-carte.png', APPLE = '../video1/assets/store-app-store.png', GPLAY = '../video1/assets/store-google-play.png';
+
+/* ---------- timeline from the words ---------- */
+const WORDS = EDIT.words, BLK = Object.fromEntries(EDIT.blocks.map(b => [b[2], b]));
+const norm = s => s.toLowerCase().replace(/[^a-zà-ÿ0-9']/g, '');
+function wt(b, pre, n = 0, end = false) { const ws = WORDS.filter(w => w[5] === b && norm(w[0]).startsWith(norm(pre))); const w = ws[n] || ws[ws.length - 1]; if (!w) { console.error('no word', b, pre); return BLK[b][0]; } return end ? w[2] : w[1]; }
+const bs = b => BLK[b][0], be = b => BLK[b][1];
+const QS = EDIT.questions, END = EDIT.end_card - .6;
+const T = {
+  nouveaux: wt(1, 'nouveaux'), quartier: wt(1, 'viennent'), benin1: wt(1, 'arrivent'), cherchent: wt(1, 'cherchent'), achete: wt(1, 'achète'),
+  maman: wt(2, 'maman'), marches: wt(2, 'nouveaux'), restez: wt(2, 'restez'), ouvrez: wt(2, 'ouvrez'), commerce: wt(2, 'commerce'), nom: wt(2, 'nom'),
+  vendez: wt(2, 'vendez', 1), photos: wt(2, 'photos'), rangee: wt(2, 'rangée'), placer: wt(2, 'placer'), ligne: wt(2, 'ligne'), gratuit: wt(2, 'gratuit'),
+  toi: wt(3, 'toi'), atassi: wt(3, 'attassi'), amiwo: wt(3, "l'amiwater"), igname: wt(3, 'yans'), aloko: wt(3, "l'aloco"), poisson: wt(3, 'poisson'),
+  coins: wt(3, 'bons'), mets: wt(3, 'mets'), viendront: wt(3, 'viendront'),
+  cherche: wt(4, 'cherche'), pain: wt(4, 'pain'), atassi4: wt(4, 'attassi'), ouvrent: wt(4, 'ouvrent'), voient: wt(4, 'voient'), vendez4: wt(4, 'vendez'),
+  ouvert: wt(4, 'ouvert'), arrivent: wt(4, 'arrivent'), perdre: wt(4, 'perdre'), appeler: wt(4, 'appeler'), whatsapp: wt(4, 'whatsapp'),
+  derrick: wt(5, "d'haïti"), mamans: wt(5, 'mamans'), oja5: wt(5, 'odja'), benin5: wt(5, 'bénin', 1), afrique: wt(5, "l'afrique"),
+  imagine: wt(6, 'imagine'), tokpa: wt(6, 'tokpa'), chaque: wt(6, 'chaque'), carte6: wt(6, 'carte'), nouv6: wt(6, 'nouveaux'), monde: wt(6, 'monde'), benin6: wt(6, 'bénin'),
+  mettez: wt(7, 'mettez'), voisine: wt(7, 'voisine'), une: wt(7, 'une'), deux: wt(7, 'deux'), tout7: wt(7, 'tout'), marche7: wt(7, 'marché'),
+  ensemble: wt(8, 'ensemble'), fiers: wt(8, 'fiers'), telecharge: wt(8, 'téléchargez'), compte: wt(8, 'compte'), merci: wt(8, 'merci'),
+};
+const PH2 = [T.ouvrez - .35, be(2) - .25], PH4 = [T.ouvrent - .35, be(4) - .25];
+const SP3 = [T.atassi - .45, be(3) - .25], SP6 = [T.imagine - .3, be(6) + .1], SP7 = [be(6) + .1, be(7) - .25];
+
+/* ---------- image cache (frames: small LRU) ---------- */
+const CACHE = new Map(), PENDING = new Set();
+function need(src, keep = false) {
+  let im = CACHE.get(src);
+  if (im) { CACHE.delete(src); CACHE.set(src, im); return im.complete && im.naturalWidth ? im : null; }
+  im = new Image(); im.src = src; im.keep = keep; CACHE.set(src, im);
+  const p = im.decode().catch(() => 0); PENDING.add(p); p.then(() => PENDING.delete(p));
+  if (CACHE.size > 40) for (const [k, v] of CACHE) { if (CACHE.size <= 40) break; if (!v.keep) CACHE.delete(k); }
+  return null;
+}
+const pad4 = n => String(n).padStart(4, '0');
+const frameIdx = t => Math.max(0, Math.min(NF - 1, Math.floor(Math.min(t, DUR - .05) * FPS_SRC)));
+const FR = i => `work/frames/f${pad4(i + 1)}.jpg`;
+const cv = $('cv'), ctx = cv.getContext('2d');
+const ZC = [540, 820];
+const zoomAt = t => { let k = 0; for (const [c, big] of EDIT.cuts) if (t >= c && big) k++; return k % 2 ? 1.1 : 1.0; };
+
+/* ---------- stylized map (top panel) and pins ---------- */
+const MAPC = document.createElement('canvas'); MAPC.width = 1080; MAPC.height = 960;
+(() => { const c = MAPC.getContext('2d'), r = rng(31); c.fillStyle = '#151A20'; c.fillRect(0, 0, 1080, 960);
+  c.fillStyle = '#1B2E3A'; c.beginPath(); c.moveTo(0, 760); c.bezierCurveTo(300, 700, 600, 820, 1080, 730); c.lineTo(1080, 960); c.lineTo(0, 960); c.fill();   // the lagoon
+  const xs = [], ys = []; for (let v = -10; v < 1100; v += 70 + r() * 40) xs.push(v); for (let v = -10; v < 760; v += 60 + r() * 40) ys.push(v);
+  for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < ys.length - 1; j++) { c.fillStyle = r() < .07 ? '#1A3324' : r() < .5 ? '#1D232B' : '#20262F'; c.beginPath(); c.roundRect(xs[i] + 7, ys[j] + 7, xs[i + 1] - xs[i] - 14, ys[j + 1] - ys[j] - 14, 6); c.fill(); }
+  c.strokeStyle = '#3A4251'; c.lineWidth = 22; c.beginPath(); c.moveTo(-20, 620); c.lineTo(1100, 380); c.stroke(); c.beginPath(); c.moveTo(380, -20); c.lineTo(640, 760); c.stroke();
+})();
+const PINS = (() => { const r = rng(77), P = [];
+  const cluster = (cx, cy, n, rad, grp) => { for (let i = 0; i < n; i++) { const a = r() * 6.283, d = Math.sqrt(r()) * rad; P.push([cx + Math.cos(a) * d * 1.3, cy + Math.sin(a) * d * .8, r(), grp]); } };
+  cluster(560, 500, 150, 170, 0); cluster(220, 330, 45, 90, 1); cluster(860, 300, 45, 90, 1); return P; })();
+function pinAt(c, x, y, s, a = 1, col = OR) { c.save(); c.globalAlpha = a; c.translate(x, y); c.scale(s, s); c.fillStyle = col; c.strokeStyle = '#fff'; c.lineWidth = 2.4;
+  c.beginPath(); c.moveTo(0, 0); c.bezierCurveTo(-4, -8, -12, -14, -12, -24); c.arc(0, -24, 12, Math.PI, 0); c.bezierCurveTo(12, -14, 4, -8, 0, 0); c.fill(); c.stroke();
+  c.fillStyle = '#fff'; c.beginPath(); c.arc(0, -24, 4.5, 0, 7); c.fill(); c.restore(); }
+const BEN = new Path2D(BENIN.d);
+
+/* ---------- DOM ---------- */
+const P = (id, cls, html, css) => `<div id="${id}" class="${cls} v" style="${css}">${html}</div>`;
+const scrImg = (id, src) => `<img id="${id}" class="s" src="${src}">`;
+$('ui').innerHTML = `
+${P('logo', 'pill dk', `<img src="${LOGO}" style="width:54px;height:54px;margin:-8px -4px -8px -14px">Oja App`, 'left:56px;top:262px;padding:12px 26px;font-size:30px')}
+${P('name', 'pill wh', `<span style="width:10px;height:70px;border-radius:5px;background:${OR}"></span><span><span style="display:block;font:800 46px Inter">Derrick Dodoo</span><span style="display:block;font:700 30px Inter;color:${OR};margin-top:4px">Fondateur d'OJA</span></span>`, 'left:56px;top:360px;border-radius:28px;padding:18px 34px 18px 22px')}
+${P('name5', 'pill wh', `<span style="display:flex;flex-direction:column;width:10px;height:70px;border-radius:5px;overflow:hidden"><i style="flex:1;background:${BJ[0]}"></i><i style="flex:1;background:${BJ[1]}"></i><i style="flex:1;background:${BJ[2]}"></i></span><span><span style="display:block;font:800 46px Inter">Derrick Dodoo</span><span style="display:block;font:700 30px Inter;color:#6B7280;margin-top:4px">Béninois · fondateur d'OJA</span></span>`, 'left:56px;top:360px;border-radius:28px;padding:18px 34px 18px 22px')}
+${P('b1', 'pill or', 'Les nouveaux clients', 'left:56px;top:360px;font-size:54px;padding:22px 40px')}
+${P('c1', 'pill wh', `${ic('pin', 40, OR, 2.6)}Nouveaux dans le quartier`, 'left:56px;top:500px')}
+${P('c2', 'pill wh', `${ic('plane', 40, OR, 2.2)}Ceux qui arrivent au Bénin`, 'left:56px;top:500px')}
+${P('c3', 'pill wh', `${ic('search', 40, OR, 2.6)}Ceux qui cherchent ce que tu vends`, 'left:56px;top:500px;font-size:38px')}
+${P('c4', 'pill dk', `${ic('out', 40, '#FF8A3D', 2.8)}Il achète ailleurs`, 'left:56px;top:500px')}
+${P('m1', 'pill or', 'Mamans de Tokpa', 'left:56px;top:360px;font-size:52px')}
+${P('m2', 'pill wh', 'Nouveaux marchés', 'left:56px;top:490px')}
+${P('m3', 'pill or', `${ic('pin', 46, '#fff', 2.6)}Restez à votre place`, 'left:56px;top:360px;font-size:54px;padding:22px 40px')}
+${P('pt2', 'pill or', 'Depuis votre place', 'left:40px;top:330px;font-size:40px;padding:14px 30px')}
+${P('pt4', 'pill or', 'On arrive sans se perdre', 'left:40px;top:330px;font-size:40px;padding:14px 30px')}
+<div id="phone" class="phone v"><div class="scr" id="scr">
+  ${scrImg('s_ajout', 'assets/app/ajout.jpg')}${scrImg('s_photos', 'assets/app/photos.jpg')}${scrImg('s_carte1', 'assets/app/carte1.jpg')}${scrImg('s_carte2', 'assets/app/carte2.jpg')}${scrImg('s_fiche', 'assets/app/fiche.jpg')}
+  <canvas id="pcv" width="396" height="861" style="position:absolute;left:0;top:0"></canvas>
+  <div id="typed" class="abs v" style="left:42px;top:${1250 * .3284 + 16}px;width:330px;height:${161 * .3284 - 32}px;background:#fff;font:700 17px/1 Inter;color:#14171A;display:flex;align-items:center;padding-left:46px"></div>
+  <div id="hl" class="hl"></div>
+  <div id="toast" class="abs v" style="left:16px;right:16px;top:40px;padding:16px 18px;border-radius:18px;background:${GRN};color:#fff;font:700 17px/1.3 Inter;display:flex;gap:12px;align-items:flex-start;box-shadow:0 14px 30px rgba(0,0,0,.35)">${ic('check', 24, '#fff', 3)}<span>Merci ! Votre lieu est en ligne : tout le monde peut maintenant le trouver sur OJA.</span></div>
+</div></div>
+${P('gratuit', 'pill', 'GRATUIT', `left:300px;top:1160px;border:6px solid ${GRN};color:${GRN};background:rgba(255,255,255,.95);font:900 60px Inter;letter-spacing:.1em;border-radius:22px;padding:12px 34px`)}
+${P('ch_call', 'pill wh', `${ic('phone', 40, OR, 2.4)}Appel`, 'left:500px;top:1060px')}
+${P('ch_wa', 'pill wh', `${ic('chat', 40, '#25A35A', 2.4)}WhatsApp`, 'left:500px;top:1180px')}
+${P('k1', 'pill wh', `${ic('search', 40, OR, 2.6)}Un pain`, 'left:56px;top:360px')}
+${P('k2', 'pill wh', `<img src="assets/plats/atassi.jpg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin:-8px 0 -8px -12px">Un bon atassi`, 'left:56px;top:480px')}
+${[['atassi', 'Atassi', 40, 300, -6], ['amiwo', 'Amiwo', 600, 330, 5], ['igname', 'Igname pilée', 70, 560, 4], ['aloko', 'Aloko', 590, 580, -4], ['poisson', 'Poisson braisé', 320, 440, -2]].map(([f, n, x, y, r], i) =>
+  `<div id="pol${i}" class="pol" style="left:${x}px;top:${y}px" data-r="${r}"><img src="assets/plats/${f}.jpg"><div>${n}</div></div>`).join('')}
+${P('sf', 'pill or', `${ic('fire', 42, '#fff', 2.4)}Nos bons coins`, 'left:56px;top:268px;font-size:46px')}
+${P('big', 'abs', '', 'left:0;right:0;top:300px;text-align:center;font:900 italic 132px/1 Inter;letter-spacing:-.04em;text-shadow:0 0 60px rgba(255,107,0,.6),0 10px 30px rgba(0,0,0,.5)')}
+${P('tag6', 'pill dk', 'Imagine', 'left:56px;top:268px;font-size:30px;padding:10px 22px')}
+${P('lbl6a', 'pill wh', 'Tokpa', 'left:470px;top:320px;font-size:34px;padding:10px 22px')}
+${P('lbl6b', 'pill dk', 'Nouveaux marchés', 'left:120px;top:200px;font-size:30px;padding:10px 22px')}
+${P('count', 'abs', '', 'left:0;right:0;top:300px;text-align:center;font:900 110px/1 Inter;letter-spacing:-.04em;text-shadow:0 10px 40px rgba(0,0,0,.6)')}
+${P('ens', 'pill or', 'Ensemble', 'left:56px;top:360px;font-size:64px;padding:22px 44px')}
+${P('flag', 'abs', `<i style="flex:1;background:${BJ[0]}"></i><i style="flex:1;background:${BJ[1]}"></i><i style="flex:1;background:${BJ[2]}"></i>`, 'left:56px;top:490px;width:420px;height:22px;border-radius:11px;overflow:hidden;display:flex')}
+${P('stores', 'abs', `<span class="pill wh" style="position:static;font-size:34px;padding:14px 26px"><img src="${APPLE}" style="width:50px;border-radius:12px">App Store</span><span class="pill wh" style="position:static;font-size:34px;padding:14px 26px"><img src="${GPLAY}" style="width:46px">Google Play</span>`, 'left:56px;top:540px;display:flex;gap:18px')}
+${P('fait', 'pill or', 'Fait au Bénin', 'left:56px;top:500px;font-size:50px')}
+<div id="q"><div id="qhead"></div><div id="qcard"><div id="qlab"><span style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#FF9A3C,${OR});display:grid;place-items:center">${ic('user', 36, '#fff', 2.4)}</span>Une commerçante demande</div><div id="qtext"></div></div></div>
+<div id="end">
+  <div class="abs" style="left:120px;right:120px;top:520px;padding:56px 40px 60px;border-radius:52px;background:#fff;color:#14171A;text-align:center;box-shadow:0 60px 140px rgba(0,0,0,.6)" id="endc">
+    <div style="display:flex;align-items:center;justify-content:center;gap:22px"><img src="${LOGO}" style="width:150px"><div style="font:900 96px Inter;letter-spacing:-.04em">Oja <span style="color:${OR}">App</span></div></div>
+    <div style="margin:30px auto 0;display:inline-block;padding:20px 64px;border-radius:44px;background:${OR};color:#fff;font:800 40px Inter;letter-spacing:.14em">TÉLÉCHARGEZ</div>
+    <div style="display:flex;gap:18px;justify-content:center;margin-top:28px"><span class="pill wh" style="position:static;background:#14171A;color:#fff;font-size:32px;padding:14px 24px;box-shadow:none"><img src="${APPLE}" style="width:46px;border-radius:10px">App Store</span><span class="pill wh" style="position:static;background:#14171A;color:#fff;font-size:32px;padding:14px 24px;box-shadow:none"><img src="${GPLAY}" style="width:42px">Google Play</span></div>
+  </div>
+  <div id="endt" class="abs" style="left:60px;right:60px;top:1110px;text-align:center;font:900 70px/1.08 Inter;letter-spacing:-.03em">On met nos marchés<br>et nos plats <span style="color:#FF8A3D">sur la carte.</span></div>
+</div>`;
+
+/* question texts, words timed on the question voice */
+const QTXT = { 1: 'Derrick, mes clients me connaissent déjà. Pourquoi je vais télécharger OJA ?', 2: "Mais moi, je vends au marché. Il n'y a pas d'adresse.",
+  3: 'Et moi, je vends à manger au carrefour ?', 4: 'Et ce nouveau client, il me trouve comment ?', 5: 'Et pourquoi je te ferais confiance ?' };
+const QW = {};
+for (const k in QTXT) { const chars = QT[k].characters.join(''), times = QT[k].character_start_times_seconds; let pos = 0;
+  QW[k] = QTXT[k].replace(/ ([?!:])/g, ' $1').split(' ').map(w => { const say = w === 'OJA' ? 'Odja' : w.replace(/[ ?!:.,]/g, ''); const i = chars.indexOf(say, pos); if (i >= 0) pos = i + say.length; return [w, i >= 0 ? times[i] : times[pos] || 0]; }); }
+let QCUR = 0;
+function setQ(k) { if (QCUR === k) return; QCUR = k; $('qtext').innerHTML = QW[k].map(([w], i) => `<span id="qw${i}"${k === 1 && i >= 6 ? ` style="color:${OR}"` : ''}>${w} </span>`).join('');
+  $('qhead').innerHTML = k === 1 ? `Pourquoi télécharger <span style="color:#FF8A3D">OJA</span> ?` : ''; }
+
+/* ---------- subtitles ---------- */
+const FIX = { 'Topa,': 'Tokpa,', 'Tokba,': 'Tokpa,', 'Odja': 'OJA', 'Odja,': 'OJA,', 'OjaApp.': 'Oja App.', 'attassi': 'atassi', 'attassi.': 'atassi.', "l'amiwater,": "l'amiwo,",
+  'yans': 'ignames', 'pilés,': 'pilées,', "l'aloco,": "l'aloko,", "d'Haïti,": 'Derrick,', 'moment': 'maman', 'Béninois': 'béninois' };
+const FIXI = { IMG_1039: { 12: 'font', 13: 'vivre', 17: 'OJA,', 18: "on l'a", 23: 'les' }, IMG_1043: { 8: "l'igname", 9: '', 10: 'pilée,' } };
+const KEY = /OJA|carte|gratuit|nouveaux|Tokpa|WhatsApp|appeler|Ensemble|fiers|Bénin|place|marché|atassi|amiwo|ignames|aloko|poisson|maman|imagine|perdre/i;
+const GROUPS = (() => { const G = []; let cur = []; WORDS.forEach(([w, s, e, take, idx], i) => { const fx = FIXI[take] && FIXI[take][idx]; const txt = fx !== undefined ? fx : FIX[w] || w;
+  if (txt) cur.push([txt, s, e]); const next = WORDS[i + 1]; if (cur.length >= 3 || /[,.!?:]$/.test(txt) || !next || next[1] - e > .3 || next[5] !== WORDS[i][5]) { G.push(cur); cur = []; } }); if (cur.length) G.push(cur); return G; })();
+
+/* ---------- helpers for the DOM layers ---------- */
+function show(id, a, extra = '', dy = 26) { const e = $(id); if (a <= 0) { e.style.visibility = 'hidden'; return; } e.style.visibility = 'visible'; e.style.opacity = Math.min(1, a * 1.4); e.style.transform = `translateY(${(1 - a) * dy}px) scale(${.92 + .08 * a}) ${extra}`; }
+function popIn(id, t, a, b, extra = '') { const p = lin(t, a, a + .45), x = eio(lin(t, b - .3, b)); const e = $(id);
+  if (t < a || t > b) { e.style.visibility = 'hidden'; return; } e.style.visibility = 'visible'; e.style.opacity = cl(p * 4) * (1 - x); e.style.transform = `scale(${bk(p) * (1 - x * .1)}) translateY(${-x * 30}px) ${extra}`; e.style.transformOrigin = '0 50%'; }
+const S = .3284;   // capture px -> screen px
+function hl(box) { const e = $('hl'); if (!box) { e.style.visibility = 'hidden'; return; } const [x0, y0, x1, y1] = box; st(e, { visibility: 'visible', left: x0 * S - 6 + 'px', top: y0 * S - 6 + 'px', width: (x1 - x0) * S + 12 + 'px', height: (y1 - y0) * S + 12 + 'px' }); }
+const BOX = { commerce: [72, 530, 1134, 772], nom: [72, 1515, 1134, 1676], desc: [72, 1966, 1134, 2263], indiceP: [72, 1250, 1134, 1411], images: [72, 1700, 1134, 2046], save: [72, 2175, 1134, 2336],
+  ouvert: [50, 1446, 260, 1538], apropos: [40, 1690, 1000, 1860], itin: [60, 1956, 396, 2164], appeler: [434, 1956, 768, 2164], wa: [806, 1956, 1144, 2164], rendre: [60, 2300, 1144, 2480] };
+const pcx = $('pcv').getContext('2d');
+
+/* ---------- frame ---------- */
+let CUR = 0, DRAWN = false;
+function draw(t) {
+  const fi = frameIdx(t), fr = need(FR(fi)); need(FR(Math.min(NF - 1, fi + 1)));
+  if (!fr) return false;
+  const q = QS.find(([a, b]) => t >= a - .05 && t < b + .3), endA = eo(lin(t, END, END + .5));
+  const ph = Math.max(eio(Math.min(lin(t, PH2[0], PH2[0] + .5), 1 - lin(t, PH2[1] - .4, PH2[1]))), eio(Math.min(lin(t, PH4[0], PH4[0] + .5), 1 - lin(t, PH4[1] - .4, PH4[1]))));
+  const sp = Math.max(...[SP3, SP6, SP7].map(([a, b]) => eio(Math.min(lin(t, a, a + .5), 1 - lin(t, b - .4, b)))), t >= SP6[0] && t < SP7[1] ? 1 : 0) * (t >= SP6[0] + .5 && t < SP7[1] - .4 ? 1 : 1);
+  const spv = t >= SP6[0] && t <= SP7[1] ? Math.min(eio(lin(t, SP6[0], SP6[0] + .5)), 1 - eio(lin(t, SP7[1] - .4, SP7[1]))) : Math.max(...[SP3].map(([a, b]) => eio(Math.min(lin(t, a, a + .5), 1 - lin(t, b - .4, b)))));
+  const z = zoomAt(t) * (q ? 1.06 + .03 * lin(t, q[0], q[1]) : 1) * (t >= bs(5) && t < be(5) ? 1 + .05 * lin(t, bs(5), be(5)) : 1);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
+  // video: phone mode reframes Derrick to the right, split mode moves him down under the top panel
+  const vz = z * (1 + .32 * ph), vdx = 165 * ph, vdy = 400 * spv + 60 * ph;
+  const qa = q ? Math.min(eo(lin(t, q[0] - .05, q[0] + .25)), 1 - eo(lin(t, q[1] - .1, q[1] + .3))) : 0;
+  ctx.filter = qa || endA ? `blur(${18 * Math.max(qa, endA)}px) brightness(${1 - .58 * Math.max(qa, endA)})` : 'none';
+  ctx.save(); ctx.translate(ZC[0] + vdx, ZC[1] + vdy); ctx.scale(vz, vz); ctx.translate(-ZC[0], -ZC[1]); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
+  // soft dark gradient at the top so the chips read on the chandelier light
+  const g = ctx.createLinearGradient(0, 0, 0, 760); g.addColorStop(0, 'rgba(0,0,0,.45)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, 760);
+  // top panel (split mode)
+  if (spv > 0) {
+    const ph_ = 960 * spv; ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, ph_); ctx.clip();
+    if (t < SP6[0]) { const gg = ctx.createLinearGradient(0, 0, 0, 960); gg.addColorStop(0, '#2A1A10'); gg.addColorStop(1, '#120D0A'); ctx.fillStyle = gg; ctx.fillRect(0, 0, W, 960);
+      // street food: warm bokeh
+      const r = rng(5); for (let i = 0; i < 26; i++) { const x = r() * W, y = r() * 960, rad = 30 + r() * 90; const gr = ctx.createRadialGradient(x, y, 0, x, y, rad); gr.addColorStop(0, `rgba(255,${140 + r() * 60 | 0},60,${.10 + r() * .12})`); gr.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gr; ctx.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+      // the pin and the route of « viendront jusqu'à toi »
+      const pa = lin(t, T.mets, T.mets + .45); if (pa > 0) { const k = eo(lin(t, T.mets + .2, T.mets + 1)); ctx.globalAlpha = 1; pinAt(ctx, 540, 640 + (1 - bk(pa)) * -300, 3.2);
+        for (let k2 = 0; k2 < 3; k2++) { const u = ((t - T.mets) * .8 + k2 / 3) % 1; ctx.strokeStyle = `rgba(255,107,0,${(1 - u) * .7})`; ctx.lineWidth = 5; ctx.beginPath(); ctx.ellipse(540, 645, 40 + 160 * u, 14 + 56 * u, 0, 0, 7); ctx.stroke(); } }
+      const ra = lin(t, T.viendront - .2, T.viendront + 1.2); if (ra > 0) { ctx.setLineDash([18, 16]); ctx.lineDashOffset = -t * 60; ctx.strokeStyle = '#FFB066'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+        ctx.beginPath(); const pts = [[90, 900], [240, 780], [380, 820], [470, 700], [535, 600]]; const n = Math.max(1, Math.floor(ra * (pts.length - 1) * 10)); ctx.moveTo(...pts[0]);
+        for (let s = 1; s <= n; s++) { const u = s / 10, k3 = Math.min(pts.length - 2, Math.floor(u)), f = u - k3; ctx.lineTo(pts[k3][0] + (pts[k3 + 1][0] - pts[k3][0]) * f, pts[k3][1] + (pts[k3 + 1][1] - pts[k3][1]) * f); } ctx.stroke(); ctx.setLineDash([]); }
+    } else {
+      // Imagine / Ensemble: the map fills with pins, then Benin
+      const zo = eio(lin(t, T.monde - .2, T.monde + 1.2)), back = eio(lin(t, SP7[0] - .2, SP7[0] + .6));
+      const zm = 1;
+      ctx.save(); ctx.translate(540, 480); ctx.scale(zm, zm); ctx.translate(-540, -480); ctx.drawImage(MAPC, 0, 0);
+      let shown;
+      if (t < SP7[0]) shown = (p, i) => p[3] === 0 ? lin(t, T.chaque + i * .012, T.chaque + i * .012 + .3) : lin(t, T.nouv6 + (i - 150) * .015, T.nouv6 + (i - 150) * .015 + .3);
+      else { const n7 = t < T.voisine ? 1 : t < T.une ? 2 : t < T.deux ? 2 : t < T.tout7 ? 3 : 999;
+        shown = (p, i) => i < Math.min(n7, 3) ? lin(t, [T.mettez, T.voisine, T.deux][i] - .1, [T.mettez, T.voisine, T.deux][i] + .3) : n7 > 3 && p[3] === 0 ? lin(t, T.tout7 + (i - 3) * .006, T.tout7 + (i - 3) * .006 + .25) : 0; }
+      PINS.forEach((p, i) => { const a = shown(p, i); if (a > 0) pinAt(ctx, p[0], p[1], (i < 3 && t >= SP7[0] ? 1.8 : .9 + p[2] * .3) * bk(a), cl(a * 3)); });
+      ctx.restore();
+      if (zo > 0 && t < SP7[0]) { // Benin outline with the flag colors
+        const [x0, y0, x1, y1] = BENIN.box, s = 560 / (y1 - y0); ctx.save(); ctx.globalAlpha = zo; ctx.fillStyle = 'rgba(12,14,18,.94)'; ctx.fillRect(0, 0, W, 960);
+        ctx.translate(540 - (x0 + x1) / 2 * s, 520 - (y0 + y1) / 2 * s); ctx.scale(s, s);
+        ctx.save(); ctx.clip(BEN); ctx.globalAlpha = zo * .92; const xm = x0 + (x1 - x0) * .4, ym = (y0 + y1) / 2;
+        ctx.fillStyle = BJ[0]; ctx.fillRect(x0, y0, xm - x0, y1 - y0); ctx.fillStyle = BJ[1]; ctx.fillRect(xm, y0, x1 - xm, ym - y0); ctx.fillStyle = BJ[2]; ctx.fillRect(xm, ym, x1 - xm, y1 - ym); ctx.restore();
+        ctx.globalAlpha = zo; ctx.lineWidth = 3 / s; ctx.strokeStyle = '#fff'; ctx.stroke(BEN); ctx.restore();
+        const r = rng(9); for (let i = 0; i < 70; i++) { const x = 540 + (r() - .5) * 220, y = 330 + r() * 420, a = lin(t, T.monde + .6 + i * .015, T.monde + .9 + i * .015); if (a > 0) pinAt(ctx, x, y, .7 * bk(a), a); }
+      }
+    }
+    ctx.restore(); ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.fillRect(0, ph_ - 3, W, 3);
+  }
+  // phone content (canvas inside the phone): crisp pins on the blurred real map
+  pcx.clearRect(0, 0, 396, 861);
+  // ---------------- DOM ----------------
+  const onFace = !q && endA === 0;
+  show('logo', onFace && ph === 0 && spv === 0 ? win(t, .2, DUR) : 0);
+  show('name', win(t, bs(1) + .1, T.nouveaux - .1));
+  show('name5', win(t, T.derrick - .2, T.benin5 - .1));
+  show('fait', win(t, T.benin5, be(5) - .1));
+  show('b1', win(t, T.nouveaux, T.achete - .1));
+  popIn('c1', t, T.quartier, T.benin1 - .05); popIn('c2', t, T.benin1, T.cherchent - .05); popIn('c3', t, T.cherchent, T.achete - .1); popIn('c4', t, T.achete, be(1) - .05);
+  show('m1', win(t, T.maman, T.restez - .1)); show('m2', win(t, T.marches, T.restez - .1)); show('m3', win(t, T.restez, PH2[0] + .2));
+  show('pt2', ph > 0 && t < be(2) ? win(t, PH2[0] + .3, PH2[1]) : 0); show('pt4', ph > 0 && t > bs(4) ? win(t, T.perdre - .2, PH4[1]) : 0);
+  show('k1', win(t, T.pain - .1, PH4[0] + .3)); show('k2', win(t, T.atassi4 - .1, PH4[0] + .3));
+  show('phone', ph, `translateX(${(1 - ph) * -480}px)`, 0);
+  if (ph > 0) {
+    let scr = 's_ajout', box = null, typed = 0, toast = 0;
+    if (t < be(2)) {
+      if (t >= T.commerce - .1) box = BOX.commerce; if (t >= T.nom - .1) box = BOX.nom; if (t >= T.vendez - .1) box = BOX.desc;
+      if (t >= T.photos - .15) { scr = 's_photos'; box = BOX.images; } if (t >= T.rangee - .2) { box = BOX.indiceP; typed = lin(t, T.rangee, T.rangee + 1.1); }
+      if (t >= T.placer - .4) { scr = 's_carte1'; box = null; }
+      if (t >= T.ligne - .9) { scr = 's_photos'; box = BOX.save; typed = 1; }
+      if (t >= T.ligne - .1) { toast = eo(lin(t, T.ligne - .1, T.ligne + .3)); box = null; }
+      if (scr === 's_carte1') { const pa = lin(t, T.placer - .1, T.placer + .45); pinAt(pcx, 198, 520 - (1 - bk(pa)) * 200, 2.2 * Math.max(.01, cl(pa * 3)));
+        for (let k = 0; k < 3; k++) { const u = ((t - T.placer) * .9 + k / 3) % 1; if (t > T.placer) { pcx.strokeStyle = `rgba(255,107,0,${(1 - u) * .8})`; pcx.lineWidth = 3; pcx.beginPath(); pcx.ellipse(198, 522, 16 + 70 * u, 6 + 26 * u, 0, 0, 7); pcx.stroke(); } }
+        pcx.fillStyle = '#14171A'; pcx.font = '800 17px Inter'; const yy = 420 - (1 - cl(pa * 2)) * 10; pcx.globalAlpha = cl(lin(t, T.placer + .3, T.placer + .6)); pcx.beginPath(); pcx.roundRect(128, yy - 22, 140, 34, 17); pcx.fillStyle = '#fff'; pcx.fill(); pcx.fillStyle = '#14171A'; pcx.textAlign = 'center'; pcx.fillText('Vous êtes ici', 198, yy); pcx.globalAlpha = 1; }
+    } else {
+      scr = 's_carte2';
+      const r = rng(4); for (let i = 0; i < 34; i++) { const x = 30 + r() * 336, y = 170 + r() * 640, a = lin(t, T.ouvrent + i * .03, T.ouvrent + i * .03 + .3); if (a > 0 && t < T.voient - .1) pinAt(pcx, x, y, .8 * bk(a), cl(a * 3)); }
+      const tap = lin(t, T.voient - .45, T.voient - .1); if (t < T.voient - .1 && tap > 0) { pinAt(pcx, 198, 480, 1.6 + .3 * Math.sin(tap * Math.PI)); }
+      if (t >= T.voient - .1) { scr = 's_fiche'; box = BOX.apropos; if (t >= T.ouvert - .1) box = BOX.ouvert; if (t >= T.arrivent - .1) box = BOX.rendre; if (t >= T.appeler - .1) box = BOX.appeler; if (t >= T.whatsapp - .1) box = BOX.wa; }
+    }
+    ['s_ajout', 's_photos', 's_carte1', 's_carte2', 's_fiche'].forEach(id => $(id).style.display = id === scr ? 'block' : 'none');
+    hl(box); $('hl').style.opacity = .75 + .25 * Math.sin(t * 8);
+    const tx = 'Rangée 12, porte 3'; $('typed').textContent = typed > 0 ? tx.slice(0, Math.ceil(tx.length * typed)) : ''; $('typed').style.visibility = typed > 0 && scr === 's_photos' ? 'visible' : 'hidden';
+    show('toast', toast, '', -20);
+  } else { show('toast', 0); hl(null); $('typed').style.visibility = 'hidden'; }
+  popIn('gratuit', t, T.gratuit - .05, be(2) + .2, 'rotate(-8deg)');
+  popIn('ch_call', t, T.appeler, PH4[1] + .2); popIn('ch_wa', t, T.whatsapp, PH4[1] + .2);
+  // street food polaroids
+  [T.atassi, T.amiwo, T.igname, T.aloko, T.poisson].forEach((t0, i) => { const e = $('pol' + i), p = lin(t, t0 - .1, t0 + .4), out = eio(lin(t, T.mets - .3, T.mets + .2));
+    if (spv <= 0 || t < SP3[0] || t > SP3[1] || p <= 0 || out >= 1) { e.style.visibility = 'hidden'; return; } const r = +e.dataset.r;
+    st(e, { visibility: 'visible', opacity: cl(p * 4) * (1 - out), transform: `translateY(${(1 - bk(p)) * -420 - out * 200}px) rotate(${r * bk(p)}deg) scale(${1 - out * .3})` }); });
+  show('sf', t > SP3[0] && t < SP3[1] ? win(t, T.coins - .1, SP3[1]) : 0);
+  // Imagine / Ensemble
+  const bigTxt = t >= T.imagine - .1 && t < T.tokpa + .4 ? 'Imagine' : ''; $('big').textContent = bigTxt; show('big', bigTxt ? win(t, T.imagine - .1, T.tokpa + .4) : 0);
+  show('tag6', t >= T.tokpa && t < SP7[1] ? win(t, T.tokpa, SP7[1]) : 0);
+  show('lbl6a', win(t, T.chaque + .3, T.monde - .1)); show('lbl6b', win(t, T.nouv6 + .2, T.monde - .1));
+  const ct = t < SP7[0] || t >= SP7[1] ? '' : t < T.voisine ? '1 place' : t < T.une ? '+ ta voisine' : t < T.deux ? '1 maman' : t < T.tout7 ? '2 mamans' : 'Tout le marché';
+  $('count').innerHTML = ct.replace('Tout le marché', `Tout le <span style="color:#FF8A3D">marché</span>`); show('count', ct && t >= T.mettez - .1 ? win(t, T.mettez - .1, SP7[1]) : 0, `scale(${1 + .06 * Math.sin(lin(t, T.tout7, T.tout7 + .4) * Math.PI)})`);
+  show('ens', win(t, T.ensemble - .1, END)); show('flag', win(t, T.fiers - .2, END), `scaleX(${eo(lin(t, T.fiers - .2, T.fiers + .4))})`); $('flag').style.transformOrigin = '0 50%';
+  show('stores', win(t, T.telecharge - .1, END));
+  // question card
+  if (q) { setQ(q[2]); const a = Math.min(eo(lin(t, q[0], q[0] + .35)), 1 - eio(lin(t, q[1] - .05, q[1] + .3)));
+    $('q').style.visibility = a > 0 ? 'visible' : 'hidden'; st($('qcard'), { opacity: a, transform: `translateY(${(1 - a) * 60}px) scale(${.94 + .06 * a})` });
+    st($('qhead'), { opacity: a, transform: `translateY(${(1 - a) * -30}px)` });
+    QW[q[2]].forEach(([w, s], i) => { const p = eo(lin(t, q[0] + .3 + s - .05, q[0] + .3 + s + .25)); st($('qw' + i), { opacity: .15 + .85 * p, transform: `translateY(${(1 - p) * 14}px)` }); });
+  } else $('q').style.visibility = 'hidden';
+  // end card
+  $('end').style.visibility = endA > 0 ? 'visible' : 'hidden';
+  if (endA > 0) { st($('endc'), { opacity: endA, transform: `scale(${bk(lin(t, END, END + .5))})` }); const p = eo(lin(t, END + .4, END + .9)); st($('endt'), { opacity: p, transform: `translateY(${(1 - p) * 30}px)` }); }
+  // fade to black at the very end
+  if (t > DUR - 1.2) { ctx.fillStyle = `rgba(0,0,0,${lin(t, DUR - 1.2, DUR)})`; ctx.fillRect(0, 0, W, H); $('ui').style.opacity = 1 - lin(t, DUR - 1.2, DUR); } else $('ui').style.opacity = 1;
+  // subtitles
+  const gi = GROUPS.findIndex((gr, i) => t >= gr[0][1] - .05 && t < (GROUPS[i + 1] ? Math.min(GROUPS[i + 1][0][1] - .05, gr[gr.length - 1][2] + .8) : gr[gr.length - 1][2] + .6));
+  const sub = gi >= 0 && !q && endA === 0 ? GROUPS[gi] : null;
+  $('sub').innerHTML = sub ? sub.map(([w]) => KEY.test(w) ? `<em>${w}</em>` : w).join(' ') : '';
+  $('sub').style.top = ph > .5 ? '1420px' : spv > .5 ? '1440px' : '1300px';
+  $('sub').style.left = ph > .5 ? '480px' : '60px'; $('sub').style.fontSize = ph > .5 ? '58px' : '74px';
+  return true;
+}
+function renderAt(t) { CUR = t; DRAWN = draw(t); }
+window.waitFrame = async () => { for (let n = 0; n < 12 && (!DRAWN || PENDING.size); n++) { await Promise.all([...PENDING]); DRAWN = draw(CUR); } };
+window.ready = (async () => { await document.fonts.load('900 100px Inter'); await document.fonts.load('800 40px Inter'); await document.fonts.load('italic 900 100px Inter'); await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); renderAt(0); await window.waitFrame(); })();
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+</script>
+</body></html>
