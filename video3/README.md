@@ -19,40 +19,41 @@ Derrick face caméra répond à une seule question, « Pourquoi télécharger OJ
 - On revient souvent sur son visage. C'est lui qui fait la confiance.
 - La fin a du sens (« par nous-mêmes et pour nous-mêmes »), puis vient une carte « Télécharge… » avec les stores et le slogan.
 
-## Texte à dire (environ 70 s)
+## Texte à dire (environ 60 s) : un ami pose les questions, Derrick répond
 
-1. **La question.** À l'écran, en grand : « Pourquoi télécharger OJA ? ». Quelqu'un hors champ peut poser la question, ou vous la posez vous-même.
-   « Pourquoi télécharger OJA ? Je vais vous répondre simplement. »
-2. **Présentation.**
-   « Je m'appelle Derrick Dodoo. Je suis béninois, et je suis le fondateur d'OJA. »
-3. **Raison 1 : votre business sur la carte.**
-   « D'abord, pour mettre votre business sur la carte. Boutique, atelier, salon, maquis… Vous l'ajoutez gratuitement : un nom, une catégorie, votre quartier, vos photos. Et vos clients vous trouvent. »
-4. **Raison 2 : trouver un lieu sans adresse.**
-   « Ensuite, parce que chez nous, les adresses, c'est compliqué. Sur OJA, on trouve un lieu par le nom que tout le monde lui donne. On voit s'il est ouvert, on appelle… ou on y va. »
-5. **Raison 3 : se déplacer.**
-   « Pour vous déplacer aussi : moto, tricycle ou voiture, avec le prix affiché avant le départ. Pas de marchandage. »
-6. **Raison 4 : tout dans la même appli.**
-   « Et dans la même appli : vos colis et vos repas livrés, le Market, et NOVOJA pour vendre ce que vous n'utilisez plus. »
-7. **Le sens** (plus lentement, c'est le moment sincère).
-   « Ọjà, en yoruba, ça veut dire "marché". Pendant longtemps, on a utilisé des applis pensées ailleurs. OJA est faite ici, par nous… et pour nous. »
-8. **L'appel** (avec le sourire).
-   « Alors, pourquoi télécharger OJA ? Parce que c'est pour nous. Téléchargez Oja App, mettez votre commerce sur la carte… et partagez cette vidéo. »
+Les questions s'affichent en grand à l'écran. Un ami peut aussi les poser hors champ : ce sera pratique pour la version en goun. L'idée, dite sans insister : on enregistre son commerce **depuis sa boutique**, OJA le place sur la carte à cet endroit, et les clients arrivent sans se perdre, appellent ou écrivent sur WhatsApp.
 
-Version courte : les blocs 1, 2, 3, 4, 7 et 8.
+1. *« Derrick, pourquoi je vais télécharger OJA ? »*
+   « Tu as une boutique, un atelier, un maquis ? Demain, un client va te chercher. Et s'il ne te trouve pas… *(pause)* il va chez le voisin. »
+2. *« Mais moi, je n'ai pas d'adresse. »*
+   « Pas besoin. Tu es dans ta boutique ? Reste là. Tu ouvres OJA, tu enregistres ton commerce : le nom, tes photos… et OJA te place sur la carte, exactement là où tu es. C'est en ligne tout de suite. Gratuitement. »
+3. *« Et le client, il me trouve comment ? »*
+   « Il tape ton nom, il voit si tu es ouvert… et il arrive chez toi sans se perdre. Il peut t'appeler, ou même t'écrire sur WhatsApp, directement depuis ta fiche. »
+4. *« Il y a déjà du monde dessus ? »*
+   « Regarde la carte : ils sont déjà nombreux. Il ne manque plus que toi. »
+5. *« C'est tout ? »*
+   « Non. Dans la même appli, tu te déplaces au prix affiché avant de partir, tu envoies un colis, tu commandes un repas. »
+6. *« Et pourquoi je te ferais confiance ? »* (plus lentement)
+   « Parce que je suis Derrick, je suis béninois, comme toi. Et OJA, on l'a faite ici… *(pause)* pour nous. »
+7. **Appel** (avec le sourire) : « Alors, reste dans ta boutique, télécharge Oja App… et mets-toi sur la carte. Je t'attends. »
+
+Version courte : les blocs 1, 2, 3, 4 et 7.
+
+Ce que Derrick a confirmé le 5 novembre 2026 :
+- Après « ENREGISTRER LE LIEU », l'appli affiche « Votre lieu est en ligne ».
+- Tout le monde voit la « Carte des lieux Oja ».
 
 ## Ce qui s'affiche pendant chaque bloc (vos vraies captures)
 
 | Bloc | Écran | Titre | Étiquette |
 |---|---|---|---|
-| 1 | Grande question sur fond orange | « Pourquoi télécharger OJA ? » | aucune |
-| 2 | Votre visage, bandeau avec votre nom | « Derrick Dodoo, fondateur d'OJA » | aucune |
-| 3 | « Enregistrer un lieu » : Commerce, Lieu public, Mon domicile ; puis « Galerie photos », puis « ENREGISTRER LE LIEU » | « Votre business sur la carte » | « Gratuit » |
-| 3 (fin) | « Carte des lieux Oja », remplie de points | « Ils sont déjà sur la carte » | « Partout au Bénin » |
-| 4 | La fiche : OUVERT/FERMÉ, Horaires, Itinéraire, Appeler, WhatsApp, S'Y RENDRE AVEC OJA | « Trouvé par son nom » | « Même sans adresse » |
-| 5 | « Choisissez votre course », prix floutés | « Le prix avant de partir » | « Moto · Tricycle · Voiture » |
-| 6 | Accueil, Market, NOVOJA | « Tout dans une seule appli » | aucune |
-| 7 | Votre visage, lent zoom | « Ọjà = marché » | aucune |
-| 8 | Carte « Oja App », Téléchargez, App Store et Google Play | « C'est pour nous. » | aucune |
+| 1 | La question en grand sur fond orange, puis votre visage avec le bandeau « Derrick Dodoo, fondateur d'OJA » | « Pourquoi télécharger OJA ? » | aucune |
+| 2 | Vous dans la boutique ; « Enregistrer un lieu », puis « Commerce », la galerie photos, « ENREGISTRER LE LIEU » et « Votre lieu est en ligne » ; un point qui se pose sur la carte, là où vous êtes | « Depuis ta boutique » | « Gratuit » |
+| 3 | La fiche : OUVERT, Horaires, Itinéraire, Appeler, WhatsApp, S'Y RENDRE AVEC OJA (zoom sur Appeler et WhatsApp) | « On arrive sans se perdre » | « Appel · WhatsApp » |
+| 4 | « Carte des lieux Oja », remplie de points (noms floutés) | « Ils sont déjà sur la carte » | « Partout au Bénin » |
+| 5 | « Choisissez votre course » (prix floutés), livraison, Market | « Tout dans une seule appli » | « Moto · Tricycle · Voiture » |
+| 6 | Votre visage, lent zoom | aucun | aucune |
+| 7 | Carte « Oja App », Téléchargez, App Store et Google Play | « Mets-toi sur la carte » | aucune |
 
 Retouches sur les captures :
 - **Fiche** : les fiches de test (« shawarma », « bxbbxjx ») sont remplacées par un commerce réel avec accord écrit, ou par l'exemple fictif « Atelier Vulcanisation Gbèto ».
@@ -70,9 +71,7 @@ Retouches sur les captures :
    - « Carte des lieux Oja » : un glissement sur la carte, un zoom.
    - Une commande de course, jusqu'à « Choisissez votre course ».
 3. **Un vrai commerce avec l'accord écrit du propriétaire**, pour la fiche. Sinon, je garde l'exemple fictif. Ne créez pas de faux commerce dans l'appli : il resterait en ligne.
-4. **Deux réponses de votre part :**
-   - Quel message s'affiche après « ENREGISTRER LE LIEU » ? « Votre lieu est en ligne » ou « envoyé pour vérification » ?
-   - Est-ce que tous les commerces de la « Carte des lieux » sont visibles par tout le monde ? (Pour la phrase « Ils sont déjà sur la carte ».)
+4. **Si possible, tournez les blocs 2 et 7 dans une vraie boutique**, avec l'accord écrit du propriétaire. On comprend alors tout de suite l'idée : « je reste ici et je m'enregistre ».
 
 ## Au montage
 - Le rythme de la référence : votre visage, puis l'écran, puis votre visage. Un titre en haut, une étiquette en bas, et le logo OJA en petit en haut à droite sur les plans de vous.
