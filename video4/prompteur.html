@@ -85,7 +85,7 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
 </div>
 <div id="veil"></div>
 <div id="mark"><span></span></div>
-<div id="top"><span id="rec">PROMPTEUR · VIDÉO 4</span><span><b id="tblock">Bloc 1/7</b> · <b id="tclock">00:00</b></span></div>
+<div id="top"><span id="rec">PROMPTEUR · VIDÉO 4</span><span><b id="tblock">Bloc 1/8</b> · <b id="tclock">00:00</b></span></div>
 <div id="count" hidden></div>
 <div id="stop" hidden>
   <p id="stopmsg"></p>
@@ -119,6 +119,7 @@ const SCRIPT = [
   ["Les particuliers", "", ["[Compter 1, 2, 3 sur les doigts] Un mariage, une fête, un baptême ?", "[TIRER] Toi aussi, trouve directement l'éleveur", "ou le grossiste qu'il te faut."]],
   ["Ce que ça change", "Plus lentement.", ["[BALAYER] Plus besoin de connaître quelqu'un.", "Le cultivateur trouve de nouveaux clients,", "l'acheteur gagne du temps…", "[RELIER] et nos produits vont du champ au marché."]],
   ["Appel", "Avec le sourire, droit dans l'objectif.", ["Cultivateur, éleveur, grossiste :", "[POINTER vers la caméra] mets-toi sur la carte.", "[MAIN] Télécharge Oja App…", "[Geste d'envoi vers l'avant] et envoie cette vidéo à quelqu'un qui produit."]],
+  ["Donnez-moi la force", "Lentement au début, puis de plus en plus fort. Avec le cœur.", ["[POINTER vers la caméra] Maintenant, je m'adresse à vous.", "Béninois du pays…", "et Béninois de la diaspora :", "à Paris, à Bruxelles, à Montréal, à Abidjan…", "[RELIER] partout où vous êtes.", "~", "[Main sur le cœur] Je suis votre jeune frère.", "Et je crois en une chose :", "ensemble, on peut faire qu'au Bénin, plus personne ne se perde.", "[Compter 1] Le livreur qui cherche une maison.", "[2] La maman qui cherche un grossiste.", "[3] Le touriste qui cherche un maquis.", "[4] Et vous, quand vous rentrez au pays.", "Personne ne viendra le faire à notre place.", "Alors faisons-le, nous.", "Si vous croyez en ça :", "[MAIN] un like, c'est un « je suis avec toi ».", "[MAIN] Un partage, c'est une porte qui s'ouvre.", "[TIRER] Un commentaire, c'est la force que vous me donnez.", "[Geste d'envoi] Envoyez cette vidéo à votre maman au marché,", "à votre oncle au village,", "à votre ami qui a une boutique.", "Ensemble, mettons le Bénin sur la carte.", "~", "[Poing levé] Donnez-moi la force… on y va !"]],
 ];
 const $ = id => document.getElementById(id);
 const text = $('text'), scroller = $('scroller'), stage = $('stage');

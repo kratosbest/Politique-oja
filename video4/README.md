@@ -31,6 +31,30 @@ L'idée de départ, donnée par Derrick : chez nous, pour se lancer dans un sect
 **À l'écran pour l'accroche :** une chaîne de petits personnages se forme (« quelqu'un », puis « qui connaît quelqu'un », puis « qui connaît quelqu'un »…) et devient de plus en plus longue. Sur « Avec OJA, plus besoin », elle est balayée et remplacée par une ligne directe entre deux points sur la carte, l'acheteur d'un côté et le producteur de l'autre.
 
 
+## Bloc 8 : « Donnez-moi la force » (environ 40 s), un appel aux Béninois du pays et de la diaspora
+
+À dire après le bloc 7, lentement au début, puis de plus en plus fort. On peut aussi le tourner une seule fois et le remettre à la fin des autres vidéos.
+
+« Maintenant, je m'adresse à vous. Béninois du pays… et Béninois de la diaspora : à Paris, à Bruxelles, à Montréal, à Abidjan… partout où vous êtes.
+Je suis votre jeune frère. Et je crois en une chose : ensemble, on peut faire qu'au Bénin, plus personne ne se perde.
+Le livreur qui cherche une maison. La maman qui cherche un grossiste. Le touriste qui cherche un maquis. Et vous, quand vous rentrez au pays.
+Personne ne viendra le faire à notre place. Alors faisons-le, nous.
+Si vous croyez en ça : un like, c'est un "je suis avec toi". Un partage, c'est une porte qui s'ouvre. Un commentaire, c'est la force que vous me donnez.
+Envoyez cette vidéo à votre maman au marché, à votre oncle au village, à votre ami qui a une boutique.
+Ensemble, mettons le Bénin sur la carte. *(pause)* Donnez-moi la force… on y va ! »
+
+**Gestes et effets**
+- POINTER vers la caméra sur « je m'adresse à vous » : zoom rapide.
+- RELIER sur « partout où vous êtes » : une carte du monde, et des lignes partent de Paris, Bruxelles, Montréal et Abidjan pour arriver au Bénin.
+- La main sur le cœur sur « votre jeune frère » : lumière chaude, et JEUNE FRÈRE s'écrit derrière vous.
+- Comptez sur vos doigts (1, 2, 3, 4) sur « le livreur, la maman, le touriste, et vous » : quatre cartes apparaissent.
+- MAIN, puis MAIN, puis TIRER sur « un like, un partage, un commentaire » : un cœur, une flèche de partage et une bulle, sans logo de réseau social.
+- Le geste d'envoi vers l'avant sur « envoyez cette vidéo » : la flèche s'envole vers trois pastilles (maman au marché, oncle au village, ami boutiquier).
+- Le poing levé sur « donnez-moi la force » : LA FORCE s'écrit derrière vous et des confettis vert, jaune et rouge tombent.
+
+**Texte pour la publication** (légende sous la vidéo, à coller tel quel) :
+> Béninois du pays et de la diaspora, j'ai besoin de vous. Je suis votre jeune frère, et je crois qu'ensemble, on peut rendre la localisation facile au Bénin. Un like, un partage, un commentaire : c'est la force que vous me donnez. Envoyez cette vidéo à quelqu'un qui a un commerce, un champ ou une boutique. Ensemble, mettons le Bénin sur la carte. #OJA #Bénin #Diaspora #Cotonou
+
 ## Gestes et effets (version 2 du texte)
 
 **Les 6 gestes.** Faites-les toujours au même endroit, pour que je cale les effets facilement.
