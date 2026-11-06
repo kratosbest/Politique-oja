@@ -30,6 +30,77 @@ L'idée de départ, donnée par Derrick : chez nous, pour se lancer dans un sect
 
 **À l'écran pour l'accroche :** une chaîne de petits personnages se forme (« quelqu'un », puis « qui connaît quelqu'un », puis « qui connaît quelqu'un »…) et devient de plus en plus longue. Sur « Avec OJA, plus besoin », elle est balayée et remplacée par une ligne directe entre deux points sur la carte, l'acheteur d'un côté et le producteur de l'autre.
 
+
+## Gestes et effets (version 2 du texte)
+
+**Les 6 gestes.** Faites-les toujours au même endroit, pour que je cale les effets facilement.
+
+| Geste | Comment le faire | Effet au montage |
+|---|---|---|
+| **MAIN** | Paume ouverte vers le haut, à hauteur de poitrine (main gauche ou droite). Claquez des doigts juste avant. | Un objet apparaît dans la main, avec des étincelles. |
+| **TIRER** | Main au-dessus de la tête, elle se ferme et tire vers le bas. | Un élément descend du haut de l'écran. |
+| **BALAYER** | Revers de main rapide, de gauche à droite, devant la poitrine (environ une demi-seconde). | Ce qui est à l'écran est chassé, avec un flou de vitesse. |
+| **TAPER** | Index qui tape dans l'air vers la caméra, comme sur un écran. | Une barre de recherche ou un bouton s'active, avec une onde. |
+| **RELIER** | Les deux mains écartées, qui se rejoignent lentement. | Une ligne relie deux points sur la carte. |
+| **POINTER** | Index vers le bas (« ici »), ou vers la caméra (« toi »). | Une épingle tombe là où vous montrez, ou un zoom rapide sur vous. |
+
+**Bloc par bloc :**
+1. **Accroche**
+   - MAIN gauche sur « connaître quelqu'un » : un petit personnage apparaît.
+   - MAIN droite sur « qui connaît quelqu'un » : un deuxième.
+   - Sur le dernier « qui connaît quelqu'un » : la chaîne s'allonge toute seule.
+   - BALAYER sur « Avec OJA, plus besoin » : la chaîne est chassée, et les grands mots PLUS BESOIN apparaissent derrière vous.
+2. **Le principe**
+   - TAPER sur « tu cherches un grossiste » : la barre de recherche s'écrit « grossiste ».
+   - TIRER sur « le cultivateur, à la source » : la fiche d'un cultivateur descend.
+   - MAIN sur « tu le trouves » : la fiche est dans votre main.
+   - Sur « tu discutes » : des bulles de discussion apparaissent à côté de vous.
+3. **L'exemple**
+   - Les deux mains qui s'écartent sur « elle ouvre la carte » : la carte se déplie.
+   - TAPER sur « ananas ».
+   - POINTER sur le côté sur « jusqu'à Allada » : la carte glisse jusqu'à Allada, ALLADA s'écrit derrière vous et les épingles s'allument.
+   - Trois fois MAIN (gauche, droite, gauche) sur « appelle », « écrit sur WhatsApp » et « discute » : trois cartes de contact apparaissent.
+   - BALAYER sur « celui qui l'arrange » : deux cartes partent et la bonne reste, avec une coche verte.
+   - RELIER sur « elle y va directement » : le trajet se trace de Tokpa à Allada.
+4. **Le producteur**
+   - TIRER sur « ananas, maïs, tomates, poulets, poissons » : les produits tombent du haut.
+   - TAPER sur « enregistre-toi » : l'écran « Enregistrer un lieu » apparaît.
+   - POINTER vers le bas sur « exactement là où tu es » : une épingle tombe devant vous, avec une onde.
+   - Sur « même au village » : VILLAGE derrière vous.
+   - MAIN sur « c'est gratuit » : le tampon GRATUIT apparaît dans votre main.
+5. **Les particuliers**
+   - Comptez sur vos doigts (1, 2, 3) sur « un mariage, une fête, un baptême » : trois pastilles apparaissent.
+   - TIRER sur « l'éleveur » : la fiche d'un éleveur descend.
+6. **Ce que ça change**
+   - BALAYER sur « plus besoin de connaître quelqu'un » : on rappelle la chaîne de l'accroche.
+   - RELIER sur « du champ au marché » : la ligne relie le champ et le marché, et DU CHAMP AU MARCHÉ s'écrit derrière vous.
+7. **Appel**
+   - POINTER vers la caméra sur « mets-toi » : zoom rapide.
+   - MAIN sur « Télécharge Oja App » : un téléphone avec l'appli apparaît dans votre main.
+   - Sur « envoie cette vidéo » : geste d'envoi vers l'avant, et une flèche de partage s'envole.
+
+**Effets en plus, comme dans la vidéo 3 :**
+- grands mots derrière vous, avec un contour blanc ;
+- zooms « coup de poing » sur les mots clés ;
+- flash à chaque bloc ;
+- étincelles quand un objet apparaît ;
+- confettis aux couleurs du Bénin à la fin ;
+- couleurs chaudes.
+
+**Pour bien tourner les gestes :**
+- **Le cadrage.**
+  - Reculez un peu par rapport à la vidéo 3 : on doit voir vos mains quand elles montent au-dessus de la tête, et quand elles s'écartent.
+  - Le téléphone reste fixe, à hauteur de poitrine ou des yeux.
+  - Laissez de l'espace au-dessus de votre tête.
+- **La pose.**
+  - Après chaque geste, ne bougez plus pendant 1 à 2 s et regardez l'objet comme s'il était vraiment là.
+  - Après BALAYER, regardez là où l'objet est parti.
+- **Le claquement de doigts.** Juste avant chaque MAIN, claquez des doigts : je repère le son et l'objet apparaît pile au bon moment.
+- **Des gestes nets.** Ni trop lents, ni trop rapides.
+- **Les blocs.** Dites « Bloc 1 », « Bloc 2 »… avant chaque bloc et faites chaque bloc deux ou trois fois.
+
+Dans le prompteur, chaque geste est écrit entre crochets avant la phrase, par exemple « [MAIN] ».
+
 ## Ce que je vérifie avec Derrick avant d'écrire la version finale
 1. **La recherche par produit.** Si on tape « ananas », l'appli cherche-t-elle aussi dans la « Description / Service proposé », ou seulement dans le nom ?
    - Si c'est seulement le nom, on donne une astuce dans la vidéo : mettre le produit dans le nom (« Ananas de Papa Koffi »).

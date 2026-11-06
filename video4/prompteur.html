@@ -77,6 +77,7 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
 #stop .row { justify-content: center; }
 @media (max-width: 640px) { input[type=range] { width: 96px; } .hint { display: none; } button.main { min-width: 104px; } }
 @media (prefers-reduced-motion: reduce) { #bar, #top { transition: none; } }
+.cue{display:inline-block;margin-right:.35em;padding:.05em .35em;border-radius:.25em;background:var(--cue,#FF6B00);color:#111;font:800 .5em/1.3 var(--font-ui,Inter);letter-spacing:.08em;vertical-align:.35em;text-transform:uppercase}
 </style>
 
 <div id="stage" aria-label="Texte du prompteur. Touchez pour lancer ou mettre en pause.">
@@ -109,19 +110,19 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
 </div>
 
 <script>
-// The script of video 4 (video4/README.md), block by block. "~" marks a real pause.
+// The script of video 4 (video4/README.md), block by block. "~" marks a real pause; [GESTE] = the gesture to make on that line.
 const SCRIPT = [
-  ["Accroche", "Calme, avec un petit sourire. Un temps avant « Avec OJA ».", ["Chez nous, quand tu veux te lancer dans un business…", "il faut toujours connaître quelqu'un.", "Qui connaît quelqu'un.", "Qui connaît quelqu'un…", "~", "Avec OJA, plus besoin."]],
-  ["Le principe", "Plus d'énergie, franc.", ["Tu veux un grossiste ?", "Tu cherches un grossiste.", "Tu veux le cultivateur, directement à la source ?", "Tu le cherches, tu le trouves…", "et tu discutes."]],
-  ["L'exemple", "", ["Prends la vendeuse d'ananas de Tokpa.", "Elle ouvre la carte OJA, elle cherche « ananas »…", "et elle voit les producteurs, jusqu'à Allada.", "Elle appelle le premier,", "elle écrit au deuxième sur WhatsApp,", "elle discute avec un troisième…", "et elle choisit celui qui l'arrange.", "Avant même de se déplacer.", "Ensuite, elle y va directement, sans se perdre."]],
-  ["Le producteur", "", ["Et toi qui cultives, toi qui élèves :", "ananas, maïs, tomates, poulets, poissons…", "Depuis ton champ ou ta ferme, ouvre OJA et enregistre-toi :", "ton nom, ce que tu produis, tes photos, ton numéro, ton WhatsApp.", "OJA te place sur la carte, exactement là où tu es.", "Même au village.", "Et c'est gratuit."]],
-  ["Les particuliers", "", ["Un mariage, une fête, un baptême ?", "Toi aussi, trouve directement l'éleveur", "ou le grossiste qu'il te faut."]],
-  ["Ce que ça change", "Plus lentement.", ["Plus besoin de connaître quelqu'un.", "Le cultivateur trouve de nouveaux clients,", "l'acheteur gagne du temps…", "et nos produits vont du champ au marché."]],
-  ["Appel", "Avec le sourire, droit dans l'objectif.", ["Cultivateur, éleveur, grossiste :", "mets-toi sur la carte.", "Télécharge Oja App…", "et envoie cette vidéo à quelqu'un qui produit."]],
+  ["Accroche", "Calme, avec un petit sourire. Reculez un peu : vos mains doivent rester dans l'image.", ["Chez nous, quand tu veux te lancer dans un business…", "[MAIN gauche] il faut toujours connaître quelqu'un.", "[MAIN droite] Qui connaît quelqu'un.", "Qui connaît quelqu'un…", "~", "[BALAYER] Avec OJA, plus besoin."]],
+  ["Le principe", "Plus d'énergie, franc.", ["Tu veux un grossiste ?", "[TAPER] Tu cherches un grossiste.", "[TIRER] Tu veux le cultivateur, directement à la source ?", "Tu le cherches, [MAIN] tu le trouves…", "et tu discutes."]],
+  ["L'exemple", "", ["Prends la vendeuse d'ananas de Tokpa.", "[MAINS qui s'écartent] Elle ouvre la carte OJA,", "[TAPER] elle cherche « ananas »…", "[POINTER sur le côté] et elle voit les producteurs, jusqu'à Allada.", "[MAIN gauche] Elle appelle le premier,", "[MAIN droite] elle écrit au deuxième sur WhatsApp,", "[MAIN gauche] elle discute avec un troisième…", "[BALAYER] et elle choisit celui qui l'arrange.", "Avant même de se déplacer.", "[RELIER] Ensuite, elle y va directement, sans se perdre."]],
+  ["Le producteur", "", ["Et toi qui cultives, toi qui élèves :", "[TIRER] ananas, maïs, tomates, poulets, poissons…", "Depuis ton champ ou ta ferme, [TAPER] ouvre OJA et enregistre-toi :", "ton nom, ce que tu produis, tes photos, ton numéro, ton WhatsApp.", "[POINTER vers le bas] OJA te place sur la carte, exactement là où tu es.", "Même au village.", "[MAIN] Et c'est gratuit."]],
+  ["Les particuliers", "", ["[Compter 1, 2, 3 sur les doigts] Un mariage, une fête, un baptême ?", "[TIRER] Toi aussi, trouve directement l'éleveur", "ou le grossiste qu'il te faut."]],
+  ["Ce que ça change", "Plus lentement.", ["[BALAYER] Plus besoin de connaître quelqu'un.", "Le cultivateur trouve de nouveaux clients,", "l'acheteur gagne du temps…", "[RELIER] et nos produits vont du champ au marché."]],
+  ["Appel", "Avec le sourire, droit dans l'objectif.", ["Cultivateur, éleveur, grossiste :", "[POINTER vers la caméra] mets-toi sur la carte.", "[MAIN] Télécharge Oja App…", "[Geste d'envoi vers l'avant] et envoie cette vidéo à quelqu'un qui produit."]],
 ];
 const $ = id => document.getElementById(id);
 const text = $('text'), scroller = $('scroller'), stage = $('stage');
-text.innerHTML = SCRIPT.map(([name, note, lines], i) => `<section class="block" data-b="${i}"><div class="bname"><i>${String(i + 1).padStart(2, '0')}</i>${name}</div>${note ? `<span class="note">${note}</span>` : ''}${lines.map(l => l === '~' ? '<div class="pause" data-hold="1.6">pause</div>' : `<span class="l">${l}</span>`).join('')}</section>`).join('') + '<div class="tail"></div>';
+text.innerHTML = SCRIPT.map(([name, note, lines], i) => `<section class="block" data-b="${i}"><div class="bname"><i>${String(i + 1).padStart(2, '0')}</i>${name}</div>${note ? `<span class="note">${note}</span>` : ''}${lines.map(l => l === '~' ? '<div class="pause" data-hold="1.6">pause</div>' : `<span class="l">${l.replace(/\[([^\]]+)\]/g, '<b class="cue">$1</b>')}</span>`).join('')}</section>`).join('') + '<div class="tail"></div>';
 $('blocks').innerHTML = SCRIPT.map((_, i) => `<button type="button" data-go="${i}" aria-label="Bloc ${i + 1} : ${SCRIPT[i][0]}">${i + 1}</button>`).join('');
 
 const store = { get(k, d) { try { const v = localStorage.getItem('prompteur-oja4-' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem('prompteur-oja4-' + k, JSON.stringify(v)); } catch (e) {} } };
