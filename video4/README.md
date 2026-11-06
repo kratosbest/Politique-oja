@@ -9,30 +9,32 @@ Derrick face caméra, avec la carte qui relie un champ et un marché.
 - **Maman Rose**, vendeuse d'ananas à Tokpa.
 - **Un éleveur de poulets**, pour l'exemple du particulier qui organise une fête.
 
-## Texte proposé (version 1, environ 75 s), en « tu » comme la vidéo 3
+## Texte proposé (version 2, environ 75 s), en « tu » comme la vidéo 3
+
+L'idée de départ, donnée par Derrick : chez nous, pour se lancer dans un secteur, il faut connaître quelqu'un qui connaît quelqu'un. Avec OJA, plus besoin : on cherche directement le grossiste ou le cultivateur à la source, on le trouve, on discute.
 
 1. **Accroche**
-   « À Allada, un cultivateur a son champ plein d'ananas… et il cherche des acheteurs. À Tokpa, une vendeuse cherche des ananas… et ne sait pas où aller. Ils ne se connaissent pas. *(pause)* OJA les met en relation. »
-2. **Le producteur**
-   « Tu cultives ? Tu élèves ? Ananas, maïs, tomates, poulets, poissons… Depuis ton champ ou ta ferme, ouvre OJA et enregistre-toi : ton nom, ce que tu produis, tes photos, ton numéro, ton WhatsApp. OJA te place sur la carte, exactement là où tu es. Même au village. Et c'est gratuit. »
-3. **L'acheteuse**
-   « Maintenant, la vendeuse de Tokpa ouvre la carte OJA. Elle cherche "ananas"… et elle voit les producteurs. Elle appelle le premier, elle écrit au deuxième sur WhatsApp, elle discute avec un troisième… et elle choisit celui qui l'arrange. Avant même de se déplacer. »
-4. **Le déplacement**
-   « Ensuite, elle y va directement, sans se perdre. »
+   « Chez nous, quand tu veux te lancer dans un business… il faut toujours connaître quelqu'un. Qui connaît quelqu'un. Qui connaît quelqu'un… *(pause)* Avec OJA, plus besoin. »
+2. **Le principe**
+   « Tu veux un grossiste ? Tu cherches un grossiste. Tu veux le cultivateur, directement à la source ? Tu le cherches, tu le trouves… et tu discutes. »
+3. **L'exemple**
+   « Prends la vendeuse d'ananas de Tokpa. Elle ouvre la carte OJA, elle cherche "ananas"… et elle voit les producteurs, jusqu'à Allada. Elle appelle le premier, elle écrit au deuxième sur WhatsApp, elle discute avec un troisième… et elle choisit celui qui l'arrange. Avant même de se déplacer. Ensuite, elle y va directement, sans se perdre. »
+4. **Le producteur**
+   « Et toi qui cultives, toi qui élèves : ananas, maïs, tomates, poulets, poissons… Depuis ton champ ou ta ferme, ouvre OJA et enregistre-toi : ton nom, ce que tu produis, tes photos, ton numéro, ton WhatsApp. OJA te place sur la carte, exactement là où tu es. Même au village. Et c'est gratuit. »
 5. **Les particuliers**
-   « Et ça marche aussi pour toi. Un mariage, une fête, un baptême ? Trouve directement l'éleveur ou le grossiste qu'il te faut. »
+   « Un mariage, une fête, un baptême ? Toi aussi, trouve directement l'éleveur ou le grossiste qu'il te faut. »
 6. **Ce que ça change** (plus lentement)
-   « Le cultivateur trouve de nouveaux clients. La vendeuse gagne du temps. Et nos produits vont du champ au marché, plus simplement. Nos champs nourrissent le Bénin : mettons-les sur la carte. »
+   « Plus besoin de connaître quelqu'un. Le cultivateur trouve de nouveaux clients, l'acheteur gagne du temps… et nos produits vont du champ au marché. »
 7. **Appel**
    « Cultivateur, éleveur, grossiste : mets-toi sur la carte. Télécharge Oja App… et envoie cette vidéo à quelqu'un qui produit. »
+
+**À l'écran pour l'accroche :** une chaîne de petits personnages se forme (« quelqu'un », puis « qui connaît quelqu'un », puis « qui connaît quelqu'un »…) et devient de plus en plus longue. Sur « Avec OJA, plus besoin », elle est balayée et remplacée par une ligne directe entre deux points sur la carte, l'acheteur d'un côté et le producteur de l'autre.
 
 ## Ce que je vérifie avec Derrick avant d'écrire la version finale
 1. **La recherche par produit.** Si on tape « ananas », l'appli cherche-t-elle aussi dans la « Description / Service proposé », ou seulement dans le nom ?
    - Si c'est seulement le nom, on donne une astuce dans la vidéo : mettre le produit dans le nom (« Ananas de Papa Koffi »).
 2. **La catégorie.** Une ferme ou un champ s'enregistre-t-il en « Commerce », avec la catégorie « Agriculture et Environnement » ?
-3. **Le format.**
-   - Comme la vidéo 3 (une voix qui pose les questions, et vous qui répondez) ?
-   - Ou cette histoire à deux personnages, racontée par vous ?
+3. **Le format** : vous seul face caméra (version 2). Je peux ajouter des questions comme dans la vidéo 3 si vous le souhaitez.
 
 ## Ce qui s'affiche (première idée)
 - **Accroche** : écran partagé, le champ d'ananas en haut et le marché en bas. Les deux points s'allument sur la carte et une ligne les relie.
