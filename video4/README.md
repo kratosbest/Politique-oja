@@ -4,6 +4,40 @@ Derrick face caméra, avec la carte qui relie un champ et un marché.
 
 **L'idée en une phrase :** le cultivateur ou l'éleveur se met sur la carte depuis son champ, même au village. La vendeuse du marché, ou un particulier, trouve plusieurs producteurs, les appelle ou leur écrit sur WhatsApp, et choisit celui qui l'arrange avant de se déplacer.
 
+## Avant de tourner : ce que Derrick doit faire pour un bon montage
+Cette liste s'affiche aussi à l'ouverture du prompteur, avec des cases à cocher.
+
+1. **L'endroit**
+   - Un endroit calme : pas de clim, pas de ventilateur, pas de télé ni de musique.
+   - La lumière en face de vous (fenêtre ou lampe devant vous), jamais derrière vous.
+   - Un mur simple derrière vous, d'une couleur différente de votre haut.
+2. **Le téléphone qui filme**
+   - Vertical, posé et fixe (trépied ou pile de livres), à hauteur de poitrine, à environ 1,5 m de vous.
+   - Si possible la caméra arrière. Le prompteur va sur un autre appareil (téléphone, tablette ou ordinateur), juste sous l'objectif.
+   - Réglages : 1080p ou 4K, 30 images par seconde, sans filtre, sans mode Cinématique.
+   - Appui long sur votre visage à l'écran pour bloquer la mise au point et la lumière (« Verrouillage AE/AF »).
+3. **Le cadrage, pour les gestes**
+   - Assis, cadré de la taille jusqu'au-dessus de la tête, avec de la place au-dessus.
+   - Le test : levez une main au-dessus de la tête, puis écartez les deux bras. Vos mains doivent rester dans l'image.
+4. **Pendant chaque prise**
+   - Lancez l'enregistrement et attendez 2 s sans bouger.
+   - Dites « Bloc 1 » (ou le numéro du bloc), attendez 1 s, regardez l'objectif, puis parlez.
+   - Faites chaque geste au moment écrit en orange, puis restez immobile 1 à 2 s en regardant l'objet.
+   - Claquez des doigts juste avant chaque MAIN.
+   - Si vous vous trompez, ne coupez pas : faites une pause de 2 s et reprenez la phrase depuis le début.
+   - À la fin du bloc, restez 2 s immobile en regardant l'objectif, puis coupez.
+   - Faites chaque bloc 2 fois : une fois calme, une fois avec plus d'énergie.
+5. **Les enregistrements d'écran**, en mode « Ne pas déranger »
+   - « Enregistrer un lieu », puis « Commerce », avec la catégorie « Agriculture et Environnement ».
+   - La recherche d'un produit (par exemple « ananas »), jusqu'aux résultats.
+   - Une fiche, avec « Appeler » et « WhatsApp ».
+6. **Si possible**
+   - Un vrai champ ou une vraie ferme, avec l'accord écrit du producteur : vous en train de l'enregistrer sur OJA.
+   - Une vendeuse au marché, avec son accord écrit.
+7. **L'envoi**
+   - Envoyez les vidéos originales ici, dans la conversation, et pas par WhatsApp (qui abîme l'image).
+   - Ne renommez pas les fichiers (IMG_xxxx).
+
 ## Les personnages (tous fictifs, ou réels avec leur accord écrit)
 - **Papa Koffi**, cultivateur d'ananas à Allada.
 - **Maman Rose**, vendeuse d'ananas à Tokpa.

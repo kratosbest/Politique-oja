@@ -78,6 +78,19 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
 @media (max-width: 640px) { input[type=range] { width: 96px; } .hint { display: none; } button.main { min-width: 104px; } }
 @media (prefers-reduced-motion: reduce) { #bar, #top { transition: none; } }
 .cue{display:inline-block;margin-right:.35em;padding:.05em .35em;border-radius:.25em;background:var(--cue,#FF6B00);color:#111;font:800 .5em/1.3 var(--font-ui,Inter);letter-spacing:.08em;vertical-align:.35em;text-transform:uppercase}
+
+/* « Avant de tourner » checklist */
+#prep { position: fixed; inset: 0; z-index: 20; background: rgba(5,6,7,.96); overflow-y: auto; -webkit-overflow-scrolling: touch; padding: calc(env(safe-area-inset-top,0px) + 20px) max(16px, env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 24px) max(16px, env(safe-area-inset-left,0px)); }
+#prep .in { max-width: 680px; margin: 0 auto; }
+#prep h1 { font: 700 30px/1.15 var(--font-ui); margin: 0 0 6px; color: var(--ink); }
+#prep .sub { color: #B9BDC2; font-size: 17px; margin: 0 0 18px; line-height: 1.4; }
+#prep h2 { font: 700 14px/1.2 var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--cue); margin: 22px 0 8px; }
+#prep h2 i { font-style: normal; font-family: var(--font-num); margin-right: .5em; }
+#prep label { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin: 6px 0; border-radius: 12px; background: var(--panel); border: 1px solid var(--edge); font-size: 17px; line-height: 1.4; color: #E6E8EB; cursor: pointer; }
+#prep input { flex: none; width: 22px; height: 22px; margin-top: 2px; accent-color: var(--ok); }
+#prep label:has(input:checked) { color: var(--dim); border-color: rgba(21,154,105,.5); }
+#prep .go { position: sticky; bottom: 0; padding-top: 16px; background: linear-gradient(to bottom, rgba(5,6,7,0), rgba(5,6,7,.96) 30%); display: flex; gap: 10px; align-items: center; }
+#prep .go span { color: var(--dim); font-size: 15px; }
 </style>
 
 <div id="stage" aria-label="Texte du prompteur. Touchez pour lancer ou mettre en pause.">
@@ -91,6 +104,7 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
   <p id="stopmsg"></p>
   <div class="row"><button id="redo" type="button">Refaire ce bloc</button><button id="next" class="main" type="button">Bloc suivant</button></div>
 </div>
+<div id="prep" role="dialog" aria-labelledby="preph"><div class="in"><h1 id="preph">Avant de tourner</h1><p class="sub">Ce que je dois recevoir pour faire un bon montage. Cochez au fur et à mesure.</p><h2><i>01</i>L'endroit</h2><label><input type="checkbox" data-k="p0_0"><span>Un endroit calme : pas de clim, pas de ventilateur, pas de télé ni de musique.</span></label><label><input type="checkbox" data-k="p0_1"><span>La lumière en face de vous (fenêtre ou lampe devant vous), jamais derrière vous.</span></label><label><input type="checkbox" data-k="p0_2"><span>Un mur simple derrière vous, d'une couleur différente de votre haut.</span></label><h2><i>02</i>Le téléphone qui filme</h2><label><input type="checkbox" data-k="p1_0"><span>Vertical, posé et fixe (trépied ou pile de livres), à hauteur de poitrine, à environ 1,5 m de vous.</span></label><label><input type="checkbox" data-k="p1_1"><span>Si possible la caméra arrière (meilleure image). Mettez ce prompteur sur un autre appareil (téléphone, tablette ou ordinateur), juste sous l'objectif.</span></label><label><input type="checkbox" data-k="p1_2"><span>Réglages : 1080p ou 4K, 30 images par seconde, sans filtre, sans mode Cinématique.</span></label><label><input type="checkbox" data-k="p1_3"><span>Appui long sur votre visage à l'écran pour bloquer la mise au point et la lumière (« Verrouillage AE/AF »).</span></label><h2><i>03</i>Le cadrage (pour les gestes)</h2><label><input type="checkbox" data-k="p2_0"><span>Assis, cadré de la taille jusqu'au-dessus de la tête, avec de la place au-dessus de la tête.</span></label><label><input type="checkbox" data-k="p2_1"><span>Le test : levez une main au-dessus de la tête, puis écartez les deux bras. Vos mains doivent rester dans l'image.</span></label><h2><i>04</i>Pendant chaque prise</h2><label><input type="checkbox" data-k="p3_0"><span>Lancez l'enregistrement et attendez 2 secondes sans bouger.</span></label><label><input type="checkbox" data-k="p3_1"><span>Dites « Bloc 1 » (ou le numéro du bloc), attendez 1 seconde, regardez l'objectif, puis parlez.</span></label><label><input type="checkbox" data-k="p3_2"><span>Faites chaque geste au moment écrit en orange, puis restez immobile 1 à 2 secondes en regardant l'objet comme s'il était là.</span></label><label><input type="checkbox" data-k="p3_3"><span>Claquez des doigts juste avant chaque MAIN.</span></label><label><input type="checkbox" data-k="p3_4"><span>Si vous vous trompez, ne coupez pas : faites une pause de 2 secondes et reprenez la phrase depuis le début.</span></label><label><input type="checkbox" data-k="p3_5"><span>À la fin du bloc, restez 2 secondes immobile en regardant l'objectif, puis coupez.</span></label><label><input type="checkbox" data-k="p3_6"><span>Faites chaque bloc 2 fois : une fois calme, une fois avec plus d'énergie.</span></label><h2><i>05</i>Les enregistrements d'écran</h2><label><input type="checkbox" data-k="p4_0"><span>Activez « Ne pas déranger » avant.</span></label><label><input type="checkbox" data-k="p4_1"><span>« Enregistrer un lieu », puis « Commerce », avec la catégorie « Agriculture et Environnement ».</span></label><label><input type="checkbox" data-k="p4_2"><span>La recherche d'un produit (par exemple « ananas »), jusqu'aux résultats.</span></label><label><input type="checkbox" data-k="p4_3"><span>Une fiche, avec « Appeler » et « WhatsApp ».</span></label><h2><i>06</i>Si possible</h2><label><input type="checkbox" data-k="p5_0"><span>Un vrai champ ou une vraie ferme, avec l'accord écrit du producteur : vous en train de l'enregistrer sur OJA.</span></label><label><input type="checkbox" data-k="p5_1"><span>Une vendeuse au marché, avec son accord écrit.</span></label><h2><i>07</i>L'envoi</h2><label><input type="checkbox" data-k="p6_0"><span>Envoyez les vidéos originales ici, dans la conversation, et pas par WhatsApp (qui abîme l'image).</span></label><label><input type="checkbox" data-k="p6_1"><span>Ne renommez pas les fichiers (IMG_xxxx) : je retrouve l'ordre tout seul.</span></label><div class="go"><button id="prepok" class="main" type="button">C'est prêt, on tourne</button><span id="prepn"></span></div></div></div>
 <div id="bar">
   <div class="row">
     <button id="play" class="main" type="button">Lancer</button>
@@ -106,6 +120,7 @@ input[type=range] { width: 130px; accent-color: var(--cue); }
     <button id="stopblk" type="button" aria-pressed="true">Arrêt à chaque bloc</button>
     <button id="cd" type="button" aria-pressed="true">Compte à rebours</button>
     <button id="fs" type="button">Plein écran</button>
+    <button id="prepbtn" type="button">Avant de tourner</button>
   </div>
 </div>
 
@@ -214,4 +229,11 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
 window.addEventListener('resize', render);
 apply(); render();
 document.fonts?.ready.then(render);
+
+// « Avant de tourner »: shown when the page opens, ticks remembered on this device
+(() => { const prep = document.getElementById('prep'), boxes = [...prep.querySelectorAll('input')];
+  const count = () => { const n = boxes.filter(b => b.checked).length; document.getElementById('prepn').textContent = `${n} sur ${boxes.length}`; };
+  boxes.forEach(b => { b.checked = !!store.get('prep-' + b.dataset.k, false); b.onchange = () => { store.set('prep-' + b.dataset.k, b.checked); count(); }; });
+  count(); document.getElementById('prepok').onclick = () => { prep.hidden = true; };
+  document.getElementById('prepbtn').onclick = () => { if (typeof pause === 'function') pause(); prep.hidden = false; prep.scrollTop = 0; }; })();
 </script>
