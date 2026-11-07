@@ -14,7 +14,7 @@ B = {b[2]: b for b in D['blocks']}
 def load(src, af=None):
     cmd = ['ffmpeg', '-v', 'error', '-i', src] + (['-af', af] if af else []) + ['-ac', '2', '-ar', str(SR), '-f', 'f32le', '-']
     return np.frombuffer(subprocess.run(cmd, capture_output=True, check=True).stdout, np.float32).reshape(-1, 2).astype(float)
-raw, bed_src = load(sys.argv[1]), load(sys.argv[1], 'equalizer=f=2500:t=q:w=1.2:g=-6,equalizer=f=900:t=q:w=1:g=-3')
+raw, bed_src = load(sys.argv[1]), load(sys.argv[1], 'equalizer=f=2500:t=q:w=1.2:g=-3')
 n, xf = int(DUR * SR), int(XF * SR)
 def looped(x):
     part = x[int(LOOP_FROM * SR):int(CLEAN_END * SR)]; out = x[:int(CLEAN_END * SR)].copy()
@@ -28,7 +28,7 @@ def lufs(a):
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(a, -1, 1) * 32767).astype(np.int16).tobytes())
     r = subprocess.run(['ffmpeg', '-hide_banner', '-i', tmp, '-af', 'ebur128=framelog=quiet', '-f', 'null', '-'], capture_output=True, text=True).stderr
     return float(r.split('I:')[-1].split('LUFS')[0])
-bed = looped(bed_src); bed = bed / np.abs(bed).max() * .5; bed = bed * 10 ** ((-41 - lufs(bed)) / 20)
+bed = looped(bed_src); bed = bed / np.abs(bed).max() * .5; bed = bed * 10 ** ((-31 - lufs(bed)) / 20)   # -31 LUFS: about 17 dB under the voice, clearly heard (Derrick: « pas de musique en fond »)
 # the ending: « Le Bénin est beau » from the clean song, at about -13 LUFS
 e0 = int((MERCI - .2) * SR); end = np.zeros_like(bed); seg = raw[int(BEAU * SR):int(BEAU * SR) + n - e0]; end[e0:e0 + len(seg)] = seg
 end = end / np.abs(end).max() * .5; end = end * 10 ** ((-13 - lufs(end[e0:])) / 20)
