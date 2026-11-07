@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — Vidéo 4, du champ au marché</title>
+<link rel="stylesheet" href="../motion/fonts/local.css">
+<style>
+/* Video 4 (video4/README.md): Derrick to camera with gestures; every effect is timed on the word he says and placed where his hands move
+   (data/edit_data.json: words + motion bursts with the centroid of the movement). Frames: work/frames/fNNNN.jpg (24 fps), person masks mNNNN.png
+   for the titles behind him (src/masks.py). Rendered at 30 fps, 1080 x 1920 (src/render.sh). One type family (Inter). No emoji. */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{position:relative;font-family:Inter,sans-serif;color:#fff}
+canvas{position:absolute;left:0;top:0}
+.abs{position:absolute}
+.fx{position:absolute;visibility:hidden;transform-origin:50% 50%}
+#sub{position:absolute;left:60px;right:160px;top:1090px;text-align:center;font:800 70px/1.08 Inter;letter-spacing:-.02em;text-shadow:0 6px 26px rgba(0,0,0,.7),0 2px 4px rgba(0,0,0,.6)}
+#sub em{font-style:normal;color:#FF7A1A}
+.pill{display:inline-flex;align-items:center;gap:14px;padding:16px 28px;border-radius:60px;font:800 40px Inter;white-space:nowrap;box-shadow:0 18px 44px rgba(0,0,0,.45);letter-spacing:-.01em}
+.or{background:linear-gradient(135deg,#FF9A3C,#FF6B00);color:#fff}
+.wh{background:#fff;color:#14171A}
+.dk{background:rgba(20,24,28,.88);color:#fff;border:2px solid rgba(255,255,255,.12)}
+.card{background:#fff;color:#14171A;border-radius:28px;box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+.av{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#FF9A3C,#FF6B00);display:grid;place-items:center;box-shadow:0 14px 34px rgba(0,0,0,.45);border:5px solid #fff}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:30px;font:800 22px Inter}
+</style></head><body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="ui"></div>
+<div id="sub"></div>
+<script src="data/montage_data.js"></script>
+<script>
+const W = 1080, H = 1920, FPS_SRC = 24, EDIT_DUR = EDIT.dur, DUR = EDIT_DUR + 5, END = EDIT_DUR - .2;
+const OR = '#FF6B00', GRN = '#159A69', BJ = ['#008751', '#FCD116', '#E8112D'];
+const NF = Math.round(EDIT_DUR * 24);
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.9; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = id => document.getElementById(id);
+const st = (e, o) => { for (const k in o) e.style[k] = o[k]; };
+function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const ICON = {
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  chat: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/>',
+  share: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/>',
+  bike: '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>',
+  store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M2 7h20"/>',
+  camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  plane: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
+  home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  ring: '<circle cx="12" cy="14" r="6"/><path d="m9 4 3 4 3-4"/>',
+  party: '<path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01M22 8h.01M15 2h.01M22 20h.01M22 2l-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m11 13 3 3"/>',
+  baby: '<path d="M9 12h.01M15 12h.01M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/>',
+};
+const ic = (n, s = 24, c = 'currentColor', w = 2.2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICON[n]}</svg>`;
+const LOGO = '../video1/assets/logo-oja-carte.png', APPLE = '../video1/assets/store-app-store.png', GPLAY = '../video1/assets/store-google-play.png';
+
+/* ---------- timeline ---------- */
+const WORDS = EDIT.words, BLK = Object.fromEntries(EDIT.blocks.map(b => [b[2], b])), MOT = EDIT.motion;
+const norm = s => s.toLowerCase().replace(/[^a-zà-ÿ0-9']/g, '');
+function wt(b, pre, n = 0) { const ws = WORDS.filter(w => w[5] === b && norm(w[0]).startsWith(norm(pre))); const w = ws[n] ?? ws[ws.length - 1]; if (!w) { console.error('no word', b, pre); return BLK[b][0]; } return w[1]; }
+const bs = b => BLK[b][0], be = b => BLK[b][1];
+// where the hands are around a word: the burst of motion closest to it (centroid of the movement), else a default place
+function hand(t0, b, dx = 0, dy = -260, def = [540, 1250]) {
+  let best = null, bd = 9; for (const m of MOT) { if (m[3] !== b) continue; const d = Math.abs(m[0] - t0 + .2); if (m[0] > t0 - 1.1 && m[0] < t0 + .8 && d < bd) { bd = d; best = m; } }
+  const [x, y] = best ? [best[4] * W, best[5] * H] : def; return [cl(x + dx, 150, 930), cl(y + dy, 1300, 1380), best ? best[0] + (best[1] - best[0]) * .6 : t0]; }
+
+/* ---------- effect elements ---------- */
+// each: id, html, t0 (in), t1 (out), x, y (centre), enter, exit, extra transform
+const FX = [];
+const fx = (id, html, t0, t1, x, y, enter = 'pop', exit = 'pop', rot = 0) => FX.push({ id, html, t0, t1, x, y, enter, exit, rot });
+const T = {};
+function build() {
+  const k = (n, b, pre, i = 0) => T[n] = wt(b, pre, i);
+  // B1 the chain « quelqu'un qui connaît quelqu'un »
+  k('connaitre', 1, 'connaître'); k('connait1', 1, 'connaît', 0); k('connait2', 1, 'connaît', 1); k('avec', 1, 'avec'); k('plus', 1, 'plus');
+  const av = (n, lab) => `<div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div class="av">${ic('user', 64, '#fff', 2.2)}</div><span class="pill dk" style="font-size:22px;padding:6px 14px">${lab}</span></div>`;
+  const [hx1, hy1, ht1] = hand(T.connaitre, 1), [hx2, hy2, ht2] = hand(T.connait1, 1);
+  fx('ch0', av(0, "quelqu'un"), Math.min(ht1, T.connaitre + .2), T.avec + .25, hx1, hy1 - 40, 'pop', 'sweep');
+  fx('ch1', av(1, 'qui connaît'), Math.min(ht2, T.connait1 + .2), T.avec + .3, hx2, hy2 - 40, 'pop', 'sweep');
+  [[180, 330], [400, 260], [640, 300], [860, 360], [300, 560]].forEach(([x, y], i) => fx('ch' + (i + 2), av(i + 2, "quelqu'un"), T.connait2 + i * .22, T.avec + .32 + i * .03, x, y + 40, 'pop', 'sweep'));
+  // B2 search « grossiste », the farmer card pulled from the top, in the hand, chat bubbles
+  k('grossiste', 2, 'grossiste'); k('cherches', 2, 'cherches'); k('cultivateur', 2, 'cultivateur'); k('trouves', 2, 'trouves'); k('discutes', 2, 'discutes');
+  fx('sb2', `<div class="pill wh" style="width:820px;height:110px;font-size:40px;gap:18px">${ic('search', 46, '#667085', 2.6)}<span id="sb2t"></span><span id="sb2c" style="width:4px;height:48px;background:${OR}"></span></div>`, T.cherches - .1, T.cultivateur - .3, 540, 380, 'drop', 'pop');
+  const farmer = (w = 520) => `<div class="card" style="width:${w}px"><div style="height:${w * .52}px;background:url(assets/img/cultivateur.jpg) 50% 40%/cover"></div><div style="padding:18px 24px 22px"><div style="font:800 40px Inter">Papa Koffi</div><div style="font:600 28px Inter;color:#667085;margin-top:6px;display:flex;gap:8px;align-items:center">${ic('pin', 28, OR, 2.4)}Ananas · Allada</div></div></div>`;
+  fx('fc', farmer(), T.cultivateur - .15, T.trouves - .05, 540, 520, 'drop', 'pop');
+  const [hx3, hy3] = hand(T.trouves, 2, 0, -300);
+  fx('fc2', farmer(300), T.trouves - .05, T.discutes + 1.4, hx3, hy3 - 60, 'pop', 'pop');
+  fx('bub1', `<div class="pill wh" style="font-size:30px;border-radius:30px 30px 30px 6px">Bonjour, vous avez des ananas ?</div>`, T.discutes, be(2) - .1, 380, 430, 'pop', 'pop');
+  fx('bub2', `<div class="pill or" style="font-size:30px;border-radius:30px 30px 6px 30px">Oui, venez voir.</div>`, T.discutes + .6, be(2) - .1, 700, 560, 'pop', 'pop');
+  // B3 the seller, the map, three contacts, the chosen one, the route
+  k('vendeuse', 3, 'vendeuse'); k('topa', 3, 'topa'); k('ouvre', 3, 'ouvre'); k('cherche3', 3, 'cherche'); k('producteurs', 3, 'producteurs'); k('alada', 3, 'alada');
+  k('appelle', 3, 'appelle'); k('ecrit', 3, 'écrit'); k('discute', 3, 'discute'); k('choisit', 3, 'choisit'); k('deplacer', 3, 'déplacer'); k('ensuite', 3, 'ensuite'); k('directement', 3, 'directement');
+  const [vx, vy] = hand(T.vendeuse, 3, 0, -300);
+  fx('vend', `<div class="card" style="width:420px"><div style="height:220px;background:url(assets/img/vendeuse.jpg) 50% 35%/cover"></div><div style="padding:14px 20px 18px"><div style="font:800 34px Inter">Maman Rose</div><div style="font:600 26px Inter;color:#667085;margin-top:4px">Vendeuse d'ananas · Tokpa</div></div></div>`, T.vendeuse - .1, T.ouvre - .1, vx, vy - 40, 'slideL', 'pop');
+  fx('map', `<div class="card" style="width:960px;height:500px;position:relative;background:#151A20"><canvas id="mapc" width="960" height="500"></canvas><div id="map_sb" class="pill wh" style="position:absolute;left:24px;top:22px;font-size:32px;padding:12px 22px;gap:12px">${ic('search', 34, '#667085', 2.6)}<span id="map_sbt"></span></div></div>`, T.ouvre - .05, be(3) - .2, 540, 560, 'unfold', 'pop');
+  const contact = (n, sub, btn, col, icn) => `<div class="card" style="width:300px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative"><div style="width:96px;height:96px;border-radius:50%;background:url(assets/img/cultivateur.jpg) ${50 + n * 8}% 35%/cover;border:4px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,.25)"></div><div style="font:800 28px Inter;text-align:center">${sub}</div><span class="btn" style="background:${col};color:#fff">${ic(icn, 24, '#fff', 2.6)}${btn}</span><div id="ok${n}" style="position:absolute;right:-14px;top:-14px;width:64px;height:64px;border-radius:50%;background:${GRN};display:grid;place-items:center;visibility:hidden;box-shadow:0 8px 20px rgba(21,154,105,.5)">${ic('check', 38, '#fff', 3.4)}</div></div>`;
+  fx('ct0', contact(0, 'Papa Koffi', 'Appeler', OR, 'phone'), T.appelle - .05, T.choisit + .3, 200, 1350, 'pop', 'sweep');
+  fx('ct1', contact(1, 'Ferme Sèna', 'WhatsApp', '#25A35A', 'chat'), T.ecrit - .05, T.choisit + .35, 540, 1350, 'pop', 'sweep');
+  fx('ct2', contact(2, "Coop d'Allada", 'Discuter', '#2E6BE6', 'chat'), T.discute - .05, T.ensuite - .1, 880, 1350, 'pop', 'pop');
+  // B4 products rain, the form, the pin under him, free
+  k('cultivateur4', 4, 'cultivateur'); k('ananas4', 4, 'ananas'); k('mais', 4, 'maïs'); k('sorgho', 4, 'sorgho'); k('poulet', 4, 'poulet'); k('ouvre4', 4, 'ouvre');
+  k('nom', 4, 'nom'); k('produis', 4, 'produis'); k('photos', 4, 'photos'); k('numero', 4, 'numéro'); k('whatsapp4', 4, 'whatsapp'); k('place4', 4, 'place'); k('village', 4, 'village'); k('gratuit', 4, 'gratuit');
+  [['ananas', T.ananas4, 170], ['mais', T.mais, 410], ['sorgho', T.sorgho, 660], ['poulet', T.poulet, 900]].forEach(([n, t0, x], i) =>
+    fx('pr' + i, `<img src="assets/img/${n}.png" style="height:${n === 'sorgho' ? 150 : 250}px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.45))">`, t0 - .15, T.ouvre4 - .2, x, 470 + (i % 2) * 60, 'drop', 'pop', (i % 2 ? 6 : -6)));
+  fx('ph4', `<div style="width:300px;border-radius:44px;background:#0B0D0F;padding:10px;box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 3px #2E343A"><div style="position:relative;border-radius:36px;overflow:hidden"><img src="assets/img/ajout.jpg" style="display:block;width:280px"><div id="ph4hl" style="position:absolute;left:12px;top:118px;width:256px;height:62px;border:4px solid ${OR};border-radius:14px;box-shadow:0 0 24px rgba(255,107,0,.7)"></div></div></div>`, T.ouvre4 - .05, T.place4 - .2, 820, 640, 'pop', 'pop');
+  ['Ton nom', 'Ce que tu produis', 'Tes photos', 'Ton numéro', 'Ton WhatsApp'].forEach((n, i) =>
+    fx('ck' + i, `<div class="pill wh" style="font-size:32px;padding:12px 22px"><span style="width:40px;height:40px;border-radius:50%;background:${GRN};display:grid;place-items:center">${ic('check', 26, '#fff', 3.4)}</span>${n}</div>`, [T.nom, T.produis, T.photos, T.numero, T.whatsapp4][i] - .05, T.place4 - .2, 300, 360 + i * 100, 'slideL', 'pop'));
+  fx('stamp', `<div class="pill" style="border:7px solid ${GRN};color:${GRN};background:rgba(255,255,255,.95);font:900 76px Inter;letter-spacing:.1em;border-radius:24px;padding:12px 36px">GRATUIT</div>`, T.gratuit - .05, be(4) + .1, 540, 420, 'pop', 'pop', -8);
+  // B5 three occasions, the breeder pulled from the top, a wholesaler
+  k('mariage', 5, 'mariage'); k('fete', 5, 'fête'); k('bapteme', 5, 'baptême'); k('trouve5', 5, 'trouve'); k('grossiste5', 5, 'grossiste'); k('eleveur', 5, "l'éleveur");
+  [['ring', 'Un mariage', 'mariage'], ['party', 'Une fête', 'fete'], ['baby', 'Un baptême', 'bapteme']].forEach(([icn, n, kk], i) =>
+    fx('oc' + i, `<div class="pill or" style="font-size:40px">${ic(icn, 44, '#fff', 2.2)}${n}</div>`, T[kk] - .05, T.trouve5 - .1, 300, 360 + i * 120, 'pop', 'pop'));
+  fx('el', `<div class="card" style="width:500px"><div style="height:250px;background:url(assets/img/eleveur.jpg) 50% 40%/cover"></div><div style="padding:16px 22px 20px"><div style="font:800 36px Inter">Éleveur de poulets</div><div style="font:600 26px Inter;color:#667085;margin-top:4px">Grossiste · Appeler · WhatsApp</div></div></div>`, T.trouve5 - .15, be(5) - .1, 540, 520, 'drop', 'pop');
+  // B6 the chain swept again, field and market joined by a line
+  k('plus6', 6, 'plus'); k('cultivateur6', 6, 'cultivateur'); k('acheteur', 6, "l'acheteur"); k('produits', 6, 'produits'); k('champ', 6, 'champ');
+  [[260, 420], [540, 360], [820, 420]].forEach(([x, y], i) => fx('c6' + i, av(i, "quelqu'un"), T.plus6 - .05 + i * .1, T.plus6 + 1.0, x, y, 'pop', 'sweep'));
+  const side = (img, top, sub) => `<div class="card" style="width:360px"><div style="height:200px;background:url(assets/img/${img}.jpg) 50% 35%/cover"></div><div style="padding:14px 18px 18px"><div style="font:800 32px Inter">${top}</div><div style="font:700 26px Inter;color:${GRN};margin-top:4px">${sub}</div></div></div>`;
+  fx('sd0', side('cultivateur', 'Le champ', '+ de clients'), T.cultivateur6 - .1, be(6) - .1, 230, 1340, 'slideL', 'pop');
+  fx('sd1', side('vendeuse', 'Le marché', 'Du temps gagné'), T.acheteur - .1, be(6) - .1, 850, 1340, 'slideR', 'pop');
+  // B7 three chips, the app in his hand, the stores, the share arrow
+  k('cult7', 7, 'cultivateur'); k('eleveur7', 7, 'éleveur'); k('grossiste7', 7, 'grossiste'); k('metstoi', 7, 'mets-toi'); k('telecharge', 7, 'télécharge'); k('envoie', 7, 'envoie');
+  ['Cultivateur', 'Éleveur', 'Grossiste'].forEach((n, i) => fx('r7' + i, `<div class="pill or" style="font-size:42px">${n}</div>`, [T.cult7, T.eleveur7, T.grossiste7][i] - .05, T.telecharge - .1, 300, 360 + i * 120, 'pop', 'pop'));
+  const [px7, py7] = hand(T.telecharge, 7, 0, -330);
+  fx('app7', `<div style="width:230px;border-radius:36px;background:#0B0D0F;padding:8px;box-shadow:0 30px 70px rgba(0,0,0,.6),inset 0 0 0 3px #2E343A"><img src="assets/img/accueil.jpg" style="display:block;width:214px;border-radius:30px"></div>`, T.telecharge - .05, T.envoie + .2, px7, py7 - 120, 'pop', 'fly');
+  fx('st7', `<div style="display:flex;gap:16px"><span class="pill wh" style="font-size:32px;padding:12px 22px"><img src="${APPLE}" style="width:46px;border-radius:10px">App Store</span><span class="pill wh" style="font-size:32px;padding:12px 22px"><img src="${GPLAY}" style="width:42px">Google Play</span></div>`, T.telecharge + .2, be(7) - .1, 540, 400, 'pop', 'pop');
+  fx('sh7', `<div style="width:130px;height:130px;border-radius:50%;background:${OR};display:grid;place-items:center;box-shadow:0 20px 50px rgba(255,107,0,.5)">${ic('share', 70, '#fff', 2.4)}</div>`, T.envoie, be(7) + .1, px7, py7, 'pop', 'fly');
+  // B8 the diaspora, the young brother, four people, like / share / comment, send, Benin, the strength
+  k('madresse', 8, "m'adresse"); k('diaspora', 8, 'diaspora'); k('paris', 8, 'paris'); k('montreal', 8, 'montréal'); k('bruxelles', 8, 'bruxelles'); k('abidjan', 8, 'abidjan'); k('partout', 8, 'partout');
+  k('frere', 8, 'frère'); k('livreur', 8, 'livreur'); k('maman', 8, 'maman'); k('touriste', 8, 'touriste'); k('vous8', 8, 'vous', 2); k('personne2', 8, 'personne', 1); k('faisons', 8, 'faisons-le');
+  k('like', 8, 'like'); k('partage', 8, 'partage'); k('commentaire', 8, 'commentaire'); k('envoyez', 8, 'envoyez'); k('maman2', 8, 'maman', 1); k('oncle', 8, 'oncle'); k('ami', 8, 'ami'); k('ensemble8', 8, 'ensemble', 1); k('benin8', 8, 'bénin', 2); k('force', 8, 'force', 1); k('merci', 8, 'merci');
+  fx('world', `<div class="card" style="width:960px;height:500px;background:#141A22"><canvas id="worldc" width="960" height="500"></canvas></div>`, T.diaspora - .2, T.frere - .6, 540, 560, 'unfold', 'pop');
+  [['livreur', 'bike', 'Le livreur'], ['maman', 'store', 'La maman'], ['touriste', 'camera', 'Le touriste'], ['vous8', 'plane', 'Et vous']].forEach(([kk, icn, n], i) =>
+    fx('p8' + i, `<div class="pill wh" style="width:440px;font-size:38px;justify-content:flex-start"><span style="width:62px;height:62px;border-radius:50%;background:${OR};display:grid;place-items:center">${ic(icn, 36, '#fff', 2.2)}</span>${n}</div>`, T[kk] - .05, T.personne2 - .1, 300 + (i % 2) * 480, 380 + Math.floor(i / 2) * 140, 'pop', 'pop'));
+  const [lx, ly] = hand(T.like, 8, 0, -300), [sx, sy] = hand(T.partage, 8, 0, -300);
+  fx('lk', `<div style="width:170px;height:170px;border-radius:50%;background:#E8112D;display:grid;place-items:center;box-shadow:0 20px 50px rgba(232,17,45,.5)">${ic('heart', 96, '#fff', 2.2)}</div>`, T.like - .05, T.envoyez - .1, cl(lx, 150, 480), ly - 60, 'pop', 'pop');
+  fx('sh', `<div style="width:170px;height:170px;border-radius:50%;background:${OR};display:grid;place-items:center;box-shadow:0 20px 50px rgba(255,107,0,.5)">${ic('share', 90, '#fff', 2.2)}</div>`, T.partage - .05, T.envoyez + .3, cl(sx, 600, 930), sy - 60, 'pop', 'fly');
+  fx('cm', `<div class="pill wh" style="font-size:40px;border-radius:34px 34px 34px 8px">${ic('chat', 46, OR, 2.4)}On est avec toi !</div>`, T.commentaire - .1, T.envoyez - .1, 540, 520, 'drop', 'pop');
+  [['maman2', 'À une maman'], ['oncle', 'À votre oncle'], ['ami', 'À votre ami qui a une boutique']].forEach(([kk, n], i) =>
+    fx('to' + i, `<div class="pill or" style="font-size:${i === 2 ? 34 : 40}px">${ic('share', 40, '#fff', 2.4)}${n}</div>`, T[kk] - .05, T.ensemble8 - .1, 340 + (i === 2 ? 120 : 0), 380 + i * 120, 'pop', 'pop'));
+  fx('bj8', `<div class="card" style="width:600px;height:500px;background:#141A22"><canvas id="bjc" width="600" height="500"></canvas></div>`, T.ensemble8 - .05, T.force - .1, 540, 560, 'unfold', 'pop');
+  // big titles behind Derrick
+  T.BEHIND = [[T.plus - .1, be(1) - .05, 'PLUS\nBESOIN', 'or'], [T.topa - .05, T.ouvre - .2, 'TOKPA', 'or'],     [T.village - .1, T.village + 1.7, 'VILLAGE', 'wh'], [T.champ - .25, be(6) - .05, 'DU CHAMP\nAU MARCHÉ', 'or'], [T.frere - .4, T.frere + 1.5, 'JEUNE\nFRÈRE', 'flag'], [T.force - .4, T.force + 2.0, 'LA FORCE', 'flag']];
+  T.PUNCH = [wt(1, 'avec'), T.grossiste, T.cultivateur, T.alada, T.cultivateur4, T.gratuit, T.metstoi, T.madresse, T.frere, T.faisons, T.force, T.merci];
+  T.FLASH = [1, 2, 3, 4, 5, 6, 7, 8].map(bs).concat([T.gratuit, T.faisons, END]);
+}
+build();
+$('ui').innerHTML = `<div id="logo" class="fx" style="left:56px;top:262px"><span class="pill dk" style="font-size:30px;padding:10px 24px 10px 12px"><img src="${LOGO}" style="width:54px;height:54px">Oja App</span></div>
+<div id="name" class="fx" style="left:56px;top:350px"><span class="pill wh" style="border-radius:26px;padding:16px 30px 16px 20px;gap:16px"><span style="display:flex;flex-direction:column;width:10px;height:66px;border-radius:5px;overflow:hidden"><i style="flex:1;background:${BJ[0]}"></i><i style="flex:1;background:${BJ[1]}"></i><i style="flex:1;background:${BJ[2]}"></i></span><span><span style="display:block;font:800 42px Inter">Derrick Dodoo</span><span style="display:block;font:700 28px Inter;color:${OR};margin-top:4px">Fondateur d'OJA</span></span></span></div>
+${FX.map(f => `<div id="${f.id}" class="fx">${f.html}</div>`).join('')}
+<div id="end" class="fx" style="left:0;top:0;width:1080px;height:1920px">
+  <div id="endc" class="abs card" style="left:120px;width:840px;top:500px;padding:56px 40px 60px;text-align:center">
+    <div style="display:flex;align-items:center;justify-content:center;gap:22px"><img src="${LOGO}" style="width:150px"><div style="font:900 96px Inter;letter-spacing:-.04em">Oja <span style="color:${OR}">App</span></div></div>
+    <div style="margin:30px auto 0;display:inline-block;padding:20px 64px;border-radius:44px;background:${OR};color:#fff;font:800 40px Inter;letter-spacing:.14em">TÉLÉCHARGEZ</div>
+    <div style="display:flex;gap:18px;justify-content:center;margin-top:28px"><span class="pill" style="background:#14171A;color:#fff;font-size:32px;padding:14px 24px;box-shadow:none"><img src="${APPLE}" style="width:46px;border-radius:10px">App Store</span><span class="pill" style="background:#14171A;color:#fff;font-size:32px;padding:14px 24px;box-shadow:none"><img src="${GPLAY}" style="width:42px">Google Play</span></div>
+  </div>
+  <div id="endt" class="abs" style="left:60px;right:60px;top:1110px;text-align:center;font:900 66px/1.1 Inter;letter-spacing:-.03em">Du champ au marché,<br><span style="color:#FF8A3D">mettons le Bénin sur la carte.</span></div>
+</div>`;
+// size of each element once laid out (to centre it on x, y)
+let SIZES = null;
+function measure() { SIZES = {}; for (const f of FX) { const e = $(f.id); e.style.visibility = 'hidden'; e.style.display = 'block'; const r = e.firstElementChild.getBoundingClientRect(); SIZES[f.id] = [r.width, r.height]; } }
+
+/* ---------- maps drawn on canvas ---------- */
+const CITY = { cotonou: [520, 410], calavi: [500, 340], allada: [430, 150], ouidah: [330, 410], porto: [690, 385], ze: [540, 170], toffo: [360, 95] };
+function drawMap(t) {
+  const c = $('mapc').getContext('2d'), r = rng(3); c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 960, 500);
+  const z = 1 + .5 * eio(lin(t, T.alada - .3, T.alada + .6)) - .5 * eio(lin(t, T.ensuite - .3, T.ensuite + .4)), [ax, ay] = CITY.allada;
+  c.translate(480, 250); c.scale(z, z); c.translate(-480 - (ax - 480) * (z - 1) / z * 1.0, -250 - (ay - 250) * (z - 1) / z * 1.0);
+  c.fillStyle = '#1B2B22'; c.fillRect(-200, -200, 1400, 900);
+  for (let i = 0; i < 40; i++) { c.fillStyle = r() < .5 ? '#20352A' : '#1E3127'; c.beginPath(); c.roundRect(r() * 960, r() * 420, 60 + r() * 120, 30 + r() * 60, 10); c.fill(); }
+  c.fillStyle = '#163446'; c.beginPath(); c.moveTo(-200, 440); c.bezierCurveTo(200, 430, 600, 450, 1200, 420); c.lineTo(1200, 700); c.lineTo(-200, 700); c.fill();      // the sea
+  c.fillStyle = '#1C4058'; c.beginPath(); c.ellipse(560, 395, 120, 22, -.1, 0, 7); c.fill();                                                                      // the lagoon
+  c.strokeStyle = '#3C4A55'; c.lineWidth = 8; c.beginPath(); c.moveTo(520, 410); c.lineTo(500, 340); c.lineTo(430, 150); c.lineTo(360, 95); c.stroke();           // the road north
+  c.beginPath(); c.moveTo(330, 410); c.lineTo(520, 410); c.lineTo(690, 385); c.stroke();
+  c.font = '700 24px Inter'; c.textAlign = 'center';
+  for (const [n, [x, y]] of Object.entries(CITY)) { if (n === 'ze' || n === 'toffo') continue; c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 6, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.85)';
+    c.fillText({ cotonou: 'Cotonou · Tokpa', calavi: 'Abomey-Calavi', allada: 'Allada', ouidah: 'Ouidah', porto: 'Porto-Novo' }[n], x, y + 34); }
+  // producers: pins around Allada (and a few further), they appear at « producteurs »
+  const P = [[400, 130], [455, 120], [470, 175], [410, 185], [380, 150], [540, 165], [360, 90], [300, 230], [600, 250]];
+  P.forEach(([x, y], i) => { const a = lin(t, T.producteurs - .2 + i * .1, T.producteurs + .2 + i * .1); if (a > 0) pin(c, x, y, 1.1 * bk(a), cl(a * 3), i < 3 && t > T.appelle - .2 ? ['#FF6B00', '#25A35A', '#2E6BE6'][i] : OR); });
+  // the route Tokpa -> Allada
+  const ra = lin(t, T.directement - .3, T.directement + 1.2); if (ra > 0) { c.setLineDash([16, 12]); c.lineDashOffset = -t * 50; c.strokeStyle = '#FFB066'; c.lineWidth = 7; c.lineCap = 'round';
+    const pts = [CITY.cotonou, CITY.calavi, [460, 240], [470, 175]]; c.beginPath(); c.moveTo(...pts[0]); const n = ra * (pts.length - 1);
+    for (let s = 1; s <= Math.ceil(n); s++) { const f = Math.min(1, n - (s - 1)); c.lineTo(pts[s - 1][0] + (pts[s][0] - pts[s - 1][0]) * f, pts[s - 1][1] + (pts[s][1] - pts[s - 1][1]) * f); } c.stroke(); c.setLineDash([]); }
+  // search text
+  const q = 'ananas', nn = Math.floor(q.length * lin(t, T.cherche3 - .05, T.cherche3 + .6)); $('map_sbt').textContent = q.slice(0, nn);
+}
+function pin(c, x, y, s, a = 1, col = OR) { c.save(); c.globalAlpha = a; c.translate(x, y); c.scale(s, s); c.fillStyle = col; c.strokeStyle = '#fff'; c.lineWidth = 2.4;
+  c.beginPath(); c.moveTo(0, 0); c.bezierCurveTo(-4, -8, -12, -14, -12, -24); c.arc(0, -24, 12, Math.PI, 0); c.bezierCurveTo(12, -14, 4, -8, 0, 0); c.fill(); c.stroke();
+  c.fillStyle = '#fff'; c.beginPath(); c.arc(0, -24, 4.5, 0, 7); c.fill(); c.restore(); }
+const BEN = new Path2D(BENIN.d);
+function benin(c, cx, cy, hgt, a, fill = true) { const [x0, y0, x1, y1] = BENIN.box, s = hgt / (y1 - y0); c.save(); c.translate(cx - (x0 + x1) / 2 * s, cy - (y0 + y1) / 2 * s); c.scale(s, s);
+  if (fill) { c.save(); c.clip(BEN); c.globalAlpha = a; const xm = x0 + (x1 - x0) * .4, ym = (y0 + y1) / 2; c.fillStyle = BJ[0]; c.fillRect(x0, y0, xm - x0, y1 - y0); c.fillStyle = BJ[1]; c.fillRect(xm, y0, x1 - xm, ym - y0); c.fillStyle = BJ[2]; c.fillRect(xm, ym, x1 - xm, y1 - ym); c.restore(); }
+  c.globalAlpha = a; c.lineWidth = 3 / s; c.strokeStyle = '#fff'; c.stroke(BEN); c.restore(); }
+function drawWorld(t) {
+  const c = $('worldc').getContext('2d'); c.clearRect(0, 0, 960, 500);
+  const r = rng(8); for (let i = 0; i < 140; i++) { c.fillStyle = `rgba(255,255,255,${.04 + r() * .05})`; c.beginPath(); c.arc(r() * 960, r() * 500, 2 + r() * 2, 0, 7); c.fill(); }
+  benin(c, 760, 300, 300, eo(lin(t, T.diaspora - .2, T.diaspora + .4)));
+  const B = [770, 330], C = [['Paris', [230, 110], T.paris], ['Montréal', [110, 250], T.montreal], ['Bruxelles', [330, 60], T.bruxelles], ['Abidjan', [430, 400], T.abidjan]];
+  c.font = '800 30px Inter'; c.textAlign = 'center';
+  for (const [n, [x, y], t0] of C) { const a = eo(lin(t, t0 - .1, t0 + .3)); if (a <= 0) continue; c.globalAlpha = a; c.fillStyle = OR; c.beginPath(); c.arc(x, y, 12 * bk(lin(t, t0 - .1, t0 + .4)), 0, 7); c.fill();
+    c.fillStyle = '#fff'; c.fillText(n, x, y - 24);
+    const la = lin(t, T.partout - .2 + C.findIndex(q => q[0] === n) * .12, T.partout + .9 + C.findIndex(q => q[0] === n) * .12); if (la > 0) { c.strokeStyle = '#FFB066'; c.lineWidth = 5; c.setLineDash([14, 10]); c.lineDashOffset = -t * 40; c.beginPath(); c.moveTo(x, y);
+      const mx = (x + B[0]) / 2, my = Math.min(y, B[1]) - 120; const N = 30, k = Math.floor(N * la); for (let s = 1; s <= k; s++) { const u = s / N; c.lineTo((1 - u) * (1 - u) * x + 2 * (1 - u) * u * mx + u * u * B[0], (1 - u) * (1 - u) * y + 2 * (1 - u) * u * my + u * u * B[1]); } c.stroke(); c.setLineDash([]); } }
+  c.globalAlpha = 1;
+}
+function drawBj(t) { const c = $('bjc').getContext('2d'); c.clearRect(0, 0, 600, 500); benin(c, 300, 250, 420, eo(lin(t, T.ensemble8 - .05, T.ensemble8 + .5)));
+  const r = rng(12); for (let i = 0; i < 90; i++) { const x = 300 + (r() - .5) * 150, y = 70 + r() * 360, a = lin(t, T.ensemble8 + .4 + i * .02, T.ensemble8 + .7 + i * .02); if (a > 0) pin(c, x, y, .8 * bk(a), a); } }
+
+/* ---------- frames, masks, the title behind Derrick ---------- */
+const CACHE = new Map(), PENDING = new Set();
+function need(src) { let im = CACHE.get(src); if (im) { CACHE.delete(src); CACHE.set(src, im); return im.complete && im.naturalWidth ? im : null; }
+  im = new Image(); im.src = src; CACHE.set(src, im); const p = im.decode().catch(() => 0); PENDING.add(p); p.then(() => PENDING.delete(p));
+  if (CACHE.size > 40) for (const [k] of CACHE) { if (CACHE.size <= 40) break; CACHE.delete(k); } return null; }
+const pad4 = n => String(n).padStart(4, '0');
+const frameIdx = t => Math.max(0, Math.min(NF - 1, Math.floor(Math.min(t, EDIT_DUR - .05) * FPS_SRC)));
+const FR = i => `work/frames/f${pad4(i + 1)}.jpg`, MK = i => `work/frames/m${pad4(i + 1)}.png`;
+const cv = $('cv'), ctx = cv.getContext('2d');
+const mk2 = () => { const c = document.createElement('canvas'); c.width = W; c.height = H; return [c, c.getContext('2d')]; };
+const [pc, px] = mk2(), [oc, ox] = mk2(), [hc, hx] = mk2();
+function hard(mk) { hx.clearRect(0, 0, W, H); for (let i = 0; i < 5; i++) hx.drawImage(mk, 0, 0, W, H); return hc; }
+function person(fr, mk) { px.globalCompositeOperation = 'source-over'; px.clearRect(0, 0, W, H); px.drawImage(fr, 0, 0, W, H); px.globalCompositeOperation = 'destination-in'; px.drawImage(mk, 0, 0); px.globalCompositeOperation = 'source-over'; return pc; }
+function outline(mk, w = 9) { ox.globalCompositeOperation = 'source-over'; ox.clearRect(0, 0, W, H); for (let a = 0; a < 12; a++) ox.drawImage(mk, Math.cos(a / 12 * 6.283) * w, Math.sin(a / 12 * 6.283) * w);
+  ox.globalCompositeOperation = 'source-in'; ox.fillStyle = '#fff'; ox.fillRect(0, 0, W, H); ox.globalCompositeOperation = 'destination-out'; ox.drawImage(mk, 0, 0); ox.globalCompositeOperation = 'source-over'; return oc; }
+function bigWord(txt, kind, t, a, b) { if (txt.includes('\n')) { const L = txt.split('\n'); L.forEach((ln, i) => bigLine(ln, kind, t, a + i * .15, b, 720 + (i - (L.length - 1) / 2) * 230, 230)); return; } bigLine(txt, kind, t, a, b, 800, 280); }
+function bigLine(txt, kind, t, a, b, y, maxSize) { const n = txt.length; ctx.save(); ctx.font = '900 100px Inter'; const size = Math.min(maxSize, 100 * 1000 / (ctx.measureText(txt).width * .98)); ctx.font = `900 ${size}px Inter`; ctx.textBaseline = 'middle';
+  const tw = ctx.measureText(txt).width + (n - 1) * -size * .02, out = eio(lin(t, b - .25, b)); let x = 540 - tw / 2;
+  for (let i = 0; i < n; i++) { const ch = txt[i], w = ctx.measureText(ch).width - size * .02, p = eo(lin(t, a + i * .03, a + i * .03 + .35));
+    let col = kind === 'wh' ? '#fff' : OR; if (kind === 'flag') col = i < n * .34 ? BJ[0] : i < n * .67 ? BJ[1] : BJ[2];
+    ctx.globalAlpha = p * (1 - out); ctx.fillStyle = col; ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 30;
+    ctx.save(); ctx.translate(x + w / 2, y + (1 - p) * 160 - out * 40); ctx.scale(1 + (1 - p) * .4 + out * .15, 1 + (1 - p) * .4 + out * .15); ctx.fillText(ch, -w / 2, 0); ctx.restore(); x += w; }
+  ctx.restore(); }
+const ZC = [540, 900];
+const zoomAt = t => { let k = 0, lc = 0; for (const [c, big] of EDIT.cuts) if (t >= c && big) { k++; lc = c; } return (k % 2 ? 1.08 : 1.0) * (1 + .03 * cl((t - lc) / 5)); };
+const punch = t => { let a = 0; for (const p of T.PUNCH) { const k = t - p; if (k > -.05 && k < .6) a = Math.max(a, k < .08 ? eo((k + .05) / .13) : 1 - eio((k - .08) / .52)); } return 1 + .09 * a; };
+const CONF = (() => { const r = rng(55); return Array.from({ length: 150 }, () => ({ x: r() * W, d: r() * .6, v: 500 + r() * 700, s: 10 + r() * 16, c: BJ[Math.floor(r() * 3)], w: r() * 6.283, sp: 2 + r() * 6 })); })();
+const SPARK = (() => { const r = rng(66); return Array.from({ length: 36 }, () => ({ a: r() * 6.283, v: 260 + r() * 520, c: r() < .5 ? '#FFD27A' : '#fff' })); })();
+
+/* ---------- subtitles ---------- */
+const FIX = { 'Topa.': 'Tokpa.', 'Alada.': 'Allada.', 'Odja': 'OJA', 'Hodja': 'Oja', 'paie.': 'perde.', 'Bénin,': 'Bénin,' };
+const KEY = /OJA|Oja|carte|gratuit|grossiste|cultivateur|Tokpa|Allada|WhatsApp|ananas|village|champ|marché|frère|force|Bénin|diaspora|ensemble|like|partage|commentaire/i;
+const GROUPS = (() => { const G = []; let cur = []; WORDS.forEach(([w, s, e], i) => { const txt = FIX[w] || w; cur.push([txt, s, e]); const next = WORDS[i + 1];
+  if (cur.length >= 3 || /[,.!?:]$/.test(txt) || !next || next[1] - e > .3 || next[5] !== WORDS[i][5]) { G.push(cur); cur = []; } }); if (cur.length) G.push(cur); return G; })();
+
+/* ---------- frame ---------- */
+let CUR = 0, DRAWN = false;
+function draw(t) {
+  if (!SIZES) measure();
+  const fi = frameIdx(t), fr = need(FR(fi)); need(FR(Math.min(NF - 1, fi + 1))); if (!fr) return false;
+  const endA = eo(lin(t, END, END + .5));
+  const z = punch(t) * zoomAt(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
+  const GRADE = 'contrast(1.07) saturate(1.12)';
+  const place = () => { ctx.translate(ZC[0], ZC[1]); ctx.scale(z, z); ctx.translate(-ZC[0], -ZC[1]); };
+  ctx.filter = endA ? `blur(${18 * endA}px) brightness(${1 - .58 * endA})` : GRADE; ctx.save(); place(); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
+  const bh = !endA ? T.BEHIND.find(([a, b]) => t >= a && t < b) : null;
+  if (bh) { const m0 = need(MK(fi)); if (!m0) return false; const mk = hard(m0); bigWord(bh[2], bh[3], t, bh[0], bh[1]);
+    const oa = eo(lin(t, bh[0], bh[0] + .3)) * (1 - eio(lin(t, bh[1] - .25, bh[1])));
+    ctx.save(); place(); ctx.globalAlpha = oa; ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 24; ctx.drawImage(outline(mk), 0, 0); ctx.restore();
+    ctx.save(); place(); ctx.filter = GRADE; ctx.drawImage(person(fr, mk), 0, 0); ctx.restore(); ctx.filter = 'none'; }
+  { const g = ctx.createLinearGradient(0, 0, 0, 760); g.addColorStop(0, 'rgba(0,0,0,.35)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, 760);
+    const vg = ctx.createRadialGradient(540, 900, 520, 540, 900, 1250); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.42)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); }
+  // warm light on « jeune frère »
+  { const a = Math.min(lin(t, T.frere - .5, T.frere), 1 - lin(t, T.frere + 1.4, T.frere + 2)); if (a > 0) { const g = ctx.createRadialGradient(540, 820, 0, 540, 820, 900); g.addColorStop(0, `rgba(255,150,60,${.28 * a})`); g.addColorStop(1, 'rgba(255,150,60,0)'); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over'; } }
+  // the pin that drops where he points (B4)
+  { const a = lin(t, T.place4 - .15, T.place4 + .35), out = lin(t, T.village - .3, T.village); if (a > 0 && out < 1) { ctx.globalAlpha = 1 - out; pin(ctx, 540, 1430 - (1 - bk(a)) * 500, 4); for (let k = 0; k < 3; k++) { const u = ((t - T.place4) * .8 + k / 3) % 1; if (t > T.place4) { ctx.strokeStyle = `rgba(255,107,0,${(1 - u) * .8 * (1 - out)})`; ctx.lineWidth = 6; ctx.beginPath(); ctx.ellipse(540, 1432, 40 + 200 * u, 12 + 60 * u, 0, 0, 7); ctx.stroke(); } } ctx.globalAlpha = 1; } }
+  // the line between the field and the market (B6)
+  { const a = lin(t, T.produits - .1, T.champ + .4); if (a > 0 && t < be(6) - .1) { ctx.setLineDash([22, 16]); ctx.lineDashOffset = -t * 60; ctx.strokeStyle = '#FFB066'; ctx.lineWidth = 10; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(410, 1340); ctx.lineTo(410 + (670 - 410) * eio(a), 1340); ctx.stroke(); ctx.setLineDash([]); } }
+  // flashes, confetti, sparks
+  for (const f of T.FLASH) { const k = t - f; if (k >= -.02 && k < .6) { ctx.fillStyle = `rgba(255,255,255,${.45 * (1 - lin(k, 0, .22))})`; ctx.fillRect(0, 0, W, H);
+    const lx = -300 + 1700 * eio(lin(k, 0, .6)), lg = ctx.createRadialGradient(lx, 800, 0, lx, 800, 700); lg.addColorStop(0, `rgba(255,140,40,${.35 * (1 - lin(k, .3, .6))})`); lg.addColorStop(1, 'rgba(255,140,40,0)');
+    ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over'; } }
+  { const k = t - T.force + .05; if (k > 0 && k < 3.2) CONF.forEach(c => { const u = k - c.d; if (u <= 0) return; const y = -40 + c.v * u, x = c.x + Math.sin(u * c.sp + c.w) * 40; if (y > H) return;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(u * c.sp); ctx.globalAlpha = 1 - lin(k, 2.4, 3.2); ctx.fillStyle = c.c; ctx.fillRect(-c.s / 2, -c.s / 4, c.s, c.s / 2); ctx.restore(); }); }
+  // ---------------- DOM ----------------
+  const vis = (id, a, tr) => { const e = $(id); if (a <= 0) { e.style.visibility = 'hidden'; return; } e.style.visibility = 'visible'; e.style.opacity = cl(a); if (tr !== undefined) e.style.transform = tr; };
+  vis('logo', endA ? 0 : 1, 'none'); vis('name', Math.min(lin(t, .2, .5), 1 - lin(t, 2.9, 3.2)), `translateY(${(1 - eo(lin(t, .2, .55))) * 20}px)`);
+  let sparks = [];
+  for (const f of FX) {
+    const e = $(f.id), [w, h] = SIZES[f.id];
+    if (t < f.t0 || t > f.t1 + .05 || endA > 0) { e.style.visibility = 'hidden'; continue; }
+    const p = lin(t, f.t0, f.t0 + .45), x = eio(lin(t, f.t1 - .35, f.t1)), fl = Math.sin(t * 2 + f.x * .01) * 6;
+    let tr = `translate(${f.x - w / 2}px,${f.y - h / 2 + fl}px) rotate(${f.rot}deg) `, op = 1, blur = 0;
+    if (f.enter === 'pop') tr += `scale(${bk(p)})`; else if (f.enter === 'drop') tr += `translateY(${-1500 * (1 - bk(p))}px)`; else if (f.enter === 'slideL') tr += `translateX(${-900 * (1 - eo(p))}px)`;
+    else if (f.enter === 'slideR') tr += `translateX(${900 * (1 - eo(p))}px)`; else if (f.enter === 'unfold') tr += `scaleY(${eo(p)}) scaleX(${.9 + .1 * eo(p)})`;
+    if (x > 0) { if (f.exit === 'sweep') { tr += ` translateX(${1500 * eio(x)}px) rotate(${25 * x}deg)`; blur = 14 * x; } else if (f.exit === 'fly') { tr += ` translate(${700 * eio(x)}px,${-1100 * eio(x)}px) rotate(${-20 * x}deg) scale(${1 - .4 * x})`; }
+      else { tr += ` scale(${1 - .25 * x})`; op = 1 - x; } }
+    e.style.visibility = 'visible'; e.style.left = '0px'; e.style.top = '0px'; e.style.opacity = cl(p * 4) * op; e.style.transform = tr; e.style.filter = blur ? `blur(${blur}px)` : 'none';
+    if (f.enter === 'pop' && t - f.t0 < .9) sparks.push([f.x, f.y, t - f.t0]);
+  }
+  // inner animations
+  if (t >= T.cherches - .1 && t < T.cultivateur) { const q = 'grossiste', n = Math.floor(q.length * lin(t, T.cherches, T.cherches + .7)); $('sb2t').textContent = q.slice(0, n); $('sb2c').style.opacity = Math.floor(t * 4) % 2 ? 1 : .2; }
+  if (t >= T.ouvre - .1 && t < be(3)) drawMap(t);
+  if (t >= T.diaspora - .3 && t < T.frere) drawWorld(t);
+  if (t >= T.ensemble8 - .1 && t < T.force) drawBj(t);
+  $('ok2').style.visibility = t > T.choisit + .2 && t < T.ensuite - .1 ? 'visible' : 'hidden';
+  { const hl = $('ph4hl'); const rows = [118, 118, 118]; hl.style.opacity = .7 + .3 * Math.sin(t * 8); }
+  // sparks where something appears
+  for (const [x0, y0, k] of sparks) { if (k > .7) continue; SPARK.forEach(s => { const d = s.v * k * (1 - k * .6); ctx.globalAlpha = 1 - k / .7; ctx.strokeStyle = s.c; ctx.lineWidth = 3.5; ctx.beginPath();
+    ctx.moveTo(x0 + Math.cos(s.a) * d * .7, y0 + Math.sin(s.a) * d * .7); ctx.lineTo(x0 + Math.cos(s.a) * d, y0 + Math.sin(s.a) * d); ctx.stroke(); }); ctx.globalAlpha = 1; }
+  // end card
+  vis('end', endA, 'none'); if (endA > 0) { st($('endc'), { opacity: endA, transform: `scale(${bk(lin(t, END, END + .5))})` }); const p = eo(lin(t, END + .4, END + .9)); st($('endt'), { opacity: p, transform: `translateY(${(1 - p) * 30}px)` }); }
+  if (t > DUR - 1.2) { ctx.fillStyle = `rgba(0,0,0,${lin(t, DUR - 1.2, DUR)})`; ctx.fillRect(0, 0, W, H); $('ui').style.opacity = 1 - lin(t, DUR - 1.2, DUR); } else $('ui').style.opacity = 1;
+  // subtitles
+  const gi = GROUPS.findIndex((gr, i) => t >= gr[0][1] - .05 && t < (GROUPS[i + 1] ? Math.min(GROUPS[i + 1][0][1] - .05, gr[gr.length - 1][2] + .8) : gr[gr.length - 1][2] + .6));
+  const sub = gi >= 0 && endA === 0 ? GROUPS[gi] : null;
+  $('sub').innerHTML = sub ? sub.map(([w]) => KEY.test(w) ? `<em>${w}</em>` : w).join(' ') : '';
+  return true;
+}
+function renderAt(t) { CUR = t; DRAWN = draw(t); }
+window.waitFrame = async () => { for (let n = 0; n < 12 && (!DRAWN || PENDING.size); n++) { await Promise.all([...PENDING]); DRAWN = draw(CUR); } };
+window.ready = (async () => { await document.fonts.load('900 100px Inter'); await document.fonts.load('800 40px Inter'); await document.fonts.ready;
+  await Promise.all([...document.images].map(i => i.decode().catch(() => 0))); measure(); renderAt(0); await window.waitFrame(); })();
+if (location.search.includes('play')) { const t0 = performance.now(); const loop = () => { renderAt(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); }; window.ready.then(loop); }
+</script>
+</body></html>

@@ -192,3 +192,42 @@ Chaque ligne : **ce que vous dites**, puis *ce que vous faites*, puis ce qui app
   2. la recherche d'un produit ;
   3. une fiche avec « Appeler » et « WhatsApp ».
 - Sinon, j'utilise des images IA du Bénin d'aujourd'hui : champ d'ananas propre, marché moderne, éleveur.
+
+## Montage (version principale, 2 min 56 s)
+Fichier : `exports/OJA-video4-du-champ-au-marche.mp4`, en 1080 × 1920, 30 fps, AAC 48 kHz.
+
+- **Prises** : IMG_1073 à IMG_1080, une par bloc, dans `rushes/` (non suivi par git).
+  - « Bloc N » est retiré au début de chaque prise.
+  - Dans le bloc 2, on garde le 2e essai de « Tu veux un cultivateur à la source ? ».
+- **Découpe** (`src/cut.py`) :
+  - Elle suit les mots et les mouvements des mains : chaque geste est gardé avec 1 s de pose au plus, et les attentes sont coupées.
+  - Les réponses passent 10 % plus vite.
+  - Chaque morceau est coupé à part, puis la timeline est recalculée sur le vrai nombre d'images.
+- **Position des mains** : pour chaque geste, on calcule le centre du mouvement. Les objets « dans la main » apparaissent à cet endroit.
+- **Effets** (`montage.html`), chacun calé sur le mot dit :
+  - la chaîne « quelqu'un qui connaît quelqu'un », balayée ;
+  - la recherche « grossiste » et la fiche du cultivateur qui descend du haut, puis se retrouve dans la main, avec des bulles de discussion ;
+  - la carte du sud du Bénin : recherche « ananas », les producteurs autour d'Allada, trois contacts (Appeler, WhatsApp, Discuter), le bon choisi, puis le trajet de Tokpa à Allada ;
+  - la pluie d'ananas, de maïs, de sorgho et de poulet ;
+  - le formulaire et ses cinq cases cochées, l'épingle qui tombe devant Derrick, et GRATUIT ;
+  - l'éleveur ;
+  - le champ et le marché reliés ;
+  - l'appli dans la main, les stores et la flèche de partage ;
+  - la diaspora : Paris, Montréal, Bruxelles et Abidjan reliées au Bénin ;
+  - quatre personnes, puis like, partage et commentaire ;
+  - le Bénin aux couleurs du drapeau ;
+  - des grands mots derrière Derrick avec un contour blanc : PLUS BESOIN, TOKPA, VILLAGE, DU CHAMP AU MARCHÉ, JEUNE FRÈRE, LA FORCE ;
+  - des confettis, des flashs, des zooms rapides et une carte de fin.
+- **Images IA** (Nano Banana 2 Lite, environ 3 300 crédits, `assets/img/`) : produits détourés, cultivateur, vendeuse et éleveur.
+  - Les personnes et les noms sont fictifs : Papa Koffi, Maman Rose, Ferme Sèna, Coop d'Allada.
+- **Musique** : la même chanson que la vidéo 3 (`work/fond2.wav`, copie de `video3/work/fond2.wav`).
+  - Elle est plus douce au début du bloc 8, puis monte jusqu'à « la force ».
+  - Après « Merci », on entend fort « Le Bénin est beau ».
+  - La voix est à -14 LUFS.
+- **Refaire** (depuis `video4/`) :
+  1. `python3 src/cut.py`, puis le petit calcul de la position des mains (voir l'historique git) ;
+  2. `python3 src/music.py work/fond2.wav work/music.wav` ;
+  3. `src/mix.sh` ;
+  4. les images : `ffmpeg -i work/edit.mp4 -vf fps=24 -q:v 3 work/frames/f%04d.jpg` ;
+  5. les masques : `python src/masks.py work/frames A B` pour 213-272, 665-700, 870-920, 1977-2031, 2526-2576, 3102-3157 et 4014-4081 ;
+  6. `src/render.sh`.
