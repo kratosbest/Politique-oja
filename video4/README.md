@@ -77,87 +77,94 @@ Si vous croyez en ça : un like, c'est un "je suis avec toi". Un partage, c'est 
 Envoyez cette vidéo à votre maman au marché, à votre oncle au village, à votre ami qui a une boutique.
 Ensemble, mettons le Bénin sur la carte. *(pause)* Donnez-moi la force… on y va ! »
 
-**Gestes et effets**
-- POINTER vers la caméra sur « je m'adresse à vous » : zoom rapide.
-- RELIER sur « partout où vous êtes » : une carte du monde, et des lignes partent de Paris, Bruxelles, Montréal et Abidjan pour arriver au Bénin.
-- La main sur le cœur sur « votre jeune frère » : lumière chaude, et JEUNE FRÈRE s'écrit derrière vous.
-- Comptez sur vos doigts (1, 2, 3, 4) sur « le livreur, la maman, le touriste, et vous » : quatre cartes apparaissent.
-- MAIN, puis MAIN, puis TIRER sur « un like, un partage, un commentaire » : un cœur, une flèche de partage et une bulle, sans logo de réseau social.
-- Le geste d'envoi vers l'avant sur « envoyez cette vidéo » : la flèche s'envole vers trois pastilles (maman au marché, oncle au village, ami boutiquier).
-- Le poing levé sur « donnez-moi la force » : LA FORCE s'écrit derrière vous et des confettis vert, jaune et rouge tombent.
+**Gestes et effets** : voir les instructions exactes, bloc 8, dans la partie « Gestes et effets ».
 
 **Texte pour la publication** (légende sous la vidéo, à coller tel quel) :
 > Béninois du pays et de la diaspora, j'ai besoin de vous. Je suis votre jeune frère, et je crois qu'ensemble, on peut rendre la localisation facile au Bénin. Un like, un partage, un commentaire : c'est la force que vous me donnez. Envoyez cette vidéo à quelqu'un qui a un commerce, un champ ou une boutique. Ensemble, mettons le Bénin sur la carte. #OJA #Bénin #Diaspora #Cotonou
 
-## Gestes et effets (version 2 du texte)
+## Gestes et effets : les instructions exactes
 
-**Les 6 gestes.** Faites-les toujours au même endroit, pour que je cale les effets facilement.
+Chaque ligne : **ce que vous dites**, puis *ce que vous faites*, puis ce qui apparaît au montage. Les mêmes instructions sont dans le prompteur, dans un cadre orange au-dessus de la phrase.
 
-| Geste | Comment le faire | Effet au montage |
-|---|---|---|
-| **MAIN** | Paume ouverte vers le haut, à hauteur de poitrine (main gauche ou droite). Claquez des doigts juste avant. | Un objet apparaît dans la main, avec des étincelles. |
-| **TIRER** | Main au-dessus de la tête, elle se ferme et tire vers le bas. | Un élément descend du haut de l'écran. |
-| **BALAYER** | Revers de main rapide, de gauche à droite, devant la poitrine (environ une demi-seconde). | Ce qui est à l'écran est chassé, avec un flou de vitesse. |
-| **TAPER** | Index qui tape dans l'air vers la caméra, comme sur un écran. | Une barre de recherche ou un bouton s'active, avec une onde. |
-| **RELIER** | Les deux mains écartées, qui se rejoignent lentement. | Une ligne relie deux points sur la carte. |
-| **POINTER** | Index vers le bas (« ici »), ou vers la caméra (« toi »). | Une épingle tombe là où vous montrez, ou un zoom rapide sur vous. |
+**1. Accroche** (calme, avec un petit sourire)
+- « il faut toujours connaître quelqu'un. » : *Claquer des doigts, puis ouvrir la main gauche, paume vers le haut, à hauteur de poitrine, et la regarder* → un petit personnage apparaît dans votre main.
+- « Qui connaît quelqu'un. » : *Claquer des doigts, puis ouvrir la main droite, paume vers le haut, et la regarder* → un deuxième personnage apparaît.
+- « Qui connaît quelqu'un… » : *Lever les yeux au ciel, les deux mains ouvertes, l'air fatigué* → la chaîne de personnages s'allonge.
+- « Avec OJA, plus besoin. » : *Balayer d'un coup sec avec la main droite, de gauche à droite devant la poitrine* → la chaîne est chassée, PLUS BESOIN s'écrit derrière vous.
 
-**Bloc par bloc :**
-1. **Accroche**
-   - MAIN gauche sur « connaître quelqu'un » : un petit personnage apparaît.
-   - MAIN droite sur « qui connaît quelqu'un » : un deuxième.
-   - Sur le dernier « qui connaît quelqu'un » : la chaîne s'allonge toute seule.
-   - BALAYER sur « Avec OJA, plus besoin » : la chaîne est chassée, et les grands mots PLUS BESOIN apparaissent derrière vous.
-2. **Le principe**
-   - TAPER sur « tu cherches un grossiste » : la barre de recherche s'écrit « grossiste ».
-   - TIRER sur « le cultivateur, à la source » : la fiche d'un cultivateur descend.
-   - MAIN sur « tu le trouves » : la fiche est dans votre main.
-   - Sur « tu discutes » : des bulles de discussion apparaissent à côté de vous.
-3. **L'exemple**
-   - Les deux mains qui s'écartent sur « elle ouvre la carte » : la carte se déplie.
-   - TAPER sur « ananas ».
-   - POINTER sur le côté sur « jusqu'à Allada » : la carte glisse jusqu'à Allada, ALLADA s'écrit derrière vous et les épingles s'allument.
-   - Trois fois MAIN (gauche, droite, gauche) sur « appelle », « écrit sur WhatsApp » et « discute » : trois cartes de contact apparaissent.
-   - BALAYER sur « celui qui l'arrange » : deux cartes partent et la bonne reste, avec une coche verte.
-   - RELIER sur « elle y va directement » : le trajet se trace de Tokpa à Allada.
-4. **Le producteur**
-   - TIRER sur « ananas, maïs, tomates, poulets, poissons » : les produits tombent du haut.
-   - TAPER sur « enregistre-toi » : l'écran « Enregistrer un lieu » apparaît.
-   - POINTER vers le bas sur « exactement là où tu es » : une épingle tombe devant vous, avec une onde.
-   - Sur « même au village » : VILLAGE derrière vous.
-   - MAIN sur « c'est gratuit » : le tampon GRATUIT apparaît dans votre main.
-5. **Les particuliers**
-   - Comptez sur vos doigts (1, 2, 3) sur « un mariage, une fête, un baptême » : trois pastilles apparaissent.
-   - TIRER sur « l'éleveur » : la fiche d'un éleveur descend.
-6. **Ce que ça change**
-   - BALAYER sur « plus besoin de connaître quelqu'un » : on rappelle la chaîne de l'accroche.
-   - RELIER sur « du champ au marché » : la ligne relie le champ et le marché, et DU CHAMP AU MARCHÉ s'écrit derrière vous.
-7. **Appel**
-   - POINTER vers la caméra sur « mets-toi » : zoom rapide.
-   - MAIN sur « Télécharge Oja App » : un téléphone avec l'appli apparaît dans votre main.
-   - Sur « envoie cette vidéo » : geste d'envoi vers l'avant, et une flèche de partage s'envole.
+**2. Le principe** (plus d'énergie, franc)
+- « Tu veux un grossiste ? » : *Pointer l'index vers la caméra* → zoom rapide sur vous.
+- « Tu cherches un grossiste. » : *Taper deux fois dans l'air avec l'index, comme sur l'écran d'un téléphone* → la barre de recherche s'écrit « grossiste ».
+- « Tu veux le cultivateur, directement à la source ? » : *Lever la main droite au-dessus de la tête, la fermer, puis la tirer du haut vers le bas jusqu'à la poitrine* → la fiche du cultivateur descend du haut.
+- « Tu le cherches, tu le trouves… » : *Claquer des doigts, puis ouvrir la main gauche, paume vers le haut, et la regarder* → la fiche apparaît dans votre main.
+- « et tu discutes. » : *Ouvrir et fermer les doigts de la main droite, comme une bouche qui parle* → des bulles de discussion apparaissent à côté de vous.
+
+**3. L'exemple**
+- « Prends la vendeuse d'ananas de Tokpa. » : *Tendre la main ouverte vers la gauche, comme pour la présenter* → la vendeuse apparaît à gauche, TOKPA s'écrit.
+- « Elle ouvre la carte OJA, » : *Mains jointes devant la poitrine, puis les écarter lentement sur les côtés* → la carte se déplie entre vos mains.
+- « elle cherche « ananas »… » : *Taper deux fois dans l'air avec l'index* → « ananas » s'écrit dans la recherche.
+- « et elle voit les producteurs, jusqu'à Allada. » : *Tendre le bras droit loin sur le côté et suivre la main du regard* → la carte glisse jusqu'à Allada, ALLADA s'écrit derrière vous.
+- « Elle appelle le premier, » : *Mettre la main gauche à l'oreille, comme un téléphone* → 1re carte de contact, avec « Appeler ».
+- « elle écrit au deuxième sur WhatsApp, » : *Faire semblant de taper un message avec les deux pouces* → 2e carte, avec « WhatsApp ».
+- « elle discute avec un troisième… » : *Claquer des doigts, puis ouvrir la main droite, paume vers le haut* → 3e carte.
+- « et elle choisit celui qui l'arrange. » : *Balayer vers l'extérieur avec la main gauche, puis pointer l'index devant vous* → deux cartes partent, la bonne reste avec une coche verte.
+- « Avant même de se déplacer. » : *Lever l'index, l'air sérieux*.
+- « Ensuite, elle y va directement, sans se perdre. » : *Écarter grand les deux bras, puis rapprocher lentement les mains jusqu'à ce qu'elles se touchent* → le trajet se trace de Tokpa à Allada.
+
+**4. Le producteur**
+- « Et toi qui cultives, toi qui élèves : » : *Pointer les deux index vers la caméra* → zoom rapide.
+- « ananas, maïs, tomates, poulets, poissons… » : *Lever les deux mains au-dessus de la tête, puis les faire descendre en agitant les doigts, comme une pluie* → les produits tombent du haut de l'écran.
+- « Depuis ton champ ou ta ferme, ouvre OJA et enregistre-toi : » : *Taper une fois dans l'air avec l'index* → l'écran « Enregistrer un lieu » apparaît.
+- « ton nom, ce que tu produis, tes photos, ton numéro, ton WhatsApp. » : *Compter sur les doigts de la main droite, de 1 à 5* → les cinq champs se cochent un à un.
+- « OJA te place sur la carte, exactement là où tu es. » : *Pointer l'index vers le bas, devant vous, d'un geste ferme* → une épingle tombe devant vous, avec une onde.
+- « Même au village. » : *Hocher la tête en souriant* → VILLAGE s'écrit derrière vous.
+- « Et c'est gratuit. » : *Taper une fois dans les deux mains, bien fort* → flash, et le tampon GRATUIT apparaît.
+
+**5. Les particuliers**
+- « Un mariage, une fête, un baptême ? » : *Compter sur les doigts : 1, 2, 3* → trois pastilles apparaissent.
+- « Toi aussi, trouve directement l'éleveur » : *Lever la main droite au-dessus de la tête, la fermer, puis la tirer du haut vers le bas* → la fiche d'un éleveur descend.
+
+**6. Ce que ça change** (plus lentement)
+- « Plus besoin de connaître quelqu'un. » : *Balayer d'un coup sec avec la main droite, de gauche à droite* → rappel de la chaîne de l'accroche, chassée à nouveau.
+- « Le cultivateur trouve de nouveaux clients, » : *Ouvrir la main gauche sur le côté, paume vers le haut* → le champ apparaît à gauche.
+- « l'acheteur gagne du temps… » : *Ouvrir la main droite sur le côté, paume vers le haut* → le marché apparaît à droite.
+- « et nos produits vont du champ au marché. » : *Rapprocher lentement les deux mains jusqu'à ce qu'elles se touchent* → une ligne relie le champ au marché, DU CHAMP AU MARCHÉ s'écrit derrière vous.
+
+**7. Appel** (avec le sourire, droit dans l'objectif)
+- « Cultivateur, éleveur, grossiste : » : *Compter sur les doigts : 1, 2, 3* → trois pastilles apparaissent.
+- « mets-toi sur la carte. » : *Pointer l'index vers la caméra* → zoom rapide.
+- « Télécharge Oja App… » : *Claquer des doigts, puis ouvrir la main droite, paume vers le haut* → un téléphone avec l'appli apparaît dans votre main.
+- « et envoie cette vidéo à quelqu'un qui produit. » : *Pousser la main ouverte vers la caméra, comme pour envoyer quelque chose* → une flèche de partage s'envole.
+
+**8. Donnez-moi la force** (lentement au début, puis de plus en plus fort. Avec le cœur)
+- « Maintenant, je m'adresse à vous. » : *Pointer l'index vers la caméra* → zoom rapide.
+- « partout où vous êtes. » : *Ouvrir grand les bras, puis ramener lentement les mains vers la poitrine* → des lignes partent des villes et arrivent au Bénin.
+- « Je suis votre jeune frère. » : *Poser la main droite sur le cœur* → lumière chaude, JEUNE FRÈRE s'écrit derrière vous.
+- « Le livreur qui cherche une maison. » : *Lever un doigt* → 1re carte.
+- « La maman qui cherche un grossiste. » : *Lever deux doigts* → 2e carte.
+- « Le touriste qui cherche un maquis. » : *Lever trois doigts* → 3e carte.
+- « Et vous, quand vous rentrez au pays. » : *Pointer la caméra* → 4e carte.
+- « Personne ne viendra le faire à notre place. » : *Secouer doucement la tête*.
+- « Alors faisons-le, nous. » : *Taper une fois dans les deux mains* → flash.
+- « un like, c'est un « je suis avec toi ». » : *Claquer des doigts, puis ouvrir la main gauche, paume vers le haut* → un cœur apparaît dans votre main.
+- « Un partage, c'est une porte qui s'ouvre. » : *Claquer des doigts, puis ouvrir la main droite, paume vers le haut* → une flèche de partage apparaît.
+- « Un commentaire, c'est la force que vous me donnez. » : *Lever la main droite au-dessus de la tête, la fermer, puis la tirer du haut vers le bas* → une bulle de commentaire descend.
+- « Envoyez cette vidéo à votre maman au marché, » : *Pousser la main ouverte vers la caméra* → la flèche s'envole.
+- « Ensemble, mettons le Bénin sur la carte. » : *Taper dans les deux mains* → flash.
+- « Donnez-moi la force… on y va ! » : *Lever le poing bien haut* → LA FORCE s'écrit derrière vous, confettis vert, jaune et rouge.
 
 **Effets en plus, comme dans la vidéo 3 :**
 - grands mots derrière vous, avec un contour blanc ;
 - zooms « coup de poing » sur les mots clés ;
-- flash à chaque bloc ;
+- flash à chaque bloc et à chaque fois que vous tapez dans vos mains ;
 - étincelles quand un objet apparaît ;
 - confettis aux couleurs du Bénin à la fin ;
 - couleurs chaudes.
 
-**Pour bien tourner les gestes :**
-- **Le cadrage.**
-  - Reculez un peu par rapport à la vidéo 3 : on doit voir vos mains quand elles montent au-dessus de la tête, et quand elles s'écartent.
-  - Le téléphone reste fixe, à hauteur de poitrine ou des yeux.
-  - Laissez de l'espace au-dessus de votre tête.
-- **La pose.**
-  - Après chaque geste, ne bougez plus pendant 1 à 2 s et regardez l'objet comme s'il était vraiment là.
-  - Après BALAYER, regardez là où l'objet est parti.
-- **Le claquement de doigts.** Juste avant chaque MAIN, claquez des doigts : je repère le son et l'objet apparaît pile au bon moment.
-- **Des gestes nets.** Ni trop lents, ni trop rapides.
-- **Les blocs.** Dites « Bloc 1 », « Bloc 2 »… avant chaque bloc et faites chaque bloc deux ou trois fois.
-
-Dans le prompteur, chaque geste est écrit entre crochets avant la phrase, par exemple « [MAIN] ».
+**Pour bien réussir les gestes :**
+- Après chaque geste, ne bougez plus pendant 1 à 2 s et regardez l'objet comme s'il était vraiment là.
+- Faites les gestes nets, ni trop lents ni trop rapides.
+- Gardez les mains dans l'image : faites le test du cadrage avant (voir « Avant de tourner »).
 
 ## Ce que je vérifie avec Derrick avant d'écrire la version finale
 1. **La recherche par produit.** Si on tape « ananas », l'appli cherche-t-elle aussi dans la « Description / Service proposé », ou seulement dans le nom ?
