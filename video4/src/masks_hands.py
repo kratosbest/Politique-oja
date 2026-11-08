@@ -1,6 +1,7 @@
 """Completes the person masks of video 4 (src/masks.py, rembg) where Derrick's hands move.
 rembg often leaves out a hand that moves (it is blurred), so the new background showed through his hand. Here:
-- MediaPipe finds his hands on the frame (hand_landmarker, image mode); each hand (the shape around its 21 points, widened a little) is added to the mask;
+- MediaPipe finds his hands on the frame (hand_landmarker, image mode); each hand (the shape around its 21 points, widened a little) is added to the mask,
+  only where the pixels are dark like his skin (the beige wall around his fingers stays out);
 - holes inside the mask are filled (the badge of his shirt was sometimes left out), and below his shoulders each row is filled from edge to edge.
 The rembg masks are kept in work/v3/masks_raw/ the first time.
 usage: python src/masks_hands.py work/v3/frames MODELS_DIR N1 N2 ...   (frame numbers, 1-based) or  ... @list.json"""
@@ -37,6 +38,9 @@ for n in nums:
         xi, yi = np.clip(P[:, 0].astype(int), 0, W - 1), np.clip(P[:, 1].astype(int), 0, H - 1)
         if (a[yi, xi] < .5).mean() > .2: missed = True
     h = np.asarray(hand.filter(ImageFilter.GaussianBlur(2)), dtype=np.float32) / 255
+    # only his skin inside that shape: the beige wall between and around his fingers stays out (it showed as a pale blob on the map)
+    rgb = np.asarray(im, dtype=np.float32); Y = .299 * rgb[..., 0] + .587 * rgb[..., 1] + .114 * rgb[..., 2]
+    h = h * np.clip((165 - Y) / 45, 0, 1)
     out = np.maximum(a, h)
     solid = ndimage.binary_fill_holes(out > .5); out = np.where(solid & (out < .5), 1., out)
     # below his shoulders his body fills the whole width: fill each row from edge to edge of the mask there
