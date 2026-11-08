@@ -257,18 +257,49 @@ function drawMap(c, t) {
     c.stroke(); c.restore(); c.fillStyle = '#fff'; c.beginPath(); c.arc(px2, py2, 16, 0, 7); c.fill(); c.fillStyle = OR; c.beginPath(); c.arc(px2, py2, 10, 0, 7); c.fill(); }
 }
 
-/* ---------- block 4: products orbiting around his head ---------- */
-const PROD = [['ananas', A.pAnanas, 230], ['mais', A.pMais, 250], ['tomates', A.pTomates, 170], ['poulet', A.pPoulets, 230], ['poissons', A.pPoissons, 170]];
-const ORB1 = A.depuis - .1;
+/* ---------- block 4: products on a glowing ring around him ----------
+   A tilted ring: behind his head at the back, in front of his chest at the front, never across his face.
+   Each product sits in the same round white sticker; it arrives at the front, big, with its name, on the word Derrick says, then turns with the others.
+   At the back the stickers are smaller, darker and a little blurred. On « Depuis ton champ » the ring opens and they fly away. */
+const PROD = [['ananas', A.pAnanas, 'Ananas'], ['mais', A.pMais, 'Maïs'], ['tomates', A.pTomates, 'Tomates'], ['poulet', A.pPoulets, 'Poulets'], ['poissons', A.pPoissons, 'Poissons']];
+const ORB0 = A.pAnanas - .45, ORB1 = A.depuis - .1;
+const RING = { cx: 560, cy: 1010, rx: 430, ry: 250 }, OMEGA = 1.6, FRONT = Math.PI / 2 - .55;   // each product reaches the front (right of centre) on its word
 const IMG = {}; for (const [n] of PROD) { IMG[n] = new Image(); IMG[n].src = `assets/img/${n}.png`; }
+PROD.forEach(([, a]) => sfx(a, 'pop'));
+const ringK = t => eo(lin(t, ORB0, ORB0 + .45)), ringOut = t => eio(lin(t, ORB1, ORB1 + .55));
+function ringArc(c, t, front) {
+  const k = ringK(t), out = ringOut(t); if (k <= 0 || out >= 1) return;
+  const rx = RING.rx * (.88 + .12 * k) * (1 + out * .9), ry = RING.ry * (.88 + .12 * k) * (1 + out * .9), a0 = front ? 0 : Math.PI, a1 = front ? Math.PI : 2 * Math.PI;
+  c.save(); c.globalAlpha = k * (1 - out); c.lineCap = 'round';
+  c.strokeStyle = 'rgba(255,122,26,.35)'; c.lineWidth = 22; c.shadowColor = '#FF7A1A'; c.shadowBlur = 30; c.beginPath(); c.ellipse(RING.cx, RING.cy, rx, ry, 0, a0, a1); c.stroke();
+  c.shadowBlur = 0; c.strokeStyle = front ? 'rgba(255,214,170,.95)' : 'rgba(255,190,130,.6)'; c.lineWidth = front ? 5 : 3; c.beginPath(); c.ellipse(RING.cx, RING.cy, rx, ry, 0, a0, a1); c.stroke();
+  // a light running along the ring
+  const la = (t * 2.4) % (2 * Math.PI); if ((Math.sin(la) >= 0) === front) { const g = c.createRadialGradient(RING.cx + Math.cos(la) * rx, RING.cy + Math.sin(la) * ry, 0, RING.cx + Math.cos(la) * rx, RING.cy + Math.sin(la) * ry, 40);
+    g.addColorStop(0, 'rgba(255,240,220,.9)'); g.addColorStop(1, 'rgba(255,160,80,0)'); c.fillStyle = g; c.fillRect(RING.cx + Math.cos(la) * rx - 40, RING.cy + Math.sin(la) * ry - 40, 80, 80); }
+  c.restore(); }
+function sticker(c, im, x, y, d, dark, blur) {
+  if (d < 40) return;
+  c.save(); if (blur) c.filter = `blur(${blur}px)`;
+  c.shadowColor = 'rgba(0,0,0,.45)'; c.shadowBlur = 28; c.shadowOffsetY = 14; c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, d / 2, 0, 7); c.fill(); c.shadowColor = 'transparent';
+  c.fillStyle = '#F6F1E7'; c.beginPath(); c.arc(x, y, d / 2 - 9, 0, 7); c.fill();
+  c.save(); c.beginPath(); c.arc(x, y, d / 2 - 9, 0, 7); c.clip(); const f = .82 * (d - 18), sc = Math.min(f / im.width, f / im.height), w = im.width * sc, h = im.height * sc;
+  c.drawImage(im, x - w / 2, y - h / 2, w, h); c.restore();
+  if (dark) { c.fillStyle = `rgba(10,12,16,${dark})`; c.beginPath(); c.arc(x, y, d / 2, 0, 7); c.fill(); }
+  c.restore(); }
 function orbit(c, t, front) {
-  if (t < A.pAnanas - .1 || t > ORB1 + .5) return;
-  const out = eio(lin(t, ORB1, ORB1 + .5));
-  PROD.forEach(([n, a, h], i) => { const k = lin(t, a - .05, a + .4); if (k <= 0) return;
-    const an = i / 5 * 6.283 + (t - A.pAnanas) * 1.25 - 1.2, z = Math.sin(an); if ((z >= 0) !== front) return;
-    const rx = 420 * (1 + out * .8), x = FX + Math.cos(an) * rx * eo(k) + (1 - eo(k)) * (i % 2 ? 700 : -700), y = 880 + z * 270 - (1 - eo(k)) * 300, s = (.72 + .28 * (z + 1) / 2) * (1 - out * .3);
-    const im = IMG[n]; if (!im.complete) return; const hh = h * s, ww = hh * im.width / im.height;
-    c.save(); c.globalAlpha = cl(k * 3) * (1 - out); c.shadowColor = 'rgba(0,0,0,.45)'; c.shadowBlur = 26; c.shadowOffsetY = 14; c.drawImage(im, x - ww / 2, y - hh / 2, ww, hh); c.restore(); });
+  if (t < ORB0 || t > ORB1 + .6) return;
+  ringArc(c, t, front);
+  const out = ringOut(t);
+  PROD.forEach(([n, a, label], i) => { const k = lin(t, a - .12, a + .3); if (k <= 0) return; const im = IMG[n]; if (!im.complete) return;
+    const an = FRONT + OMEGA * (t - a), z = Math.sin(an); if ((z >= 0) !== front) return;
+    const R = 1 + out * 1.4, x = RING.cx + Math.cos(an) * RING.rx * R, y = RING.cy + Math.sin(an) * RING.ry * R - (1 - eo(k)) * 260;
+    const depth = (z + 1) / 2, named = 1 - lin(t, a + .7, a + 1.0);                  // the product being named is a bit bigger
+    const d = (130 + 80 * depth) * bk(k) * (1 + .18 * named * (t >= a - .12 ? 1 : 0)) * (1 - .3 * out);
+    c.save(); c.globalAlpha = cl(k * 3) * (1 - out); sticker(c, im, x, y, d, (1 - depth) * .35, (1 - depth) * 2.5); c.restore();
+    if (front && named > 0 && t >= a - .05) { c.save(); c.globalAlpha = named * (1 - out) * cl(k * 2); c.font = '800 34px Inter'; const w = c.measureText(label).width + 40;
+      c.fillStyle = OR; rrect(c, x - w / 2, y + d / 2 + 10, w, 54, 27); c.fill(); c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(label, x, y + d / 2 + 38); c.restore(); }
+    if (front && t >= a - .1 && t < a + .5) ring(c, x, y, d / 2 + 30 * eo(lin(t, a - .1, a + .5)), .7 * (1 - lin(t, a - .1, a + .5)), '255,200,140', 5);
+  });
 }
 /* ---------- block 5: newspaper clippings stuck on the wall ---------- */
 const CLIP = [['UN MARIAGE', A.mariage, 260, 470, -6], ['UNE FÊTE', A.fete, 820, 430, 5], ['UN BAPTÊME', A.bapteme, 250, 760, 3]];
@@ -325,7 +356,7 @@ const BIG = [['PLUS\nBESOIN', 'wh', A.plus - .05, A.plus + 1.25], ['TOKPA', 'or'
 // the moments that need his cut-out (src/masks.py): something sits behind him, or the wall is replaced
 const MASKED = [[UI0, UI1], [MAP0, MAP1], [PAP0, PAP1], [WOR0, WOR1], [COV0, COV1], ...BIG.map(x => [x[2], x[3]])];
 function needMask(t) { return MASKED.some(([a, b]) => t >= a && t < b) || (t > A.connaitre - .3 && t < A.plus + 1.2) || (t > A.mariage - .1 && t < A.trouve5 + .4)
-  || (t > A.pAnanas - .1 && t < ORB1 + .5) || (t > A.avant - .1 && t < A.ensuite + .3) || (t > A.personne - .1 && t < A.livreur) || (t > A.plusB - .1 && t < A.cultiv6 + .2); }
+  || (t > ORB0 && t < ORB1 + .6) || (t > A.avant - .1 && t < A.ensuite + .3) || (t > A.personne - .1 && t < A.livreur) || (t > A.plusB - .1 && t < A.cultiv6 + .2); }
 window.needMask = needMask;
 /* ---------- frames and masks ---------- */
 const CACHE = new Map(), PENDING = new Set();
@@ -476,7 +507,9 @@ function draw(t) {
   if (t > DUR - 1.2) { const k = lin(t, DUR - 1.2, DUR); fx2.fillStyle = `rgba(0,0,0,${k})`; fx2.fillRect(0, 0, W, H); $('ui').style.opacity = 1 - k; } else $('ui').style.opacity = 1;
   // subtitles (not on the magazine cover, which already writes the words, nor on the end card)
   const gi = GROUPS.findIndex((g, i) => t >= g[0].s - .05 && t < (GROUPS[i + 1] ? Math.min(GROUPS[i + 1][0].s - .05, g[g.length - 1].e + .7) : g[g.length - 1].e + .6));
-  const sub = gi >= 0 && !endA && !cover ? GROUPS[gi] : null;
+  const named = t > A.pAnanas - .05 && t < A.depuis - .05;   // the ring already writes each product under its sticker
+  const sub = gi >= 0 && !endA && !cover && !named ? GROUPS[gi] : null;
+  $('sub').style.top = t > ORB0 && t < ORB1 + .4 ? '1400px' : '1290px';
   $('sub').innerHTML = sub ? `<span>${sub.map(k => KEY.test(k.txt) ? `<em>${k.txt}</em>` : k.txt).join(' ')}</span>` : '';
   return true;
 }
