@@ -52,19 +52,29 @@ for take, blk in TAKES:
 # ---------- encode each segment, then concatenate ----------
 os.makedirs('work/v3/segs', exist_ok=True); os.makedirs('data/v3', exist_ok=True)
 def one(k):
-    s = segs[k]; out = f'work/v3/segs/s{k:03d}.mp4'; fr = max(1, round((s['b'] - s['a']) / SPEED * 24)); L = fr / 24
+    """video of segment k (as before, without sound), then its sound cut to exactly the same length as the video that came out.
+    Before 9 Nov 2026 the sound was cut to the length planned, and many segments came out with one more video frame:
+    1/24 s per segment, so the sound ran up to 2.4 s ahead of the picture at the end."""
+    s = segs[k]; out = f'work/v3/segs/s{k:03d}.mp4'; fr = max(1, round((s['b'] - s['a']) / SPEED * 24))
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f"{s['a']:.3f}", '-t', f"{s['b'] - s['a'] + .2:.3f}", '-i', f"rushes/{s['take']}.mp4",
-                    '-vf', f'setpts=PTS/{SPEED},fps=24,format=yuv420p,trim=end_frame={fr}',
-                    '-af', f'aresample=48000,atempo={SPEED},atrim=0:{L:.5f},afade=t=in:d=0.01,afade=t=out:st={L - .01:.4f}:d=0.01',
-                    '-c:v', 'libx264', '-crf', '16', '-preset', 'fast', '-r', '24', '-ac', '1', '-c:a', 'aac', '-ar', '48000', '-b:a', '192k', out], check=True)
-    return out
-with cf.ThreadPoolExecutor(3) as ex: files = list(ex.map(one, range(len(segs))))
-for k, f in enumerate(files):
-    segs[k]['frames'] = int(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v', '-count_packets', '-show_entries', 'stream=nb_read_packets',
-                                            '-of', 'csv=p=0', f], capture_output=True, text=True).stdout.strip())
+                    '-vf', f'setpts=PTS/{SPEED},fps=24,format=yuv420p,trim=end_frame={fr}', '-an',
+                    '-c:v', 'libx264', '-crf', '16', '-preset', 'fast', '-r', '24', out], check=True)
+    n = int(subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v', '-count_packets', '-show_entries', 'stream=nb_read_packets',
+                            '-of', 'csv=p=0', out], capture_output=True, text=True).stdout.strip()); L = n / 24
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f"{s['a']:.3f}", '-t', f"{s['b'] - s['a'] + .4:.3f}", '-i', f"rushes/{s['take']}.mp4", '-vn',
+                    '-af', f'aresample=48000,atempo={SPEED},apad,atrim=0:{L:.6f},afade=t=in:d=0.01,afade=t=out:st={L - .01:.4f}:d=0.01',
+                    '-ac', '1', '-ar', '48000', '-c:a', 'pcm_s16le', out.replace('.mp4', '.wav')], check=True)
+    return out, n
+with cf.ThreadPoolExecutor(3) as ex: res = list(ex.map(one, range(len(segs))))
+files = [r[0] for r in res]
+for k, (f, n) in enumerate(res): segs[k]['frames'] = n
 open('work/v3/segs/list.txt', 'w').write(''.join(f"file '{os.path.basename(f)}'\n" for f in files))
+open('work/v3/segs/alist.txt', 'w').write(''.join(f"file '{os.path.basename(f).replace('.mp4', '.wav')}'\n" for f in files))
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', 'work/v3/segs/list.txt', '-c:v', 'libx264', '-crf', '16', '-preset', 'medium',
-                '-r', '24', '-c:a', 'aac', '-ar', '48000', '-b:a', '192k', 'work/v3/edit.mp4'], check=True)
+                '-r', '24', '-an', 'work/v3/edit_v.mp4'], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', 'work/v3/segs/alist.txt', '-c', 'copy', 'work/v3/voice.wav'], check=True)
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', 'work/v3/edit_v.mp4', '-i', 'work/v3/voice.wav', '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+                '-c:a', 'aac', '-ar', '48000', '-b:a', '192k', 'work/v3/edit.mp4'], check=True)
 
 # ---------- timeline from the real frame counts ----------
 out_words, cuts, blocks, t = [], [], [], 0.0

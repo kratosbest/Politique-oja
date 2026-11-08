@@ -85,6 +85,7 @@ const A = {
   mariage: T(5, 'mariage'), fete: T(5, 'fête'), bapteme: T(5, 'baptême'), trouve5: T(5, 'trouve'),
   plusB: T(6, 'plus'), cultiv6: T(6, 'cultivateur'), acheteur: T(6, "l'acheteur"), etNos: T(6, 'et'),
   w1: T(7, 'cultivateur'), w2: T(7, 'éleveur'), w3: T(7, 'grossiste'), carte7: T(7, 'carte'), telecharge: T(7, 'télécharge'), envoie: T(7, 'et'),
+  champ6: T(6, 'champ'), marche6: T(6, 'marché'),
   partout3: T(3, 'partout'), nord: T(3, 'nord'), tout: T(3, 'tout'), nigeria: T(8, 'nigeria'), cultiv8: T(8, 'cultivateur'),
   maintenant: T(8, 'maintenant'), beninois: T(8, 'béninois'), paris: T(8, 'paris'), bruxelles: T(8, 'bruxelles'), montreal: T(8, 'montréal'), abidjan: T(8, 'abidjan'), partout: T(8, 'partout'),
   frere: T(8, 'je', 1), personne: T(8, 'plus'), livreur: T(8, 'livreur'), maman: T(8, 'maman'), touriste: T(8, 'touriste'), etVous: Tbefore(8, 'vous,', 0, 'et'), viendra: T(8, 'personne', 1),
@@ -98,10 +99,10 @@ const sfx = (t, k) => SFX.push([+t.toFixed(3), k]);
 /* ---------- scenes (what replaces the wall behind him) ---------- */
 const UI0 = A.b2 - .15, UI1 = A.trouves - .3;                  // block 2: the page of the app
 const MAP0 = A.ouvre - .1, MAP1 = A.tout - .05;                 // block 3: the OJA map
-const PAP0 = A.etNos - .05, PAP1 = be(6);                      // block 6: paper cut
+const ROAD0 = A.etNos - .05, ROAD1 = be(6) - .05;              // block 6: the products travel from the field to the market (Derrick did not like the paper cut)
 const PH0 = A.telecharge - .15, PH1 = be(7) - .9;              // block 7: the video becomes a phone
 const WOR0 = A.beninois - .15, WOR1 = A.frere - .1;            // block 8: the world
-const COV0 = A.ensemble - .1, COV1 = A.force - .05;            // block 8: magazine cover
+const COV0 = A.ensemble - .1, COV1 = A.force - .05;            // block 8: Benin behind him fills with pins (Derrick did not like the magazine cover)
 const cutBefore = x => Math.max(0, ...EDIT.cuts.map(c => c[0]).filter(c => c <= x + .02));
 const VC0 = cutBefore(A.connaitre - .2), VC1 = cutBefore(A.avec);   // block 1 vertigo, from cut to cut
 
@@ -355,6 +356,39 @@ function miniBenin(c, t, k) { if (k <= 0) return; const [x0, y0, x1, y1] = BENIN
   MB.forEach(([x, y], i) => { const a = lin(t, A.partout3 + i / MB.length * (A.nord + .3 - A.partout3), A.partout3 + .25 + i / MB.length * (A.nord + .3 - A.partout3)); if (a <= 0) return;
     c.fillStyle = OR; c.beginPath(); c.arc(x, y, 9 / s * bk(a), 0, 7); c.fill(); });
   c.restore(); }
+/* ---------- block 6: from the field to the market ----------
+   The card of the farmer (left) and the card of the buyer (right) stay; an orange road draws itself from one to the other above his head,
+   and an pineapple, tomatoes and a chicken travel along it; on « marché » the buyer's card gets a green tick. */
+const RP = [[240, 430], [545, 110], [850, 430]];
+const roadAt = u => [(1 - u) * (1 - u) * RP[0][0] + 2 * (1 - u) * u * RP[1][0] + u * u * RP[2][0], (1 - u) * (1 - u) * RP[0][1] + 2 * (1 - u) * u * RP[1][1] + u * u * RP[2][1]];
+const ROADP = ['ananas', 'tomates', 'poulet'];
+function road(t) {
+  const k = inout(t, ROAD0, ROAD1, .3, .35), dr = eio(lin(t, ROAD0, A.champ6 + .3)); fx.save(); fx.globalAlpha = k;
+  fx.lineCap = 'round'; fx.strokeStyle = 'rgba(255,122,26,.35)'; fx.lineWidth = 22; fx.shadowColor = '#FF7A1A'; fx.shadowBlur = 24;
+  const N = 60; fx.beginPath(); fx.moveTo(...roadAt(0)); for (let i = 1; i <= Math.floor(N * dr); i++) fx.lineTo(...roadAt(i / N)); fx.stroke();
+  fx.shadowBlur = 0; fx.setLineDash([22, 16]); fx.lineDashOffset = -t * 70; fx.strokeStyle = '#FFD2A6'; fx.lineWidth = 7; fx.stroke(); fx.setLineDash([]); fx.restore();
+  ROADP.forEach((n, i) => { const a = A.champ6 - .45 + i * .32, u = eio(lin(t, a, a + 1.25)); if (t < a || !IMG[n].complete) return;
+    const [x, y] = roadAt(u), arrive = lin(t, a + 1.25, a + 1.5); fx2.save(); fx2.globalAlpha = k * (1 - arrive); sticker(fx2, IMG[n], x, y - 10, 120 * (1 - .3 * arrive), 0, 0); fx2.restore(); });
+  const ok = lin(t, A.marche6, A.marche6 + .3); if (ok > 0) { fx2.save(); fx2.globalAlpha = k; const r = 34 * bk(ok); fx2.fillStyle = GRN; fx2.beginPath(); fx2.arc(1000, 420, r, 0, 7); fx2.fill();
+    fx2.strokeStyle = '#fff'; fx2.lineWidth = 7; fx2.lineCap = fx2.lineJoin = 'round'; fx2.beginPath(); fx2.moveTo(1000 - r * .42, 420); fx2.lineTo(1000 - r * .1, 420 + r * .32); fx2.lineTo(1000 + r * .45, 420 - r * .3); fx2.stroke();
+    ring(fx2, 1000, 420, 40 + 120 * ok, .7 * (1 - ok), '21,154,105', 6); fx2.restore(); }
+}
+ROADP.forEach((n, i) => sfx(A.champ6 - .45 + i * .32 + 1.25, 'pop')); sfx(A.marche6, 'tick');
+/* ---------- block 8 « Ensemble, mettons le Bénin sur la carte »: Benin behind him, in the colours of the flag, fills with pins ---------- */
+const BJP = (() => { const [x0, y0, x1, y1] = BENIN.box, c = document.createElement('canvas').getContext('2d'), r = rng(91), P = [];
+  while (P.length < 28) { const x = x0 + r() * (x1 - x0), y = y0 + r() * (y1 - y0); if (c.isPointInPath(BEN, x, y)) P.push([x, y, r()]); }
+  return P.sort((a, b) => a[2] - b[2]); })();
+const BJG = { cx: 545, cy: 440, h: 700 };
+function bjXY(x, y) { const [x0, y0, x1, y1] = BENIN.box, s = BJG.h / (y1 - y0); return [BJG.cx - (x0 + x1) / 2 * s + x * s, BJG.cy - (y0 + y1) / 2 * s + y * s]; }
+function bigBenin(c, t, k) {
+  const g = c.createRadialGradient(BJG.cx, BJG.cy, 50, BJG.cx, BJG.cy, 520); g.addColorStop(0, `rgba(255,190,90,${.35 * k})`); g.addColorStop(1, 'rgba(255,190,90,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+  c.save(); c.translate(0, (1 - eo(k)) * 60); benin(c, BJG.cx, BJG.cy, BJG.h * (.92 + .08 * eo(k)), .92 * k); c.restore(); }
+function bigBeninPins(c, t, k) {
+  BJP.forEach(([x, y], i) => { const a = COV0 + .35 + i * (COV1 - COV0 - 1.0) / BJP.length, p = lin(t, a, a + .3); if (p <= 0) return; const [X, Y] = bjXY(x, y);
+    if (Y > 520 && Math.abs(X - FX) < 230) return;                     // hidden behind his head anyway
+    pin(c, X, Y - (1 - eo(p)) * 160, 1.7 * bk(p), k * cl(p * 3)); if (p < 1) ring(c, X, Y, 8 + 40 * p, .6 * (1 - p), '255,140,40', 4, .35); });
+}
+[0, 6, 12, 18, 24].forEach(i => sfx(COV0 + .35 + i * (COV1 - COV0 - 1.0) / BJP.length + .3, 'tac'));
 /* ---------- block 8: the world ---------- */
 const CITY = [['Montréal', A.montreal, 120, 430], ['Paris', A.paris, 330, 350], ['Bruxelles', A.bruxelles, 480, 300], ['Abidjan', A.abidjan, 170, 780], ['Nigeria', A.nigeria, 960, 920]];
 const BJC = [850, 640];
@@ -374,7 +408,7 @@ function drawWorld(c, t) {
 const BIG = [['PLUS\nBESOIN', 'wh', A.plus - .05, A.plus + 1.25], ['TOKPA', 'or', A.tokpa - .1, A.ouvre - .05], ['VILLAGE', 'wh', A.meme - .1, A.gratuit - .05],
   ['CULTIVATEUR', 'or', A.w1 - .08, A.w2 - .08], ['ÉLEVEUR', 'or', A.w2 - .08, A.w3 - .08], ['GROSSISTE', 'or', A.w3 - .08, A.carte7 + .3], ['JEUNE\nFRÈRE', 'flag', A.frere, A.frere + 1.9], ['LA FORCE', 'flag', A.force, A.merci - .1]];
 // the moments that need his cut-out (src/masks.py): something sits behind him, or the wall is replaced
-const MASKED = [[UI0, UI1], [MAP0, MAP1], [PAP0, PAP1], [WOR0, WOR1], [COV0, COV1], ...BIG.map(x => [x[2], x[3]])];
+const MASKED = [[UI0, UI1], [MAP0, MAP1], [WOR0, WOR1], [COV0, COV1], ...BIG.map(x => [x[2], x[3]])];
 function needMask(t) { return MASKED.some(([a, b]) => t >= a && t < b) || (t > A.connaitre - .3 && t < A.plus + 1.2) || (t > A.mariage - .1 && t < A.trouve5 + .4)
   || (t > ORB0 && t < ORB1 + .6) || (t > A.avant - .1 && t < A.ensuite + .3) || (t > A.personne - .1 && t < A.livreur) || (t > A.plusB - .1 && t < A.cultiv6 + .2); }
 window.needMask = needMask;
@@ -421,16 +455,15 @@ function draw(t) {
   let mode = 'video', wipe = 1, focus = 0;
   if (t >= UI0 && t < UI1) { mode = 'ui'; wipe = Math.min(eio(lin(t, UI0, UI0 + .35)), 1 - eio(lin(t, UI1 - .3, UI1))); }
   if (t >= MAP0 && t < MAP1) { mode = 'map'; wipe = eio(lin(t, MAP0, MAP0 + .45)); }
-  if (t >= PAP0 && t < PAP1) { mode = 'paper'; wipe = eio(lin(t, PAP0, PAP0 + .3)); }
   if (t >= WOR0 && t < WOR1) { mode = 'world'; wipe = Math.min(eio(lin(t, WOR0, WOR0 + .45)), 1 - eio(lin(t, WOR1 - .35, WOR1))); }
   const phoneK = t >= PH0 && t < PH1 + .5 ? Math.min(eio(lin(t, PH0, PH0 + .7)), 1 - eio(lin(t, PH1, PH1 + .5))) : 0;
-  const cover = t >= COV0 && t < COV1 ? inout(t, COV0, COV1, .4, .3) : 0;
+  const bjK = t >= COV0 && t < COV1 ? inout(t, COV0, COV1, .45, .3) : 0;
   if (t >= A.trouve5 - .05 && t < be(5)) focus = inout(t, A.trouve5 - .05, be(5), .35, .3);
 
   // ---- 1. the video (or the new wall), then what sits on the wall, then him
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
   const blur = Math.max(CAM.blur, 16 * focus, 18 * endA);
-  ctx.save(); place(ctx, BG); ctx.filter = GRADE + (blur ? ` blur(${blur}px) brightness(${1 - .45 * Math.max(focus, endA)})` : '') + (cover ? ` brightness(${1 - .25 * cover})` : ''); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
+  ctx.save(); place(ctx, BG); ctx.filter = GRADE + (blur ? ` blur(${blur}px) brightness(${1 - .45 * Math.max(focus, endA)})` : '') + (bjK ? ` brightness(${1 - .2 * bjK})` : ''); ctx.drawImage(fr, 0, 0, W, H); ctx.restore(); ctx.filter = 'none';
   if (mode !== 'video') {
     ctx.save();
     if (mode === 'ui') { ctx.beginPath(); ctx.rect(0, 0, W, H * wipe); ctx.clip(); ctx.fillStyle = '#F4F5F7'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, 210); ctx.fillStyle = '#E4E7EC'; ctx.fillRect(0, 210, W, 2);
@@ -446,8 +479,7 @@ function draw(t) {
   for (const [w, k, a, b] of BIG) if (t >= a && t < b) bigWord(ctx, w, k, t, a, b, w === 'VILLAGE' ? 660 : w.includes('\n') ? 380 : 430);
   glass(['AVANT MÊME', 'DE SE DÉPLACER'], t, A.avant - .05, A.ensuite + .25, 440, 165);
   glass(['PLUS PERSONNE', 'NE SE PERD'], t, A.personne - .05, A.livreur - .1, 440, 160);
-  if (cover > 0) { ctx.save(); ctx.globalAlpha = cover; ctx.font = `300 470px 'Inter Tight'`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff'; ctx.letterSpacing = '30px';
-    ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 30; ctx.fillText('OJA', 548, 640 + (1 - cover) * 40); ctx.restore(); }
+  if (bjK > 0) bigBenin(ctx, t, bjK);
   // him, on top of all that (with a white sticker edge in paper mode, a boiling drawn outline in block 6)
   if (useM && !(t > A.plusB - .1 && t < A.cultiv6 + .2 && mode === 'video' && !BIG.some(([, , a, b]) => t >= a && t < b))) {
     const pp = person(fr, mk);
@@ -471,7 +503,7 @@ function draw(t) {
 
   // ---- 3. the overlays, block by block
   if (!endA) {
-    const busyTop = mode !== 'video' || phoneK > 0 || cover > 0 || CAM.rec || BIG.some(([, , a, b]) => t >= a - .1 && t < b) || (t > A.avant - .15 && t < A.ensuite + .3) || (t > A.personne - .15 && t < A.livreur) || (t > A.discutes - .1 && t < be(2)) || (t > A.connaitre - .2 && t < A.plus + 1) || (t > A.like - .2 && t < A.ami + 1.4) || (t > A.mariage - .2 && t < A.trouve5) || (t > A.livreur - .2 && t < A.viendra);
+    const busyTop = mode !== 'video' || phoneK > 0 || bjK > 0 || (t > ROAD0 - .1 && t < ROAD1) || CAM.rec || BIG.some(([, , a, b]) => t >= a - .1 && t < b) || (t > A.avant - .15 && t < A.ensuite + .3) || (t > A.personne - .15 && t < A.livreur) || (t > A.discutes - .1 && t < be(2)) || (t > A.connaitre - .2 && t < A.plus + 1) || (t > A.like - .2 && t < A.ami + 1.4) || (t > A.mariage - .2 && t < A.trouve5) || (t > A.livreur - .2 && t < A.viendra);
     put('logo', 190, 300, 1 + .2 * (1 - lin(t, A.avec + .3, A.avec + .7)) * lin(t, A.avec, A.avec + .3), 1 - (busyTop ? 1 : 0));
     if (t < 3.0) put('name', 330, 420, bk(lin(t, .25, .6)), 1 - lin(t, 2.7, 3.0));
     // block 2: search « grossiste », then « cultivateur d'ananas »
@@ -511,8 +543,8 @@ function draw(t) {
     // block 5
     if (focus > 0) put('breeder', 540, 800, mix(.85, 1, eo(lin(t, A.trouve5 - .05, A.trouve5 + .35))), focus);
     // block 6
-    if (t >= A.cultiv6 - .05 && t < PAP0 + .2) { const x = eio(lin(t, PAP0 - .15, PAP0 + .2)); put('d1', 190 - x * 500, 560, bk(lin(t, A.cultiv6 - .05, A.cultiv6 + .3)), 1, -3); if (t >= A.acheteur - .05) put('d2', 890 + x * 500, 560, bk(lin(t, A.acheteur - .05, A.acheteur + .3)), 1, 3); }
-    if (mode === 'paper') ransom(fx2, t);
+    if (t >= A.cultiv6 - .05 && t < ROAD1) { const x = eio(lin(t, ROAD1 - .35, ROAD1)); put('d1', 190 - x * 500, 560, bk(lin(t, A.cultiv6 - .05, A.cultiv6 + .3)), 1, -3); if (t >= A.acheteur - .05) put('d2', 890 + x * 500, 560, bk(lin(t, A.acheteur - .05, A.acheteur + .3)), 1, 3); }
+    if (t >= ROAD0 && t < ROAD1) road(t);
     // block 7: a pin pops above his head on « carte »
     if (t >= A.carte7 - .1 && t < PH0) { const a = lin(t, A.carte7 - .1, A.carte7 + .3); pin(fx, ...scr(545, 540), 3.4 * bk(a), cl(a * 3) * (1 - lin(t, PH0 - .25, PH0))); }
     // block 8
@@ -521,8 +553,7 @@ function draw(t) {
     if (t >= A.like - .1 && t < A.envoyez) { const o = 1 - lin(t, A.envoyez - .3, A.envoyez); put('like', 210, 760, bk(lin(t, A.like - .1, A.like + .25)) * (1 + .12 * Math.max(0, Math.sin((t - A.like) * 9)) * (t < A.partage ? 1 : 0)), o);
       if (t >= A.partage - .1) put('share8', 880, 760, bk(lin(t, A.partage - .1, A.partage + .25)), o); if (t >= A.commentaire - .1) put('comment', 545, 380, bk(lin(t, A.commentaire - .1, A.commentaire + .3)), o); }
     [A.aMaman, A.oncle, A.ami].forEach((a, i) => { if (t < a - .1 || t > COV0) return; put('to' + i, 545, 320 + i * 96, bk(lin(t, a - .1, a + .25)), 1 - lin(t, COV0 - .3, COV0)); });
-    if (cover > 0) { fx2.save(); fx2.globalAlpha = cover; fx2.strokeStyle = 'rgba(255,255,255,.9)'; fx2.lineWidth = 4; fx2.strokeRect(40, 260, 1000, 1260); fx2.restore();
-      put('cov1', 545, 275, 1, cover); put('cov2', 900, 760, 1, cover); put('cov3', 540, 1340, 1, cover); }
+    if (bjK > 0) bigBeninPins(fx, t, bjK);
   }
   // flashes: blocks 1 « plus besoin », GRATUIT, la force, and the end
   for (const f of [A.plus, A.gratuit + .32, A.force, END]) { const k = t - f; if (k >= -.02 && k < .45) { ctx.fillStyle = `rgba(255,255,255,${.5 * (1 - lin(k, 0, .2))})`; ctx.fillRect(0, 0, W, H); } }
@@ -531,10 +562,10 @@ function draw(t) {
   if (t < .6) { fx2.fillStyle = `rgba(0,0,0,${1 - eo(t / .6)})`; fx2.fillRect(0, 0, W, H); }
   if (endA > 0) { put('endc', 540, 760, bk(lin(t, END, END + .5)), endA); put('endt', 540, 1190, 1, eo(lin(t, END + .4, END + .9))); }
   if (t > DUR - 1.2) { const k = lin(t, DUR - 1.2, DUR); fx2.fillStyle = `rgba(0,0,0,${k})`; fx2.fillRect(0, 0, W, H); $('ui').style.opacity = 1 - k; } else $('ui').style.opacity = 1;
-  // subtitles (not on the magazine cover, which already writes the words, nor on the end card)
+  // subtitles (not on the end card)
   const gi = GROUPS.findIndex((g, i) => t >= g[0].s - .05 && t < (GROUPS[i + 1] ? Math.min(GROUPS[i + 1][0].s - .05, g[g.length - 1].e + .7) : g[g.length - 1].e + .6));
   const named = t > A.pAnanas - .05 && t < A.depuis - .05;   // the ring already writes each product under its sticker
-  const sub = gi >= 0 && !endA && !cover && !named ? GROUPS[gi] : null;
+  const sub = gi >= 0 && !endA && !named ? GROUPS[gi] : null;
   $('sub').style.top = t > ORB0 && t < ORB1 + .4 ? '1400px' : '1290px';
   $('sub').innerHTML = sub ? `<span>${sub.map(k => KEY.test(k.txt) ? `<em>${k.txt}</em>` : k.txt).join(' ')}</span>` : '';
   return true;
