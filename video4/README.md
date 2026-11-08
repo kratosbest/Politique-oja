@@ -234,3 +234,34 @@ Ce qui change dans la version 2 :
   4. les images : `ffmpeg -i work/edit.mp4 -vf fps=24 -q:v 3 work/frames/f%04d.jpg` ;
   5. les masques : `python src/masks.py work/frames A B` pour chaque ligne de `work/mask_ranges.txt` ;
   6. `src/render.sh` (la page `montage2.html` par défaut ; `PAGE=montage.html` pour la version 1).
+
+## Montage version 3 : assis, sans gestes (IMG_1082 à 1089)
+Fichier : `exports/OJA-video4-du-champ-au-marche.mp4`, en 1080 × 1920, 30 fps, AAC 48 kHz. Script : `script-v3.md`.
+
+Le style est celui des deux reels de référence que Derrick a envoyés : une personne assise qui parle calmement, et des effets faits au montage. Les couleurs sont sombres et un peu éteintes, avec une seule couleur vive, l'orange OJA.
+
+- **Découpe** (`src/cut3.py`) :
+  - une prise par bloc ; « Bloc N » est retiré ;
+  - les reprises sont retirées : « vont de marcher » (bloc 6), « Téléja- » (bloc 7), « Béninois, et », la première « maman qui cherche une gro- » et « Bon » (bloc 8) ;
+  - les silences passent à 0,3 s, sauf là où un effet arrive (environ 0,8 s) ;
+  - chaque prise s'arrête avant que Derrick se penche pour couper ;
+  - les réponses passent 6 % plus vite.
+- **Effets** (`montage3.html`), chacun calé sur un mot :
+  1. des cartes « quelqu'un » se collent au mur et se relient, pendant que le mur recule (vertigo) ; elles tombent sur « plus besoin » ;
+  2. le mur devient une page de l'appli : la recherche « grossiste », puis « cultivateur d'ananas » ; deux zooms secs avec « REC » ; deux bulles de discussion ;
+  3. Maman Rose et TOKPA ; le mur devient la carte OJA : les épingles autour d'Allada, la fenêtre « Contacts » qui se coche, « AVANT MÊME DE SE RENDRE » en lettres de verre, le trajet de Tokpa à Allada, puis un zoom à travers le visage ;
+  4. les produits tournent autour de sa tête ; le vrai écran « Enregistrer un lieu » ; « Ta fiche » qui se coche ; l'épingle au-dessus de sa tête ; VILLAGE ; le tampon GRATUIT ;
+  5. trois coupures de journal ; la fiche de l'éleveur, la vidéo floue derrière ;
+  6. un contour dessiné qui tremble ; les cartes « Le cultivateur » et « L'acheteur » ; le papier découpé avec « DU CHAMP AU MARCHÉ » ;
+  7. CULTIVATEUR, ÉLEVEUR, GROSSISTE derrière lui ; la vidéo devient l'écran d'un téléphone, avec les stores et la flèche de partage ;
+  8. la carte du monde (Montréal, Paris, Bruxelles, Abidjan reliées au Bénin) ; JEUNE FRÈRE ; « PLUS PERSONNE NE SE PERD » en verre ; quatre cartes ; deux zooms sur « Alors, faisons-le » ; like, partage, commentaire ; trois étiquettes ; la couverture de magazine « OJA » ; LA FORCE et les confettis ; la carte de fin.
+- **Sons** : un petit clic quand une case se coche, un « tac » quand une épingle tombe, un « pop » quand une carte se colle, un coup sourd pour GRATUIT. Ils sont fabriqués dans `src/music3.py`, sans échantillon et sans « whoosh ».
+- **Musique** : la même chanson. Elle se coupe dans le silence avant « Avec OJA, plus besoin », elle est plus douce au début du bloc 8, puis monte jusqu'à « Donnez-moi la force ».
+- **Images IA** : tomates et poissons (Nano Banana 2 Lite, 412 crédits), détourés dans `assets/img/`.
+- **Refaire** (depuis `video4/`) :
+  1. transcrire chaque prise avec Scribe dans `work/v3/stt_NNNN.json` ;
+  2. `python3 src/cut3.py` ;
+  3. `ffmpeg -i work/v3/edit.mp4 -vf fps=24 -q:v 3 work/v3/frames/f%04d.jpg` ;
+  4. les masques des images où un effet passe derrière Derrick (`needMask` dans `montage3.html`) : `python src/masks.py work/v3/frames A B` ;
+  5. `node src/sfx3.js`, `python3 src/music3.py work/fond2.wav work/v3/music.wav`, puis le mix (comme `src/mix.sh`, sur `work/v3/`) ;
+  6. `PAGE=montage3.html EDIT=data/v3/edit_data.json TAIL=4 MIX=work/v3/mix.m4a src/render.sh`.
