@@ -455,7 +455,7 @@ function draw(t) {
     ctx.save(); place(ctx, CAM); ctx.filter = GRADE + (blur ? ` blur(${blur}px)` : ''); ctx.drawImage(pp, 0, 0); ctx.restore(); ctx.filter = 'none';
   }
   orbit(fx, t, true);
-  if (mk && t > A.plusB - .1 && t < A.cultiv6 + .2) { const k = inout(t, A.plusB - .1, A.cultiv6 + .2, .3, .3); fx.save(); place(fx, CAM); fx.globalAlpha = k; fx.drawImage(outline(mk, 8, '#fff', 7, 1 + Math.floor(t * 8)), 0, 0); fx.restore();
+  if (mk && t > A.plusB - .1 && t < A.cultiv6 + .2) { const k = inout(t, A.plusB - .1, A.cultiv6 + .2, .3, .3); fx.save(); fx.beginPath(); fx.rect(0, 0, W, 1250); fx.clip(); place(fx, CAM); fx.globalAlpha = k; fx.drawImage(outline(mk, 8, '#fff', 7, 1 + Math.floor(t * 8)), 0, 0); fx.restore();
     fx.globalAlpha = k; star(fx, 240, 640, 38, t, 5); star(fx, 860, 580, 30, t, 9); fx.globalAlpha = 1; }
   // light grade over everything filmed: top shade and vignette
   { const g = ctx.createLinearGradient(0, 0, 0, 600); g.addColorStop(0, 'rgba(0,0,0,.35)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, 600);
