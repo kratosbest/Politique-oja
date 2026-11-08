@@ -262,6 +262,6 @@ Le style est celui des deux reels de référence que Derrick a envoyés : une pe
   1. transcrire chaque prise avec Scribe dans `work/v3/stt_NNNN.json` ;
   2. `python3 src/cut3.py` ;
   3. `ffmpeg -i work/v3/edit.mp4 -vf fps=24 -q:v 3 work/v3/frames/f%04d.jpg` ;
-  4. les masques des images où un effet passe derrière Derrick (`needMask` dans `montage3.html`) : `python src/masks.py work/v3/frames A B` ;
+  4. les masques des images où un effet passe derrière Derrick (`needMask` dans `montage3.html`) : `python src/masks.py work/v3/frames A B`, puis `python src/masks_hands.py work/v3/frames DOSSIER_MODELES @liste.json`, qui ajoute ses mains (MediaPipe) et bouche les trous de son corps ;
   5. `node src/sfx3.js`, `python3 src/music3.py work/fond2.wav work/v3/music.wav`, puis le mix (comme `src/mix.sh`, sur `work/v3/`) ;
   6. `PAGE=montage3.html EDIT=data/v3/edit_data.json TAIL=4 MIX=work/v3/mix.m4a src/render.sh`.
