@@ -36,7 +36,7 @@ canvas{position:absolute;left:0;top:0}
 <script>
 const W = 1080, H = 1920, EDIT_DUR = EDIT.dur, END = EDIT_DUR - .2, DUR = EDIT_DUR + 4, NF = Math.round(EDIT_DUR * 24);
 const OR = '#FF6B00', GRN = '#159A69', BJ = ['#008751', '#FCD116', '#E8112D'];
-const FX = 560, FY = 960;                       // centre of his face (from the masks): zooms keep it in place
+const FX = 545, FY = 880;                       // centre of his face (takes of 8 Nov, from the masks: head from y 555 to 1110): zooms keep it in place
 const GRADE = 'brightness(.86) contrast(1.13) saturate(.72)';
 const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lin = (t, a, b) => cl((t - a) / (b - a));
@@ -59,6 +59,7 @@ const ICON = {
   bike: '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>',
   store: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M2 7h20"/>',
   camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  sprout: '<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>',
   plane: '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>',
 };
 const ic = (n, s = 24, c = 'currentColor', w = 2.2) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICON[n]}</svg>`;
@@ -68,21 +69,25 @@ const LOGO = '../video1/assets/logo-oja-carte.png', APPLE = '../video1/assets/st
 const WORDS = EDIT.words, BLK = Object.fromEntries(EDIT.blocks.map(b => [b[2], b]));
 const bs = b => BLK[b][0], be = b => BLK[b][1];
 const norm = s => s.toLowerCase().replace(/[^a-z0-9àâçéèêëîïôûùüÿœ'-]/g, '');
-function T(b, w, n = 0) { const L = WORDS.filter(x => x[4] === b && norm(x[0]).startsWith(w)); if (!L[n]) throw new Error(`mot introuvable : bloc ${b}, « ${w} » n° ${n}`); return L[n][1]; }
+function T(b, w, n = 0) { const alt = w.split('|'), L = WORDS.filter(x => x[4] === b && alt.some(a => norm(x[0]).startsWith(a))); if (!L[n]) throw new Error(`mot introuvable : bloc ${b}, « ${w} » n° ${n}`); return L[n][1]; }
+function Tbefore(b, w, n = 0, must = null) {             // start of the word said just before « w » (optionally only if that word is « must »)
+  const L = WORDS.filter(x => x[4] === b), I = L.map((x, i) => i).filter(i => i > 0 && norm(L[i][0]).startsWith(norm(w)) && (!must || norm(L[i - 1][0]).startsWith(must)));
+  if (I[n] === undefined) throw new Error(`mot introuvable : bloc ${b}, « ${w} »`); return L[I[n] - 1][1]; }
 const A = {
   connaitre: T(1, 'connaître'), qq1: T(1, "quelqu'un", 0), qq2: T(1, "quelqu'un", 1), qq3: T(1, "quelqu'un", 2), avec: T(1, 'avec'), plus: T(1, 'plus'),
-  b2: T(2, 'tu'), gros1: T(2, 'grossiste', 0), gros2: T(2, 'grossiste', 1), cultiv: T(2, 'cultivateur'), trouves: T(2, 'trouves'), discutes: T(2, 'et'),
-  prends: T(3, 'prends'), tokpa: T(3, 'tokba'), ouvre: T(3, 'ouvre'), cherche: T(3, 'cherche'), ananas: T(3, 'ananas'), voit: T(3, 'voit'), allada: T(3, 'alada'),
-  appelle: T(3, 'appelle'), whatsapp: T(3, 'whatsapp'), troisieme: T(3, 'troisième'), choisit: T(3, 'choisit'), avant: T(3, 'avant'), ensuite: T(3, 'ensuite'), perdre: T(3, 'perdre'),
+  b2: T(2, 'tu'), gros1: T(2, 'grossiste', 0), gros2: T(2, 'grossiste', 1), cultiv: T(2, 'cultivateur'), trouves: T(2, 'trouves'), discutes: Tbefore(2, 'discutes'),
+  prends: T(3, 'prends'), tokpa: T(3, 'tokpa|tokba'), ouvre: T(3, 'ouvre'), cherche: T(3, 'cherche'), ananas: T(3, 'ananas'), voit: T(3, 'voit'), allada: T(3, 'allada|alada'),
+  appelle: T(3, 'appelle'), whatsapp: T(3, 'whatsapp'), troisieme: T(3, 'troisième'), choisit: T(3, 'choisit|trouve'), avant: T(3, 'avant'), ensuite: T(3, 'ensuite'), perdre: T(3, 'perdre'),
   etToi: T(4, 'et'), pAnanas: T(4, 'ananas'), pMais: T(4, 'maïs'), pTomates: T(4, 'tomates'), pPoulets: T(4, 'poulets'), pPoissons: T(4, 'poissons'), depuis: T(4, 'depuis'), ouvre4: T(4, 'ouvre'),
   nom: T(4, 'nom'), produis: T(4, 'ce'), photos: T(4, 'tes'), numero: T(4, 'numéro'), wa4: T(4, 'whatsapp'), place: T(4, 'ogya', 1), carte4: T(4, 'carte'), meme: T(4, 'même'), gratuit: T(4, "c'est"),
   mariage: T(5, 'mariage'), fete: T(5, 'fête'), bapteme: T(5, 'baptême'), trouve5: T(5, 'trouve'),
   plusB: T(6, 'plus'), cultiv6: T(6, 'cultivateur'), acheteur: T(6, "l'acheteur"), etNos: T(6, 'et'),
   w1: T(7, 'cultivateur'), w2: T(7, 'éleveur'), w3: T(7, 'grossiste'), carte7: T(7, 'carte'), telecharge: T(7, 'télécharge'), envoie: T(7, 'et'),
+  partout3: T(3, 'partout'), nord: T(3, 'nord'), tout: T(3, 'tout'), nigeria: T(8, 'nigeria'), cultiv8: T(8, 'cultivateur'),
   maintenant: T(8, 'maintenant'), beninois: T(8, 'béninois'), paris: T(8, 'paris'), bruxelles: T(8, 'bruxelles'), montreal: T(8, 'montréal'), abidjan: T(8, 'abidjan'), partout: T(8, 'partout'),
-  frere: T(8, 'je', 1), personne: T(8, 'plus'), livreur: T(8, 'livreur'), maman: T(8, 'maman'), touriste: T(8, 'touriste'), etVous: T(8, 'et', 1), viendra: T(8, 'personne', 1),
+  frere: T(8, 'je', 1), personne: T(8, 'plus'), livreur: T(8, 'livreur'), maman: T(8, 'maman'), touriste: T(8, 'touriste'), etVous: Tbefore(8, 'vous,', 0, 'et'), viendra: T(8, 'personne', 1),
   alors: T(8, 'alors'), faisons: T(8, 'faisons-le'), like: T(8, 'like'), partage: T(8, 'partage'), commentaire: T(8, 'commentaire'), envoyez: T(8, 'envoyez'),
-  aMaman: T(8, 'maman', 1), oncle: T(8, 'oncle'), ami: T(8, 'ami'), ensemble: T(8, 'ensemble', 1), force: T(8, 'donnez-moi'), onyva: T(8, 'on', 1), merci: T(8, 'merci'),
+  aMaman: T(8, 'maman', 1), oncle: T(8, 'oncle'), ami: T(8, 'ami'), ensemble: T(8, 'ensemble', 1), force: T(8, 'donnez-moi'),  merci: T(8, 'merci'),
 };
 // sound marks for src/music3.py: [time, kind] (tick: a box is ticked, tac: a pin lands, pop: a card sticks, stamp)
 const SFX = [];
@@ -90,7 +95,7 @@ const sfx = (t, k) => SFX.push([+t.toFixed(3), k]);
 
 /* ---------- scenes (what replaces the wall behind him) ---------- */
 const UI0 = A.b2 - .15, UI1 = A.trouves - .3;                  // block 2: the page of the app
-const MAP0 = A.ouvre - .1, MAP1 = be(3) - .02;                 // block 3: the OJA map
+const MAP0 = A.ouvre - .1, MAP1 = A.tout - .05;                 // block 3: the OJA map
 const PAP0 = A.etNos - .05, PAP1 = be(6);                      // block 6: paper cut
 const PH0 = A.telecharge - .15, PH1 = be(7) - .9;              // block 7: the video becomes a phone
 const WOR0 = A.beninois - .15, WOR1 = A.frere - .1;            // block 8: the world
@@ -107,10 +112,10 @@ function camera(t) {
   // block 2 « tu le trouves »: two dry zooms, like a camcorder
   if (t >= A.trouves - .12 && t < A.discutes - .1) { z *= t < A.trouves + .3 ? 1.45 : 1.95; rec = 1; }
   // block 3 ends by diving into his face (zoom-through cut), block 4 opens from it
-  { const d = lin(t, A.perdre + .35, be(3)); if (d > 0 && t < be(3)) { z *= 1 + 2.2 * eio(d); blur = Math.max(blur, 18 * eio(d)); } }
+  { const d = lin(t, be(3) - .45, be(3)); if (d > 0 && t < be(3)) { z *= 1 + 2.2 * eio(d); blur = Math.max(blur, 18 * eio(d)); } }
   { const d = t - bs(4); if (d >= 0 && d < .5) { const q = 1 - eo(d / .5); z *= 1 + .9 * q; blur = Math.max(blur, 16 * q); } }
   // block 4 « c'est gratuit » and block 8 « on y va »: a punch
-  for (const [a, p] of [[A.gratuit + .2, .1], [A.onyva, .14], [A.plus, .08]]) { const d = t - a; if (d > -.05 && d < .5) z *= 1 + p * (d < .08 ? eo((d + .05) / .13) : 1 - eio((d - .08) / .42)); }
+  for (const [a, p] of [[A.gratuit + .2, .1], [A.merci, .12], [A.plus, .08]]) { const d = t - a; if (d > -.05 && d < .5) z *= 1 + p * (d < .08 ? eo((d + .05) / .13) : 1 - eio((d - .08) / .42)); }
   // block 8: slow push while he starts, then « Alors, faisons-le »: two dry zooms
   z *= 1 + .14 * eio(lin(t, A.maintenant - .2, A.beninois - .3)) * (1 - lin(t, A.beninois - .3, A.beninois - .1));
   if (t >= A.alors - .05 && t < A.faisons + .85) z *= t < A.faisons - .05 ? 1.32 : 1.68;
@@ -135,6 +140,7 @@ obj('bub1', `<div class="pill wh" style="font-size:42px;border-radius:36px 36px 
 obj('bub2', `<div class="pill or" style="font-size:42px;border-radius:36px 36px 8px 36px">Oui, venez voir.</div>`);
 // block 3
 obj('rose', `<div class="card" style="width:330px;transform:rotate(-4deg)"><div style="height:250px;background:url(assets/img/vendeuse.jpg) 50% 35%/cover"></div><div style="padding:14px 20px 18px"><div style="font:800 36px Inter">Maman Rose</div><div style="font:600 25px Inter;color:#667085;margin-top:4px">Vendeuse d'ananas · Tokpa</div></div></div>`);
+obj('appbig', `<div class="card" style="padding:30px 46px;display:flex;align-items:center;gap:24px;border-radius:40px"><img src="${LOGO}" style="width:130px"><span style="font:900 88px Inter;letter-spacing:-.04em">Oja <span style="color:${OR}">App</span></span></div>`);
 obj('msearch', `<div class="pill wh" style="width:640px;font-size:42px;gap:18px">${ic('search', 46, '#667085', 2.6)}<span id="mst"></span></div>`);
 obj('contacts', `<div class="win" style="width:470px"><h4>Contacts</h4>${[['Appeler', 'Papa Koffi', OR, 'phone'], ['WhatsApp', 'Ferme Sèna', '#25A35A', 'chat'], ['Discuter', "Coop d'Allada", '#2E6BE6', 'chat']].map(([v, n, c, i], k) =>
   `<div class="row" id="cr${k}"><span class="box" id="cb${k}">${ic('check', 26, '#fff', 3.6)}</span><span style="display:flex;flex-direction:column;line-height:1.1"><span style="font:600 24px Inter;color:${c}">${v}</span><span>${n}</span></span><span id="ch${k}" style="margin-left:auto;font:800 24px Inter;background:${OR};color:#fff;border-radius:20px;padding:6px 14px;display:none">Choisi</span></div>`).join('')}</div>`);
@@ -153,7 +159,7 @@ obj('apptitle', `<span style="display:inline-flex;align-items:center;gap:20px;fo
 obj('stores', `<div style="display:flex;gap:16px"><span class="pill wh" style="font-size:34px;padding:12px 24px"><img src="${APPLE}" style="width:48px;border-radius:10px">App Store</span><span class="pill wh" style="font-size:34px;padding:12px 24px"><img src="${GPLAY}" style="width:44px">Google Play</span></div>`);
 obj('share7', `<div class="ic" style="width:190px;height:190px;background:${OR};box-shadow:0 20px 50px rgba(255,107,0,.5)">${ic('share', 100, '#fff', 2.4)}</div>`);
 // block 8
-[['bike', 'Le livreur'], ['store', 'La maman'], ['camera', 'Le touriste'], ['plane', 'Et vous']].forEach(([i, n], k) => obj('p8' + k, `<div class="pill wh" style="font-size:40px;padding:14px 28px 14px 14px"><span class="ic" style="width:70px;height:70px;background:${OR}">${ic(i, 40, '#fff', 2.2)}</span>${n}</div>`));
+[['bike', 'Le livreur'], ['store', 'La maman'], ['sprout', 'Le cultivateur'], ['camera', 'Le touriste'], ['plane', 'Et vous']].forEach(([i, n], k) => obj('p8' + k, `<div class="pill wh" style="font-size:40px;padding:14px 28px 14px 14px"><span class="ic" style="width:70px;height:70px;background:${OR}">${ic(i, 40, '#fff', 2.2)}</span>${n}</div>`));
 obj('like', `<div class="ic" style="width:180px;height:180px;background:#E8112D;box-shadow:0 24px 60px rgba(232,17,45,.5)">${ic('heart', 98, '#fff', 2.2)}</div>`);
 obj('share8', `<div class="ic" style="width:180px;height:180px;background:${OR};box-shadow:0 24px 60px rgba(255,107,0,.5)">${ic('share', 94, '#fff', 2.2)}</div>`);
 obj('comment', `<div class="card" style="width:760px;padding:28px 36px;border-radius:44px 44px 44px 10px;display:flex;gap:22px;align-items:center"><div class="ic" style="flex:none;width:90px;height:90px;background:${OR}">${ic('chat', 50, '#fff', 2.4)}</div><div style="font:900 56px/1.05 Inter;letter-spacing:-.02em">On est avec toi, Derrick !</div></div>`);
@@ -211,7 +217,7 @@ function benin(c, cx, cy, hgt, a) { const [x0, y0, x1, y1] = BENIN.box, s = hgt 
   c.globalAlpha = a; c.lineWidth = 3 / s; c.strokeStyle = '#fff'; c.stroke(BEN); c.restore(); }
 
 /* ---------- block 1: cards « quelqu'un » stuck on the wall, joined by strings ---------- */
-const SLOT1 = [[230, 560], [560, 470], [890, 560], [250, 860], [880, 860], [400, 300], [730, 300], [110, 330], [990, 330]];
+const SLOT1 = [[180, 470], [545, 380], [900, 470], [170, 800], [910, 800], [360, 300], [730, 300], [175, 1110], [905, 1110]];
 const CARD_T = [A.connaitre, A.qq2 - .1, A.qq3 - .1, A.qq3 + .25, A.qq3 + .45, A.qq3 + .62, A.qq3 + .78, A.qq3 + .92, A.qq3 + 1.04];
 CARD_T.forEach(t => sfx(t, 'pop'));
 function card1(c, x, y, s, rot, a) { c.save(); c.globalAlpha = a; c.translate(x, y); c.rotate(rot); c.scale(s, s);
@@ -232,17 +238,17 @@ function wallCards(c, t) {
 }
 
 /* ---------- block 3: the OJA map of the south of Benin ---------- */
-const TOWN = { tokpa: [190, 1080, 'Cotonou · Tokpa'], calavi: [300, 830, 'Abomey-Calavi'], allada: [760, 500, 'Allada'], porto: [960, 1110, 'Porto-Novo'], ouidah: [80, 1220, 'Ouidah'] };
-const PINS = [[700, 430], [820, 440], [760, 580], [880, 560], [640, 520], [930, 420], [690, 650], [850, 660], [600, 400]];
+const TOWN = { tokpa: [150, 980, 'Cotonou · Tokpa'], calavi: [220, 720, 'Abomey-Calavi'], allada: [790, 470, 'Allada'], porto: [930, 1060, 'Porto-Novo'], ouidah: [90, 1180, 'Ouidah'] };
+const PINS = [[720, 420], [850, 430], [800, 560], [920, 560], [660, 500], [940, 380], [880, 680], [700, 330], [610, 420]];
 const PIN_T = PINS.map((_, i) => A.voit + .1 + i * .17); PIN_T.forEach(t => sfx(t + .25, 'tac'));
-const ROUTE = [[190, 1080], [250, 950], [300, 830], [380, 700], [520, 620], [650, 560], [760, 500]];
+const ROUTE = [[150, 980], [190, 850], [220, 720], [300, 560], [440, 450], [620, 420], [790, 470]];
 function drawMap(c, t) {
   const r = rng(3); c.fillStyle = '#18261E'; c.fillRect(-400, -400, W + 800, H + 800);
   for (let i = 0; i < 70; i++) { c.fillStyle = r() < .5 ? '#1D3025' : '#1B2C22'; rrect(c, r() * 1200 - 60, r() * 1500, 90 + r() * 160, 50 + r() * 90, 14); c.fill(); }
   c.fillStyle = '#16384B'; c.beginPath(); c.moveTo(-400, 1300); c.bezierCurveTo(300, 1270, 700, 1310, 1500, 1260); c.lineTo(1500, 2400); c.lineTo(-400, 2400); c.fill();
   c.fillStyle = '#1B4560'; c.beginPath(); c.ellipse(600, 1180, 250, 40, -.08, 0, 7); c.fill();
   c.strokeStyle = '#3B4954'; c.lineWidth = 10; c.lineCap = 'round'; c.beginPath(); ROUTE.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.lineTo(860, 360); c.stroke();
-  c.beginPath(); c.moveTo(80, 1220); c.lineTo(190, 1080); c.lineTo(960, 1110); c.stroke();
+  c.beginPath(); c.moveTo(90, 1180); c.lineTo(150, 980); c.lineTo(930, 1060); c.stroke();
   c.font = '700 28px Inter'; c.textAlign = 'center';
   for (const [x, y, n] of Object.values(TOWN)) { c.fillStyle = '#fff'; c.beginPath(); c.arc(x, y, 8, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,.9)'; c.fillText(n, x, y + 42); }
   const col = [OR, '#25A35A', '#2E6BE6'], tick = [A.appelle, A.whatsapp, A.troisieme];
@@ -302,7 +308,7 @@ function orbit(c, t, front) {
   });
 }
 /* ---------- block 5: newspaper clippings stuck on the wall ---------- */
-const CLIP = [['UN MARIAGE', A.mariage, 260, 470, -6], ['UNE FÊTE', A.fete, 820, 430, 5], ['UN BAPTÊME', A.bapteme, 250, 760, 3]];
+const CLIP = [['UN MARIAGE', A.mariage, 250, 380, -6], ['UNE FÊTE', A.fete, 850, 360, 5], ['UN BAPTÊME', A.bapteme, 200, 700, 3]];
 CLIP.forEach(([, t]) => sfx(t, 'pop'));
 function clippings(c, t) {
   if (t < A.mariage - .1 || t > A.trouve5 + .4) return; const out = eio(lin(t, A.trouve5 - .1, A.trouve5 + .4));
@@ -318,14 +324,14 @@ function clippings(c, t) {
 /* ---------- block 6: paper cut (yellow torn paper, ransom letters) ---------- */
 function paperBg(c, t) {
   const r = rng(9); c.fillStyle = '#E9E2D2'; c.fillRect(0, 0, W, H);
-  c.fillStyle = '#F2CF3E'; c.beginPath(); c.moveTo(-20, 560); for (let s = 0; s <= 20; s++) c.lineTo(s * 56, 560 + (r() - .5) * 40 + Math.sin(s) * 18); c.lineTo(1100, 1500); for (let s = 20; s >= 0; s--) c.lineTo(s * 56, 1500 + (r() - .5) * 40); c.closePath(); c.fill();
+  c.fillStyle = '#F2CF3E'; c.beginPath(); c.moveTo(-20, 490); for (let s = 0; s <= 20; s++) c.lineTo(s * 56, 490 + (r() - .5) * 40 + Math.sin(s) * 18); c.lineTo(1100, 1500); for (let s = 20; s >= 0; s--) c.lineTo(s * 56, 1500 + (r() - .5) * 40); c.closePath(); c.fill();
   c.strokeStyle = 'rgba(70,90,170,.55)'; c.lineWidth = 6; c.lineCap = 'round'; for (let k = 0; k < 2; k++) { c.beginPath(); const x0 = k ? 800 : 120, y0 = k ? 1180 : 640; c.moveTo(x0, y0); for (let s = 0; s < 14; s++) c.lineTo(x0 + s * 14 + (s % 2) * 50, y0 + (s % 2 ? 90 : 0) + s * 4); c.stroke(); }
   c.fillStyle = 'rgba(20,23,26,.12)'; for (let l = 0; l < 6; l++) c.fillRect(70, 1560 + l * 26, 400 + r() * 300, 8);
 }
 const RANSOM = ['DU CHAMP', 'AU MARCHÉ'];
 function ransom(c, t) {
   const a0 = A.etNos + .55; let n = 0; const r = rng(31), BG = ['#14171A', '#FFFFFF', OR, '#E8112D', '#F2EEE6', '#2E6BE6'];
-  RANSOM.forEach((word, li) => { const y = 330 + li * 170, tiles = [...word]; const tw = tiles.length * 96; let x = 540 - tw / 2 + 48;
+  RANSOM.forEach((word, li) => { const y = 300 + li * 150, tiles = [...word]; const tw = tiles.length * 96; let x = 540 - tw / 2 + 48;
     tiles.forEach(ch => { const k = lin(t, a0 + n * .08, a0 + n * .08 + .2); n++; const bg = BG[Math.floor(r() * BG.length)], rot = (r() - .5) * .3, sz = 92 + r() * 22;
       if (ch !== ' ' && k > 0) { c.save(); c.translate(x, y); c.rotate(rot); c.scale(bk(k), bk(k)); c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = 14; c.shadowOffsetY = 6;
         c.fillStyle = bg; c.fillRect(-44, -60, 88, 120); c.shadowColor = 'transparent'; c.fillStyle = bg === '#FFFFFF' || bg === '#F2EEE6' ? '#14171A' : '#fff';
@@ -335,13 +341,24 @@ function ransom(c, t) {
 /* ---------- block 6: doodle outline and two drawn stars ---------- */
 function star(c, x, y, s, t, seed) { const r = rng(seed + Math.floor(t * 8)); c.save(); c.translate(x, y); c.strokeStyle = '#fff'; c.lineWidth = 6; c.lineCap = c.lineJoin = 'round'; c.beginPath();
   for (let i = 0; i <= 10; i++) { const an = i / 10 * 6.283 - 1.57, rr = (i % 2 ? .42 : 1) * s; c.lineTo(Math.cos(an) * rr + (r() - .5) * 6, Math.sin(an) * rr + (r() - .5) * 6); } c.stroke(); c.restore(); }
+/* ---------- block 3: small map of Benin, producers from the south to the north ---------- */
+const MB = (() => { const [x0, y0, x1, y1] = BENIN.box, c = document.createElement('canvas').getContext('2d'), r = rng(77), P = [];
+  while (P.length < 34) { const x = x0 + r() * (x1 - x0), y = y0 + r() * (y1 - y0); if (c.isPointInPath(BEN, x, y)) P.push([x, y]); }
+  return P.sort((a, b) => b[1] - a[1]); })();
+function miniBenin(c, t, k) { if (k <= 0) return; const [x0, y0, x1, y1] = BENIN.box, h = 380, s = h / (y1 - y0), w = (x1 - x0) * s, cx = 215, cy = 450;
+  c.save(); c.globalAlpha = k; c.fillStyle = 'rgba(18,21,25,.92)'; rrect(c, cx - w / 2 - 50, cy - h / 2 - 70, w + 100, h + 110, 26); c.fill();
+  c.fillStyle = '#9BA3AB'; c.font = '700 24px Inter'; c.textAlign = 'center'; c.fillText('BÉNIN', cx, cy - h / 2 - 30);
+  c.translate(cx - (x0 + x1) / 2 * s, cy - (y0 + y1) / 2 * s); c.scale(s, s); c.fillStyle = '#1E3A2A'; c.fill(BEN); c.lineWidth = 2.5 / s; c.strokeStyle = '#fff'; c.stroke(BEN);
+  MB.forEach(([x, y], i) => { const a = lin(t, A.partout3 + i / MB.length * (A.nord + .3 - A.partout3), A.partout3 + .25 + i / MB.length * (A.nord + .3 - A.partout3)); if (a <= 0) return;
+    c.fillStyle = OR; c.beginPath(); c.arc(x, y, 9 / s * bk(a), 0, 7); c.fill(); });
+  c.restore(); }
 /* ---------- block 8: the world ---------- */
-const CITY = [['Montréal', A.montreal, 140, 440], ['Paris', A.paris, 380, 380], ['Bruxelles', A.bruxelles, 470, 280], ['Abidjan', A.abidjan, 270, 900]];
-const BJC = [830, 720];
+const CITY = [['Montréal', A.montreal, 120, 430], ['Paris', A.paris, 330, 350], ['Bruxelles', A.bruxelles, 480, 300], ['Abidjan', A.abidjan, 170, 780], ['Nigeria', A.nigeria, 960, 920]];
+const BJC = [850, 640];
 function drawWorld(c, t) {
   const r = rng(8); c.fillStyle = '#0F151D'; c.fillRect(-400, -400, W + 800, H + 800);
   for (let i = 0; i < 520; i++) { const x = r() * 1200 - 60, y = r() * 1500 + 100; c.fillStyle = `rgba(255,255,255,${.05 + r() * .07})`; c.beginPath(); c.arc(x, y, 3 + r() * 2, 0, 7); c.fill(); }
-  benin(c, BJC[0], BJC[1], 430, eo(lin(t, WOR0, WOR0 + .5)));
+  benin(c, BJC[0], BJC[1], 400, eo(lin(t, WOR0, WOR0 + .5)));
   c.font = '800 36px Inter'; c.textAlign = 'center';
   CITY.forEach(([n, a, x, y]) => { const k = eo(lin(t, a - .1, a + .3)); if (k <= 0) return; c.globalAlpha = k; c.fillStyle = OR; c.beginPath(); c.arc(x, y, 16 * bk(lin(t, a - .1, a + .4)), 0, 7); c.fill();
     ring(c, x, y, 16 + 50 * ((t - a) % 1.2) / 1.2, .6 * (1 - ((t - a) % 1.2) / 1.2), '255,140,40', 4); c.fillStyle = '#fff'; c.fillText(n, x, y - 34);
@@ -421,11 +438,11 @@ function draw(t) {
   // things on the wall (they pass behind him)
   ctx.save(); place(ctx, BG); wallCards(ctx, t); clippings(ctx, t); ctx.restore();
   orbit(ctx, t, false);
-  for (const [w, k, a, b] of BIG) if (t >= a && t < b) bigWord(ctx, w, k, t, a, b, w.includes('\n') ? 580 : 620);
-  glass(['AVANT MÊME', 'DE SE RENDRE'], t, A.avant - .05, A.ensuite + .25, 560, 170);
-  glass(['PLUS PERSONNE', 'NE SE PERD'], t, A.personne - .05, A.livreur - .1, 560, 160);
+  for (const [w, k, a, b] of BIG) if (t >= a && t < b) bigWord(ctx, w, k, t, a, b, w.includes('\n') ? 460 : 430);
+  glass(['AVANT MÊME', 'DE SE DÉPLACER'], t, A.avant - .05, A.ensuite + .25, 440, 165);
+  glass(['PLUS PERSONNE', 'NE SE PERD'], t, A.personne - .05, A.livreur - .1, 440, 160);
   if (cover > 0) { ctx.save(); ctx.globalAlpha = cover; ctx.font = `300 470px 'Inter Tight'`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff'; ctx.letterSpacing = '30px';
-    ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 30; ctx.fillText('OJA', 555, 900 + (1 - cover) * 40); ctx.restore(); }
+    ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 30; ctx.fillText('OJA', 548, 640 + (1 - cover) * 40); ctx.restore(); }
   // him, on top of all that (with a white sticker edge in paper mode, a boiling drawn outline in block 6)
   if (useM && !(t > A.plusB - .1 && t < A.cultiv6 + .2 && mode === 'video' && !BIG.some(([, , a, b]) => t >= a && t < b))) {
     const pp = person(fr, mk);
@@ -434,7 +451,7 @@ function draw(t) {
   }
   orbit(fx, t, true);
   if (mk && t > A.plusB - .1 && t < A.cultiv6 + .2) { const k = inout(t, A.plusB - .1, A.cultiv6 + .2, .3, .3); fx.save(); place(fx, CAM); fx.globalAlpha = k; fx.drawImage(outline(mk, 8, '#fff', 7, 1 + Math.floor(t * 8)), 0, 0); fx.restore();
-    fx.globalAlpha = k; star(fx, 330, 760, 38, t, 5); star(fx, 800, 700, 30, t, 9); fx.globalAlpha = 1; }
+    fx.globalAlpha = k; star(fx, 240, 640, 38, t, 5); star(fx, 860, 580, 30, t, 9); fx.globalAlpha = 1; }
   // light grade over everything filmed: top shade and vignette
   { const g = ctx.createLinearGradient(0, 0, 0, 600); g.addColorStop(0, 'rgba(0,0,0,.35)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, 600);
     const vg = ctx.createRadialGradient(540, 960, 520, 540, 960, 1250); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.5)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H); }
@@ -451,9 +468,9 @@ function draw(t) {
   if (!endA) {
     const busyTop = mode !== 'video' || phoneK > 0 || cover > 0 || CAM.rec || (t > A.connaitre - .2 && t < A.plus + 1) || (t > A.like - .2 && t < A.ami + 1.4) || (t > A.mariage - .2 && t < A.trouve5) || (t > A.livreur - .2 && t < A.viendra);
     put('logo', 190, 300, 1 + .2 * (1 - lin(t, A.avec + .3, A.avec + .7)) * lin(t, A.avec, A.avec + .3), 1 - (busyTop ? 1 : 0));
-    if (t < 3.0) put('name', 360, 560, bk(lin(t, .25, .6)), 1 - lin(t, 2.7, 3.0));
+    if (t < 3.0) put('name', 330, 420, bk(lin(t, .25, .6)), 1 - lin(t, 2.7, 3.0));
     // block 2: search « grossiste », then « cultivateur d'ananas »
-    if (t >= UI0 + .15 && t < UI1) { const k = Math.min(eo(lin(t, UI0 + .15, UI0 + .5)), 1 - eio(lin(t, UI1 - .3, UI1))); put('search', 540, 470, 1, k, 0);
+    if (t >= UI0 + .15 && t < UI1) { const k = Math.min(eo(lin(t, UI0 + .15, UI0 + .5)), 1 - eio(lin(t, UI1 - .3, UI1))); put('search', 540, 400, 1, k, 0);
       const q1 = 'grossiste', q2 = "cultivateur d'ananas"; let q;
       if (t < A.cultiv - .3) q = q1.slice(0, Math.round(q1.length * lin(t, A.gros1 - .2, A.gros1 + .4)));
       else q = t < A.cultiv - .05 ? q1.slice(0, Math.round(q1.length * (1 - lin(t, A.cultiv - .3, A.cultiv - .1)))) : q2.slice(0, Math.round(q2.length * lin(t, A.cultiv - .05, A.cultiv + .7)));
@@ -465,15 +482,19 @@ function draw(t) {
     if (CAM.rec) { fx2.save(); fx2.strokeStyle = '#fff'; fx2.lineWidth = 6; for (const [x, y, dx, dy] of [[70, 290, 1, 1], [1010, 290, -1, 1], [70, 1520, 1, -1], [1010, 1520, -1, -1]]) { fx2.beginPath(); fx2.moveTo(x, y + dy * 70); fx2.lineTo(x, y); fx2.lineTo(x + dx * 70, y); fx2.stroke(); }
       fx2.fillStyle = Math.floor(t * 3) % 2 ? 'rgba(232,17,45,.3)' : '#E8112D'; fx2.beginPath(); fx2.arc(110, 340, 14, 0, 7); fx2.fill(); fx2.fillStyle = '#fff'; fx2.font = '700 34px Inter'; fx2.fillText('REC', 136, 352);
       fx2.textAlign = 'right'; fx2.fillText(t < A.trouves + .3 ? 'x1.5' : 'x2.0', 990, 352); fx2.restore(); }
-    if (t >= A.discutes - .05 && t < be(2)) { put('bub1', 400, 640, bk(lin(t, A.discutes - .05, A.discutes + .3)), 1 - lin(t, be(2) - .25, be(2)), -2);
-      if (t > A.discutes + .45) put('bub2', 760, 770, bk(lin(t, A.discutes + .45, A.discutes + .8)), 1 - lin(t, be(2) - .25, be(2)), 2); }
+    if (t >= A.discutes - .05 && t < be(2)) { put('bub1', 420, 350, bk(lin(t, A.discutes - .05, A.discutes + .3)), 1 - lin(t, be(2) - .25, be(2)), -2);
+      if (t > A.discutes + .45) put('bub2', 720, 470, bk(lin(t, A.discutes + .45, A.discutes + .8)), 1 - lin(t, be(2) - .25, be(2)), 2); }
     // block 3
-    if (t >= A.prends - .05 && t < MAP0 + .4) { const k = eo(lin(t, A.prends - .05, A.prends + .45)), x = eio(lin(t, MAP0, MAP0 + .4)); put('rose', mix(-260, 220, k) - x * 600, 640, 1, 1); }
+    if (t >= A.prends - .05 && t < MAP0 + .4) { const k = eo(lin(t, A.prends - .05, A.prends + .45)), x = eio(lin(t, MAP0, MAP0 + .4)); put('rose', mix(-260, 185, k) - x * 600, 790, .9, 1); }
     if (mode === 'map') {
-      if (t >= A.cherche - .2) { const q = 'ananas'; $('mst').textContent = q.slice(0, Math.round(q.length * lin(t, A.cherche, A.ananas + .3))); put('msearch', 540, 300, bk(lin(t, A.cherche - .2, A.cherche + .15)), 1 - lin(t, A.ensuite - .2, A.ensuite)); }
-      if (t >= A.appelle - .15 && t < A.avant) { put('contacts', 300, 560, bk(lin(t, A.appelle - .15, A.appelle + .2)), 1 - lin(t, A.avant - .3, A.avant));
+      if (t >= A.cherche - .2) { const q = 'ananas'; $('mst').textContent = q.slice(0, Math.round(q.length * lin(t, A.cherche, A.ananas + .3))); put('msearch', 700, 290, bk(lin(t, A.cherche - .2, A.cherche + .15)), 1 - lin(t, A.ensuite - .2, A.ensuite)); }
+      if (t >= A.appelle - .15 && t < A.avant) { put('contacts', 245, 400, bk(lin(t, A.appelle - .15, A.appelle + .2)), 1 - lin(t, A.avant - .3, A.avant));
         const tick = [A.appelle + .2, A.whatsapp + .1, A.troisieme]; for (let i = 0; i < 3; i++) { const on = t > tick[i]; const bxe = $('cb' + i); bxe.style.background = on ? GRN : 'transparent'; bxe.style.borderColor = on ? GRN : '#5B636B'; bxe.firstElementChild.style.opacity = on ? 1 : 0;
           $('cr' + i).style.opacity = t > A.choisit && i < 2 ? .4 : 1; } $('ch2').style.display = t > A.choisit ? 'inline-block' : 'none'; } }
+    if (t >= A.tout - .05 && t < be(3) - .3) { const k = bk(lin(t, A.tout - .05, A.tout + .35)); put('appbig', 545, 400, k, 1 - lin(t, be(3) - .6, be(3) - .3));
+      for (let q = 0; q < 2; q++) { const u = ((t - A.tout) * .8 + q / 2) % 1; if (t > A.tout) ring(fx, 545, 400, 200 + 260 * u, (1 - u) * .5, '255,140,40', 5, .45); } }
+    // block 3 « partout au Bénin, de Allada jusqu'au nord »: a small map of Benin fills with producers from the south to the north
+    if (t >= A.partout3 - .15 && t < A.appelle) miniBenin(fx2, t, inout(t, A.partout3 - .15, A.appelle, .3, .25));
     // block 4: phone with the real « Enregistrer un lieu » screen, the five boxes, the pin, GRATUIT
     if (t >= A.ouvre4 - .15 && t < A.place) { const k = eo(lin(t, A.ouvre4 - .15, A.ouvre4 + .35)), x = eio(lin(t, A.place - .35, A.place)); put('phone4', mix(-300, 210, k) - x * 500, 800, 1, 1, -4); }
     if (t >= A.nom - .3 && t < A.place) { const x = eio(lin(t, A.place - .35, A.place)); put('form', 830 + x * 500, 640, bk(lin(t, A.nom - .3, A.nom)), 1);
@@ -483,20 +504,20 @@ function draw(t) {
       for (let k = 0; k < 3; k++) { const u = ((t - land) * .7 + k / 3) % 1; if (t > land) ring(fx, ...scr(560, 772), 30 + 220 * u, (1 - u) * .8 * (1 - x), '255,107,0', 7, .3); } fx.globalAlpha = 1; }
     if (t >= A.gratuit + .1 && t < be(4) + .05) put('stamp', 540, 520, mix(2.3, 1, eo(lin(t, A.gratuit + .1, A.gratuit + .32))), 1 - lin(t, be(4) - .2, be(4) + .05), -8 + (t < A.gratuit + .6 ? Math.sin(t * 90) * 2 : 0));
     // block 5
-    if (focus > 0) put('breeder', 540, 760, mix(.85, 1, eo(lin(t, A.trouve5 - .05, A.trouve5 + .35))), focus);
+    if (focus > 0) put('breeder', 540, 800, mix(.85, 1, eo(lin(t, A.trouve5 - .05, A.trouve5 + .35))), focus);
     // block 6
-    if (t >= A.cultiv6 - .05 && t < PAP0 + .2) { const x = eio(lin(t, PAP0 - .15, PAP0 + .2)); put('d1', 230 - x * 500, 620, bk(lin(t, A.cultiv6 - .05, A.cultiv6 + .3)), 1, -3); if (t >= A.acheteur - .05) put('d2', 850 + x * 500, 620, bk(lin(t, A.acheteur - .05, A.acheteur + .3)), 1, 3); }
+    if (t >= A.cultiv6 - .05 && t < PAP0 + .2) { const x = eio(lin(t, PAP0 - .15, PAP0 + .2)); put('d1', 190 - x * 500, 560, bk(lin(t, A.cultiv6 - .05, A.cultiv6 + .3)), 1, -3); if (t >= A.acheteur - .05) put('d2', 890 + x * 500, 560, bk(lin(t, A.acheteur - .05, A.acheteur + .3)), 1, 3); }
     if (mode === 'paper') ransom(fx2, t);
     // block 7: a pin pops above his head on « carte »
-    if (t >= A.carte7 - .1 && t < PH0) { const a = lin(t, A.carte7 - .1, A.carte7 + .3); pin(fx, ...scr(560, 780), 3.4 * bk(a), cl(a * 3) * (1 - lin(t, PH0 - .25, PH0))); }
+    if (t >= A.carte7 - .1 && t < PH0) { const a = lin(t, A.carte7 - .1, A.carte7 + .3); pin(fx, ...scr(545, 540), 3.4 * bk(a), cl(a * 3) * (1 - lin(t, PH0 - .25, PH0))); }
     // block 8
-    [A.livreur, A.maman, A.touriste, A.etVous].forEach((a, i) => { if (t < a - .05 || t > A.viendra) return; const [x, y] = [[250, 470], [830, 470], [240, 760], [840, 760]][i];
+    [A.livreur, A.maman, A.cultiv8, A.touriste, A.etVous].forEach((a, i) => { if (t < a - .05 || t > A.viendra) return; const [x, y] = [[200, 390], [880, 390], [545, 290], [190, 690], [890, 690]][i];
       put('p8' + i, x, y, bk(lin(t, a - .05, a + .3)), 1 - lin(t, A.viendra - .3, A.viendra), i % 2 ? 3 : -3); });
-    if (t >= A.like - .1 && t < A.envoyez) { const o = 1 - lin(t, A.envoyez - .3, A.envoyez); put('like', 290, 880, bk(lin(t, A.like - .1, A.like + .25)) * (1 + .12 * Math.max(0, Math.sin((t - A.like) * 9)) * (t < A.partage ? 1 : 0)), o);
-      if (t >= A.partage - .1) put('share8', 830, 880, bk(lin(t, A.partage - .1, A.partage + .25)), o); if (t >= A.commentaire - .1) put('comment', 540, 600, bk(lin(t, A.commentaire - .1, A.commentaire + .3)), o); }
-    [A.aMaman, A.oncle, A.ami].forEach((a, i) => { if (t < a - .1 || t > COV0) return; put('to' + i, 560, 420 + i * 112, bk(lin(t, a - .1, a + .25)), 1 - lin(t, COV0 - .3, COV0)); });
+    if (t >= A.like - .1 && t < A.envoyez) { const o = 1 - lin(t, A.envoyez - .3, A.envoyez); put('like', 210, 760, bk(lin(t, A.like - .1, A.like + .25)) * (1 + .12 * Math.max(0, Math.sin((t - A.like) * 9)) * (t < A.partage ? 1 : 0)), o);
+      if (t >= A.partage - .1) put('share8', 880, 760, bk(lin(t, A.partage - .1, A.partage + .25)), o); if (t >= A.commentaire - .1) put('comment', 545, 380, bk(lin(t, A.commentaire - .1, A.commentaire + .3)), o); }
+    [A.aMaman, A.oncle, A.ami].forEach((a, i) => { if (t < a - .1 || t > COV0) return; put('to' + i, 545, 320 + i * 96, bk(lin(t, a - .1, a + .25)), 1 - lin(t, COV0 - .3, COV0)); });
     if (cover > 0) { fx2.save(); fx2.globalAlpha = cover; fx2.strokeStyle = 'rgba(255,255,255,.9)'; fx2.lineWidth = 4; fx2.strokeRect(40, 260, 1000, 1260); fx2.restore();
-      put('cov1', 300, 320, 1, cover); put('cov2', 880, 1000, 1, cover); put('cov3', 540, 1340, 1, cover); }
+      put('cov1', 300, 320, 1, cover); put('cov2', 900, 760, 1, cover); put('cov3', 540, 1340, 1, cover); }
   }
   // flashes: blocks 1 « plus besoin », GRATUIT, la force, and the end
   for (const f of [A.plus, A.gratuit + .32, A.force, END]) { const k = t - f; if (k >= -.02 && k < .45) { ctx.fillStyle = `rgba(255,255,255,${.5 * (1 - lin(k, 0, .2))})`; ctx.fillRect(0, 0, W, H); } }
@@ -515,7 +536,7 @@ function draw(t) {
 }
 // sound marks that depend on the drawing
 [A.appelle + .2, A.whatsapp + .1, A.troisieme].forEach(t => sfx(t, 'tick')); [A.nom, A.produis, A.photos, A.numero, A.wa4].forEach(t => sfx(t + .15, 'tick'));
-sfx(A.carte4 + .1, 'tac'); sfx(A.gratuit + .32, 'stamp'); [A.livreur, A.maman, A.touriste, A.etVous, A.like, A.partage, A.commentaire, A.aMaman, A.oncle, A.ami].forEach(t => sfx(t + .05, 'pop'));
+sfx(A.carte4 + .1, 'tac'); sfx(A.gratuit + .32, 'stamp'); [A.livreur, A.maman, A.cultiv8, A.touriste, A.etVous, A.like, A.partage, A.commentaire, A.aMaman, A.oncle, A.ami].forEach(t => sfx(t + .05, 'pop'));
 CITY.forEach(([, a]) => sfx(a, 'pop')); sfx(A.carte7, 'tac');
 window.SFX = SFX.sort((a, b) => a[0] - b[0]);
 function renderAt(t) { CUR = t; DRAWN = draw(t); }
