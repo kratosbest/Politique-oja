@@ -36,7 +36,8 @@ canvas{position:absolute;left:0;top:0}
 <script>
 const W = 1080, H = 1920, EDIT_DUR = EDIT.dur, END = EDIT_DUR - .2, DUR = EDIT_DUR + 4, NF = Math.round(EDIT_DUR * 24);
 const OR = '#FF6B00', GRN = '#159A69', BJ = ['#008751', '#FCD116', '#E8112D'];
-const FX = 545, FY = 880;                       // centre of his face (takes of 8 Nov, from the masks: head from y 555 to 1110): zooms keep it in place
+let FX = 545, FY = 880;                         // centre of his face (takes of 8 Nov, from the masks: head from y 555 to 1110): zooms keep it in place
+const FACE = { 4: [505, 985] };                  // block 4 (IMG_1102) was filmed a little further away: head from y 750, a little left
 const GRADE = 'brightness(.86) contrast(1.13) saturate(.72)';
 const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lin = (t, a, b) => cl((t - a) / (b - a));
@@ -78,7 +79,7 @@ const A = {
   b2: T(2, 'tu'), gros1: T(2, 'grossiste', 0), gros2: T(2, 'grossiste', 1), cultiv: T(2, 'cultivateur'), trouves: T(2, 'trouves'), discutes: Tbefore(2, 'discutes'),
   prends: T(3, 'prends'), tokpa: T(3, 'tokpa|tokba'), ouvre: T(3, 'ouvre'), cherche: T(3, 'cherche'), ananas: T(3, 'ananas'), voit: T(3, 'voit'), allada: T(3, 'allada|alada'),
   appelle: T(3, 'appelle'), whatsapp: T(3, 'whatsapp'), troisieme: T(3, 'troisième'), choisit: T(3, 'choisit|trouve'), avant: T(3, 'avant'), ensuite: T(3, 'ensuite'), perdre: T(3, 'perdre'),
-  etToi: T(4, 'et'), pAnanas: T(4, 'ananas'), pMais: T(4, 'maïs'), pTomates: T(4, 'tomates'), pPoulets: T(4, 'poulets'), pPoissons: T(4, 'poissons'), depuis: T(4, 'depuis'), ouvre4: T(4, 'ouvre'),
+  etToi: T(4, 'et'), pAnanas: T(4, 'ananas'), pMais: T(4, 'maïs'), pTomates: T(4, 'tomates'), pPoulets: T(4, 'poulet'), pPoissons: T(4, 'poisson'), depuis: T(4, 'depuis'), ouvre4: T(4, 'ouvre'),
   nom: T(4, 'nom'), produis: T(4, 'ce'), photos: T(4, 'tes'), numero: T(4, 'numéro'), wa4: T(4, 'whatsapp'), place: T(4, 'ogya', 1), carte4: T(4, 'carte'), meme: T(4, 'même'), gratuit: T(4, "c'est"),
   mariage: T(5, 'mariage'), fete: T(5, 'fête'), bapteme: T(5, 'baptême'), trouve5: T(5, 'trouve'),
   plusB: T(6, 'plus'), cultiv6: T(6, 'cultivateur'), acheteur: T(6, "l'acheteur"), etNos: T(6, 'et'),
@@ -269,7 +270,7 @@ function drawMap(c, t) {
    At the back the stickers are smaller, darker and a little blurred. On « Depuis ton champ » the ring opens and they fly away. */
 const PROD = [['ananas', A.pAnanas, 'Ananas'], ['mais', A.pMais, 'Maïs'], ['tomates', A.pTomates, 'Tomates'], ['poulet', A.pPoulets, 'Poulets'], ['poissons', A.pPoissons, 'Poissons']];
 const ORB0 = A.pAnanas - .45, ORB1 = A.depuis - .1;
-const RING = { cx: 560, cy: 1010, rx: 430, ry: 250 }, OMEGA = 1.6, FRONT = Math.PI / 2 - .55;   // each product reaches the front (right of centre) on its word
+const RING = { cx: 505, cy: 1090, rx: 400, ry: 240 }, OMEGA = 1.6, FRONT = Math.PI / 2 - .55;   // each product reaches the front (right of centre) on its word
 const IMG = {}; for (const [n] of PROD) { IMG[n] = new Image(); IMG[n].src = `assets/img/${n}.png`; }
 PROD.forEach(([, a]) => sfx(a, 'pop'));
 const ringK = t => eo(lin(t, ORB0, ORB0 + .45)), ringOut = t => eio(lin(t, ORB1, ORB1 + .55));
@@ -406,6 +407,7 @@ function draw(t) {
   if (!SIZE) measure();
   const fi = fIdx(t), fr = need(FR(fi)); need(FR(Math.min(NF - 1, fi + 1))); if (!fr) return false;
   const useM = needMask(t), m0 = useM ? need(MK(fi)) : null; if (useM) { need(MK(Math.min(NF - 1, fi + 1))); if (!m0) return false; }
+  { let b = 1; for (const bl of EDIT.blocks) if (t >= bl[0]) b = bl[2]; [FX, FY] = FACE[b] || [545, 880]; }
   CAM = camera(t); const BG = { ...CAM };
   const endA = eo(lin(t, END, END + .5));
   fx.clearRect(0, 0, W, H); fx2.clearRect(0, 0, W, H); hideAll();
@@ -438,7 +440,7 @@ function draw(t) {
   // things on the wall (they pass behind him)
   ctx.save(); place(ctx, BG); wallCards(ctx, t); clippings(ctx, t); ctx.restore();
   orbit(ctx, t, false);
-  for (const [w, k, a, b] of BIG) if (t >= a && t < b) bigWord(ctx, w, k, t, a, b, w.includes('\n') ? 460 : 430);
+  for (const [w, k, a, b] of BIG) if (t >= a && t < b) bigWord(ctx, w, k, t, a, b, w === 'VILLAGE' ? 660 : w.includes('\n') ? 460 : 430);
   glass(['AVANT MÊME', 'DE SE DÉPLACER'], t, A.avant - .05, A.ensuite + .25, 440, 165);
   glass(['PLUS PERSONNE', 'NE SE PERD'], t, A.personne - .05, A.livreur - .1, 440, 160);
   if (cover > 0) { ctx.save(); ctx.globalAlpha = cover; ctx.font = `300 470px 'Inter Tight'`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = '#fff'; ctx.letterSpacing = '30px';
@@ -496,12 +498,12 @@ function draw(t) {
     // block 3 « partout au Bénin, de Allada jusqu'au nord »: a small map of Benin fills with producers from the south to the north
     if (t >= A.partout3 - .15 && t < A.appelle) miniBenin(fx2, t, inout(t, A.partout3 - .15, A.appelle, .3, .25));
     // block 4: phone with the real « Enregistrer un lieu » screen, the five boxes, the pin, GRATUIT
-    if (t >= A.ouvre4 - .15 && t < A.place) { const k = eo(lin(t, A.ouvre4 - .15, A.ouvre4 + .35)), x = eio(lin(t, A.place - .35, A.place)); put('phone4', mix(-300, 210, k) - x * 500, 800, 1, 1, -4); }
-    if (t >= A.nom - .3 && t < A.place) { const x = eio(lin(t, A.place - .35, A.place)); put('form', 830 + x * 500, 640, bk(lin(t, A.nom - .3, A.nom)), 1);
+    if (t >= A.ouvre4 - .15 && t < A.place) { const k = eo(lin(t, A.ouvre4 - .15, A.ouvre4 + .35)), x = eio(lin(t, A.place - .35, A.place)); put('phone4', mix(-300, 190, k) - x * 500, 930, 1, 1, -4); }
+    if (t >= A.nom - .3 && t < A.place) { const x = eio(lin(t, A.place - .35, A.place)); put('form', 845 + x * 500, 600, bk(lin(t, A.nom - .3, A.nom)), 1);
       [A.nom, A.produis, A.photos, A.numero, A.wa4].forEach((a, i) => { const on = t > a + .15, e = $('fb' + i); e.style.background = on ? GRN : 'transparent'; e.style.borderColor = on ? GRN : '#5B636B'; e.firstElementChild.style.opacity = on ? 1 : 0; }); }
     if (t >= A.carte4 - .25 && t < A.meme - .1) { const land = A.carte4 + .1, a = lin(t, A.carte4 - .25, land), x = lin(t, A.meme - .4, A.meme - .1);
-      const [lx, ly] = scr(560, 770); fx.globalAlpha = 1 - x; pin(fx, lx, a < 1 ? mix(-200, ly, eio(a)) : ly, 5.2, 1);
-      for (let k = 0; k < 3; k++) { const u = ((t - land) * .7 + k / 3) % 1; if (t > land) ring(fx, ...scr(560, 772), 30 + 220 * u, (1 - u) * .8 * (1 - x), '255,107,0', 7, .3); } fx.globalAlpha = 1; }
+      const [lx, ly] = scr(505, 735); fx.globalAlpha = 1 - x; pin(fx, lx, a < 1 ? mix(-200, ly, eio(a)) : ly, 5.2, 1);
+      for (let k = 0; k < 3; k++) { const u = ((t - land) * .7 + k / 3) % 1; if (t > land) ring(fx, ...scr(505, 737), 30 + 220 * u, (1 - u) * .8 * (1 - x), '255,107,0', 7, .3); } fx.globalAlpha = 1; }
     if (t >= A.gratuit + .1 && t < be(4) + .05) put('stamp', 540, 520, mix(2.3, 1, eo(lin(t, A.gratuit + .1, A.gratuit + .32))), 1 - lin(t, be(4) - .2, be(4) + .05), -8 + (t < A.gratuit + .6 ? Math.sin(t * 90) * 2 : 0));
     // block 5
     if (focus > 0) put('breeder', 540, 800, mix(.85, 1, eo(lin(t, A.trouve5 - .05, A.trouve5 + .35))), focus);

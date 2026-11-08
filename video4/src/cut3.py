@@ -10,19 +10,19 @@ import concurrent.futures as cf, json, os, re, subprocess
 SPEED = 1.06
 GAP = .30          # silence kept between two phrases (rush seconds)
 # takes of 8 Nov 2026 (closer framing, the wall with the frames behind him). The first seated series (IMG_1082 to 1089) is in the git history.
-# IMG_1095 is silent and IMG_1099 is an aborted take: not used. Block 4 still comes from the first series (IMG_1085) until it is filmed again.
-TAKES = [('IMG_1092', 1), ('IMG_1093', 2), ('IMG_1094', 3), ('IMG_1085', 4), ('IMG_1096', 5), ('IMG_1097', 6), ('IMG_1098', 7), ('IMG_1100', 8)]
+# IMG_1095 is silent and IMG_1099 is an aborted take: not used. Block 4 was filmed again (IMG_1102), a little further from the camera.
+TAKES = [('IMG_1092', 1), ('IMG_1093', 2), ('IMG_1094', 3), ('IMG_1102', 4), ('IMG_1096', 5), ('IMG_1097', 6), ('IMG_1098', 7), ('IMG_1100', 8)]
 # words dropped: [from, to) in rush seconds. Before the first value: « Bloc N ».
 DROP = {
     'IMG_1092': [(0, 2.6), (4.25, 5.35)],                       # « quand tu te lances, », said again just after
-    'IMG_1093': [(0, 1.6)], 'IMG_1094': [(0, 8.5)], 'IMG_1085': [(0, 4.0)], 'IMG_1096': [(0, 1.5)], 'IMG_1097': [(0, 1.4)],
+    'IMG_1093': [(0, 1.6)], 'IMG_1094': [(0, 8.5)], 'IMG_1102': [(0, 3.6)], 'IMG_1096': [(0, 1.5)], 'IMG_1097': [(0, 1.4)],
     'IMG_1098': [(0, 4.5)],                                     # « Télécha- » is removed from the transcript (work/v3/stt_1098.json)
     'IMG_1100': [(0, .6)],
 }
 # longer pauses (rush seconds) before the word starting at that time: the effect lands there
-PAUSE = {('IMG_1092', 16.12): 1.0, ('IMG_1093', 15.64): .9, ('IMG_1094', 49.12): .8, ('IMG_1094', 55.44): .5, ('IMG_1085', 34.90): .7,
+PAUSE = {('IMG_1092', 16.12): 1.0, ('IMG_1093', 15.64): .9, ('IMG_1094', 49.12): .8, ('IMG_1094', 55.44): .5, ('IMG_1102', 34.44): .7,
          ('IMG_1100', 6.60): .8, ('IMG_1100', 91.18): .8, ('IMG_1100', 94.04): .6}
-TAIL = {'IMG_1092': .9, 'IMG_1093': .6, 'IMG_1094': .7, 'IMG_1085': .8, 'IMG_1096': .5, 'IMG_1097': .9, 'IMG_1098': .6, 'IMG_1100': 1.0}
+TAIL = {'IMG_1092': .9, 'IMG_1093': .6, 'IMG_1094': .7, 'IMG_1102': .8, 'IMG_1096': .5, 'IMG_1097': .9, 'IMG_1098': .6, 'IMG_1100': 1.0}
 
 def words(take):
     d = json.load(open(f'work/v3/stt_{take[4:]}.json'))
