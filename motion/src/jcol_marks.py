@@ -3,9 +3,12 @@ From the per-character timings of the voice (assets/jcol/voix_journee.mp3.json, 
 - where each line starts and ends in the voice file;
 - the length of each scene: at least its base length, and long enough for its line plus 1 s;
 - the words of each line, in scene seconds (the animations land on them: « Pas de marchandage » on the stamp, and so on).
+The start and end of each line are then moved to the real silences of the audio: the per-character timings can be off by
+0.2 s (the « O » of « Odja App », after an audio tag, was left at the end of the line before it and cut there; Derrick heard it, 9 Nov 2026).
 Writes assets/jcol/voix_marks.js (window.VO, read by the page) and assets/jcol/voix_marks.json (read by src/music40.py).
 usage (from motion/): python3 src/jcol_marks.py"""
-import json, re
+import json, re, subprocess
+import numpy as np
 
 BASE = [4.5, 7.0, 7.0, 7.0, 10.0, 7.5, 6.5, 6.5]     # shortest length of each scene (s)
 OFF = [0.3, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35, 0.35]  # the line starts this long after its scene starts
@@ -13,11 +16,29 @@ d = json.load(open('assets/jcol/voix_journee.mp3.json'))
 txt = ''.join(d['characters']); S = d['character_start_times_seconds']; E = d['character_end_times_seconds']
 lines = [re.sub(r'^\[[^\]]*\]\s*', '', l) for l in open('assets/jcol/voix_journee.txt', encoding='utf-8').read().strip().split('\n')]
 assert len(lines) == len(BASE), (len(lines), len(BASE))
+SR = 16000
+pcm = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', 'assets/jcol/voix_journee.mp3', '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'],
+                                   capture_output=True, check=True).stdout, np.float32)
+HOP = .01; db = np.array([20 * np.log10(np.sqrt((pcm[int(t * SR):int((t + .02) * SR)] ** 2).mean()) + 1e-9) for t in np.arange(0, len(pcm) / SR, HOP)])
+silent = db < -50
+def onset(t, back=.45):
+    """the speech start: the end of the last silence (at least 60 ms) before t, looking back at most `back` s"""
+    i = int(t / HOP)
+    for k in range(i, max(0, int((t - back) / HOP)), -1):
+        if silent[k - 6:k].all(): return round(k * HOP, 3)
+    return t
+def offset(t, ahead=.45):
+    """the speech end: the start of the first silence (at least 60 ms) after t"""
+    i = int(t / HOP)
+    for k in range(i, min(len(silent) - 6, int((t + ahead) / HOP))):
+        if silent[k:k + 6].all(): return round(k * HOP, 3)
+    return t
 out = {'dur': [], 'off': OFF, 'line': [], 'words': []}
 pos = 0
 for i, line in enumerate(lines):
     j = txt.index(line, pos); k = j + len(line) - 1; pos = k + 1
-    a, b = S[j], E[k]
+    a, b = onset(S[j]), offset(E[k] - .05)
+    if abs(a - S[j]) > .05 or abs(b - E[k]) > .05: print(f'line {i + 1}: start {S[j]:.2f} -> {a:.2f}, end {E[k]:.2f} -> {b:.2f}')
     out['line'].append([round(a, 3), round(b, 3)])
     out['dur'].append(round(max(BASE[i], OFF[i] + (b - a) + 1.0), 2))
     words = []

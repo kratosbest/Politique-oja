@@ -154,7 +154,7 @@ if len(sys.argv) > 3:
     v = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', sys.argv[3], '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32).astype(float)
     VOc = np.zeros(N); lines = MK['line']
     for i, (a, b) in enumerate(lines):
-        a0 = a - .04; b0 = min(b + .25, lines[i + 1][0] - .02) if i + 1 < len(lines) else b + .5
+        a0 = a - .04; b0 = min(b + .25, lines[i + 1][0] - .05) if i + 1 < len(lines) else b + .5
         seg = v[int(a0 * SR):int(b0 * SR)].copy(); k = int(.01 * SR); seg[:k] *= np.linspace(0, 1, k); seg[-k:] *= np.linspace(1, 0, k)
         j = int((ST[i] + MK['off'][i] - .04) * SR); VOc[j:j + len(seg)] += seg[:N - j]
     VOc = VOc / np.abs(VOc).max() * .9; VOc = VOc + conv(VOc, ir[:int(.6 * SR)]) * .05

@@ -271,7 +271,7 @@ function s7(c, u) {
 }
 [0, 1, 2, 3, 4].forEach(i => sfx(S(6) + .6 + i * .22, 'pop')); sfx(S(6) + SW7, 'hit');
 /* ---------- 8. the end ---------- */
-const O8 = A(7, 'odja', 0, .35) - .05;
+const O8 = (VO ? VO.off[7] : .35) - .05;   // the « O » starts with the line (its character timing was late)
 function s8(c, u) {
   paper(c); grid(c, 80, 1480, 920, 240, 60, .08);
   for (const [x, y, r, sp] of [[180, 520, 40, 1], [900, 640, 30, -1.3], [160, 1180, 26, 1.6], [930, 1260, 44, -.8]]) star4(c, x, y, r * bk(lin(u, .2, .6)), u * sp);
