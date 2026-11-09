@@ -12,8 +12,9 @@ html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}
 canvas{position:absolute;left:0;top:0}
 </style></head><body>
 <canvas id="c" width="1080" height="1920"></canvas>
+<script src="assets/jcol/voix_marks.js"></script>
 <script>
-const W = 1080, H = 1920, DUR = 53;
+const W = 1080, H = 1920;
 const OR = '#FF6B00', INK = '#15120F', CREAM = '#ECE3D2', DARK = '#16120E', GRN = '#159A69';
 const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const lin = (t, a, b) => cl((t - a) / (b - a));
@@ -25,13 +26,19 @@ function rng(seed) { let a = seed; return () => { a |= 0; a = a + 0x6D2B79F5 | 0
 const SERIF = "'Playfair Display'", TIGHT = "'Inter Tight'";
 
 /* ---------- images ---------- */
-const SRC = { sablier: 'assets/jcol/sablier.png', buste: 'assets/jcol/buste.png', cerveau: 'assets/jcol/cerveau.png', colis: 'assets/jcol/colis.png',
+const SRC = { sablier: 'assets/jcol/sablier.png', frigo: 'assets/jcol/frigo.png', cerveau: 'assets/jcol/cerveau.png', colis: 'assets/jcol/colis.png',
   course: 'assets/jcol/course_ui.jpg', market: 'store/captures/market.png', accueil: 'store/captures/accueil.png', fiche: '../video3/assets/app/fiche.jpg',
   plat: '../video3/assets/plats/atassi.jpg', logo: '../video1/assets/logo-oja-carte.png', apple: '../video1/assets/store-app-store.png', gplay: '../video1/assets/store-google-play.png' };
 const IM = {}; for (const k in SRC) { IM[k] = new Image(); IM[k].src = SRC[k]; }
 
 /* ---------- scenes: [start, end] ---------- */
-const SC = [[0, 4.5], [4.5, 11.5], [11.5, 18.5], [18.5, 25.5], [25.5, 32.5], [32.5, 40], [40, 46.5], [46.5, DUR]];
+// the length of each scene and the words of the voice (scene seconds) come from assets/jcol/voix_marks.js (src/jcol_marks.py);
+// the animations land on the words (A below). Without that file the page keeps the lengths and times below.
+const VO = window.VO || null;
+const SC = []; { let t0 = 0; for (const d of (VO ? VO.dur : [4.5, 7.07, 7, 7, 10.15, 7.5, 6.5, 6.5])) { SC.push([t0, t0 + d]); t0 += d; } }
+const DUR = SC[SC.length - 1][1], S = i => SC[i][0];
+const norm = x => x.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function A(i, w, n = 0, def = 0) { if (!VO) return def; const L = VO.words[i].filter(x => norm(x[0]).startsWith(norm(w))); return L[n] ? L[n][1] : def; }
 // how each scene ends: zoom-through a point, a whip to the left, or a white flash
 const OUT = [['zoom', 540, 1060], ['whip'], ['zoom', 860, 900], ['flash'], ['zoom', 540, 1060], ['zoom', 540, 1080], ['zoom', 540, 1060], null];
 
@@ -117,16 +124,18 @@ function barcode(c, x, y, u, t0) { const k = eo(lin(u, t0, t0 + .6)); if (k <= 0
   while (bx < x - 130 + 260 * k) { const w = 2 + Math.floor(r() * 3) * 2; c.fillRect(bx, y - 40, w, 80); bx += w + 3 + Math.floor(r() * 3) * 2; }
   c.font = `500 20px ${TIGHT}`; c.letterSpacing = '5px'; c.textAlign = 'center'; c.fillText('OJA APP · BÉNIN', x, y + 72); c.restore(); }
 /* ---------- 1. the hook: time (dark) ---------- */
+const T1 = A(0, 'ça', 0, 2.0) - .05;
 function s1(c, u) {
   paper(c, true);
   const flip = eio(lin(u, 1.2, 1.9)); cut(c, IM.sablier, 540, 1080 + (1 - eo(lin(u, 0, .7))) * 500, 860, flip * Math.PI, 1);
   typed(c, 'Au Bénin, une journée…', 540, 420, 64, u, .35, { col: 'rgba(236,227,210,.9)', cps: 26 });
-  rise(c, 'ÇA FILE.', 540, 610, 190, u, 2.0, { col: '#F4ECDD' });
-  label(c, 'chaque jour', 700, 690, u, 2.6, { rot: -4, size: 40, it: true });
-  for (const [x, y, r, sp] of [[170, 1450, 34, 1], [930, 860, 26, -1.4]]) star4(c, x, y, r * eo(lin(u, 2.2, 2.7)), u * sp, '#F4ECDD');
+  rise(c, 'ÇA FILE.', 540, 610, 190, u, T1, { col: '#F4ECDD' });
+  label(c, 'chaque jour', 700, 690, u, T1 + .6, { rot: -4, size: 40, it: true });
+  for (const [x, y, r, sp] of [[170, 1450, 34, 1], [930, 860, 26, -1.4]]) star4(c, x, y, r * eo(lin(u, T1 + .2, T1 + .7)), u * sp, '#F4ECDD');
 }
-sfx(2.0, 'hit'); sfx(2.62, 'pop');
+sfx(T1, 'hit'); sfx(T1 + .62, 'pop');
 /* ---------- 2. the ride ---------- */
+const P2 = A(1, 'prix', 0, 3.55) - .15, M2 = A(1, 'pas', 0, 4.6);
 function s2(c, u) {
   paper(c); grid(c, 80, 1180, 920, 480, 60, .1); header(c, 1, 'SE DÉPLACER', u);
   typed(c, 'moto, tricycle, voiture', 540, 420, 54, u, .3);
@@ -138,12 +147,13 @@ function s2(c, u) {
     c.fillStyle = OR; c.beginPath(); c.ellipse(px, py, 170 * b, 40 * b, 0, 0, 7); c.fill(); c.restore(); }
   person(c, px, py, 150, 0);
   phone(c, IM.course, mix(1400, 790, eo(lin(u, 2.3, 2.9))), 1110, 820, -6);
-  label(c, 'Prix affiché avant de partir', 380, 668, u, 3.4, { rot: -3, size: 40 });
-  stamp(c, 'PAS DE MARCHANDAGE', 540, 1600, u, 4.6, -6);
+  label(c, 'Prix affiché avant de partir', 380, 668, u, P2, { rot: -3, size: 40 });
+  stamp(c, 'PAS DE MARCHANDAGE', 540, 1600, u, M2, -6);
 }
-sfx(4.5 + 2.3, 'pop'); sfx(4.5 + 3.4, 'tick'); sfx(4.5 + 4.6, 'stamp');
+sfx(S(1) + 2.3, 'pop'); sfx(S(1) + P2, 'tick'); sfx(S(1) + M2, 'stamp');
 /* ---------- 3. the parcel ---------- */
 const R3 = curve([[230, 1520], [380, 820], [860, 900]]);
+const H3 = A(2, 'maintenant', 0, 4.4) - .1;
 function s3(c, u) {
   paper(c); streets(c, 31); header(c, 2, 'ENVOYER', u);
   typed(c, 'tu le suis en direct', 540, 420, 54, u, .3);
@@ -157,40 +167,72 @@ function s3(c, u) {
   L.forEach(([n, a], i) => { const on = u > a, y = 55 + i * 70; c.strokeStyle = on ? GRN : 'rgba(21,18,15,.4)'; c.lineWidth = 4; c.beginPath(); c.arc(50, y, 18, 0, 7); c.stroke();
     if (on) { c.fillStyle = GRN; c.beginPath(); c.arc(50, y, 18, 0, 7); c.fill(); c.strokeStyle = '#fff'; c.beginPath(); c.moveTo(41, y); c.lineTo(48, y + 7); c.lineTo(60, y - 7); c.stroke(); }
     c.fillStyle = INK; c.font = `700 36px ${SERIF}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(n, 90, y + 2); }); c.restore();
-  label(c, 'maintenant ou à l’heure choisie', 540, 1640, u, 4.3, { rot: 2, size: 38, it: true });
+  label(c, 'maintenant ou à l’heure choisie', 540, 1640, u, H3, { rot: 2, size: 38, it: true });
 }
-[1.4, 2.4].forEach(a => sfx(11.5 + a, 'tick')); sfx(11.5 + 3.7, 'done'); sfx(11.5 + 4.3, 'pop');
+[1.4, 2.4].forEach(a => sfx(S(2) + a, 'tick')); sfx(S(2) + 3.7, 'done'); sfx(S(2) + H3, 'pop');
 /* ---------- 4. OJA Market ---------- */
+const SN4 = A(3, 'restaurants', 0, 1.8) + .1, PL4 = A(3, 'livrent', 0, 2.75) - .1;
 function s4(c, u) {
   paper(c); header(c, 3, 'MANGER, ACHETER', u);
   typed(c, 'commerces et restaurants', 540, 420, 54, u, .3);
   rise(c, 'OJA MARKET', 540, 580, 140, u, .55);
-  const snap = eio(lin(u, .9, 1.9)), s = 330;
+  const snap = eio(lin(u, SN4 - 1, SN4)), s = 330;
   puzzle(c, mix(-300, 540 - s / 2 - 2, snap), 1000, s, 'L', INK); puzzle(c, mix(1380, 540 + s / 2 + 2, snap), 1000, s, 'R', OR);
-  c.save(); c.globalAlpha = eo(lin(u, 1.0, 1.6)); c.font = `italic 400 44px ${SERIF}`; c.textAlign = 'center'; c.fillStyle = INK; c.fillText('ta faim', mix(-300, 540 - s / 2, snap), 1240); c.fillText('le restaurant du coin', mix(1380, 540 + s / 2 + 40, snap), 1240); c.restore();
-  if (u > 1.9) for (const [x, y, r] of [[300, 830, 30], [800, 1190, 24]]) star4(c, x, y, r * bk(lin(u, 1.9, 2.3)), u * 1.2);
+  c.save(); c.globalAlpha = eo(lin(u, SN4 - .9, SN4 - .3)); c.font = `italic 400 44px ${SERIF}`; c.textAlign = 'center'; c.fillStyle = INK; c.fillText('ta faim', mix(-300, 540 - s / 2, snap), 1240); c.fillText('le restaurant du coin', mix(1380, 540 + s / 2 + 40, snap), 1240); c.restore();
+  if (u > SN4) for (const [x, y, r] of [[300, 830, 30], [800, 1190, 24]]) star4(c, x, y, r * bk(lin(u, SN4, SN4 + .4)), u * 1.2);
   // the dish, as a polaroid, delivered
-  const pk = eo(lin(u, 2.6, 3.2)); if (pk > 0 && IM.plat.complete) { c.save(); c.translate(mix(540, 740, pk), mix(1900, 1450, pk)); c.rotate(.08 - .04 * pk); c.shadowColor = 'rgba(40,20,5,.4)'; c.shadowBlur = 40; c.shadowOffsetY = 20;
+  const pk = eo(lin(u, PL4, PL4 + .6)); if (pk > 0 && IM.plat.complete) { c.save(); c.translate(mix(540, 740, pk), mix(1900, 1450, pk)); c.rotate(.08 - .04 * pk); c.shadowColor = 'rgba(40,20,5,.4)'; c.shadowBlur = 40; c.shadowOffsetY = 20;
     c.fillStyle = '#FFFDF8'; c.fillRect(-190, -170, 380, 360); c.shadowColor = 'transparent'; c.drawImage(IM.plat, -170, -150, 340, 260); c.fillStyle = INK; c.font = `italic 400 34px ${SERIF}`; c.textAlign = 'center'; c.fillText('livré chez toi', 0, 160); c.restore(); }
   label(c, 'Paiement Mobile Money sécurisé', 380, 1650, u, 4.2, { rot: -2, size: 36 });
 }
-sfx(18.5 + 1.9, 'snap'); sfx(18.5 + 2.7, 'pop'); sfx(18.5 + 4.2, 'tick');
-/* ---------- 5. NOVOJA (dark) ---------- */
+sfx(S(3) + SN4, 'snap'); sfx(S(3) + PL4 + .1, 'pop'); sfx(S(3) + 4.2, 'tick');
+/* ---------- 5. NOVOJA (dark): the money waits for the delivery ----------
+   (replaces the bust split in two, 9 Nov 2026: Derrick found it meant nothing.) The seller puts a fridge on NOVOJA; the buyer pays,
+   OJA keeps the money in the padlock; the fridge goes to the buyer, who confirms; then the padlock opens and the seller is paid. */
+const N5 = { vends: A(4, 'vends', 0, 1.5), paie: A(4, 'paie', 0, 3.9), garde: A(4, 'garde', 0, 4.75), recoit: A(4, 'reçoit', 0, 5.9), confirme: A(4, 'confirme', 0, 6.6), paye: A(4, 'payé', 0, 8.5) };
+const CREAM2 = '#F4ECDD', R5 = curve([[265, 1390], [540, 760], [815, 1390]]);
+function padlock(c, x, y, s, open, a = 1) {   // open: 0 closed, 1 open
+  if (a <= 0) return; c.save(); c.globalAlpha = a; c.translate(x, y); c.scale(s, s);
+  c.strokeStyle = CREAM2; c.lineWidth = 17; c.lineCap = 'round'; c.beginPath(); c.moveTo(-42, 12); c.lineTo(-42, -38 - 34 * open); c.arc(0, -38 - 34 * open, 42, Math.PI, 0); c.lineTo(42, -38 - 34 * open + 30 * (1 - open) + 20 * (1 - open)); c.stroke();
+  c.fillStyle = OR; c.shadowColor = 'rgba(255,107,0,.5)'; c.shadowBlur = 40; c.beginPath(); c.roundRect(-78, 0, 156, 124, 20); c.fill(); c.shadowColor = 'transparent';
+  c.fillStyle = DARK; c.beginPath(); c.arc(0, 50, 15, 0, 7); c.fill(); c.fillRect(-6, 52, 12, 34); c.restore(); }
+function chip(c, x, y, s, a = 1) {           // the payment: no amount on screen
+  if (a <= 0 || s <= 0) return; c.save(); c.globalAlpha = a; c.translate(x, y); c.scale(s, s); c.fillStyle = CREAM2; c.shadowColor = 'rgba(0,0,0,.5)'; c.shadowBlur = 20;
+  c.beginPath(); c.roundRect(-105, -40, 210, 80, 40); c.fill(); c.shadowColor = 'transparent'; c.fillStyle = OR; c.beginPath(); c.arc(-62, 0, 22, 0, 7); c.fill();
+  c.strokeStyle = '#fff'; c.lineWidth = 3.5; c.beginPath(); c.roundRect(-70, -13, 16, 26, 4); c.stroke(); c.textBaseline = 'middle';   // a small phone: Mobile Money
+  c.fillStyle = INK; c.font = `700 28px Inter`; c.textAlign = 'left'; c.fillText('Paiement', -30, 2); c.restore(); }
+function bubble(c, txt, x, y, k) {           // green tick and a word, above a person
+  if (k <= 0) return; c.save(); c.translate(x, y); c.scale(k, k); c.font = `700 32px Inter`; const w = c.measureText(txt).width + 100;
+  c.fillStyle = '#fff'; c.beginPath(); c.roundRect(-w / 2, -38, w, 76, 38); c.fill(); c.fillStyle = GRN; c.beginPath(); c.arc(-w / 2 + 40, 0, 22, 0, 7); c.fill();
+  c.strokeStyle = '#fff'; c.lineWidth = 5; c.lineCap = c.lineJoin = 'round'; c.beginPath(); c.moveTo(-w / 2 + 30, 0); c.lineTo(-w / 2 + 37, 8); c.lineTo(-w / 2 + 51, -8); c.stroke();
+  c.fillStyle = INK; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, -w / 2 + 74, 2); c.restore(); }
 function s5(c, u) {
   paper(c, true); header(c, 4, 'ENTRE PARTICULIERS', u, true);
   typed(c, 'vendre ou donner', 540, 420, 54, u, .3, { col: 'rgba(236,227,210,.9)' });
-  rise(c, 'NOVOJA', 540, 590, 170, u, .55, { col: '#F4ECDD' });
-  const img = IM.buste; if (img.complete) { const h = 820, w = h * img.width / img.height, x = 540, y = 1130, gap = 80 * eio(lin(u, 1.2, 1.8));
-    for (const [sx, dx] of [[0, -1], [1, 1]]) { c.save(); c.beginPath(); c.rect(x - w / 2 + sx * w / 2 + dx * gap / 2, y - h / 2, w / 2, h); c.clip(); c.drawImage(img, x - w / 2 + dx * gap / 2, y - h / 2, w, h); c.restore(); }
-    const bandK = eo(lin(u, 1.6, 2.2)); c.fillStyle = OR; c.fillRect(x - gap / 2 + 8, y - h / 2 - 40, Math.max(0, gap - 16), (h + 80) * bandK); }
-  c.save(); c.font = `italic 700 58px ${SERIF}`; c.fillStyle = '#F4ECDD'; c.globalAlpha = eo(lin(u, 1.9, 2.4)); c.textAlign = 'center'; c.fillText('Vendre', 150, 880); c.fillText('Donner', 935, 880); c.restore();
-  stamp(c, 'PAIEMENT PROTÉGÉ', 540, 1400, u, 3.2, -5);
-  c.save(); c.globalAlpha = eo(lin(u, 4.0, 4.5)); c.fillStyle = 'rgba(236,227,210,.85)'; c.font = `300 30px ${TIGHT}`; c.textAlign = 'center';
-  c.fillText('L’argent est remis au vendeur', 540, 1650); c.fillText('après confirmation de réception.', 540, 1692); c.restore();
+  rise(c, 'NOVOJA', 540, 590, 170, u, .55, { col: CREAM2 });
+  // the two people, the padlock between them
+  const pk = eo(lin(u, .9, 1.4)); c.save(); c.globalAlpha = pk; person(c, 115, 1500, 230, 0, CREAM2); person(c, 965, 1500, 230, 0, CREAM2);
+  c.font = `italic 400 40px ${SERIF}`; c.fillStyle = 'rgba(244,236,221,.85)'; c.textAlign = 'center'; c.fillText('le vendeur', 135, 1575); c.fillText('l’acheteur', 945, 1575); c.restore();
+  const lockIn = bk(lin(u, N5.paie - .5, N5.paie - .1)), open = 1 - eio(lin(u, N5.garde - .1, N5.garde + .15)) + eio(lin(u, N5.paye - .6, N5.paye - .35));
+  padlock(c, 540, 1230, 1.1 * lockIn, cl(open), 1);
+  for (let k = 0; k < 2; k++) { const v = lin(u, N5.garde + k * .15, N5.garde + .8 + k * .15); if (v > 0 && v < 1) ring(c, 540, 1300, 90 + 220 * v, (1 - v) * .7, '255,107,0', 6); }
+  c.save(); c.globalAlpha = eo(lin(u, N5.garde, N5.garde + .4)) * (1 - lin(u, N5.paye - .6, N5.paye - .3)); c.font = `italic 400 36px ${SERIF}`; c.fillStyle = CREAM2; c.textAlign = 'center'; c.fillText('OJA garde l’argent', 540, 1440); c.restore();
+  // the fridge: next to the seller, then carried to the buyer
+  const fk = bk(lin(u, N5.vends - .2, N5.vends + .25)), mv = eio(lin(u, N5.recoit - .9, N5.recoit + .15));
+  if (mv > 0) dotted(c, R5, mv, u, OR, 8);
+  const fp = R5[Math.min(R5.length - 1, Math.floor(R5.length * mv))]; cut(c, IM.frigo, fp[0], fp[1], 220 * fk, (mv > 0 && mv < 1 ? Math.sin(u * 9) * .06 : 0), 1);
+  // the payment: from the buyer into the padlock, then out of it to the seller
+  const p1 = eio(lin(u, N5.paie, N5.paie + .6)), p2 = eio(lin(u, N5.paye - .35, N5.paye + .15));
+  if (u < N5.paie + .6) chip(c, mix(950, 540, p1), mix(1180, 1260, p1), (u < N5.paie ? bk(lin(u, N5.paie - .45, N5.paie - .05)) : 1) * mix(1, .4, p1), 1 - lin(u, N5.paie + .45, N5.paie + .6));
+  else if (u > N5.paye - .35) chip(c, mix(540, 150, p2), mix(1260, 1180, p2), mix(.4, 1, p2), 1);
+  bubble(c, 'Reçu', 955, 1180, bk(lin(u, N5.confirme - .1, N5.confirme + .25)) * (u < N5.paye - .4 ? 1 : 1 - lin(u, N5.paye - .4, N5.paye - .2)));
+  bubble(c, 'Payé', 150, 1060, bk(lin(u, N5.paye + .15, N5.paye + .5)));
+  stamp(c, 'PAIEMENT PROTÉGÉ', 540, 805, u, N5.garde + .05, -5, OR, 54);
 }
-sfx(25.5 + 1.2, 'split'); sfx(25.5 + 3.2, 'stamp');
+sfx(S(4) + N5.vends - .1, 'pop'); sfx(S(4) + N5.paie + .55, 'tick'); sfx(S(4) + N5.garde + .05, 'stamp'); sfx(S(4) + N5.confirme, 'done'); sfx(S(4) + N5.paye + .15, 'done');
 /* ---------- 6. the map ---------- */
 const R6 = curve([[120, 1480], [220, 1190], [540, 1172]]);
+const P6 = A(5, 'carte', 0, 2.2) - .1, B6 = [A(5, 'appelles', 0, 2.75), A(5, 'whatsapp', 0, 3.85), A(5, 'vas', 0, 4.95)];
 function s6(c, u) {
   paper(c); streets(c, 61, .2); grid(c, 80, 700, 920, 900, 90, .07); header(c, 5, 'TROUVER UN LIEU', u);
   rise(c, 'LA CARTE', 540, 520, 150, u, .4);
@@ -198,26 +240,27 @@ function s6(c, u) {
   const sk = eo(lin(u, .7, 1.0)); if (sk > 0) { c.save(); c.globalAlpha = sk; c.fillStyle = '#fff'; c.shadowColor = 'rgba(40,20,5,.25)'; c.shadowBlur = 24; c.beginPath(); c.roundRect(110, 610, 860, 96, 48); c.fill(); c.shadowColor = 'transparent';
     icon(c, 'lieu', 170, 658, 44, '#667085'); c.restore(); }
   typed(c, 'la pharmacie derrière le marché', 210, 672, 40, u, 1.0, { font: `600 40px Inter`, col: INK, align: 'left', cps: 24 });
-  const q = lin(u, 0, .3) * (1 - eio(lin(u, 2.4, 2.8))); if (q > 0) { c.save(); c.globalAlpha = q; c.fillStyle = OR; c.font = `900 520px ${SERIF}`; c.textAlign = 'center'; c.translate(540, 1300); c.rotate(Math.sin(u * 2) * .05); c.fillText('?', 0, 0); c.restore(); }
-  const pk = lin(u, 2.5, 2.95); if (pk > 0) { pin(c, 540, mix(700, 1170, eo(pk)), 6.5, 1); for (let k = 0; k < 3; k++) { const v = ((u - 2.95) * .7 + k / 3) % 1; if (u > 2.95) ring(c, 540, 1172, 30 + 240 * v, (1 - v) * .8, '255,107,0', 7, .3); } }
-  const wk = lin(u, 3.2, 5.4); if (wk > 0) { dotted(c, R6, wk, u); const p = R6[Math.min(R6.length - 1, Math.floor(R6.length * wk))]; person(c, p[0], p[1], 120, u * 9); }
-  [['Appeler', 215], ['WhatsApp', 465], ['S’y rendre avec OJA', 790]].forEach(([n, x], i) => { const k = bk(lin(u, 4.3 + i * .25, 4.65 + i * .25)); if (k <= 0) return;
+  const q = lin(u, 0, .3) * (1 - eio(lin(u, P6 - .1, P6 + .3))); if (q > 0) { c.save(); c.globalAlpha = q; c.fillStyle = OR; c.font = `900 520px ${SERIF}`; c.textAlign = 'center'; c.translate(540, 1300); c.rotate(Math.sin(u * 2) * .05); c.fillText('?', 0, 0); c.restore(); }
+  const pk = lin(u, P6, P6 + .45); if (pk > 0) { pin(c, 540, mix(700, 1170, eo(pk)), 6.5, 1); for (let k = 0; k < 3; k++) { const v = ((u - P6 - .45) * .7 + k / 3) % 1; if (u > P6 + .45) ring(c, 540, 1172, 30 + 240 * v, (1 - v) * .8, '255,107,0', 7, .3); } }
+  const wk = lin(u, P6 + .7, P6 + 2.9); if (wk > 0) { dotted(c, R6, wk, u); const p = R6[Math.min(R6.length - 1, Math.floor(R6.length * wk))]; person(c, p[0], p[1], 120, u * 9); }
+  [['Appeler', 215], ['WhatsApp', 465], ['S’y rendre avec OJA', 790]].forEach(([n, x], i) => { const k = bk(lin(u, B6[i] - .1, B6[i] + .25)); if (k <= 0) return;
     c.save(); c.translate(x, 1600); c.scale(k, k); c.font = `700 32px Inter`; const w = c.measureText(n).width + 48; c.fillStyle = i === 2 ? OR : '#fff'; c.shadowColor = 'rgba(40,20,5,.25)'; c.shadowBlur = 18;
     c.beginPath(); c.roundRect(-w / 2, -34, w, 68, 34); c.fill(); c.shadowColor = 'transparent'; c.fillStyle = i === 2 ? '#fff' : INK; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(n, 0, 2); c.restore(); });
 }
-sfx(32.5 + 1.0, 'type'); sfx(32.5 + 2.95, 'tac'); [0, 1, 2].forEach(i => sfx(32.5 + 4.3 + i * .25, 'pop'));
+sfx(S(5) + 1.0, 'type'); sfx(S(5) + P6 + .45, 'tac'); B6.forEach(b => sfx(S(5) + b - .05, 'pop'));
 /* ---------- 7. everything in your head → one app ---------- */
 const LAB = [['COURSE', 230, 700, 'bike'], ['COLIS', 860, 700, 'colis'], ['REPAS', 200, 1250, 'repas'], ['BOUTIQUE', 880, 1250, 'boutique'], ['LIEUX', 540, 1450, 'lieu']];
+const SW7 = A(6, 'tout', 1, 2.0);
 function s7(c, u) {
   paper(c); header(c, 6, 'TOUT EN TÊTE', u);
-  const toApp = eio(lin(u, 2.8, 3.5));
-  if (u < 3.1) { c.save(); c.globalAlpha = 1 - lin(u, 2.8, 3.1); rise(c, 'TOUT EN TÊTE ?', 540, 520, 100, u, .3); c.restore(); } else rise(c, 'UNE SEULE APPLI', 540, 520, 100, u, 3.1);
+  const toApp = eio(lin(u, SW7 - .2, SW7 + .5));
+  if (u < SW7) { c.save(); c.globalAlpha = 1 - lin(u, SW7 - .3, SW7); rise(c, 'TOUT EN TÊTE ?', 540, 520, 100, u, .3); c.restore(); } else rise(c, 'UNE SEULE APPLI', 540, 520, 100, u, SW7);
   if (IM.cerveau.complete && toApp < 1) cut(c, IM.cerveau, 540, 980, 470 * (1 - .6 * toApp), 0, 1 - toApp);
   LAB.forEach(([n, x, y], i) => { const k = eo(lin(u, .6 + i * .22, .9 + i * .22)); if (k <= 0 || toApp >= 1) return; const X = mix(x, 540, toApp), Y = mix(y, 1000, toApp);
     c.save(); c.globalAlpha = k * (1 - toApp); c.strokeStyle = INK; c.lineWidth = 2; c.beginPath(); c.moveTo(X, Y + 20); c.lineTo(mix(X, 540, .45), mix(Y + 20, 980, .45)); c.stroke();
     c.font = `700 42px ${SERIF}`; c.letterSpacing = '4px'; c.fillStyle = INK; c.textAlign = 'center'; c.fillText(n, X, Y); c.restore(); });
   if (toApp > 0) {
-    const ph = eo(lin(u, 3.0, 3.6)), cx = 540, cy = 1080, rx = 420, ry = 140;
+    const ph = eo(lin(u, SW7, SW7 + .6)), cx = 540, cy = 1080, rx = 420, ry = 140;
     const ringArc = (front) => { c.save(); c.globalAlpha = ph; c.lineCap = 'round'; c.strokeStyle = 'rgba(255,122,26,.35)'; c.lineWidth = 20; c.shadowColor = '#FF7A1A'; c.shadowBlur = 26;
       c.beginPath(); c.ellipse(cx, cy, rx, ry, 0, front ? 0 : Math.PI, front ? Math.PI : 2 * Math.PI); c.stroke(); c.shadowBlur = 0; c.strokeStyle = front ? 'rgba(255,214,170,.95)' : 'rgba(255,190,130,.6)'; c.lineWidth = front ? 5 : 3; c.stroke(); c.restore(); };
     const items = LAB.map(([n, , , ic], i) => { const an = i / 5 * Math.PI * 2 + u * 1.3; return { ic, an, z: Math.sin(an) }; });
@@ -226,21 +269,22 @@ function s7(c, u) {
     ringArc(true); items.filter(o => o.z >= 0).forEach(o => sticker(c, o.ic, cx + Math.cos(o.an) * rx, cy + Math.sin(o.an) * ry, (110 + 50 * (o.z + 1) / 2) * ph));
   }
 }
-[0, 1, 2, 3, 4].forEach(i => sfx(40 + .6 + i * .22, 'pop')); sfx(40 + 3.0, 'hit');
+[0, 1, 2, 3, 4].forEach(i => sfx(S(6) + .6 + i * .22, 'pop')); sfx(S(6) + SW7, 'hit');
 /* ---------- 8. the end ---------- */
+const O8 = A(7, 'odja', 0, .35) - .05;
 function s8(c, u) {
   paper(c); grid(c, 80, 1480, 920, 240, 60, .08);
   for (const [x, y, r, sp] of [[180, 520, 40, 1], [900, 640, 30, -1.3], [160, 1180, 26, 1.6], [930, 1260, 44, -.8]]) star4(c, x, y, r * bk(lin(u, .2, .6)), u * sp);
   if (IM.logo.complete) { const k = bk(lin(u, .1, .5)); c.save(); c.translate(540, 560); c.scale(k, k); c.drawImage(IM.logo, -110, -110, 220, 220); c.restore(); }
   c.save(); c.font = `900 230px ${SERIF}`; const w1 = c.measureText('Oja').width; c.font = `italic 700 230px ${SERIF}`; const w2 = c.measureText('App').width; c.restore();
-  const x0 = 540 - (w1 + 50 + w2) / 2; rise(c, 'Oja', x0, 900, 230, u, .3, { align: 'left' }); rise(c, 'App', x0 + w1 + 50, 900, 230, u, .45, { align: 'left', it: true, w: 700, col: OR });
-  barcode(c, 540, 1560, u, 3.6);
-  typed(c, 'Tout est plus facile quand on a', 540, 1030, 50, u, 1.0, { cps: 34 }); typed(c, 'le marché dans sa poche.', 540, 1095, 50, u, 1.9, { cps: 34 });
-  label(c, 'TÉLÉCHARGE OJA APP', 540, 1240, u, 2.7, { size: 40 });
-  [['apple', 'App Store', 370], ['gplay', 'Google Play', 710]].forEach(([k, n, x], i) => { const s = bk(lin(u, 3.1 + i * .15, 3.5 + i * .15)); if (s <= 0 || !IM[k].complete) return;
+  const x0 = 540 - (w1 + 50 + w2) / 2; rise(c, 'Oja', x0, 900, 230, u, O8, { align: 'left' }); rise(c, 'App', x0 + w1 + 50, 900, 230, u, A(7, 'app', 0, .7) - .05, { align: 'left', it: true, w: 700, col: OR });
+  barcode(c, 540, 1560, u, 4.4);
+  typed(c, 'Tout est plus facile quand on a', 540, 1030, 50, u, A(7, 'tout', 0, 1.2) - .05, { cps: 26 }); typed(c, 'le marché dans sa poche.', 540, 1095, 50, u, A(7, 'le', 0, 2.45) - .05, { cps: 26 });
+  label(c, 'TÉLÉCHARGE OJA APP', 540, 1240, u, 3.6, { size: 40 });
+  [['apple', 'App Store', 370], ['gplay', 'Google Play', 710]].forEach(([k, n, x], i) => { const s = bk(lin(u, 4.0 + i * .15, 4.4 + i * .15)); if (s <= 0 || !IM[k].complete) return;
     c.save(); c.translate(x, 1370); c.scale(s, s); c.fillStyle = INK; c.beginPath(); c.roundRect(-150, -48, 300, 96, 48); c.fill(); c.drawImage(IM[k], -125, -26, 52, 52); c.fillStyle = '#fff'; c.font = `600 32px Inter`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(n, -60, 2); c.restore(); });
 }
-sfx(46.5 + .3, 'hit'); sfx(46.5 + 2.7, 'pop');
+sfx(S(7) + O8, 'hit'); sfx(S(7) + 3.6, 'pop');
 const SCENES = [s1, s2, s3, s4, s5, s6, s7, s8];
 
 /* ---------- compositing: each scene on its own canvas, then the cut to the next ---------- */

@@ -1,13 +1,19 @@
-# OJA « Une journée avec OJA », motion design in collage style (oja_journee_collage.html, 53 s, 9:16): music and small sounds, no voice.
-# - 0 to 4.5 s: dark, a low pad and a clock that ticks (the hourglass), a hit on « ÇA FILE. »;
-# - 4.5 to 46.5 s: a light Afro-house groove (104 BPM: kick, clap, shaker, log drum, plucks), stripped down on the dark NOVOJA scene;
-# - 46.5 s: end card, a low hit and a chime, the groove thins out, fade out in the last 1.5 s.
+# OJA « Une journée avec OJA », motion design in collage style (oja_journee_collage.html, 9:16): music, small sounds and, if given, Isac's voice.
+# Scene lengths and voice lines come from assets/jcol/voix_marks.json (src/jcol_marks.py).
+# - scene 1: dark, a low pad and a clock that ticks (the hourglass), a hit on « ÇA FILE. »;
+# - scenes 2 to 7: a light Afro-house groove (104 BPM: kick, clap, shaker, log drum, plucks), stripped down on the dark NOVOJA scene;
+# - scene 8: end card, a chime, the groove thins out, fade out in the last 1.5 s.
 # Small sounds on the animations come from the page (window.SFX, saved by src/sfx_dump.js). No whoosh: each cut is a short
-# reversed chord that grows into it.
-# usage (from motion/): node src/sfx_dump.js oja_journee_collage.html work/jcol/sfx.json && python3 src/music40.py work/jcol/sfx.json work/jcol/music.wav
-import json, sys, wave
+# reversed chord that grows into it. With the voice, each line starts in its scene (marks 'off') and the music dips under it.
+# usage (from motion/): node src/sfx_dump.js oja_journee_collage.html work/jcol/sfx.json
+#   python3 src/music40.py work/jcol/sfx.json work/jcol/mix_voix.wav assets/jcol/voix_journee.mp3      (with the voice)
+#   python3 src/music40.py work/jcol/sfx.json work/jcol/mix_musique.wav                                (music only)
+import json, subprocess, sys, wave
 import numpy as np
-SR = 44100; DUR = 53.0; N = int(SR * DUR)
+MK = json.load(open('assets/jcol/voix_marks.json'))
+ST = [0.0]
+for d in MK['dur']: ST.append(ST[-1] + d)
+SR = 44100; DUR = ST[-1]; N = int(SR * DUR)
 L = np.zeros(N); R = np.zeros(N)
 rng = np.random.default_rng(4040)
 SFX = json.load(open(sys.argv[1]))
@@ -103,19 +109,19 @@ def groove(T0, END, bright=1.0, full=True, gain=1.0, bar0=0):
 def bars(t0, t1): return int((t1 - t0) / (4 * b) + .5)
 
 # ---------- 1. the hook: dark, time ticking ----------
-pad(0, 4.5, [33, 45, 52, 57], g=.09, a=1.2, rel=.4)
+pad(0, ST[1], [33, 45, 52, 57], g=.09, a=1.2, rel=.4)
 for k in range(8): (tick if k % 2 == 0 else tock)(.25 + k * .25, .08)
 for k in range(5): (tick if k % 2 == 0 else tock)(2.55 + k * .38, .05)
 # ---------- 2-7: the groove, scene by scene ----------
-groove(4.5, 25.5, bright=1.1, full=True, gain=1.5)
-groove(25.5, 32.5, bright=.8, full=False, gain=1.2, bar0=bars(4.5, 25.5))           # NOVOJA (dark): no clap, no pluck
-pad(25.5, 32.4, [45, 52, 57, 60], g=.05, a=.6, rel=.3)
-groove(32.5, 46.5, bright=1.25, full=True, gain=1.55, bar0=bars(4.5, 32.5))
-engine(5.2, 1.8, .03, pan=-.3)                                                       # the ride
+groove(ST[1], ST[4], bright=1.1, full=True, gain=1.5)
+groove(ST[4], ST[5], bright=.8, full=False, gain=1.2, bar0=bars(ST[1], ST[4]))       # NOVOJA (dark): no clap, no pluck
+pad(ST[4], ST[5] - .1, [45, 52, 57, 60], g=.05, a=.6, rel=.3)
+groove(ST[5], ST[7], bright=1.25, full=True, gain=1.55, bar0=bars(ST[1], ST[5]))
+engine(ST[1] + .7, 1.8, .03, pan=-.3)                                                # the ride
 # ---------- 8. the end card ----------
-groove(46.5, 50.2, bright=.9, full=False, gain=1.1)
-pad(46.5, 52.0, [33, 45, 52, 57, 60, 64, 69], g=.07, a=.15, rel=1.0)
-chime(46.55, (1175, 1760, 2349, 2960), .1)
+groove(ST[7], DUR - 2.3, bright=.9, full=False, gain=1.1)
+pad(ST[7], DUR - 1.0, [33, 45, 52, 57, 60, 64, 69], g=.07, a=.15, rel=1.0)
+chime(ST[7] + .05, (1175, 1760, 2349, 2960), .1)
 
 # ---------- small sounds from the page ----------
 CUT_CH = [[57, 64, 69], [55, 62, 67], [53, 60, 65], [52, 59, 64]]
@@ -143,7 +149,19 @@ fade = np.ones(N); k = int(1.5 * SR); fade[-k:] = np.linspace(1, 0, k) ** 1.5
 fin = np.ones(N); k = int(.3 * SR); fin[:k] = np.linspace(0, 1, k)
 L *= fade * fin; R *= fade * fin
 pk = max(np.abs(L).max(), np.abs(R).max()); L = np.tanh(1.6 * L / pk) / np.tanh(1.6); R = np.tanh(1.6 * R / pk) / np.tanh(1.6)
+# ---------- the voice: each line in its scene, the music dips under it ----------
+if len(sys.argv) > 3:
+    v = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', sys.argv[3], '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32).astype(float)
+    VOc = np.zeros(N); lines = MK['line']
+    for i, (a, b) in enumerate(lines):
+        a0 = a - .04; b0 = min(b + .25, lines[i + 1][0] - .02) if i + 1 < len(lines) else b + .5
+        seg = v[int(a0 * SR):int(b0 * SR)].copy(); k = int(.01 * SR); seg[:k] *= np.linspace(0, 1, k); seg[-k:] *= np.linspace(1, 0, k)
+        j = int((ST[i] + MK['off'][i] - .04) * SR); VOc[j:j + len(seg)] += seg[:N - j]
+    VOc = VOc / np.abs(VOc).max() * .9; VOc = VOc + conv(VOc, ir[:int(.6 * SR)]) * .05
+    e = np.abs(VOc); k = int(.03 * SR); e = np.convolve(e, np.ones(k) / k, 'same'); e = lp(e, .0015)
+    duck = 1 - .55 * np.clip(e / .06, 0, 1)
+    L = L * .5 * duck + VOc * .95; R = R * .5 * duck + VOc * .95
 pk = max(np.abs(L).max(), np.abs(R).max()); L /= pk / .95; R /= pk / .95
 st = (np.stack([L, R], 1) * 32767).astype(np.int16)
 with wave.open(sys.argv[2], 'wb') as w: w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(st.tobytes())
-print('ok', DUR, 's,', len(SFX), 'sounds,', cuts, 'cuts')
+print('ok', round(DUR, 2), 's,', len(SFX), 'sounds,', cuts, 'cuts', 'with voice' if len(sys.argv) > 3 else 'music only')
