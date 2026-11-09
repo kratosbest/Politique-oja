@@ -2,10 +2,13 @@
 <html lang="fr"><head><meta charset="utf-8"><title>OJA — pub Facebook</title>
 <link rel="stylesheet" href="fonts/local.css">
 <style>
-/* Facebook / Instagram ad for Oja App (9 Nov 2026), after the « Griokids » ad Derrick sent: flat brand colour, logo, one big line,
-   the app on real phones, store badges. Made as a real layout, not a generated picture: real logo, real screens of the app
-   (assets/frm/: amounts blurred, test listing replaced by a fictitious one), real type.
-   #feed = 1080 x 1350 (4:5, news feed), #story = 1080 x 1920 (9:16, stories and reels). Built by src/pub_facebook_build.js. */
+/* Facebook / Instagram ad for Oja App, after the « Griokids » ad Derrick sent: flat brand colour, logo, one big line,
+   the app on real phones, store badges. A real layout, not a generated picture: real logo, real screens, real type.
+   9 Nov 2026, Derrick: every feature must be understood, and putting yourself on the map always comes FIRST
+   (also in marketing/kit/09-regles-et-mentions.md). So: the map is the headline and the phones
+   (« Enregistrer un lieu » and a place card, « Chez Maman Rose », fictitious), then the four other services in a list.
+   #feed = 1080 x 1350 (4:5, news feed), #story = 1080 x 1920 (9:16: the same block, below the top 250 px, above the bottom 340 px).
+   Built by src/pub_facebook_build.js. */
 :root { --or: #FF6B00; --or2: #F05A00; --ink: #17110B; --cream: #FFF4EA; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { width: 1080px; overflow: hidden; background: var(--or); }
@@ -13,78 +16,77 @@ body { font-family: 'Inter', sans-serif; color: #fff; }
 .ad { position: relative; width: 1080px; height: 1350px; overflow: hidden;
   background: radial-gradient(120% 80% at 50% 0%, #FF8A2E 0%, var(--or) 45%, var(--or2) 100%); }
 body.story .ad { height: 1920px; }
-/* the map behind: rings around a pin and a dotted route, very light */
-svg.bg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.top { position: absolute; left: 0; right: 0; top: 64px; display: flex; flex-direction: column; align-items: center; }
-.icon { width: 112px; height: 112px; border-radius: 28px; background: #fff; display: grid; place-items: center;
-  box-shadow: 0 14px 30px rgba(120, 40, 0, .28); }
+.block { position: absolute; left: 0; top: 10px; width: 1080px; height: 1330px; }
+body.story .block { top: 250px; }
+svg.bg { position: absolute; left: 0; top: 0; width: 1080px; height: 1330px; }
+/* header */
+.brand { position: absolute; top: 40px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
+.icon { width: 76px; height: 76px; border-radius: 20px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px rgba(120, 40, 0, .25); }
 .icon img { width: 118%; height: 118%; object-fit: contain; margin-top: 6%; }
-.name { margin-top: 14px; font: 800 30px 'Poppins'; letter-spacing: .5px; }
-.name span { opacity: .8; font-weight: 600; }
-h1 { margin-top: 30px; text-align: center; font: 900 96px/0.98 'Poppins'; letter-spacing: -1.5px; text-transform: uppercase; }
-h1 .dark { color: var(--ink); display: block; }
-.sub { margin-top: 22px; text-align: center; font: 600 33px/1.3 'Inter'; color: var(--cream); }
-.phones { position: absolute; left: 0; right: 0; }
-.phone { position: absolute; border-radius: 58px; background: #0B0C0E; padding: 13px;
-  box-shadow: 0 40px 70px rgba(90, 25, 0, .45), 0 0 0 3px #2A2B2F inset; }
-.phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 46px; }
-.chip { position: absolute; display: flex; align-items: center; gap: 14px; background: #fff; color: var(--ink);
-  border-radius: 999px; padding: 16px 26px 16px 16px; font: 700 29px 'Inter'; white-space: nowrap;
-  box-shadow: 0 18px 34px rgba(90, 25, 0, .3); }
-.chip i { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #159A69; flex: none; }
-.chip i.or { background: var(--or); }
-.chip svg { width: 26px; height: 26px; }
-.stores { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 22px; }
-.badge { display: flex; align-items: center; gap: 14px; background: #000; border-radius: 18px; padding: 14px 30px 14px 22px;
-  border: 2px solid rgba(255, 255, 255, .25); }
-.badge img { width: 50px; height: 50px; }
-.badge small { display: block; font: 500 17px 'Inter'; letter-spacing: .4px; }
-.badge b { display: block; font: 600 33px/1.05 'Inter'; letter-spacing: -.3px; }
-/* feed (4:5) */
-.phones { top: 585px; height: 620px; }
-.p1 { left: 250px; top: 0; width: 276px; height: 600px; transform: rotate(-4deg); z-index: 2; }
-.p2 { left: 540px; top: 34px; width: 254px; height: 552px; transform: rotate(6deg); z-index: 1; }
-.c1 { left: 520px; top: 700px; z-index: 3; transform: rotate(3deg); }
-.c2 { left: 70px; top: 1010px; z-index: 3; transform: rotate(-3deg); }
-.stores { top: 1222px; }
-/* story (9:16): same pieces, more air, everything inside the safe area (no text in the top 250 px or the bottom 340 px) */
-body.story .top { top: 250px; }
-body.story h1 { font-size: 104px; }
-body.story .phones { top: 805px; }
-body.story .p1 { left: 225px; width: 300px; height: 652px; }
-body.story .p2 { left: 540px; top: 40px; width: 276px; height: 600px; }
-body.story .c1 { left: 515px; top: 930px; }
-body.story .c2 { left: 60px; top: 1290px; }
-body.story .stores { top: 1488px; }
+.brand b { font: 800 34px 'Poppins'; letter-spacing: .3px; }
+.brand b span { font-weight: 600; opacity: .85; }
+h1 { position: absolute; top: 150px; left: 0; right: 0; text-align: center; font: 900 80px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
+h1 .dark { display: block; color: var(--ink); font-size: 116px; letter-spacing: -2px; margin-top: 4px; }
+.sub { position: absolute; top: 386px; left: 90px; right: 90px; text-align: center; font: 600 31px/1.3 'Inter'; color: var(--cream); }
+/* the map feature: two phones and a pin */
+.phone { position: absolute; border-radius: 50px; background: #0B0C0E; padding: 11px; box-shadow: 0 34px 60px rgba(90, 25, 0, .45), 0 0 0 3px #2A2B2F inset; }
+.phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 40px; }
+.p1 { left: 64px; top: 520px; width: 268px; height: 583px; transform: rotate(-5deg); z-index: 2; }
+.p2 { left: 258px; top: 560px; width: 244px; height: 530px; transform: rotate(5deg); z-index: 1; }
+.pin { position: absolute; left: 360px; top: 470px; width: 96px; z-index: 3; filter: drop-shadow(0 12px 16px rgba(90, 25, 0, .35)); }
+.tag { position: absolute; left: 40px; top: 1080px; z-index: 3; background: #fff; color: var(--ink); border-radius: 999px; padding: 14px 24px;
+  font: 700 26px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
+.tag em { font-style: normal; color: var(--or); }
+/* the other services */
+.more { position: absolute; left: 548px; top: 515px; width: 492px; }
+.more h2 { font: 700 27px 'Inter'; color: var(--cream); margin: 0 0 16px 6px; }
+.svc { display: flex; align-items: center; gap: 18px; background: rgba(255, 255, 255, .14); border: 1.5px solid rgba(255, 255, 255, .22);
+  border-radius: 26px; padding: 14px 18px; margin-bottom: 12px; }
+.svc i { width: 64px; height: 64px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+.svc svg { width: 34px; height: 34px; stroke: var(--or); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.svc b { display: block; font: 800 31px/1.1 'Poppins'; }
+.svc span { display: block; margin-top: 4px; font: 500 22px/1.3 'Inter'; color: var(--cream); }
+.pay { margin: 4px 8px 0 0; text-align: right; font: 600 22px 'Inter'; color: var(--cream); }
+/* stores */
+.stores { position: absolute; left: 0; right: 0; top: 1214px; display: flex; justify-content: center; gap: 22px; }
+.badge { display: flex; align-items: center; gap: 14px; background: #000; border-radius: 18px; padding: 12px 28px 12px 20px; border: 2px solid rgba(255, 255, 255, .25); }
+.badge img { width: 46px; height: 46px; }
+.badge small { display: block; font: 500 16px 'Inter'; letter-spacing: .4px; }
+.badge b { display: block; font: 600 31px/1.05 'Inter'; letter-spacing: -.3px; }
 </style></head>
 <body>
-<div class="ad">
-  <svg class="bg" viewBox="0 0 1080 1350" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<div class="ad"><div class="block">
+  <svg class="bg" viewBox="0 0 1080 1330" aria-hidden="true">
     <g fill="none" stroke="#fff">
-      <circle cx="540" cy="930" r="250" stroke-opacity=".10" stroke-width="2"/>
-      <circle cx="540" cy="930" r="390" stroke-opacity=".07" stroke-width="2"/>
-      <circle cx="540" cy="930" r="540" stroke-opacity=".05" stroke-width="2"/>
-      <path d="M-40 1180 C 180 1090, 160 860, 380 800 S 760 820, 1120 560" stroke-opacity=".22" stroke-width="5" stroke-dasharray="2 18" stroke-linecap="round"/>
+      <circle cx="300" cy="820" r="230" stroke-opacity=".10" stroke-width="2"/>
+      <circle cx="300" cy="820" r="360" stroke-opacity=".07" stroke-width="2"/>
+      <circle cx="300" cy="820" r="500" stroke-opacity=".05" stroke-width="2"/>
+      <path d="M-40 1160 C 160 1110, 120 900, 300 820 S 640 640, 1120 470" stroke-opacity=".2" stroke-width="5" stroke-dasharray="2 18" stroke-linecap="round"/>
     </g>
   </svg>
-  <div class="top">
-    <div class="icon"><img src="../video1/assets/logo-oja-carte.png" alt=""></div>
-    <div class="name">Oja <span>App</span></div>
-    <h1>Le marché<span class="dark">dans ta poche</span></h1>
-    <p class="sub">Course, colis, repas, bonnes adresses.<br>Une seule appli, faite au Bénin.</p>
+  <div class="brand"><div class="icon"><img src="../video1/assets/logo-oja-carte.png" alt=""></div><b>Oja <span>App</span></b></div>
+  <h1>Mets ton business<span class="dark">sur la carte</span></h1>
+  <p class="sub">Boutique, atelier, maquis : on te trouve par le nom que tout le monde connaît, même sans adresse.</p>
+  <svg class="pin" viewBox="0 0 24 30"><path d="M12 29s-9-9.2-9-16.2A9 9 0 0 1 21 12.8C21 19.8 12 29 12 29z" fill="#fff"/><circle cx="12" cy="12.6" r="4" fill="#FF6B00"/></svg>
+  <div class="phone p2"><img src="../video3/assets/app/ajout.jpg" alt=""></div>
+  <div class="phone p1"><img src="../video3/assets/app/fiche.jpg" alt=""></div>
+  <div class="tag">Ajoute ton lieu : <em>nom, catégorie, photos</em></div>
+  <div class="more">
+    <h2>Et aussi, dans la même appli :</h2>
+    <div class="svc"><i><svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg></i>
+      <div><b>Course</b><span>Moto, tricycle, voiture. Prix affiché avant de partir.</span></div></div>
+    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg></i>
+      <div><b>Colis</b><span>Tu envoies, tu suis la livraison en direct.</span></div></div>
+    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></i>
+      <div><b>OJA Market</b><span>Commerces et restos du coin, livrés chez toi.</span></div></div>
+    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/></svg></i>
+      <div><b>NOVOJA</b><span>Vends ou donne entre particuliers. Paiement protégé.</span></div></div>
+    <p class="pay">Paiement en espèces ou Mobile Money.</p>
   </div>
-  <div class="phones">
-    <div class="phone p2"><img src="assets/frm/course_m.jpg" alt=""></div>
-    <div class="phone p1"><img src="assets/frm/accueil_m.jpg" alt=""></div>
-  </div>
-  <div class="chip c1"><i><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Prix affiché avant de partir</div>
-  <div class="chip c2"><i class="or"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg></i>Paiement Mobile Money</div>
   <div class="stores">
     <div class="badge"><img src="../video1/assets/store-app-store.png" alt=""><div><small>Télécharger dans</small><b>l'App Store</b></div></div>
     <div class="badge"><img src="../video1/assets/store-google-play.png" alt=""><div><small>DISPONIBLE SUR</small><b>Google Play</b></div></div>
   </div>
-</div>
-<script>
-if (location.hash === '#story') { document.body.classList.add('story'); document.querySelector('svg.bg').setAttribute('viewBox', '0 -150 1080 1920'); }
-</script>
+</div></div>
+<script>if (location.hash === '#story') document.body.classList.add('story');</script>
 </body></html>

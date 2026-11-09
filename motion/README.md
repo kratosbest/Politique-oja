@@ -1089,26 +1089,33 @@ La musique est un groove afro-house à 104 BPM, avec un tic-tac au début et des
 
 **Rendu :** `src/journee_collage_render.sh` (depuis `motion/`) produit les deux versions.
 
-## OJA — Pub Facebook / Instagram « Le marché dans ta poche » (image)
+## OJA — Pub Facebook / Instagram « Mets ton business sur la carte » (image)
 
 Image publicitaire pour lancer Oja App sur Facebook et Instagram. Elle s'inspire de la pub « Griokids » envoyée par Derrick : couleur de marque en aplat, logo, une grande phrase, l'appli sur de vrais téléphones et les logos des stores.
 
-C'est une vraie mise en page, pas une image générée par IA :
-- le vrai logo ;
-- de vrais écrans de l'appli : `assets/frm/accueil_m.jpg` (fiche fictive) et `assets/frm/course_m.jpg` (prix et durées floutés) ;
-- en fond, les cercles d'une épingle et une route en pointillés, très légers.
+C'est une vraie mise en page, pas une image générée par IA : vrai logo, vrais écrans de l'appli, vraie typographie.
 
-**Textes :**
-- « Le marché dans ta poche » ;
-- « Course, colis, repas, bonnes adresses. Une seule appli, faite au Bénin. » ;
-- deux pastilles : « Prix affiché avant de partir » et « Paiement Mobile Money » ;
-- les logos de l'App Store et de Google Play.
+Consigne de Derrick (9 novembre 2026) : on doit comprendre toutes les fonctions, et **se mettre sur la carte passe toujours en premier**.
 
-Aucun montant, aucun concurrent, pas de « gratuit ».
+**Contenu de l'image :**
+- **En premier, la carte :**
+  - le titre « Mets ton business sur la carte » ;
+  - la phrase « Boutique, atelier, maquis : on te trouve par le nom que tout le monde connaît, même sans adresse. » ;
+  - deux téléphones : la fiche d'un lieu fictif (« Chez Maman Rose », `video3/assets/app/fiche.jpg`) et l'écran « Enregistrer un lieu » (`ajout.jpg`) ;
+  - une épingle et la pastille « Ajoute ton lieu : nom, catégorie, photos ».
+- **Puis, sous « Et aussi, dans la même appli » :**
+  - Course : moto, tricycle, voiture, prix affiché avant de partir ;
+  - Colis : suivi en direct ;
+  - OJA Market : commerces et restos livrés ;
+  - NOVOJA : vendre ou donner, paiement protégé ;
+  - « Paiement en espèces ou Mobile Money ».
+- **En bas,** les logos de l'App Store et de Google Play.
+
+Aucun montant, aucun concurrent, pas de « gratuit ». « C'est mon commerce » (revendiquer sa fiche) n'est pas montré : cette fonction n'est pas encore sortie.
 
 **Fichiers :** `node src/pub_facebook_build.js` (depuis `motion/`) produit, dans `pubs/` :
 - `OJA_Pub_Facebook_1080x1350.png` : fil d'actualité, 4:5 ;
-- `OJA_Pub_Facebook_1080x1920.png` : stories et reels, 9:16. Rien d'écrit dans les 250 px du haut ni les 340 px du bas ;
+- `OJA_Pub_Facebook_1080x1920.png` : stories et reels, 9:16. C'est le même bloc, sous les 250 px du haut et au-dessus des 340 px du bas ;
 - les mêmes en double définition : `_2160x2700.png` et `_2160x3840.png`.
 
 La page source est `pub_facebook.html` (`#feed` ou `#story`).
