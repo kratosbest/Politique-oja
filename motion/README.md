@@ -1091,29 +1091,33 @@ La musique est un groove afro-house à 104 BPM, avec un tic-tac au début et des
 
 ## OJA — Pub Facebook / Instagram « Mets ton business sur la map » (image)
 
-Image publicitaire pour lancer Oja App sur Facebook et Instagram. Elle s'inspire de la pub « Griokids » envoyée par Derrick : couleur de marque en aplat, logo, une grande phrase, l'appli sur de vrais téléphones et les logos des stores.
+Image publicitaire pour lancer Oja App sur Facebook et Instagram. Elle s'inspire de la pub « Griokids » envoyée par Derrick : couleur de marque en aplat, logo, une grande phrase, l'appli sur une tablette et des téléphones, et les logos des stores.
 
 C'est une vraie mise en page, pas une image générée par IA : vrai logo, vrais écrans de l'appli, vraie typographie.
 
 Consignes de Derrick (9 novembre 2026), reprises dans `marketing/kit/09-regles-et-mentions.md` :
 - on doit comprendre toutes les fonctions ;
 - se mettre sur la map passe toujours en premier ;
-- on doit voir tout de suite qu'il s'agit de la map, pas d'une « carte » au sens flou ;
+- on doit voir tout de suite qu'il s'agit de la map ;
+- garder les vrais écrans sur les téléphones ;
+- des appareils en 3D, et une tablette en plus ;
 - un QR code vers https://oja-app-6265f.web.app/telecharger.
 
 **Contenu de l'image :**
 - **En premier, la map :**
   - le titre « Mets ton business sur la map » ;
   - la phrase « Ton lieu sur le plan de ta ville : on te trouve par son nom, même sans adresse. » ;
-  - au premier plan, le vrai écran « Carte des lieux Oja ». Son en-tête vient de `video3/assets/app/carte1.jpg` ; la map est dessinée par-dessus, parce que la vraie map montre les commerces d'autres personnes. On y voit des rues, une lagune, des épingles (Coiffure, Atelier, Boutique, Maquis, Pharmacie), « Vous êtes ici », le chemin jusqu'à « Chez Maman Rose » (lieu fictif) et sa fiche avec « S'y rendre avec OJA » ;
-  - derrière, l'écran « Enregistrer un lieu » (`ajout.jpg`) ;
+  - une tablette qui affiche « Carte des lieux Oja ». La map est dessinée, parce que la vraie map montre les commerces d'autres personnes. On y voit des rues avec des bâtiments, une lagune, des épingles (Coiffure, Atelier, Boutique, Maquis, Pharmacie, Garage, Couture), la recherche « Rechercher un lieu par son nom », « Vous êtes ici », le chemin jusqu'à « Chez Maman Rose » (lieu fictif) et sa fiche avec « S'y rendre avec OJA » ;
+  - deux téléphones avec les vrais écrans : la fiche « Chez Maman Rose » (`video3/assets/app/fiche.jpg`) et « Enregistrer un lieu » (`ajout.jpg`) ;
   - la pastille « Ajoute ton lieu : nom, photos, point exact ».
-- **Puis, sous « Et aussi, dans la même appli » :**
+- **Les appareils en 3D :** perspective CSS et corps visible (la forme de l'appareil empilée sur 9 à 11 px), avec tranche métallique, boutons, encoche, reflet sur la vitre et ombre au sol.
+- **Puis, sous « Et aussi, dans la même appli », quatre cases :**
   - Course : moto, tricycle, voiture, prix affiché avant de partir ;
   - Colis : suivi en direct ;
-  - OJA Market : commerces et restos livrés ;
-  - NOVOJA : vendre ou donner, paiement protégé ;
-  - « Paiement en espèces ou Mobile Money ».
+  - Market : restos et commerces livrés ;
+  - NOVOJA : vendre ou donner, paiement protégé.
+
+  Dessous : « Paiement en espèces ou Mobile Money ».
 - **En bas :**
   - le QR code (`pubs/qr_telecharger.svg`, fait avec segno) ;
   - « Scanne pour télécharger » et le lien en clair ;

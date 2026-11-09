@@ -3,14 +3,16 @@
 <link rel="stylesheet" href="fonts/local.css">
 <style>
 /* Facebook / Instagram ad for Oja App, after the « Griokids » ad Derrick sent: flat brand colour, logo, one big line,
-   the app on real phones, store badges. A real layout, not a generated picture: real logo, real screens, real type.
+   the app on real devices, store badges. A real layout, not a generated picture: real logo, real screens, real type.
    Derrick, 9 Nov 2026:
-   - every feature must be understood, and putting yourself on the map always comes FIRST;
-   - « carte » alone is unclear: it must be obvious that it is the MAP. So the headline says « sur la map », the line under it
-     « le plan de ta ville », and the front phone shows the real « Carte des lieux Oja » screen (its header) over a drawn
-     street map: roads, lagoon, pins with fictitious place names, « Vous êtes ici », the way to « Chez Maman Rose »;
+   - every feature must be understood; putting yourself on the map always comes FIRST;
+   - « carte » alone is unclear: the headline says « sur la map », the line under it « le plan de ta ville », and the tablet
+     shows the map (drawn: streets, lagoon, pins with fictitious place names, « Vous êtes ici », the way to « Chez Maman Rose »);
+   - the phones keep the real screens he preferred: the place card « Chez Maman Rose » (fictitious) and « Enregistrer un lieu »;
+   - phones and tablet must feel like real 3D devices: tilted in perspective, with a body you can see (stacked layers),
+     a metal rim, side buttons, a glass reflection and a shadow on the ground;
    - a QR code to https://oja-app-6265f.web.app/telecharger (pubs/qr_telecharger.svg, made with segno, checked by decoding).
-   Both rules are in marketing/kit/09-regles-et-mentions.md.
+   The rules are in marketing/kit/09-regles-et-mentions.md.
    #feed = 1080 x 1350 (4:5, news feed), #story = 1080 x 1920 (9:16: the same block, below the top 250 px, above the bottom 340 px).
    Built by src/pub_facebook_build.js. */
 :root { --or: #FF6B00; --or2: #F05A00; --ink: #17110B; --cream: #FFF4EA; }
@@ -24,125 +26,111 @@ body.story .ad { height: 1920px; }
 body.story .block { top: 250px; }
 svg.bg { position: absolute; left: 0; top: 0; width: 1080px; height: 1330px; }
 /* header */
-.brand { position: absolute; top: 34px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
-.icon { width: 72px; height: 72px; border-radius: 19px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px rgba(120, 40, 0, .25); }
+.brand { position: absolute; top: 30px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
+.icon { width: 70px; height: 70px; border-radius: 19px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px rgba(120, 40, 0, .25); }
 .icon img { width: 118%; height: 118%; object-fit: contain; margin-top: 6%; }
 .brand b { font: 800 33px 'Poppins'; letter-spacing: .3px; }
 .brand b span { font-weight: 600; opacity: .85; }
-h1 { position: absolute; top: 134px; left: 0; right: 0; text-align: center; font: 900 78px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
-h1 .dark { display: block; color: var(--ink); font-size: 122px; letter-spacing: -2px; margin-top: 2px; }
-.sub { position: absolute; top: 362px; left: 100px; right: 100px; text-align: center; font: 600 31px/1.3 'Inter'; color: var(--cream); }
+h1 { position: absolute; top: 124px; left: 0; right: 0; text-align: center; font: 900 76px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
+h1 .dark { display: block; color: var(--ink); font-size: 112px; letter-spacing: -2px; margin-top: 2px; }
+.sub { position: absolute; top: 334px; left: 100px; right: 100px; text-align: center; font: 600 30px/1.3 'Inter'; color: var(--cream); }
 .sub b { color: #fff; font-weight: 800; }
-/* the map feature: the map screen in front, « Enregistrer un lieu » behind */
-.phone { position: absolute; border-radius: 50px; background: #0B0C0E; padding: 11px; box-shadow: 0 34px 60px rgba(90, 25, 0, .45), 0 0 0 3px #2A2B2F inset; }
-.phone > img, .phone .screen { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 40px; overflow: hidden; }
-.screen { background: #F1ECE2; position: relative; }
-.screen img { display: block; width: 100%; }
-.screen svg { display: block; width: 100%; }
-.p1 { left: 58px; top: 478px; width: 270px; height: 587px; transform: rotate(-4deg); z-index: 2; }
-.p2 { left: 268px; top: 520px; width: 236px; height: 513px; transform: rotate(5deg); z-index: 1; }
-.tag { position: absolute; left: 34px; top: 1046px; z-index: 3; background: #fff; color: var(--ink); border-radius: 999px; padding: 13px 24px;
-  font: 700 25px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
+
+/* ---------- the devices, in 3D ---------- */
+.stage { position: absolute; left: 0; top: 422px; width: 1080px; height: 540px; perspective: 1700px; perspective-origin: 560px 120px; }
+.dev { position: absolute; transform-style: preserve-3d; }
+.dev .layer { position: absolute; inset: 0; border-radius: inherit; }
+.dev .front { position: absolute; inset: 0; border-radius: inherit; background: #08090B; overflow: hidden;
+  box-shadow: inset 0 0 0 2px #5A5C62, inset 0 0 0 4px #1B1C1F; }
+.dev .scr { position: absolute; overflow: hidden; background: #F2EFE9; }
+.dev .scr > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.dev .glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, .06) 30%, rgba(255, 255, 255, 0) 46%); }
+.dev .island { position: absolute; left: 50%; top: 18px; width: 30%; height: 22px; margin-left: -15%; border-radius: 12px; background: #000; }
+.dev .btn { position: absolute; width: 5px; border-radius: 3px; background: linear-gradient(90deg, #6B6E75, #3A3C41); }
+.ground { position: absolute; border-radius: 50%; background: radial-gradient(closest-side, rgba(80, 22, 0, .42), rgba(80, 22, 0, 0)); }
+/* the tablet (landscape) */
+.tab { left: 84px; top: 104px; width: 566px; height: 404px; border-radius: 30px; transform: rotateY(14deg) rotateX(7deg) rotateZ(-2deg); }
+.tab .scr { left: 17px; top: 17px; right: 17px; bottom: 17px; border-radius: 14px; }
+/* the phones */
+.ph1 { left: 606px; top: 6px; width: 238px; height: 516px; border-radius: 44px; transform: rotateY(-20deg) rotateX(6deg) rotateZ(3deg) translateZ(40px); }
+.ph2 { left: 820px; top: 52px; width: 212px; height: 460px; border-radius: 40px; transform: rotateY(-26deg) rotateX(6deg) rotateZ(5deg); }
+.ph1 .scr, .ph2 .scr { left: 11px; top: 11px; right: 11px; bottom: 11px; border-radius: 34px; }
+/* the map in the tablet */
+.mapbar { position: absolute; left: 0; right: 0; top: 0; height: 46px; background: #F07F2A; display: flex; align-items: center; gap: 12px; padding: 0 12px; }
+.mapbar i { width: 30px; height: 30px; border-radius: 9px; background: #fff; display: grid; place-items: center; }
+.mapbar b { font: 700 19px 'Inter'; color: #fff; }
+.tab svg.map { position: absolute; left: 0; top: 46px; width: 532px; height: 324px; }
+.tag { position: absolute; left: 40px; top: 872px; z-index: 5; background: #fff; color: var(--ink); border-radius: 999px; padding: 12px 22px;
+  font: 700 24px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
 .tag em { font-style: normal; color: var(--or); }
-/* the other services */
-.more { position: absolute; left: 548px; top: 482px; width: 492px; }
-.more h2 { font: 700 27px 'Inter'; color: var(--cream); margin: 0 0 14px 6px; }
-.svc { display: flex; align-items: center; gap: 18px; background: rgba(255, 255, 255, .14); border: 1.5px solid rgba(255, 255, 255, .22);
-  border-radius: 26px; padding: 13px 18px; margin-bottom: 11px; }
-.svc i { width: 62px; height: 62px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
-.svc svg { width: 33px; height: 33px; stroke: var(--or); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.svc b { display: block; font: 800 30px/1.1 'Poppins'; }
-.svc span { display: block; margin-top: 3px; font: 500 22px/1.28 'Inter'; color: var(--cream); }
-.pay { margin: 2px 8px 0 0; text-align: right; font: 600 22px 'Inter'; color: var(--cream); }
-/* download: QR code + store badges */
-.dl { position: absolute; left: 0; right: 0; top: 1124px; display: flex; justify-content: center; align-items: center; gap: 30px; }
-.qr { width: 184px; height: 184px; background: #fff; border-radius: 22px; padding: 16px; box-shadow: 0 14px 28px rgba(90, 25, 0, .3); }
+
+/* ---------- the other services, in a row ---------- */
+.more h2 { position: absolute; left: 0; right: 0; top: 968px; text-align: center; font: 700 25px 'Inter'; color: var(--cream); }
+.svcs { position: absolute; left: 44px; right: 44px; top: 1006px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.svc { background: rgba(255, 255, 255, .14); border: 1.5px solid rgba(255, 255, 255, .24); border-radius: 22px; padding: 12px 14px 13px; }
+.svc .t { display: flex; align-items: center; gap: 10px; }
+.svc i { width: 46px; height: 46px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+.svc svg { width: 26px; height: 26px; stroke: var(--or); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.svc b { font: 800 24px/1.05 'Poppins'; }
+.svc span { display: block; margin-top: 8px; font: 500 19px/1.25 'Inter'; color: var(--cream); }
+.pay { position: absolute; left: 0; right: 0; top: 1148px; text-align: center; font: 600 20px 'Inter'; color: var(--cream); }
+
+/* ---------- download: QR code + store badges ---------- */
+.dl { position: absolute; left: 0; right: 0; top: 1184px; display: flex; justify-content: center; align-items: center; gap: 26px; }
+.qr { width: 138px; height: 138px; background: #fff; border-radius: 18px; padding: 12px; box-shadow: 0 12px 24px rgba(90, 25, 0, .3); }
 .qr img { display: block; width: 100%; height: 100%; }
-.dl h3 { font: 800 31px 'Poppins'; }
-.dl p { font: 500 21px 'Inter'; color: var(--cream); margin: 2px 0 14px; }
-.stores { display: flex; gap: 14px; }
-.badge { display: flex; align-items: center; gap: 12px; background: #000; border-radius: 16px; padding: 10px 22px 10px 16px; border: 2px solid rgba(255, 255, 255, .25); }
-.badge img { width: 42px; height: 42px; }
-.badge small { display: block; font: 500 15px 'Inter'; letter-spacing: .3px; }
-.badge b { display: block; font: 600 28px/1.05 'Inter'; letter-spacing: -.3px; }
+.dl h3 { font: 800 28px 'Poppins'; }
+.dl p { font: 500 19px 'Inter'; color: var(--cream); margin: 0 0 10px; }
+.stores { display: flex; gap: 12px; }
+.badge { display: flex; align-items: center; gap: 10px; background: #000; border-radius: 14px; padding: 8px 20px 8px 14px; border: 2px solid rgba(255, 255, 255, .25); }
+.badge img { width: 36px; height: 36px; }
+.badge small { display: block; font: 500 13px 'Inter'; letter-spacing: .3px; }
+.badge b { display: block; font: 600 24px/1.05 'Inter'; letter-spacing: -.3px; }
 </style></head>
 <body>
 <div class="ad"><div class="block">
   <svg class="bg" viewBox="0 0 1080 1330" aria-hidden="true">
     <g fill="none" stroke="#fff">
-      <circle cx="290" cy="760" r="240" stroke-opacity=".10" stroke-width="2"/>
-      <circle cx="290" cy="760" r="370" stroke-opacity=".07" stroke-width="2"/>
-      <circle cx="290" cy="760" r="510" stroke-opacity=".05" stroke-width="2"/>
+      <circle cx="540" cy="700" r="260" stroke-opacity=".09" stroke-width="2"/>
+      <circle cx="540" cy="700" r="400" stroke-opacity=".06" stroke-width="2"/>
+      <circle cx="540" cy="700" r="560" stroke-opacity=".045" stroke-width="2"/>
     </g>
   </svg>
   <div class="brand"><div class="icon"><img src="../video1/assets/logo-oja-carte.png" alt=""></div><b>Oja <span>App</span></b></div>
   <h1>Mets ton business<span class="dark">sur la map</span></h1>
   <p class="sub">Ton lieu sur <b>le plan de ta ville</b> : on te trouve par son nom, même sans adresse.</p>
 
-  <div class="phone p2"><img src="../video3/assets/app/ajout.jpg" alt=""></div>
-  <div class="phone p1"><div class="screen">
-    <img src="pubs/carte_entete.jpg" alt="">
-    <!-- a drawn street map (fictitious places), in place of the real map, which shows other people's businesses -->
-    <svg viewBox="0 0 400 760" aria-hidden="true">
-      <rect width="400" height="760" fill="#F1ECE2"/>
-      <path d="M260 40 l110 -20 l20 110 l-120 20z" fill="#CFE7C3"/>
-      <path d="M20 250 l70 -10 l10 70 l-75 12z" fill="#CFE7C3"/>
-      <path d="M0 590 C 90 560, 160 620, 250 650 S 400 690, 410 700 L410 770 L0 770Z" fill="#A9D3F0"/>
-      <text x="40" y="722" font-family="Inter" font-style="italic" font-size="17" fill="#5C8EBA">Lagune</text>
-      <g fill="none" stroke-linecap="round">
-        <g stroke="#E2D8C6" stroke-width="10">
-          <path d="M-20 270 L420 236"/><path d="M-20 520 L420 470"/><path d="M60 -20 L92 580"/><path d="M232 -20 L212 640"/>
-          <path d="M360 -20 L382 520"/><path d="M-20 90 L420 66"/><path d="M0 660 L200 470"/><path d="M-20 400 L130 392"/>
-        </g>
-        <g stroke="#FFFFFF" stroke-width="6.5">
-          <path d="M-20 270 L420 236"/><path d="M-20 520 L420 470"/><path d="M60 -20 L92 580"/><path d="M232 -20 L212 640"/>
-          <path d="M360 -20 L382 520"/><path d="M-20 90 L420 66"/><path d="M0 660 L200 470"/><path d="M-20 400 L130 392"/>
-        </g>
-        <path d="M120 -20 L168 780" stroke="#DDD2BF" stroke-width="22"/><path d="M120 -20 L168 780" stroke="#FFFFFF" stroke-width="16"/>
-        <path d="M-20 180 L420 132" stroke="#DDD2BF" stroke-width="20"/><path d="M-20 180 L420 132" stroke="#FFFFFF" stroke-width="14"/>
-        <path d="M-20 420 C 120 384, 260 360, 420 300" stroke="#E5C36A" stroke-width="24"/><path d="M-20 420 C 120 384, 260 360, 420 300" stroke="#FFE39A" stroke-width="17"/>
-        <path d="M300 -20 C 282 200, 318 400, 262 780" stroke="#DDD2BF" stroke-width="20"/><path d="M300 -20 C 282 200, 318 400, 262 780" stroke="#FFFFFF" stroke-width="14"/>
-        <!-- the way from « Vous êtes ici » to the place -->
-        <path d="M232 548 L224 446 L214 352 L208 312" stroke="#FF6B00" stroke-width="7" stroke-dasharray="1 13"/>
-      </g>
-      <g font-family="Inter" font-weight="700" font-size="15" fill="#3A332B" stroke="#F1ECE2" stroke-width="4" paint-order="stroke" text-anchor="middle">
-        <g transform="translate(76 168)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Coiffure</text></g>
-        <g transform="translate(336 236)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Atelier</text></g>
-        <g transform="translate(96 372)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Boutique</text></g>
-        <g transform="translate(318 430)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Maquis</text></g>
-        <g transform="translate(140 488)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Pharmacie</text></g>
-      </g>
-      <!-- the place, selected -->
-      <g transform="translate(206 300)">
-        <circle cy="-4" r="34" fill="#FF6B00" opacity=".16"/>
-        <path d="M0 0c-5-10-19-17-19-31a19 19 0 0 1 38 0c0 14-14 21-19 31z" fill="#FF6B00" stroke="#fff" stroke-width="3"/><circle cy="-31" r="7" fill="#fff"/>
-        <g transform="translate(0 -78)"><rect x="-82" y="-19" width="164" height="36" rx="18" fill="#17110B"/><text y="5" text-anchor="middle" font-family="Inter" font-weight="700" font-size="16" fill="#fff">Chez Maman Rose</text></g>
-      </g>
-      <!-- you are here -->
-      <circle cx="232" cy="556" r="22" fill="#2F80ED" opacity=".18"/><circle cx="232" cy="556" r="9" fill="#2F80ED" stroke="#fff" stroke-width="3.5"/>
-      <text x="232" y="590" text-anchor="middle" font-family="Inter" font-weight="700" font-size="14" fill="#2F6FD0" stroke="#F1ECE2" stroke-width="4" paint-order="stroke">Vous êtes ici</text>
-      <!-- the place card -->
-      <g transform="translate(18 628)">
-        <rect width="364" height="112" rx="20" fill="#fff" stroke="#E6DED0"/>
-        <text x="18" y="34" font-family="Inter" font-weight="800" font-size="19" fill="#17110B">Chez Maman Rose</text>
-        <text x="18" y="56" font-family="Inter" font-weight="600" font-size="14" fill="#159A69">Restaurant · Ouvert</text>
-        <rect x="14" y="68" width="336" height="34" rx="17" fill="#FF6B00"/>
-        <text x="182" y="90" text-anchor="middle" font-family="Inter" font-weight="800" font-size="13.5" letter-spacing="1.2" fill="#fff">S'Y RENDRE AVEC OJA</text>
-      </g>
-    </svg>
-  </div></div>
+  <div class="stage">
+    <div class="ground" style="left:90px; top:478px; width:560px; height:60px"></div>
+    <div class="ground" style="left:610px; top:486px; width:420px; height:56px"></div>
+    <div class="dev tab" data-depth="11">
+      <div class="front"><div class="scr">
+        <div class="mapbar"><i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#17110B" stroke-width="2.6" stroke-linecap="round"><path d="M19 12H5m6-6-6 6 6 6"/></svg></i><b>Carte des lieux Oja</b></div>
+        <svg class="map" id="map" viewBox="0 0 600 370"></svg>
+      </div><div class="glare"></div></div>
+    </div>
+    <div class="dev ph2" data-depth="9">
+      <div class="front"><div class="scr"><img src="../video3/assets/app/ajout.jpg" alt=""></div><div class="island"></div><div class="glare"></div></div>
+    </div>
+    <div class="dev ph1" data-depth="10">
+      <div class="front"><div class="scr"><img src="../video3/assets/app/fiche.jpg" alt=""></div><div class="island"></div><div class="glare"></div></div>
+    </div>
+  </div>
   <div class="tag">Ajoute ton lieu : <em>nom, photos, point exact</em></div>
 
   <div class="more">
     <h2>Et aussi, dans la même appli :</h2>
-    <div class="svc"><i><svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg></i>
-      <div><b>Course</b><span>Moto, tricycle, voiture. Prix affiché avant de partir.</span></div></div>
-    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg></i>
-      <div><b>Colis</b><span>Tu envoies, tu suis la livraison en direct.</span></div></div>
-    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></i>
-      <div><b>OJA Market</b><span>Commerces et restos du coin, livrés chez toi.</span></div></div>
-    <div class="svc"><i><svg viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/></svg></i>
-      <div><b>NOVOJA</b><span>Vends ou donne entre particuliers. Paiement protégé.</span></div></div>
+    <div class="svcs">
+      <div class="svc"><div class="t"><i><svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg></i><b>Course</b></div>
+        <span>Moto, tricycle, voiture. Prix affiché avant.</span></div>
+      <div class="svc"><div class="t"><i><svg viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg></i><b>Colis</b></div>
+        <span>Tu envoies, tu suis la livraison en direct.</span></div>
+      <div class="svc"><div class="t"><i><svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg></i><b>Market</b></div>
+        <span>Restos et commerces livrés chez toi.</span></div>
+      <div class="svc"><div class="t"><i><svg viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/></svg></i><b>NOVOJA</b></div>
+        <span>Vends ou donne. Paiement protégé.</span></div>
+    </div>
     <p class="pay">Paiement en espèces ou Mobile Money.</p>
   </div>
 
@@ -158,5 +146,89 @@ h1 .dark { display: block; color: var(--ink); font-size: 122px; letter-spacing: 
     </div>
   </div>
 </div></div>
-<script>if (location.hash === '#story') document.body.classList.add('story');</script>
+<script>
+if (location.hash === '#story') document.body.classList.add('story');
+
+/* ---- 3D bodies: the device shape stacked backwards, 1 px a layer, metal colours; side buttons on the body ---- */
+document.querySelectorAll('.dev').forEach(dev => {
+  const n = +dev.dataset.depth, phone = !dev.classList.contains('tab');
+  for (let i = n; i >= 1; i--) {
+    const l = document.createElement('div'); l.className = 'layer'; const k = i / n;
+    l.style.transform = `translateZ(${-i}px)`;
+    l.style.background = `linear-gradient(135deg, hsl(220,4%,${46 - 22 * k}%), hsl(220,5%,${30 - 16 * k}%) 60%, hsl(220,4%,${40 - 18 * k}%))`;
+    dev.insertBefore(l, dev.firstChild);
+  }
+  const H = dev.offsetHeight;
+  const btns = phone ? [[-4, .2, .07], [-4, .3, .11], [-4, .43, .11], [dev.offsetWidth - 1, .3, .16]] : [[dev.offsetWidth * .1, -4, .09, true], [dev.offsetWidth * .82, -4, .06, true]];
+  for (const [x, y, len, top] of btns) {
+    const b = document.createElement('div'); b.className = 'btn';
+    if (top) { Object.assign(b.style, { left: x + 'px', top: y + 'px', width: dev.offsetWidth * len + 'px', height: '5px' }); }
+    else { Object.assign(b.style, { left: x + 'px', top: H * y + 'px', height: H * len + 'px' }); }
+    b.style.transform = `translateZ(${-n / 2}px)`; dev.insertBefore(b, dev.firstChild);
+  }
+});
+
+/* ---- the map (drawn; fictitious places): streets with buildings, lagoon, parks, pins, you are here, the place card ---- */
+(() => {
+  const S = document.getElementById('map'), NS = 'http://www.w3.org/2000/svg', W = 600, H = 370;   // drawn in 600 x 370, shown at 532 x 324
+  const el = (t, a, p = S) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+  let seed = 7; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  el('rect', { width: W, height: H, fill: '#F2EFE9' });
+  const water = 'M0 300 C 120 278, 230 318, 340 304 S 520 270, 610 280 L610 380 L0 380Z';
+  // streets: a slightly tilted grid
+  const xs = [], ys = []; for (let x = -20; x < W + 40; x += 54 + r() * 14) xs.push(x); for (let y = -10; y < H; y += 44 + r() * 12) ys.push(y);
+  const X = (x, y) => x + y * .08, Y = (x, y) => y - x * .05;
+  // buildings in each block
+  const bg = el('g', { fill: '#E7E1D6', stroke: '#DDD5C7', 'stroke-width': .8 });
+  for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < ys.length - 1; j++) {
+    const x0 = xs[i] + 7, x1 = xs[i + 1] - 7, y0 = ys[j] + 7, y1 = ys[j + 1] - 7; if (Y(x0, y1) > 268) continue;
+    const n = 2 + Math.floor(r() * 3);
+    for (let k = 0; k < n; k++) { const w = (x1 - x0) * (.25 + r() * .3), h = (y1 - y0) * (.3 + r() * .35), bx = x0 + r() * (x1 - x0 - w), by = y0 + r() * (y1 - y0 - h);
+      el('polygon', { points: [[bx, by], [bx + w, by], [bx + w, by + h], [bx, by + h]].map(([a, b]) => `${X(a, b).toFixed(1)},${Y(a, b).toFixed(1)}`).join(' ') }, bg); }
+  }
+  el('path', { d: 'M360 20 l120 -10 l12 82 l-124 12z', fill: '#CDE6C1' }); el('path', { d: 'M40 160 l70 -6 l6 56 l-72 8z', fill: '#CDE6C1' });
+  el('path', { d: water, fill: '#AAD3F2' });
+  el('text', { x: 300, y: 344, 'font-family': 'Inter', 'font-style': 'italic', 'font-size': 14, fill: '#5C8EBA' }).textContent = 'Lagune';
+  const line = (pts, w, c, p) => el('polyline', { points: pts.map(([a, b]) => `${X(a, b).toFixed(1)},${Y(a, b).toFixed(1)}`).join(' '), fill: 'none', stroke: c, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, p);
+  const minor = el('g', {});
+  for (const x of xs) { line([[x, -20], [x, 300]], 7.5, '#DED5C4', minor); }
+  for (const y of ys) if (y < 290) line([[-40, y], [W + 40, y]], 7.5, '#DED5C4', minor);
+  for (const x of xs) line([[x, -20], [x, 300]], 5, '#FFFFFF', minor);
+  for (const y of ys) if (y < 290) line([[-40, y], [W + 40, y]], 5, '#FFFFFF', minor);
+  // main roads: one big avenue (yellow) and two boulevards
+  el('path', { d: 'M-20 250 C 150 210, 330 190, 620 120', fill: 'none', stroke: '#E3C064', 'stroke-width': 17 }); el('path', { d: 'M-20 250 C 150 210, 330 190, 620 120', fill: 'none', stroke: '#FFE39A', 'stroke-width': 12 });
+  line([[xs[3], -20], [xs[3], 320]], 13, '#DCCFB9'); line([[xs[3], -20], [xs[3], 320]], 9, '#FFFFFF');
+  line([[-40, ys[2]], [W + 40, ys[2]]], 13, '#DCCFB9'); line([[-40, ys[2]], [W + 40, ys[2]]], 9, '#FFFFFF');
+  // search
+  el('rect', { x: 14, y: 12, width: 250, height: 34, rx: 17, fill: '#fff', stroke: '#E3DBCD' });
+  el('circle', { cx: 32, cy: 29, r: 6, fill: 'none', stroke: '#8A8173', 'stroke-width': 2 }); el('path', { d: 'M36.5 33.5l4 4', stroke: '#8A8173', 'stroke-width': 2, 'stroke-linecap': 'round' });
+  el('text', { x: 48, y: 34, 'font-family': 'Inter', 'font-weight': 500, 'font-size': 13.5, fill: '#8A8173' }).textContent = 'Rechercher un lieu par son nom';
+  // pins
+  const pin = (x, y, label, s = 1) => { const g = el('g', { transform: `translate(${x} ${y}) scale(${s})` });
+    el('path', { d: 'M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z', fill: '#FF6B00', stroke: '#fff', 'stroke-width': 2 }, g); el('circle', { cy: -18, r: 4, fill: '#fff' }, g);
+    if (label) { const t = el('text', { y: 18, 'text-anchor': 'middle', 'font-family': 'Inter', 'font-weight': 700, 'font-size': 12.5, fill: '#3A332B', stroke: '#F2EFE9', 'stroke-width': 3.5, 'paint-order': 'stroke' }, g); t.textContent = label; } };
+  [[70, 128, 'Coiffure'], [520, 128, 'Atelier'], [170, 168, 'Boutique'], [470, 228, 'Maquis'], [96, 240, 'Pharmacie'], [418, 150, 'Garage'], [392, 262, 'Couture']].forEach(p => pin(...p));
+  // you are here and the way to the place
+  const me = [196, 262], to = [304, 176];
+  el('path', { d: `M${me[0]} ${me[1]} L${me[0] + 8} 214 L${to[0] - 26} 206 L${to[0]} ${to[1] + 4}`, fill: 'none', stroke: '#FF6B00', 'stroke-width': 5, 'stroke-dasharray': '1 10', 'stroke-linecap': 'round' });
+  el('circle', { cx: me[0], cy: me[1], r: 17, fill: '#2F80ED', opacity: .18 }); el('circle', { cx: me[0], cy: me[1], r: 7, fill: '#2F80ED', stroke: '#fff', 'stroke-width': 3 });
+  const g = el('g', { transform: `translate(${to[0]} ${to[1]})` });
+  el('circle', { cy: -4, r: 26, fill: '#FF6B00', opacity: .16 }, g);
+  el('path', { d: 'M0 0c-4-8-15-13-15-24a15 15 0 0 1 30 0c0 11-11 16-15 24z', fill: '#FF6B00', stroke: '#fff', 'stroke-width': 2.5 }, g); el('circle', { cy: -24, r: 5.5, fill: '#fff' }, g);
+  el('rect', { x: -66, y: -74, width: 132, height: 28, rx: 14, fill: '#17110B' }, g);
+  const tt = el('text', { y: -55, 'text-anchor': 'middle', 'font-family': 'Inter', 'font-weight': 700, 'font-size': 13, fill: '#fff' }, g); tt.textContent = 'Chez Maman Rose';
+  // the place card
+  const c = el('g', { transform: 'translate(286 10)' });
+  el('rect', { width: 300, height: 76, rx: 14, fill: '#fff', stroke: '#E3DBCD', filter: 'drop-shadow(0 3px 6px rgba(0,0,0,.12))' }, c);
+  el('clipPath', { id: 'cp' }, c).appendChild(Object.assign(document.createElementNS(NS, 'rect'), {})).setAttribute('x', 8);
+  const cp = c.querySelector('#cp rect'); cp.setAttribute('y', 8); cp.setAttribute('width', 60); cp.setAttribute('height', 60); cp.setAttribute('rx', 10);
+  el('image', { href: 'pubs/plat_fiche.jpg', x: -4, y: 8, width: 84, height: 66, 'clip-path': 'url(#cp)', preserveAspectRatio: 'xMidYMid slice' }, c);
+  el('text', { x: 80, y: 28, 'font-family': 'Inter', 'font-weight': 800, 'font-size': 15, fill: '#17110B' }, c).textContent = 'Chez Maman Rose';
+  el('text', { x: 80, y: 45, 'font-family': 'Inter', 'font-weight': 600, 'font-size': 11.5, fill: '#159A69' }, c).textContent = 'Restaurant · Ouvert';
+  el('rect', { x: 80, y: 51, width: 208, height: 18, rx: 9, fill: '#FF6B00' }, c);
+  el('text', { x: 184, y: 63.5, 'text-anchor': 'middle', 'font-family': 'Inter', 'font-weight': 800, 'font-size': 9.5, 'letter-spacing': .8, fill: '#fff' }, c).textContent = "S'Y RENDRE AVEC OJA";
+  // locate button
+  el('circle', { cx: 572, cy: 336, r: 17, fill: '#fff', stroke: '#E3DBCD' }); el('circle', { cx: 572, cy: 336, r: 5, fill: '#2F80ED' });
+})();
+</script>
 </body></html>
