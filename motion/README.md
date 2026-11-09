@@ -1015,3 +1015,25 @@ L'écran de fin montre « 23 effets, une seule vidéo », « Vends tranquille. �
 **Son :** `python3 src/music39.py assets/frm/music_mix.wav assets/frm/voix_forfaits.mp3 ffmpeg`, puis `loudnorm=I=-14` en m4a vers `assets/soundtrack_forfaits_reel.m4a`. Pas de « whoosh ».
 
 **Rendu :** `src/forfaits_render.sh` (depuis `motion/`).
+
+## OJA — « Une journée avec OJA », motion design en collage (9:16, 53 s)
+
+`OJA_UneJourneeAvecOJA_Collage_9x16.mp4` (1080 × 1920, 30 fps) est un motion design pur : aucun plan filmé, aucune voix. Il reprend le style de la vidéo de référence « Premium Motion Graphics » envoyée par Derrick : papier crème avec grain et bords sombres, grands titres noirs en Playfair Display, petits mots en italique, une seule couleur vive (l'orange OJA), objets découpés en collage (sablier, buste en bronze, cerveau, colis), petites silhouettes, étoiles à quatre branches, grilles fines et code-barres. Il reprend aussi des effets des vidéos OJA précédentes : recherche tapée, téléphone avec de vraies captures, épingle et carte, tampon, liste cochée, anneau lumineux avec pastilles, passages en zoom.
+
+**Scènes :**
+1. Fond sombre, le sablier se retourne : « Au Bénin, une journée… ÇA FILE. ».
+2. La course : un faisceau orange rejoint une silhouette qui attend ; « moto, tricycle, voiture » ; vraie capture « Choisissez votre course » (prix et durées floutés) ; « Prix affiché avant de partir » ; tampon « PAS DE MARCHANDAGE ».
+3. Le colis : il suit un trajet en pointillés d'une maison à l'autre ; liste Récupéré, En route, Livré ; « maintenant ou à l'heure choisie ».
+4. OJA Market : deux pièces de puzzle, « ta faim » et « le restaurant du coin », s'emboîtent ; plat livré en polaroïd ; « Paiement Mobile Money sécurisé ».
+5. NOVOJA (fond sombre) : le buste s'ouvre sur une bande orange, « Vendre » et « Donner » ; tampon « PAIEMENT PROTÉGÉ » ; « L'argent est remis au vendeur après confirmation de réception. ».
+6. La carte : recherche « la pharmacie derrière le marché » ; le point d'interrogation devient une épingle ; une silhouette marche jusqu'au lieu ; boutons Appeler, WhatsApp, S'y rendre avec OJA.
+7. « TOUT EN TÊTE ? » : un cerveau avec les étiquettes COURSE, COLIS, REPAS, BOUTIQUE, LIEUX. Puis « UNE SEULE APPLI » : accueil de l'appli dans un téléphone, entouré d'un anneau de pastilles.
+8. « Oja App », « Tout est plus facile quand on a le marché dans sa poche. », « TÉLÉCHARGE OJA APP », logos des stores, code-barres.
+
+Aucun montant n'apparaît à l'écran et aucun concurrent n'est nommé.
+
+**Images :** dans `assets/jcol/`. Les objets ont été générés dans ElevenLabs sur fond blanc, puis détourés : `sablier.png`, `buste.png`, `cerveau.png`, `colis.png`. Dans `course_ui.jpg`, les prix et les durées sont floutés. Polices : `fonts/playfair.css` (Playfair Display, licence OFL).
+
+**Son :** `node src/sfx_dump.js oja_journee_collage.html work/jcol/sfx.json && python3 src/music40.py work/jcol/sfx.json work/jcol/music.wav`, puis `loudnorm=I=-14` en m4a vers `assets/soundtrack_journee_collage.m4a`. Groove afro-house à 104 BPM, tic-tac au début, sons placés sur les animations. Pas de « whoosh ».
+
+**Rendu :** `src/journee_collage_render.sh` (depuis `motion/`).
