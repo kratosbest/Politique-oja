@@ -4,9 +4,13 @@
 <style>
 /* Facebook / Instagram ad for Oja App, after the « Griokids » ad Derrick sent: flat brand colour, logo, one big line,
    the app on real phones, store badges. A real layout, not a generated picture: real logo, real screens, real type.
-   9 Nov 2026, Derrick: every feature must be understood, and putting yourself on the map always comes FIRST
-   (also in marketing/kit/09-regles-et-mentions.md). So: the map is the headline and the phones
-   (« Enregistrer un lieu » and a place card, « Chez Maman Rose », fictitious), then the four other services in a list.
+   Derrick, 9 Nov 2026:
+   - every feature must be understood, and putting yourself on the map always comes FIRST;
+   - « carte » alone is unclear: it must be obvious that it is the MAP. So the headline says « sur la map », the line under it
+     « le plan de ta ville », and the front phone shows the real « Carte des lieux Oja » screen (its header) over a drawn
+     street map: roads, lagoon, pins with fictitious place names, « Vous êtes ici », the way to « Chez Maman Rose »;
+   - a QR code to https://oja-app-6265f.web.app/telecharger (pubs/qr_telecharger.svg, made with segno, checked by decoding).
+   Both rules are in marketing/kit/09-regles-et-mentions.md.
    #feed = 1080 x 1350 (4:5, news feed), #story = 1080 x 1920 (9:16: the same block, below the top 250 px, above the bottom 340 px).
    Built by src/pub_facebook_build.js. */
 :root { --or: #FF6B00; --or2: #F05A00; --ink: #17110B; --cream: #FFF4EA; }
@@ -20,57 +24,115 @@ body.story .ad { height: 1920px; }
 body.story .block { top: 250px; }
 svg.bg { position: absolute; left: 0; top: 0; width: 1080px; height: 1330px; }
 /* header */
-.brand { position: absolute; top: 40px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
-.icon { width: 76px; height: 76px; border-radius: 20px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px rgba(120, 40, 0, .25); }
+.brand { position: absolute; top: 34px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 16px; }
+.icon { width: 72px; height: 72px; border-radius: 19px; background: #fff; display: grid; place-items: center; box-shadow: 0 10px 22px rgba(120, 40, 0, .25); }
 .icon img { width: 118%; height: 118%; object-fit: contain; margin-top: 6%; }
-.brand b { font: 800 34px 'Poppins'; letter-spacing: .3px; }
+.brand b { font: 800 33px 'Poppins'; letter-spacing: .3px; }
 .brand b span { font-weight: 600; opacity: .85; }
-h1 { position: absolute; top: 150px; left: 0; right: 0; text-align: center; font: 900 80px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
-h1 .dark { display: block; color: var(--ink); font-size: 116px; letter-spacing: -2px; margin-top: 4px; }
-.sub { position: absolute; top: 386px; left: 90px; right: 90px; text-align: center; font: 600 31px/1.3 'Inter'; color: var(--cream); }
-/* the map feature: two phones and a pin */
+h1 { position: absolute; top: 134px; left: 0; right: 0; text-align: center; font: 900 78px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
+h1 .dark { display: block; color: var(--ink); font-size: 122px; letter-spacing: -2px; margin-top: 2px; }
+.sub { position: absolute; top: 362px; left: 100px; right: 100px; text-align: center; font: 600 31px/1.3 'Inter'; color: var(--cream); }
+.sub b { color: #fff; font-weight: 800; }
+/* the map feature: the map screen in front, « Enregistrer un lieu » behind */
 .phone { position: absolute; border-radius: 50px; background: #0B0C0E; padding: 11px; box-shadow: 0 34px 60px rgba(90, 25, 0, .45), 0 0 0 3px #2A2B2F inset; }
-.phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 40px; }
-.p1 { left: 64px; top: 520px; width: 268px; height: 583px; transform: rotate(-5deg); z-index: 2; }
-.p2 { left: 258px; top: 560px; width: 244px; height: 530px; transform: rotate(5deg); z-index: 1; }
-.pin { position: absolute; left: 360px; top: 470px; width: 96px; z-index: 3; filter: drop-shadow(0 12px 16px rgba(90, 25, 0, .35)); }
-.tag { position: absolute; left: 40px; top: 1080px; z-index: 3; background: #fff; color: var(--ink); border-radius: 999px; padding: 14px 24px;
-  font: 700 26px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
+.phone > img, .phone .screen { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 40px; overflow: hidden; }
+.screen { background: #F1ECE2; position: relative; }
+.screen img { display: block; width: 100%; }
+.screen svg { display: block; width: 100%; }
+.p1 { left: 58px; top: 478px; width: 270px; height: 587px; transform: rotate(-4deg); z-index: 2; }
+.p2 { left: 268px; top: 520px; width: 236px; height: 513px; transform: rotate(5deg); z-index: 1; }
+.tag { position: absolute; left: 34px; top: 1046px; z-index: 3; background: #fff; color: var(--ink); border-radius: 999px; padding: 13px 24px;
+  font: 700 25px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
 .tag em { font-style: normal; color: var(--or); }
 /* the other services */
-.more { position: absolute; left: 548px; top: 515px; width: 492px; }
-.more h2 { font: 700 27px 'Inter'; color: var(--cream); margin: 0 0 16px 6px; }
+.more { position: absolute; left: 548px; top: 482px; width: 492px; }
+.more h2 { font: 700 27px 'Inter'; color: var(--cream); margin: 0 0 14px 6px; }
 .svc { display: flex; align-items: center; gap: 18px; background: rgba(255, 255, 255, .14); border: 1.5px solid rgba(255, 255, 255, .22);
-  border-radius: 26px; padding: 14px 18px; margin-bottom: 12px; }
-.svc i { width: 64px; height: 64px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
-.svc svg { width: 34px; height: 34px; stroke: var(--or); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.svc b { display: block; font: 800 31px/1.1 'Poppins'; }
-.svc span { display: block; margin-top: 4px; font: 500 22px/1.3 'Inter'; color: var(--cream); }
-.pay { margin: 4px 8px 0 0; text-align: right; font: 600 22px 'Inter'; color: var(--cream); }
-/* stores */
-.stores { position: absolute; left: 0; right: 0; top: 1214px; display: flex; justify-content: center; gap: 22px; }
-.badge { display: flex; align-items: center; gap: 14px; background: #000; border-radius: 18px; padding: 12px 28px 12px 20px; border: 2px solid rgba(255, 255, 255, .25); }
-.badge img { width: 46px; height: 46px; }
-.badge small { display: block; font: 500 16px 'Inter'; letter-spacing: .4px; }
-.badge b { display: block; font: 600 31px/1.05 'Inter'; letter-spacing: -.3px; }
+  border-radius: 26px; padding: 13px 18px; margin-bottom: 11px; }
+.svc i { width: 62px; height: 62px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+.svc svg { width: 33px; height: 33px; stroke: var(--or); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.svc b { display: block; font: 800 30px/1.1 'Poppins'; }
+.svc span { display: block; margin-top: 3px; font: 500 22px/1.28 'Inter'; color: var(--cream); }
+.pay { margin: 2px 8px 0 0; text-align: right; font: 600 22px 'Inter'; color: var(--cream); }
+/* download: QR code + store badges */
+.dl { position: absolute; left: 0; right: 0; top: 1124px; display: flex; justify-content: center; align-items: center; gap: 30px; }
+.qr { width: 184px; height: 184px; background: #fff; border-radius: 22px; padding: 16px; box-shadow: 0 14px 28px rgba(90, 25, 0, .3); }
+.qr img { display: block; width: 100%; height: 100%; }
+.dl h3 { font: 800 31px 'Poppins'; }
+.dl p { font: 500 21px 'Inter'; color: var(--cream); margin: 2px 0 14px; }
+.stores { display: flex; gap: 14px; }
+.badge { display: flex; align-items: center; gap: 12px; background: #000; border-radius: 16px; padding: 10px 22px 10px 16px; border: 2px solid rgba(255, 255, 255, .25); }
+.badge img { width: 42px; height: 42px; }
+.badge small { display: block; font: 500 15px 'Inter'; letter-spacing: .3px; }
+.badge b { display: block; font: 600 28px/1.05 'Inter'; letter-spacing: -.3px; }
 </style></head>
 <body>
 <div class="ad"><div class="block">
   <svg class="bg" viewBox="0 0 1080 1330" aria-hidden="true">
     <g fill="none" stroke="#fff">
-      <circle cx="300" cy="820" r="230" stroke-opacity=".10" stroke-width="2"/>
-      <circle cx="300" cy="820" r="360" stroke-opacity=".07" stroke-width="2"/>
-      <circle cx="300" cy="820" r="500" stroke-opacity=".05" stroke-width="2"/>
-      <path d="M-40 1160 C 160 1110, 120 900, 300 820 S 640 640, 1120 470" stroke-opacity=".2" stroke-width="5" stroke-dasharray="2 18" stroke-linecap="round"/>
+      <circle cx="290" cy="760" r="240" stroke-opacity=".10" stroke-width="2"/>
+      <circle cx="290" cy="760" r="370" stroke-opacity=".07" stroke-width="2"/>
+      <circle cx="290" cy="760" r="510" stroke-opacity=".05" stroke-width="2"/>
     </g>
   </svg>
   <div class="brand"><div class="icon"><img src="../video1/assets/logo-oja-carte.png" alt=""></div><b>Oja <span>App</span></b></div>
-  <h1>Mets ton business<span class="dark">sur la carte</span></h1>
-  <p class="sub">Boutique, atelier, maquis : on te trouve par le nom que tout le monde connaît, même sans adresse.</p>
-  <svg class="pin" viewBox="0 0 24 30"><path d="M12 29s-9-9.2-9-16.2A9 9 0 0 1 21 12.8C21 19.8 12 29 12 29z" fill="#fff"/><circle cx="12" cy="12.6" r="4" fill="#FF6B00"/></svg>
+  <h1>Mets ton business<span class="dark">sur la map</span></h1>
+  <p class="sub">Ton lieu sur <b>le plan de ta ville</b> : on te trouve par son nom, même sans adresse.</p>
+
   <div class="phone p2"><img src="../video3/assets/app/ajout.jpg" alt=""></div>
-  <div class="phone p1"><img src="../video3/assets/app/fiche.jpg" alt=""></div>
-  <div class="tag">Ajoute ton lieu : <em>nom, catégorie, photos</em></div>
+  <div class="phone p1"><div class="screen">
+    <img src="pubs/carte_entete.jpg" alt="">
+    <!-- a drawn street map (fictitious places), in place of the real map, which shows other people's businesses -->
+    <svg viewBox="0 0 400 760" aria-hidden="true">
+      <rect width="400" height="760" fill="#F1ECE2"/>
+      <path d="M260 40 l110 -20 l20 110 l-120 20z" fill="#CFE7C3"/>
+      <path d="M20 250 l70 -10 l10 70 l-75 12z" fill="#CFE7C3"/>
+      <path d="M0 590 C 90 560, 160 620, 250 650 S 400 690, 410 700 L410 770 L0 770Z" fill="#A9D3F0"/>
+      <text x="40" y="722" font-family="Inter" font-style="italic" font-size="17" fill="#5C8EBA">Lagune</text>
+      <g fill="none" stroke-linecap="round">
+        <g stroke="#E2D8C6" stroke-width="10">
+          <path d="M-20 270 L420 236"/><path d="M-20 520 L420 470"/><path d="M60 -20 L92 580"/><path d="M232 -20 L212 640"/>
+          <path d="M360 -20 L382 520"/><path d="M-20 90 L420 66"/><path d="M0 660 L200 470"/><path d="M-20 400 L130 392"/>
+        </g>
+        <g stroke="#FFFFFF" stroke-width="6.5">
+          <path d="M-20 270 L420 236"/><path d="M-20 520 L420 470"/><path d="M60 -20 L92 580"/><path d="M232 -20 L212 640"/>
+          <path d="M360 -20 L382 520"/><path d="M-20 90 L420 66"/><path d="M0 660 L200 470"/><path d="M-20 400 L130 392"/>
+        </g>
+        <path d="M120 -20 L168 780" stroke="#DDD2BF" stroke-width="22"/><path d="M120 -20 L168 780" stroke="#FFFFFF" stroke-width="16"/>
+        <path d="M-20 180 L420 132" stroke="#DDD2BF" stroke-width="20"/><path d="M-20 180 L420 132" stroke="#FFFFFF" stroke-width="14"/>
+        <path d="M-20 420 C 120 384, 260 360, 420 300" stroke="#E5C36A" stroke-width="24"/><path d="M-20 420 C 120 384, 260 360, 420 300" stroke="#FFE39A" stroke-width="17"/>
+        <path d="M300 -20 C 282 200, 318 400, 262 780" stroke="#DDD2BF" stroke-width="20"/><path d="M300 -20 C 282 200, 318 400, 262 780" stroke="#FFFFFF" stroke-width="14"/>
+        <!-- the way from « Vous êtes ici » to the place -->
+        <path d="M232 548 L224 446 L214 352 L208 312" stroke="#FF6B00" stroke-width="7" stroke-dasharray="1 13"/>
+      </g>
+      <g font-family="Inter" font-weight="700" font-size="15" fill="#3A332B" stroke="#F1ECE2" stroke-width="4" paint-order="stroke" text-anchor="middle">
+        <g transform="translate(76 168)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Coiffure</text></g>
+        <g transform="translate(336 236)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Atelier</text></g>
+        <g transform="translate(96 372)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Boutique</text></g>
+        <g transform="translate(318 430)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Maquis</text></g>
+        <g transform="translate(140 488)"><path d="M0 0c-3-6-11-10-11-18a11 11 0 0 1 22 0c0 8-8 12-11 18z" fill="#FF6B00" stroke="#fff" stroke-width="2"/><circle cy="-18" r="4" fill="#fff" stroke="none"/><text y="22">Pharmacie</text></g>
+      </g>
+      <!-- the place, selected -->
+      <g transform="translate(206 300)">
+        <circle cy="-4" r="34" fill="#FF6B00" opacity=".16"/>
+        <path d="M0 0c-5-10-19-17-19-31a19 19 0 0 1 38 0c0 14-14 21-19 31z" fill="#FF6B00" stroke="#fff" stroke-width="3"/><circle cy="-31" r="7" fill="#fff"/>
+        <g transform="translate(0 -78)"><rect x="-82" y="-19" width="164" height="36" rx="18" fill="#17110B"/><text y="5" text-anchor="middle" font-family="Inter" font-weight="700" font-size="16" fill="#fff">Chez Maman Rose</text></g>
+      </g>
+      <!-- you are here -->
+      <circle cx="232" cy="556" r="22" fill="#2F80ED" opacity=".18"/><circle cx="232" cy="556" r="9" fill="#2F80ED" stroke="#fff" stroke-width="3.5"/>
+      <text x="232" y="590" text-anchor="middle" font-family="Inter" font-weight="700" font-size="14" fill="#2F6FD0" stroke="#F1ECE2" stroke-width="4" paint-order="stroke">Vous êtes ici</text>
+      <!-- the place card -->
+      <g transform="translate(18 628)">
+        <rect width="364" height="112" rx="20" fill="#fff" stroke="#E6DED0"/>
+        <text x="18" y="34" font-family="Inter" font-weight="800" font-size="19" fill="#17110B">Chez Maman Rose</text>
+        <text x="18" y="56" font-family="Inter" font-weight="600" font-size="14" fill="#159A69">Restaurant · Ouvert</text>
+        <rect x="14" y="68" width="336" height="34" rx="17" fill="#FF6B00"/>
+        <text x="182" y="90" text-anchor="middle" font-family="Inter" font-weight="800" font-size="13.5" letter-spacing="1.2" fill="#fff">S'Y RENDRE AVEC OJA</text>
+      </g>
+    </svg>
+  </div></div>
+  <div class="tag">Ajoute ton lieu : <em>nom, photos, point exact</em></div>
+
   <div class="more">
     <h2>Et aussi, dans la même appli :</h2>
     <div class="svc"><i><svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg></i>
@@ -83,9 +145,17 @@ h1 .dark { display: block; color: var(--ink); font-size: 116px; letter-spacing: 
       <div><b>NOVOJA</b><span>Vends ou donne entre particuliers. Paiement protégé.</span></div></div>
     <p class="pay">Paiement en espèces ou Mobile Money.</p>
   </div>
-  <div class="stores">
-    <div class="badge"><img src="../video1/assets/store-app-store.png" alt=""><div><small>Télécharger dans</small><b>l'App Store</b></div></div>
-    <div class="badge"><img src="../video1/assets/store-google-play.png" alt=""><div><small>DISPONIBLE SUR</small><b>Google Play</b></div></div>
+
+  <div class="dl">
+    <div class="qr"><img src="pubs/qr_telecharger.svg" alt="QR code : oja-app-6265f.web.app/telecharger"></div>
+    <div>
+      <h3>Scanne pour télécharger</h3>
+      <p>oja-app-6265f.web.app/telecharger</p>
+      <div class="stores">
+        <div class="badge"><img src="../video1/assets/store-app-store.png" alt=""><div><small>Télécharger dans</small><b>l'App Store</b></div></div>
+        <div class="badge"><img src="../video1/assets/store-google-play.png" alt=""><div><small>DISPONIBLE SUR</small><b>Google Play</b></div></div>
+      </div>
+    </div>
   </div>
 </div></div>
 <script>if (location.hash === '#story') document.body.classList.add('story');</script>

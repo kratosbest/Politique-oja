@@ -46,6 +46,10 @@
 ## Fonction mise en avant en premier
 - **Mettre son entreprise sur la carte** : boutique, atelier, restaurant, petit business. Au Bénin, se faire trouver sans adresse précise est un casse-tête ; sur OJA, on ajoute son lieu (nom, catégorie, point exact, photos) et on le trouve par le nom que les gens lui donnent. « C'est mon commerce » (revendiquer sa fiche) arrive avec la prochaine version : ne pas le promouvoir avant.
 - Consigne de Derrick (9 novembre 2026) : dans chaque pub ou visuel qui présente l'appli, cette fonction passe **toujours en premier** (titre et image principale). Les autres services viennent ensuite, pour que l'on comprenne toutes les fonctions.
+- Consigne de Derrick (9 novembre 2026) : « carte » seul est flou (carte de visite ? carte bancaire ?). À partir de maintenant, on doit voir tout de suite qu'il s'agit de la **map**, le plan de la ville :
+  - dans le texte, on dit « sur la map » ou « le plan de ta ville » ;
+  - à l'image, on montre une vraie vue de map : rues, épingles, « Vous êtes ici ».
+- Lien de téléchargement à mettre dans les visuels (en QR code ou en lien) : https://oja-app-6265f.web.app/telecharger
 
 ## Commission chauffeurs (chiffres donnés par Derrick, 5 novembre 2026)
 - **Pass illimité** : 0 % de commission pendant 24 h, 7 jours ou 1 mois.
