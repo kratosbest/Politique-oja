@@ -31,13 +31,16 @@ svg.bg { position: absolute; left: 0; top: 0; width: 1080px; height: 1330px; }
 .icon img { width: 118%; height: 118%; object-fit: contain; margin-top: 6%; }
 .brand b { font: 800 33px 'Poppins'; letter-spacing: .3px; }
 .brand b span { font-weight: 600; opacity: .85; }
-h1 { position: absolute; top: 124px; left: 0; right: 0; text-align: center; font: 900 76px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
-h1 .dark { display: block; color: var(--ink); font-size: 112px; letter-spacing: -2px; margin-top: 2px; }
-.sub { position: absolute; top: 334px; left: 100px; right: 100px; text-align: center; font: 600 30px/1.3 'Inter'; color: var(--cream); }
+h1 { position: absolute; top: 116px; left: 0; right: 0; text-align: center; font: 900 68px/1 'Poppins'; letter-spacing: -1.2px; text-transform: uppercase; }
+h1 .dark { display: block; color: var(--ink); font-size: 106px; letter-spacing: -2px; margin-top: 2px; }
+/* « gratuitement » (Derrick, 9 Nov 2026: adding your place costs nothing; « gratuit » is said only about that) */
+h1 .free { display: inline-block; margin-top: 10px; padding: 6px 26px 4px; background: #fff; color: var(--or); border-radius: 14px;
+  font-size: 50px; letter-spacing: 3px; transform: rotate(-2deg); box-shadow: 0 12px 24px rgba(90, 25, 0, .28); }
+.sub { position: absolute; top: 384px; left: 100px; right: 100px; text-align: center; font: 600 30px/1.3 'Inter'; color: var(--cream); }
 .sub b { color: #fff; font-weight: 800; }
 
 /* ---------- the devices, in 3D ---------- */
-.stage { position: absolute; left: 0; top: 422px; width: 1080px; height: 540px; perspective: 1700px; perspective-origin: 560px 120px; }
+.stage { position: absolute; left: 0; top: 440px; width: 1080px; height: 540px; perspective: 1700px; perspective-origin: 560px 120px; }
 .dev { position: absolute; transform-style: preserve-3d; }
 .dev .layer { position: absolute; inset: 0; border-radius: inherit; }
 .dev .front { position: absolute; inset: 0; border-radius: inherit; background: #08090B; overflow: hidden;
@@ -61,7 +64,7 @@ h1 .dark { display: block; color: var(--ink); font-size: 112px; letter-spacing: 
 .mapbar i { width: 30px; height: 30px; border-radius: 9px; background: #fff; display: grid; place-items: center; }
 .mapbar b { font: 700 19px 'Inter'; color: #fff; }
 .tab svg.map { position: absolute; left: 0; top: 46px; width: 532px; height: 324px; }
-.tag { position: absolute; left: 40px; top: 872px; z-index: 5; background: #fff; color: var(--ink); border-radius: 999px; padding: 12px 22px;
+.tag { position: absolute; left: 40px; top: 884px; z-index: 5; background: #fff; color: var(--ink); border-radius: 999px; padding: 12px 22px;
   font: 700 24px 'Inter'; white-space: nowrap; transform: rotate(-3deg); box-shadow: 0 16px 30px rgba(90, 25, 0, .3); }
 .tag em { font-style: normal; color: var(--or); }
 
@@ -98,8 +101,8 @@ h1 .dark { display: block; color: var(--ink); font-size: 112px; letter-spacing: 
     </g>
   </svg>
   <div class="brand"><div class="icon"><img src="../video1/assets/logo-oja-carte.png" alt=""></div><b>Oja <span>App</span></b></div>
-  <h1>Mets ton business<span class="dark">sur la map</span></h1>
-  <p class="sub">Ton lieu sur <b>le plan de ta ville</b> : on te trouve par son nom, même sans adresse.</p>
+  <h1>Mets ton business<span class="dark">sur la map</span><span class="free">gratuitement</span></h1>
+  <p class="sub">Sur <b>le plan de ta ville</b>, on te trouve par ton nom.</p>
 
   <div class="stage">
     <div class="ground" style="left:90px; top:478px; width:560px; height:60px"></div>

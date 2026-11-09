@@ -1105,8 +1105,8 @@ Consignes de Derrick (9 novembre 2026), reprises dans `marketing/kit/09-regles-e
 
 **Contenu de l'image :**
 - **En premier, la map :**
-  - le titre « Mets ton business sur la map » ;
-  - la phrase « Ton lieu sur le plan de ta ville : on te trouve par son nom, même sans adresse. » ;
+  - le titre « Mets ton business sur la map », suivi de « gratuitement » sur un bandeau blanc. Ajouter son lieu ne coûte rien, et c'est le seul cas où l'on dit « gratuit » ;
+  - la phrase « Sur le plan de ta ville, on te trouve par ton nom. » ;
   - une tablette qui affiche « Carte des lieux Oja ». La map est dessinée, parce que la vraie map montre les commerces d'autres personnes. On y voit des rues avec des bâtiments, une lagune, des épingles (Coiffure, Atelier, Boutique, Maquis, Pharmacie, Garage, Couture), la recherche « Rechercher un lieu par son nom », « Vous êtes ici », le chemin jusqu'à « Chez Maman Rose » (lieu fictif) et sa fiche avec « S'y rendre avec OJA » ;
   - deux téléphones avec les vrais écrans : la fiche « Chez Maman Rose » (`video3/assets/app/fiche.jpg`) et « Enregistrer un lieu » (`ajout.jpg`) ;
   - la pastille « Ajoute ton lieu : nom, photos, point exact ».
