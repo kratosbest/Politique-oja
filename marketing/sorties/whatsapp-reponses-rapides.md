@@ -4,15 +4,22 @@ Pour les enregistrer dans WhatsApp Business, ouvrez *Outils professionnels*, pui
 
 ## Message d'accueil
 Bonjour et bienvenue chez *OJA* 👋
-Transport, livraison, Market, NOVOJA… et votre business sur la carte, dans une seule app.
+Avec Oja App, mettez gratuitement votre business sur la map : vos clients vous trouvent par votre nom, même sans adresse.
+Dans la même appli : courses, colis, Market et NOVOJA.
 Dites-nous comment on peut vous aider.
+Télécharger l'appli : https://oja-app-6265f.web.app/telecharger
 
 ## Message d'absence
 Merci pour votre message ! L'équipe OJA n'est pas disponible pour le moment. Nous vous répondons dès notre retour.
+En attendant, vous pouvez télécharger Oja App : https://oja-app-6265f.web.app/telecharger
+
+Où les enregistrer : dans WhatsApp Business, *Outils professionnels*, puis *Message d'accueil* et *Message d'absence*. Aucun délai de réponse n'est promis.
+
+Si l'assistant WhatsApp (`whatsapp-bot/`) répond déjà sur ce numéro, le message d'accueil s'ajoute à sa première réponse : dans ce cas, on peut ne garder que le message d'absence, ou aucun des deux.
 
 ## Réponses rapides
 **/carte**
-Votre boutique, atelier ou restaurant *sur la carte* avec OJA 📍
+Votre boutique, atelier ou restaurant *sur la map* avec OJA 📍
 Dans Oja App, ajoutez votre lieu : le nom, la catégorie, le point exact et quelques photos.
 Vos clients vous trouvent avec les mots de tous les jours, même sans adresse précise.
 
