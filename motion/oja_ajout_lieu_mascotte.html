@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>OJA — Ajouter un lieu, avec la mascotte</title>
+<link rel="stylesheet" href="fonts/local.css"><link rel="stylesheet" href="fonts/jakarta.css">
+<script src="assets/lieu2/voix_marks.js"></script>
+<style>
+/* Tutorial « Ajouter un lieu » with the OJA mascot, 1080 x 1920, 9:16 (13 Nov 2026).
+   The mascot (keyed Flow clips, assets/mc/) speaks the lines of assets/lieu2/voix_ajout_lieu.txt (her voice, cloned from
+   Voix_mascotte_echantillon.mp3). The app screens are rebuilt from Derrick's screenshots of the version on the stores
+   (IMG_1145 to IMG_1157), with fictitious Beninese data: « Chez Maman Rose », a drawn map of a Cotonou neighbourhood,
+   +229 numbers masked. No real name, number, address or position on screen.
+   Layout: the spoken line on top (word by word), the step on the left, the mascot below it, the phone on the right.
+   Nothing written in the top 250 px; the bottom of the phone stops at 1580 px. */
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#FFF4EA}
+*{box-sizing:border-box}
+.abs{position:absolute}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif;color:#17110B}
+/* top: the spoken line */
+#sub{position:absolute;left:60px;right:60px;top:268px;height:200px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font:800 54px/1.16 Poppins;letter-spacing:-.5px}
+#sub .w{opacity:.28;transition:none}
+#sub .w.on{opacity:1}
+#sub .k{color:#FF6B00}
+/* left: the step */
+#step{position:absolute;left:44px;top:560px;width:500px}
+.stp{position:absolute;left:0;top:0;width:500px}
+.stp .n{display:inline-flex;align-items:center;justify-content:center;width:74px;height:74px;border-radius:24px;background:#FF6B00;color:#fff;font:900 40px Poppins;box-shadow:0 10px 24px rgba(255,107,0,.35)}
+.stp h2{margin:18px 0 0;font:900 50px/1.04 Poppins;letter-spacing:-1px}
+.stp p{margin:12px 0 0;font:600 25px/1.3 'Plus Jakarta Sans';color:#6B5A4C}
+.chip3{display:flex;gap:10px;margin-top:16px}
+.chip3 span{font:700 20px 'Plus Jakarta Sans';padding:9px 14px;border-radius:999px;background:#fff;border:2px solid #F1D8C4;color:#8A6A52}
+.chip3 span.on{background:#FF6B00;border-color:#FF6B00;color:#fff}
+/* the phone */
+#phoneWrap{position:absolute;left:560px;top:556px;width:484px;height:1020px;perspective:2000px}
+#phone{position:absolute;left:0;top:0;width:414px;height:868px;transform-origin:0 0;transform-style:preserve-3d}
+#phone .layer{position:absolute;inset:0;border-radius:58px}
+#phone .front{position:absolute;inset:0;border-radius:58px;background:#0B0C0E;box-shadow:inset 0 0 0 2px #5A5C62,inset 0 0 0 4px #1B1C1F}
+#scr{position:absolute;left:12px;top:12px;width:390px;height:844px;border-radius:46px;overflow:hidden;background:#fff}
+#phone .glare{position:absolute;inset:0;border-radius:58px;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.20) 0%,rgba(255,255,255,.05) 28%,rgba(255,255,255,0) 44%)}
+#phone .island{position:absolute;left:50%;top:22px;width:118px;height:32px;margin-left:-59px;border-radius:18px;background:#000;z-index:40}
+/* app screens (390 x 844) */
+.sc{position:absolute;left:0;top:0;width:390px;height:844px;overflow:hidden;background:#F6F5F3}
+.sb{position:absolute;left:0;right:0;top:0;height:50px;display:flex;justify-content:space-between;align-items:center;padding:0 30px 0 34px;font:700 16px 'Plus Jakarta Sans';z-index:30}
+.sb .r{display:flex;gap:6px;align-items:center}
+.hdr{position:absolute;left:0;right:0;top:0;height:132px;background:#F07A2E}
+.hbtn{position:absolute;top:64px;width:48px;height:48px;border-radius:15px;border:1.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center}
+.logo{position:absolute;left:0;right:0;top:66px;display:flex;justify-content:center;align-items:center;gap:6px;color:#fff;font:800 30px 'Plus Jakarta Sans'}
+.logo i{font:700 13px 'Plus Jakarta Sans';font-style:normal;background:rgba(255,255,255,.22);padding:4px 8px;border-radius:6px;margin-left:6px;letter-spacing:.5px}
+.chips{position:absolute;left:16px;top:146px;display:flex;gap:8px;white-space:nowrap}
+.chips span{font:600 15px 'Plus Jakarta Sans';padding:10px 15px;border-radius:999px;background:#fff;border:1px solid #ECE6E0}
+.chips span.on{background:#B9450F;color:#fff;border-color:#B9450F}
+.nav{position:absolute;left:10px;right:10px;bottom:14px;height:70px;border-radius:26px;background:#2B2622;display:flex;justify-content:space-around;align-items:center;z-index:20}
+.nav div{display:flex;flex-direction:column;align-items:center;gap:4px;font:600 11.5px 'Plus Jakarta Sans';color:#F4EDE6}
+.nav div.on{color:#FF8A3D}
+.card{border-radius:22px;overflow:hidden;position:relative}
+.lbl{font:700 15px 'Plus Jakarta Sans';margin:0 0 8px}
+.inp{height:52px;border-radius:14px;border:1px solid #E6E1DB;background:#fff;display:flex;align-items:center;gap:12px;padding:0 14px;font:500 15px 'Plus Jakarta Sans';color:#17110B}
+.inp .ph{color:#9C948C}
+.hint{font:500 12.5px 'Plus Jakarta Sans';color:#3A332B;margin:8px 0 0 6px}
+.cat{display:inline-flex;align-items:center;gap:8px;font:600 14px 'Plus Jakarta Sans';padding:9px 14px;border-radius:999px;background:#fff;border:1px solid #E6E1DB;margin:0 7px 9px 0}
+.cat.on{background:#FF6B00;color:#fff;border-color:#FF6B00}
+.btn{height:52px;border-radius:16px;background:#FF6B00;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font:700 17px 'Plus Jakarta Sans'}
+.btnd{height:48px;border-radius:14px;background:#B23F0B;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px;font:700 15px 'Plus Jakarta Sans'}
+.stepH{position:absolute;left:0;right:0;top:0;height:132px;background:#fff;z-index:10}
+.stepH .bk{position:absolute;left:18px;top:70px}
+.stepH .s1{position:absolute;left:62px;top:60px;font:600 13px 'Plus Jakarta Sans'}
+.stepH .s2{position:absolute;left:62px;top:78px;font:800 21px 'Plus Jakarta Sans';letter-spacing:-.3px}
+.stepH .pg{position:absolute;left:20px;right:20px;top:122px;height:4px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stepH .pg span{border-radius:2px;background:#EDE8E3}
+.stepH .pg span.on{background:#FF6B00}
+.foot{position:absolute;left:0;right:0;bottom:0;height:96px;background:#fff;border-top:1px solid #EFEAE5;padding:14px 18px 0;z-index:10}
+/* touch and highlight, in screen units */
+#tap{position:absolute;left:0;top:0;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(255,255,255,.55);border:4px solid #FF6B00;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:60;opacity:0}
+#rip{position:absolute;left:0;top:0;border-radius:50%;border:4px solid #FF6B00;z-index:59;opacity:0}
+#ring{position:absolute;border:4px solid #FF6B00;border-radius:20px;z-index:58;opacity:0;box-shadow:0 0 0 6px rgba(255,107,0,.18)}
+/* the end card */
+#endc{position:absolute;left:44px;top:560px;width:500px;opacity:0}
+#endc h2{margin:0;font:900 64px/1 Poppins;letter-spacing:-1.5px}
+#endc h2 span{color:#FF6B00}
+#endc .qr{margin-top:22px;width:214px;height:214px;padding:16px;border-radius:24px;background:#fff;box-shadow:0 14px 30px rgba(120,50,0,.18)}
+#endc .qr img{width:100%;height:100%;display:block}
+#endc p{margin:14px 0 0;font:700 22px 'Plus Jakarta Sans';color:#6B5A4C}
+</style></head>
+<body><div id="stage"></div>
+<script>
+const VW = 1080, VH = 1920, OR = '#FF6B00', INK = '#17110B';
+const VO = window.VO;
+const ST = [0]; VO.dur.forEach(d => ST.push(+(ST[ST.length - 1] + d).toFixed(3))); const DUR = ST[ST.length - 1];
+const cl = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lin = (t, a, b) => cl((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3), eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bk = x => { const c = 1.7; return x <= 0 ? 0 : 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const mix = (a, b, k) => a + (b - a) * k;
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9'-]/g, '');
+/* absolute time of the n-th word of scene i that starts with w */
+function AT(i, w, n = 0) { const L = VO.words[i].filter(x => norm(x[0]).startsWith(norm(w))); if (!L[n]) throw new Error('word ' + w + ' in ' + i); return +(ST[i] + L[n][1]).toFixed(3); }
+const el = id => document.getElementById(id);
+
+/* ---------- icons (Lucide-style strokes; « c:x,y,r » circle, « r:x,y,w,h,rx » rect) ---------- */
+const ICN = {
+  store: ['m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7', 'M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8', 'M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4', 'M2 7h20', 'M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7'],
+  plus: ['M5 12h14', 'M12 5v14'],
+  map: ['M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z', 'M15 5.764v15', 'M9 3.236v15'],
+  dots: ['c:7,7,2.4', 'c:17,7,2.4', 'c:7,17,2.4', 'c:17,17,2.4'],
+  heart: ['M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z'],
+  pin: ['M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0', 'c:12,10,3'],
+  locate: ['M2 12h3', 'M19 12h3', 'M12 2v3', 'M12 19v3', 'c:12,12,7', 'c:12,12,2.5'],
+  phone: ['M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384'],
+  msg: ['M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z', 'M8 10h.01', 'M12 10h.01', 'M16 10h.01'],
+  route: ['c:6,19,3', 'M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15', 'c:18,5,3'],
+  camera: ['M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z', 'c:12,13,3'],
+  shield: ['M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z', 'm9 12 2 2 4-4'],
+  check: ['M20 6 9 17l-5-5'],
+  chevd: ['m6 9 6 6 6-6'], chevr: ['m9 18 6-6-6-6'],
+  back: ['m12 19-7-7 7-7', 'M19 12H5'],
+  vol: ['M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z', 'M16 9a5 5 0 0 1 0 6', 'M19.364 18.364a9 9 0 0 0 0-12.728'],
+  building: ['M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z', 'M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2', 'M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2', 'M10 6h4', 'M10 10h4', 'M10 14h4', 'M10 18h4'],
+  home: ['M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8', 'M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'],
+  doc: ['M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z', 'M14 2v4a2 2 0 0 0 2 2h4', 'M16 13H8', 'M16 17H8', 'M10 9H8'],
+  clock: ['c:12,12,10', 'M12 6v6l4 2'],
+  crop: ['M6 2v14a2 2 0 0 0 2 2h14', 'M18 22V8a2 2 0 0 0-2-2H2'],
+  recycle: ['m17 2 4 4-4 4', 'M3 11v-1a4 4 0 0 1 4-4h14', 'm7 22-4-4 4-4', 'M21 13v1a4 4 0 0 1-4 4H3'],
+  car: ['M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2', 'c:7,17,2', 'M9 17h6', 'c:17,17,2'],
+  user: ['M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2', 'c:12,7,4'],
+  trophy: ['M6 9H4.5a2.5 2.5 0 0 1 0-5H6', 'M18 9h1.5a2.5 2.5 0 0 0 0-5H18', 'M4 22h16', 'M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22', 'M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22', 'M18 2H6v7a6 6 0 0 0 12 0V2Z'],
+  list: ['r:5,3,14,18,2', 'M9 8h6', 'M9 12h6', 'M9 16h4'],
+  pencil: ['M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z'],
+  utensils: ['M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2', 'M7 2v20', 'M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'],
+  leaf: ['M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z', 'M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12'],
+  hammer: ['m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9', 'm18 15 4-4', 'm21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5'],
+  landmark: ['M10 18v-7', 'M11.12 2.198a2 2 0 0 1 1.76.006l7.866 3.847c.476.233.31.949-.22.949H3.474c-.53 0-.695-.716-.22-.949z', 'M14 18v-7', 'M18 18v-7', 'M3 22h18', 'M6 18v-7'],
+  health: ['r:3,3,18,18,3', 'M8 12h8', 'M12 8v8'],
+  scissors: ['c:6,6,3', 'c:6,18,3', 'M20 4 8.12 15.88', 'M14.47 14.48 20 20', 'M8.12 8.12 12 12'],
+  ball: ['c:12,12,10', 'M12 2a14.5 14.5 0 0 0 0 20', 'M2 12h20'],
+  monitor: ['r:2,3,20,14,2', 'M8 21h8', 'M12 17v4'],
+  bed: ['M2 4v16', 'M2 8h18a2 2 0 0 1 2 2v10', 'M2 17h20', 'M6 8v9'],
+  cap: ['M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z', 'M22 10v6', 'M6 12.5V16a6 3 0 0 0 12 0v-3.5'],
+  globe: ['c:12,12,10', 'M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20', 'M2 12h20'],
+};
+function ic(n, s = 22, col = '#17110B', sw = 2, fill = 'none') {
+  const parts = ICN[n].map(p => {
+    if (p.startsWith('c:')) { const [x, y, r] = p.slice(2).split(','); return `<circle cx="${x}" cy="${y}" r="${r}"${n === 'dots' ? ` fill="${col}"` : ''}/>`; }
+    if (p.startsWith('r:')) { const [x, y, w, h, rx] = p.slice(2).split(','); return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/>`; }
+    return `<path d="${p}"/>`; }).join('');
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none">${parts}</svg>`;
+}
+const storePlus = (s, col) => `<span style="position:relative;display:inline-flex;flex:none">${ic('store', s, col, 2)}<span style="position:absolute;right:-${s * .22}px;bottom:-${s * .18}px;width:${s * .5}px;height:${s * .5}px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center">${ic('plus', s * .36, '#fff', 3.4)}</span></span>`;
+const flagBJ = `<span style="display:inline-flex;width:26px;height:18px;border-radius:3px;overflow:hidden;flex:none"><span style="width:40%;background:#008751"></span><span style="flex:1;display:flex;flex-direction:column"><span style="flex:1;background:#FCD116"></span><span style="flex:1;background:#E8112D"></span></span></span>`;
+
+/* ---------- a drawn street map (fictitious places) ---------- */
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function mapSVG(w, h, seed, o = {}) {
+  const r = rng(seed), sk = o.skew ?? .12; let s = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block"><rect width="${w}" height="${h}" fill="#F2F0EC"/>`;
+  const xs = [], ys = []; for (let x = -60; x < w + 60; x += 64 + r() * 26) xs.push(x); for (let y = -40; y < h + 40; y += 56 + r() * 22) ys.push(y);
+  const P = (x, y) => `${(x + y * sk).toFixed(1)},${(y - x * sk * .5).toFixed(1)}`;
+  s += `<g fill="#E8E4DD" stroke="#DED8CF" stroke-width=".8">`;
+  for (let i = 0; i < xs.length - 1; i++) for (let j = 0; j < ys.length - 1; j++) {
+    const x0 = xs[i] + 8, x1 = xs[i + 1] - 8, y0 = ys[j] + 8, y1 = ys[j + 1] - 8, n = 1 + Math.floor(r() * 3);
+    for (let k = 0; k < n; k++) { const bw = (x1 - x0) * (.3 + r() * .35), bh = (y1 - y0) * (.35 + r() * .4), bx = x0 + r() * (x1 - x0 - bw), by = y0 + r() * (y1 - y0 - bh);
+      s += `<polygon points="${P(bx, by)} ${P(bx + bw, by)} ${P(bx + bw, by + bh)} ${P(bx, by + bh)}"/>`; }
+  }
+  s += `</g>`;
+  if (o.park) s += `<path d="${o.park}" fill="#D5EBCB"/>`;
+  if (o.water) s += `<path d="${o.water}" fill="#B6DAF2"/>`;
+  const line = (pts, wd, c) => `<polyline points="${pts.map(([a, b]) => P(a, b)).join(' ')}" fill="none" stroke="${c}" stroke-width="${wd}" stroke-linecap="round"/>`;
+  let g1 = '', g2 = '';
+  for (const x of xs) { g1 += line([[x, -60], [x, h + 60]], 9, '#E2DCD2'); g2 += line([[x, -60], [x, h + 60]], 6, '#FFFFFF'); }
+  for (const y of ys) { g1 += line([[-60, y], [w + 60, y]], 9, '#E2DCD2'); g2 += line([[-60, y], [w + 60, y]], 6, '#FFFFFF'); }
+  s += g1 + g2;
+  if (o.main) s += `<path d="${o.main}" fill="none" stroke="#E8CF8C" stroke-width="17"/><path d="${o.main}" fill="none" stroke="#FCE7A8" stroke-width="12"/>`;
+  return s + `</svg>`;
+}
+
+/* ---------- the app screens ---------- */
+const statusBar = (dark) => `<div class="sb" style="color:${dark ? '#17110B' : '#fff'}"><span>10:24</span><span class="r">${[5, 8, 11, 14].map(hh => `<span style="width:4px;height:${hh}px;border-radius:1px;background:${dark ? '#17110B' : '#fff'}"></span>`).join('')}<span style="margin-left:4px">4G</span><span style="margin-left:4px;width:26px;height:13px;border-radius:4px;border:1.5px solid ${dark ? '#17110B' : '#fff'};padding:1.5px"><span style="display:block;width:70%;height:100%;border-radius:2px;background:${dark ? '#17110B' : '#fff'}"></span></span></span></div>`;
+const appHeader = () => `<div class="hdr"></div>${statusBar(false)}
+<div class="hbtn" style="left:18px">${ic('dots', 22, '#fff', 1.6)}</div>
+<div class="logo">${ic('globe', 28, '#fff', 2.4)}<span>JA</span><i>App</i></div>
+<div class="hbtn" style="right:18px">${ic('map', 22, '#fff', 2)}</div>`;
+const navBar = (on) => `<div class="nav">${[['home', 'Accueil'], ['recycle', 'NOVOJA'], ['car', 'Transport'], ['store', 'Market'], ['user', 'Profil']].map(([i, n]) =>
+  `<div class="${n === on ? 'on' : ''}">${ic(i, 23, n === on ? '#FF8A3D' : '#F4EDE6', 2)}${n}</div>`).join('')}</div>`;
+const bigCard = (img, name, sub, y) => `<div class="card abs" style="left:16px;top:${y}px;width:358px;height:206px">
+<img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block">
+<div class="abs" style="inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.62))"></div>
+<div class="abs" style="right:12px;top:12px;width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center">${ic('heart', 20, '#fff', 2)}</div>
+<div class="abs" style="left:16px;bottom:14px;color:#fff"><div style="font:800 22px 'Plus Jakarta Sans'">${name}</div><div style="font:600 15px 'Plus Jakarta Sans';margin-top:2px;opacity:.95">${sub}</div></div></div>`;
+function scrHome() {
+  return `<div class="sc" id="s_home">${appHeader()}
+<div class="chips"><span class="on">Tout</span><span>Agriculture et Environnement</span><span>Commerce</span></div>
+<div class="abs" style="left:-336px;top:208px;width:340px;height:146px;border-radius:20px;background:#F3D5BD"></div>
+<div class="abs" style="left:24px;top:202px;width:342px;height:150px;border-radius:20px;overflow:hidden"><img src="assets/lieu2/banniere_market.jpg" style="width:104%;height:104%;margin:-2% 0 0 -2%;object-fit:cover"></div>
+<div class="abs" style="left:386px;top:208px;width:340px;height:146px;border-radius:20px;background:#F3D5BD"></div>
+<div class="abs" style="left:0;right:0;top:362px;display:flex;justify-content:center;gap:6px">${[0, 0, 1, 0, 0].map(o => `<span style="width:${o ? 20 : 7}px;height:7px;border-radius:4px;background:${o ? '#F07A2E' : '#D9D3CC'}"></span>`).join('')}</div>
+${bigCard('assets/lieu2/epicerie.jpg', 'Épicerie du Marché', 'Commerce · 1,2 km', 386)}
+${bigCard('assets/lieu2/atelier.jpg', 'Atelier Gbèto', 'Services · 2,4 km', 606)}
+<div id="fab" class="abs" style="right:16px;bottom:100px;width:66px;height:66px;border-radius:50%;background:#C04A12;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(160,60,10,.4);z-index:21">${storePlus(30, '#fff').replace('background:#fff', 'background:#fff').replace(/background:#fff;display:flex/, 'background:#C04A12;display:flex')}</div>
+${navBar('Accueil')}</div>`;
+}
+function mapPin(img, name, cat, x, y, id = '') {
+  return `<div ${id ? `id="${id}"` : ''} class="abs" style="left:${x - 30}px;top:${y - 30}px;display:flex;align-items:center;gap:6px;transform-origin:30px 30px">
+<span style="width:60px;height:60px;border-radius:50%;border:3.5px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.28);overflow:hidden;flex:none;background:#ddd"><img src="${img}" style="width:100%;height:100%;object-fit:cover"></span>
+<span style="font:800 15px/1.15 'Plus Jakarta Sans';color:#D9600F;white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff">${name}<br><span style="font-weight:600;font-size:12.5px;color:#3A332B">${cat}</span></span></div>`;
+}
+function mapScreen(id, extra = '') {
+  return `<div class="sc" id="${id}" style="background:#F2F0EC"><div class="abs" style="left:0;top:0">${mapSVG(390, 844, 11, { main: 'M-40 700 C 120 640, 260 520, 430 300', park: 'M40 190 l90 -12 l12 70 l-96 14z' })}</div>
+${statusBar(true)}
+<div class="abs" style="left:18px;top:62px;width:48px;height:48px;border-radius:15px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center">${ic('back', 22, '#17110B', 2.4)}</div>
+<div class="abs" style="left:90px;top:62px;height:48px;padding:0 20px;border-radius:24px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);display:flex;align-items:center;font:700 17px 'Plus Jakarta Sans'">Carte des lieux Oja</div>
+<div class="abs" style="left:16px;top:124px;display:flex;gap:8px;white-space:nowrap">
+<span style="display:flex;align-items:center;gap:7px;height:42px;padding:0 16px;border-radius:21px;background:#FF6B00;color:#fff;font:700 15px 'Plus Jakarta Sans'">${ic('pin', 18, '#fff', 2.2)}Tout</span>
+<span style="display:flex;align-items:center;gap:7px;height:42px;padding:0 16px;border-radius:21px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);font:700 15px 'Plus Jakarta Sans'">${ic('store', 18, '#17110B', 2)}Commerce</span>
+<span style="display:flex;align-items:center;gap:7px;height:42px;padding:0 16px;border-radius:21px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1);font:700 15px 'Plus Jakarta Sans'">${ic('scissors', 18, '#17110B', 2)}Services</span></div>
+${mapPin('assets/lieu2/epicerie.jpg', 'Épicerie du Marché', 'Commerce', 64, 236)}
+${mapPin('assets/lieu2/atelier.jpg', 'Atelier Gbèto', 'Services', 222, 590)}
+${mapPin('assets/lieu2/fruits.jpg', 'Fruits de saison', 'Agriculture', 56, 700)}
+<div class="abs" style="left:282px;top:430px;width:56px;height:56px;border-radius:50%;background:rgba(47,128,237,.16)"><span class="abs" style="left:18px;top:18px;width:20px;height:20px;border-radius:50%;background:#2F80ED;border:3.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)"></span></div>
+${extra}
+<div class="abs" style="right:18px;bottom:128px;width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center">${ic('locate', 24, '#17110B', 2)}</div>
+<div id="${id}_add" class="abs" style="right:16px;bottom:44px;height:62px;padding:0 24px 0 18px;border-radius:31px;background:#FF6B00;display:flex;align-items:center;gap:12px;color:#fff;font:700 19px 'Plus Jakarta Sans';box-shadow:0 10px 22px rgba(255,107,0,.4)">${storePlus(24, '#fff').replace(/background:#fff;display:flex/, 'background:#FF6B00;display:flex')}Ajouter</div></div>`;
+}
+function scrProfile() {
+  const row = (icn, bg, col, t, s, id = '') => `<div ${id} style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:22px;background:#fff;border:1px solid #EFEAE5;margin-bottom:12px">
+<span style="width:50px;height:50px;border-radius:16px;background:${bg};display:flex;align-items:center;justify-content:center;flex:none">${icn}</span>
+<span style="flex:1"><span style="display:block;font:700 17px 'Plus Jakarta Sans';color:${col}">${t}</span><span style="display:block;font:500 13.5px/1.35 'Plus Jakarta Sans';margin-top:2px">${s}</span></span>${ic('chevr', 20, '#17110B', 2.4)}</div>`;
+  return `<div class="sc" id="s_prof">${appHeader()}
+<div class="abs" style="left:14px;right:14px;top:142px;height:118px;border-radius:24px;background:linear-gradient(135deg,#4A4E54,#2C2F33);display:flex;align-items:center;gap:14px;padding:0 16px;color:#fff">
+<span style="width:72px;height:72px;border-radius:50%;background:#FF6B00;display:flex;align-items:center;justify-content:center;font:800 26px 'Plus Jakarta Sans';flex:none">AH</span>
+<span style="flex:1"><span style="display:block;font:700 19px 'Plus Jakarta Sans'">Afi Houngbédji</span><span style="display:block;font:500 13.5px 'Plus Jakarta Sans';opacity:.75;margin-top:3px">afi.h@exemple.com</span><span style="display:block;font:500 13.5px 'Plus Jakarta Sans';opacity:.75;margin-top:2px">01 •• •• •• 27</span></span>
+<span style="width:50px;height:50px;border-radius:50%;background:#B9450F;display:flex;align-items:center;justify-content:center;flex:none">${ic('pencil', 20, '#fff', 2.2)}</span></div>
+<div class="abs" style="left:14px;right:14px;top:276px">
+<div id="profAdd" style="display:flex;align-items:center;gap:14px;padding:16px;border-radius:22px;background:#fff;border:1.5px solid #F2C7A6;margin-bottom:22px">
+<span style="width:54px;height:54px;border-radius:50%;background:#C04A12;display:flex;align-items:center;justify-content:center;flex:none">${storePlus(24, '#fff').replace(/background:#fff;display:flex/, 'background:#C04A12;display:flex')}</span>
+<span style="flex:1"><span style="display:block;font:700 17px 'Plus Jakarta Sans'">Ajouter mon commerce ou un lieu</span><span style="display:block;font:500 13.5px/1.35 'Plus Jakarta Sans';margin-top:3px">Gratuit : mettez votre commerce ou votre quartier sur la carte</span></span>${ic('chevr', 20, '#C04A12', 2.4)}</div>
+<div style="font:700 13px 'Plus Jakarta Sans';letter-spacing:1.6px;margin:0 0 10px 6px">SÉCURITÉ PERSONNELLE</div>
+${row(ic('pin', 24, '#C04A12', 2), '#F7EBE4', '#17110B', 'Partager ma position', 'Envoyer ma position ou me faire suivre en direct')}
+<div style="font:700 13px 'Plus Jakarta Sans';letter-spacing:1.6px;margin:10px 0 10px 6px">ACTIVITÉ</div>
+${row(ic('trophy', 24, '#5A3A00', 2), '#F5C542', '#17110B', 'Défis', 'Mes défis et récompenses')}
+${row(ic('list', 24, '#C04A12', 2), '#F7EBE4', '#17110B', 'Mes commandes', 'Achats Market et suivi des commandes')}</div>
+${navBar('Profil')}</div>`;
+}
+function scrSheet() {
+  const opt = (id, icn, bg, title, sub, vbg, vcol) => `<div id="${id}" style="display:flex;align-items:center;gap:16px;padding:16px;border-radius:24px;background:#fff;border:1px solid #EEE9E4;margin-bottom:12px">
+<span style="width:62px;height:62px;border-radius:20px;background:${bg};display:flex;align-items:center;justify-content:center;flex:none">${icn}</span>
+<span style="flex:1"><span style="display:block;font:700 19px 'Plus Jakarta Sans'">${title}</span><span style="display:block;font:500 14.5px/1.35 'Plus Jakarta Sans';margin-top:3px">${sub}</span></span>
+<span id="${id}_v" style="width:52px;height:52px;border-radius:50%;background:${vbg};display:flex;align-items:center;justify-content:center;flex:none">${ic('vol', 22, vcol, 2.2)}</span></div>`;
+  return `<div class="sc" id="s_sheet" style="background:transparent">
+<div id="sheetDim" class="abs" style="inset:0;background:rgba(0,0,0,.42)"></div>
+<div id="sheetBox" class="abs" style="left:0;right:0;bottom:0;height:440px;border-radius:28px 28px 0 0;background:#fff;padding:12px 18px 0">
+<div style="width:46px;height:5px;border-radius:3px;background:#DAD5CF;margin:0 auto 18px"></div>
+<div style="font:800 23px 'Plus Jakarta Sans';letter-spacing:-.3px;margin:0 2px 18px">Que voulez-vous mettre sur la carte ?</div>
+${opt('optCom', ic('store', 30, '#C04A12', 2), '#F7E4D9', 'Mon commerce', 'Boutique, maquis, salon, atelier…', '#F7E4D9', '#C04A12')}
+${opt('optLieu', ic('building', 30, '#0F7A52', 2), '#DDEFE6', 'Un lieu du quartier', 'Pharmacie, école, carrefour, marché…', '#DDEFE6', '#0F7A52')}
+${opt('optDom', ic('home', 30, '#2563C9', 2.2), '#E3EBFA', 'Mon domicile', 'Visible par vous seul', '#E3EBFA', '#2563C9')}</div></div>`;
+}
+const CATS = [['leaf', 'Agriculture et Environnement'], ['store', 'Commerce'], ['hammer', 'Industrie et Artisanat'], ['landmark', 'Lieu Symbolique'], ['utensils', 'Restauration'], ['health', 'Santé'], ['scissors', 'Services'], ['ball', 'Sport et Loisirs'], ['monitor', 'Technologie et Communication'], ['bed', 'Tourisme'], ['cap', 'Éducation']];
+function scrForm() {
+  return `<div class="sc" id="s_form" style="background:#fff">
+<div id="formC" class="abs" style="left:0;right:0;top:140px;padding:0 18px">
+<div class="card" style="border:1px solid #EAE5DF;height:268px">
+<div class="abs" style="left:0;top:0;width:354px;height:150px;overflow:hidden">${mapSVG(354, 150, 23, { main: 'M-20 120 C 90 100, 200 60, 380 20' })}
+<svg id="fpin" class="abs" style="left:156px;top:22px" width="42" height="56" viewBox="0 0 42 56"><path d="M21 54C21 54 4 33 4 21a17 17 0 0 1 34 0c0 12-17 33-17 33z" fill="#E53935" stroke="#B71C1C" stroke-width="1.5"/><circle cx="21" cy="21" r="6.5" fill="#8E1414"/></svg></div>
+<div class="abs" style="left:14px;right:14px;top:162px;display:flex;gap:14px">
+<span style="width:50px;height:50px;border-radius:14px;background:#E3F1E8;display:flex;align-items:center;justify-content:center;flex:none">${ic('shield', 26, '#0F7A52', 2)}</span>
+<span><span style="display:block;font:700 17px 'Plus Jakarta Sans'">Position trouvée</span><span style="display:block;font:600 13.5px/1.4 'Plus Jakarta Sans';margin-top:2px">Précision : environ 20 m<br>Restez devant l'entrée : le lieu est enregistré là où vous êtes.</span></span></div></div>
+<div style="margin-top:22px" class="lbl">Indice pour vous trouver (facultatif)</div>
+<div class="inp">${ic('pin', 22, '#FF6B00', 2)}<span class="ph">Ex. derrière la pharmacie, portail bleu</span></div>
+<div style="margin-top:24px;display:flex;justify-content:space-between" class="lbl"><span>Photos</span><span id="phCount">0/5</span></div>
+<div style="display:flex;gap:10px">
+<div id="phAdd" style="width:104px;height:104px;border-radius:18px;border:1.5px solid #F4B996;background:#FFF5EE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#F07A2E;font:700 15px 'Plus Jakarta Sans'">${ic('camera', 26, '#F07A2E', 2)}Ajouter</div>
+<div id="phImg" style="width:104px;height:104px;border-radius:18px;overflow:hidden;position:relative;opacity:0"><img src="assets/lieu2/plat.jpg" style="width:100%;height:100%;object-fit:cover"><span class="abs" style="left:6px;bottom:6px;font:700 10px 'Plus Jakarta Sans';color:#fff;background:rgba(0,0,0,.6);padding:3px 7px;border-radius:999px">Couverture</span></div></div>
+<div class="hint">La première image sera votre couverture principale.</div>
+<div style="margin-top:22px" class="lbl">Nom</div>
+<div class="inp" id="nameBox">${ic('store', 22, '#FF6B00', 2)}<span id="nameTxt"></span><span id="caret" style="width:2px;height:22px;background:#FF6B00;margin-left:-10px"></span></div>
+<div class="hint">Le nom que tout le monde connaît.</div>
+<div style="margin-top:22px" class="lbl">Catégorie</div>
+<div id="cats">${CATS.map(([i, n], k) => `<span class="cat" id="cat${k}">${ic(i, 18, '#FF6B00', 2)}${n}</span>`).join('')}</div>
+<div style="margin-top:14px" class="lbl">C'est votre commerce ?</div>
+<div style="display:flex;gap:10px">
+<div id="ouiCard" style="flex:1;border-radius:20px;border:1.5px solid #EAE5DF;background:#fff;padding:14px 12px">${ic('store', 28, '#FF6B00', 2)}<div style="font:700 17px 'Plus Jakarta Sans';margin-top:8px">Oui, c'est à moi</div><div style="font:500 12.5px/1.35 'Plus Jakarta Sans';margin-top:4px">Vous le vérifiez ensuite (code SMS + photo) pour le gérer.</div></div>
+<div style="flex:1;border-radius:20px;border:1.5px solid #EAE5DF;background:#fff;padding:14px 12px">${ic('shield', 28, '#17110B', 2)}<div style="font:700 17px 'Plus Jakarta Sans';margin-top:8px">Non</div><div style="font:500 12.5px/1.35 'Plus Jakarta Sans';margin-top:4px">Vous aidez les autres à le trouver.</div></div></div>
+<div style="margin-top:22px" class="lbl">Ce que vous proposez (facultatif)</div>
+<div class="inp" style="height:84px;align-items:flex-start;padding-top:14px">${ic('doc', 22, '#FF6B00', 2)}<span>Atassi, aloko et poisson braisé.</span></div>
+<div style="margin-top:22px" class="lbl">Téléphone du commerce</div>
+<div class="inp" id="telBox">${ic('chevd', 18, '#17110B', 2.2)}${flagBJ}<span style="font-weight:700">+229</span><span id="telTxt"></span></div>
+<div class="hint">Un code de vérification sera envoyé à ce numéro.</div>
+<div style="margin-top:18px" class="lbl">WhatsApp (facultatif)</div>
+<div class="inp">${ic('chevd', 18, '#17110B', 2.2)}${flagBJ}<span style="font-weight:700">+229</span><span class="ph">01 00 00 00 00</span></div>
+<div class="inp" style="margin-top:14px;height:60px;justify-content:space-between"><span style="display:flex;align-items:center;gap:12px;font:700 16px 'Plus Jakarta Sans'">${ic('clock', 24, '#FF6B00', 2)}Horaires (facultatif)</span>${ic('chevd', 20, '#17110B', 2.2)}</div>
+<div style="height:140px"></div></div>
+<div class="stepH">${statusBar(true)}<span class="bk">${ic('back', 24, '#17110B', 2.2)}</span><span class="s1">Étape 1 sur 2</span><span class="s2">Présentez votre commerce</span><span class="abs" style="right:20px;top:70px">${ic('doc', 26, '#17110B', 1.8)}</span><div class="pg"><span class="on"></span><span></span></div></div>
+<div class="foot"><div class="btn" id="contBtn">Continuer</div></div></div>`;
+}
+function scrFiche() {
+  return `<div class="sc" id="s_fiche" style="background:#fff">
+<div class="abs" style="left:18px;right:18px;top:140px">
+<div class="card" style="border:1px solid #EAE5DF">
+<div style="height:96px;overflow:hidden;position:relative">${mapSVG(354, 96, 23, { main: 'M-20 90 C 90 70, 200 40, 380 10' })}<svg class="abs" style="left:160px;top:18px" width="34" height="46" viewBox="0 0 42 56"><path d="M21 54C21 54 4 33 4 21a17 17 0 0 1 34 0c0 12-17 33-17 33z" fill="#E53935" stroke="#B71C1C" stroke-width="1.5"/><circle cx="21" cy="21" r="6.5" fill="#8E1414"/></svg></div>
+<div style="height:200px;overflow:hidden"><img src="assets/lieu2/plat.jpg" style="width:100%;height:100%;object-fit:cover"></div>
+<div style="padding:16px 18px 14px">
+<div style="font:800 25px 'Plus Jakarta Sans';letter-spacing:-.4px">Chez Maman Rose</div>
+<span style="display:inline-block;margin-top:8px;font:700 15px 'Plus Jakarta Sans';color:#1E7D46;background:#E1F2E7;padding:6px 14px;border-radius:10px">Restauration</span>
+<div style="font:600 16px 'Plus Jakarta Sans';margin-top:10px">Atassi, aloko et poisson braisé.</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;text-align:center;font:600 14px 'Plus Jakarta Sans'">
+<div>${ic('route', 24, '#FF6B00', 2)}<div style="margin-top:4px">Itinéraire</div></div><div>${ic('phone', 24, '#FF6B00', 2)}<div style="margin-top:4px">Appeler</div></div><div>${ic('msg', 24, '#FF6B00', 2)}<div style="margin-top:4px">WhatsApp</div></div></div></div></div>
+<div style="display:flex;align-items:center;gap:12px;margin:22px 0 0 8px;font:700 17px 'Plus Jakarta Sans';color:#B9450F">${ic('crop', 22, '#B9450F', 2)}Cadrer la couverture</div>
+<div style="display:flex;align-items:center;gap:16px;margin:24px 0 0 8px;font:600 16px/1.35 'Plus Jakarta Sans'"><span id="chk" style="width:26px;height:26px;border-radius:6px;border:2.5px solid #17110B;display:flex;align-items:center;justify-content:center;flex:none"></span>Je confirme que ces informations sont exactes.</div></div>
+<div class="stepH">${statusBar(true)}<span class="bk">${ic('back', 24, '#17110B', 2.2)}</span><span class="s1">Étape 2 sur 2</span><span class="s2">Vérifiez votre fiche</span><div class="pg"><span class="on"></span><span class="on"></span></div></div>
+<div class="foot" style="display:flex;gap:12px"><div style="width:120px;height:52px;border-radius:16px;border:2px solid #B9450F;color:#B9450F;display:flex;align-items:center;justify-content:center;font:700 17px 'Plus Jakarta Sans'">Modifier</div>
+<div id="pubBtn" class="btn" style="flex:1;background:#E5E4E2;color:#8E8A85">Publier sur la carte</div></div></div>`;
+}
+function scrDone() {
+  return `<div class="sc" id="s_done" style="background:#fff">${statusBar(true)}
+<div class="abs" style="left:95px;top:210px;width:200px;height:200px;border-radius:50%;background:#FDEBDD"></div>
+<div class="abs" style="left:128px;top:243px;width:134px;height:134px;border-radius:50%;background:#FBD3B4"></div>
+<svg id="donePin" class="abs" style="left:166px;top:276px" width="58" height="70" viewBox="0 0 24 29"><path d="M12 28s-10-9.5-10-16.5a10 10 0 0 1 20 0C22 18.5 12 28 12 28z" fill="#FF6B00"/><path d="m8 11.5 3 3 5-5.5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div class="abs" style="left:24px;right:24px;top:450px;text-align:center"><div style="font:800 26px/1.2 'Plus Jakarta Sans';letter-spacing:-.4px">« Chez Maman Rose » est sur la carte</div>
+<div style="font:600 15.5px/1.45 'Plus Jakarta Sans';margin-top:14px">Dernière étape : prouvez que c'est votre commerce avec un code SMS et une photo sur place. Vous pourrez ensuite le gérer dans OJA Merchant.</div></div>
+<div id="verBtn" class="btn abs" style="left:24px;right:24px;bottom:96px;height:56px">${ic('shield', 22, '#fff', 2)}Vérifier maintenant</div>
+<div class="abs" style="left:0;right:0;bottom:52px;text-align:center;font:700 16px 'Plus Jakarta Sans';color:#B9450F">Plus tard</div></div>`;
+}
+function scrVerif() {
+  return `<div class="sc" id="s_verif" style="background:#F4F4F5">
+<div class="abs" style="left:0;right:0;top:0;height:132px;background:#FF6B00"></div>${statusBar(false)}
+<div class="abs" style="left:14px;top:66px;width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center">${ic('back', 22, '#17110B', 2.4)}</div>
+<div class="abs" style="left:84px;top:76px;font:700 21px 'Plus Jakarta Sans';color:#fff">Vérifier votre commerce</div>
+<div class="abs" style="left:20px;right:20px;top:150px;font:600 15.5px/1.4 'Plus Jakarta Sans'">Pour devenir le gérant de « Chez Maman Rose », confirmez ces deux points. Personne d'autre ne pourra alors le gérer.</div>
+<div class="abs" style="left:18px;right:18px;top:236px">
+<div style="border-radius:22px;background:#fff;border:1px solid #E6E3E0;padding:18px;margin-bottom:14px;position:relative">
+<div id="v1a"><div style="display:flex;align-items:center;gap:12px;font:600 16px 'Plus Jakarta Sans'"><span style="width:34px;height:34px;border-radius:50%;background:#B23F0B;color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px 'Plus Jakarta Sans';flex:none">1</span>Code SMS au numéro du commerce</div>
+<div style="font:600 15px 'Plus Jakarta Sans';margin:14px 0 14px">Un code est envoyé au +229 01 •• •• •• 27.</div>
+<div class="btnd" id="v1btn">Recevoir le code</div><div style="text-align:center;font:700 15px 'Plus Jakarta Sans';color:#B9450F;margin-top:14px">Je ne reçois pas le code</div></div>
+<div id="v1b" class="abs" style="inset:0;padding:18px;display:flex;align-items:center;gap:12px;font:600 16px 'Plus Jakarta Sans';opacity:0"><span style="width:34px;height:34px;border-radius:50%;background:#1E7D46;display:flex;align-items:center;justify-content:center;flex:none">${ic('check', 18, '#fff', 3)}</span><span style="flex:1">Code SMS au numéro du commerce</span><span style="color:#1E7D46;font-weight:700">Vérifié</span></div></div>
+<div id="v2" style="border-radius:22px;background:#fff;border:1px solid #E6E3E0;padding:18px;position:relative">
+<div id="v2a"><div style="display:flex;align-items:center;gap:12px;font:600 16px 'Plus Jakarta Sans'"><span style="width:34px;height:34px;border-radius:50%;background:#B23F0B;color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px 'Plus Jakarta Sans';flex:none">2</span>Photo de la devanture, sur place</div>
+<div style="font:600 15px/1.4 'Plus Jakarta Sans';margin:14px 0 14px">Placez-vous devant le commerce et prenez une photo de l'entrée.</div>
+<div class="btnd" id="v2btn">${ic('camera', 20, '#fff', 2)}Prendre la photo</div></div>
+<div id="v2b" class="abs" style="inset:0;padding:18px;display:flex;align-items:center;gap:12px;font:600 16px 'Plus Jakarta Sans';opacity:0"><span style="width:34px;height:34px;border-radius:50%;background:#1E7D46;display:flex;align-items:center;justify-content:center;flex:none">${ic('check', 18, '#fff', 3)}</span><span style="flex:1">Photo de la devanture, sur place</span><span style="color:#1E7D46;font-weight:700">Vérifié</span></div></div></div>
+<div id="flash" class="abs" style="inset:0;background:#fff;opacity:0;z-index:50"></div></div>`;
+}
+function scrFinal() {
+  const newPin = `<div id="newPin" class="abs" style="left:120px;top:360px;z-index:6;transform-origin:30px 60px">${mapPin('assets/lieu2/plat.jpg', 'Chez Maman Rose', 'Restauration', 30, 30).replace('class="abs" style="left:0px;top:0px;', 'class="abs" style="left:0;top:0;')}</div>
+<div id="fsheet" class="abs" style="left:0;right:0;bottom:0;height:330px;border-radius:26px 26px 0 0;background:#fff;box-shadow:0 -10px 30px rgba(0,0,0,.18);padding:12px 18px;z-index:25;transform:translateY(340px)">
+<div style="width:46px;height:5px;border-radius:3px;background:#DAD5CF;margin:0 auto 14px"></div>
+<div style="display:flex;gap:14px"><span style="width:110px;height:110px;border-radius:18px;overflow:hidden;flex:none"><img src="assets/lieu2/plat.jpg" style="width:100%;height:100%;object-fit:cover"></span>
+<span><span style="display:block;font:800 23px 'Plus Jakarta Sans';letter-spacing:-.3px">Chez Maman Rose</span><span style="display:inline-block;margin-top:8px;font:700 14px 'Plus Jakarta Sans';color:#1E7D46;background:#E1F2E7;padding:5px 12px;border-radius:9px">Restauration</span><span style="display:block;font:600 14px 'Plus Jakarta Sans';margin-top:8px;color:#6B6258">Atassi, aloko et poisson braisé.</span></span></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;text-align:center;font:700 14px 'Plus Jakarta Sans'">
+<div id="fb1" style="padding:12px 0;border-radius:16px;background:#FFF1E7">${ic('route', 24, '#FF6B00', 2)}<div style="margin-top:4px">Itinéraire</div></div>
+<div id="fb2" style="padding:12px 0;border-radius:16px;background:#FFF1E7">${ic('phone', 24, '#FF6B00', 2)}<div style="margin-top:4px">Appeler</div></div>
+<div id="fb3" style="padding:12px 0;border-radius:16px;background:#FFF1E7">${ic('msg', 24, '#FF6B00', 2)}<div style="margin-top:4px">WhatsApp</div></div></div></div>`;
+  return mapScreen('s_final', newPin);
+}
+
+/* ---------- the stage ---------- */
+const STEPS = [
+  ['', 'Ajouter un lieu sur la map', '<span style="display:inline-block;padding:8px 18px;border-radius:999px;background:#1E7D46;color:#fff;font:800 24px Poppins;letter-spacing:1px">GRATUIT</span>'],
+  ['1', 'Le bouton orange', '<div class="chip3"><span id="e1">Accueil</span><span id="e2">Carte</span><span id="e3">Profil</span></div>'],
+  ['2', '« Mon commerce »', '<p>Ou un lieu du quartier, ou ton domicile.</p>'],
+  ['3', 'Devant l\'entrée', '<p>Ta position est enregistrée là où tu es.</p>'],
+  ['4', 'Photos, nom, catégorie', '<p>Le nom que tout le monde connaît.</p>'],
+  ['5', 'C\'est ton commerce ?', '<p>« Oui », ton numéro, puis « Continuer ».</p>'],
+  ['6', 'Publie sur la carte', '<p>Vérifie ta fiche et coche la case.</p>'],
+  ['7', 'Prouve que c\'est à toi', '<p>Code SMS + photo de la devanture.</p>'],
+  ['', 'Ton lieu sur la map', '<p>Ta photo, ton nom, ta catégorie.</p>'],
+];
+let H = `<div class="abs" style="inset:0;background:#FFF4EA"></div>
+<div class="abs" style="left:-320px;top:-260px;width:1100px;height:1100px;border-radius:50%;background:radial-gradient(circle,rgba(255,154,77,.38),rgba(255,154,77,0) 66%)"></div>
+<div class="abs" style="left:280px;top:1050px;width:1300px;height:1300px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,.20),rgba(255,107,0,0) 66%)"></div>
+<div class="abs" style="left:0;top:0;opacity:.30">${mapSVG(VW, VH, 5, { skew: .08 })}</div>
+<div class="abs" style="inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(255,244,234,.15),rgba(255,244,234,.92) 75%)"></div>
+<div id="sub"></div>
+<div id="step">${STEPS.map(([n, t, x], i) => `<div class="stp" id="stp${i}" style="opacity:0">${n ? `<span class="n">${n}</span>` : ''}<h2>${t}</h2>${x.startsWith('<p') || x.startsWith('<div') ? x : `<div style="margin-top:16px">${x}</div>`}</div>`).join('')}</div>
+<div id="endc"><h2>Télécharge<br><span>Oja App</span></h2><div class="qr"><img src="pubs/qr_telecharger.svg" alt=""></div><p>Scanne le code ou cherche « Oja App » sur Play Store et App Store.</p></div>
+<div id="phoneWrap"><div id="phone"><div class="front"><div id="scr">${scrHome()}${mapScreen('s_map')}${scrProfile()}${scrSheet()}${scrForm()}${scrFiche()}${scrDone()}${scrVerif()}${scrFinal()}
+<div id="ring"></div><div id="rip"></div><div id="tap"></div></div><div class="island"></div><div class="glare"></div></div></div></div>
+<div id="mas" class="abs" style="left:0;top:0;width:612px;height:960px;transform-origin:306px 926px">
+<div class="abs" style="left:146px;top:900px;width:320px;height:52px;border-radius:50%;background:radial-gradient(ellipse,rgba(80,35,5,.30),rgba(80,35,5,0) 70%)"></div>
+<img id="masi" class="abs" style="left:0;top:0;width:612px;height:960px"></div>`;
+el('stage').innerHTML = H;
+
+/* phone body: the shape stacked backwards (a real thickness when it turns) */
+(() => { const ph = el('phone'); for (let i = 12; i >= 1; i--) { const l = document.createElement('div'); l.className = 'layer'; const k = i / 12;
+  l.style.transform = `translateZ(${-i}px)`; l.style.background = `linear-gradient(135deg,hsl(25,6%,${44 - 20 * k}%),hsl(25,6%,${28 - 14 * k}%) 60%,hsl(25,6%,${38 - 16 * k}%))`; ph.insertBefore(l, ph.firstChild); } })();
+
+/* ---------- the timeline ---------- */
+const SFX = []; const sfx = (t, k, d) => SFX.push([+t.toFixed(3), k, d || 0]);
+// screens: [start, id, way in] ; 'up' = the sheet rises over the home screen
+const T_FAB = AT(1, 'orange'), T_MAP = AT(1, 'carte') - .25, T_PROF = AT(1, 'profil') - .3;
+const T_COM = AT(2, 'commerce'), T_HP = AT(2, 'haut-parleur');
+const T_PHOTO = AT(4, 'photos'), T_NOM = AT(4, 'nom'), T_CAT = AT(4, 'categorie');
+const T_OUI = AT(5, 'oui'), T_NUM = AT(5, 'numero'), T_CONT = AT(5, 'continuer');
+const T_COCHE = AT(6, 'coche'), T_PUB = AT(6, 'publie');
+const T_GERER = AT(7, 'gerer'), T_CODE = AT(7, 'code'), T_PHO = AT(7, 'photo');
+const T_APP = AT(8, 'apparait'), T_FPH = AT(8, 'photo'), T_FNOM = AT(8, 'nom'), T_FCAT = AT(8, 'categorie'), T_TROUV = AT(8, 'trouvent'), T_APPEL = AT(8, "t'appellent"), T_WA = AT(8, 'whatsapp');
+const T_END = ST[8] + 9.0;
+const SCHED = [[0, 's_home'], [T_MAP, 's_map'], [T_PROF, 's_prof'], [ST[2] - .1, 's_home'], [ST[3], 's_form'], [T_CONT + .4, 's_fiche'], [T_PUB + .45, 's_done'], [T_GERER + .45, 's_verif'], [ST[8], 's_final']];
+const SCR_IDS = ['s_home', 's_map', 's_prof', 's_sheet', 's_form', 's_fiche', 's_done', 's_verif', 's_final'];
+// taps: [time, screen x, screen y]  (filled in once the layout is measured)
+let TAPS = [], RINGS = [];
+function rel(e, root) { let x = 0, y = 0; while (e && e !== root) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } return { x, y }; }
+function boxOf(id, root) { const e = el(id), p = rel(e, el(root)); return { x: p.x, y: p.y, w: e.offsetWidth, h: e.offsetHeight, cx: p.x + e.offsetWidth / 2, cy: p.y + e.offsetHeight / 2 }; }
+// form scroll keyframes [time, scroll]
+const SCROLL = [[0, 0], [ST[3], 0], [T_PHOTO - .7, 0], [T_PHOTO - .1, 300], [T_CAT - .75, 300], [T_CAT - .15, 560], [ST[5] + .1, 560], [ST[5] + .7, 960], [T_NUM - .7, 960], [T_NUM - .1, 1130]];
+function scrollAt(t) { let v = 0; for (let i = 0; i < SCROLL.length; i++) { const [a, y] = SCROLL[i]; if (t >= a) { const nx = SCROLL[i + 1]; v = nx && t < nx[0] ? mix(y, nx[1], eio(lin(t, a, nx[0]))) : y; } } return v; }
+function layout() {
+  const fy = 140; // content top in the form screen
+  const inForm = (id, scroll) => { const b = boxOf(id, 's_form'); return { ...b, cy: b.cy - scroll, y: b.y - scroll }; };
+  const fab = boxOf('fab', 's_home'), madd = boxOf('s_map_add', 's_map'), padd = boxOf('profAdd', 's_prof');
+  const ocom = boxOf('optCom', 's_sheet'), hp = boxOf('optCom_v', 's_sheet');
+  const phA = inForm('phAdd', 300), nm = inForm('nameBox', 300), cat = inForm('cat4', 560), oui = inForm('ouiCard', 960), tel = inForm('telBox', 1130), cont = boxOf('contBtn', 's_form');
+  const chk = boxOf('chk', 's_fiche'), pub = boxOf('pubBtn', 's_fiche'), ver = boxOf('verBtn', 's_done'), v1 = boxOf('v1btn', 's_verif'), v2 = boxOf('v2btn', 's_verif');
+  const pin = { cx: 150, cy: 390 }, fb2 = boxOf('fb2', 's_final'), fb3 = boxOf('fb3', 's_final');
+  const fsTop = 844 - 330; // fiche sheet top once up
+  TAPS = [[T_FAB + .1, fab.cx, fab.cy], [T_MAP + .9, madd.cx, madd.cy], [T_PROF + .8, padd.cx + 60, padd.cy],
+    [T_COM, ocom.cx - 40, ocom.cy], [T_PHOTO + .25, phA.cx, phA.cy], [T_NOM - .1, nm.cx, nm.cy], [T_CAT + .2, cat.cx, cat.cy],
+    [T_OUI, oui.cx, oui.cy], [T_NUM, tel.cx + 40, tel.cy], [T_CONT, cont.cx, cont.cy], [T_COCHE, chk.cx, chk.cy], [T_PUB, pub.cx, pub.cy],
+    [T_GERER, ver.cx, ver.cy], [T_CODE, v1.cx, v1.cy], [T_PHO, v2.cx, v2.cy], [T_TROUV, pin.cx, pin.cy]];
+  RINGS = [[T_FAB - .9, T_FAB + .4, fab, 40], [T_MAP + .3, T_MAP + 1.1, madd, 34], [T_PROF + .25, T_PROF + 1.1, padd, 24], [T_HP - .1, T_HP + 1.2, hp, 30],
+    [ST[3] + .3, ST[3] + 2.6, { x: 18, y: fy, w: 354, h: 268 }, 24], [T_APPEL - .1, T_APPEL + .7, { x: fb2.x, y: fsTop + fb2.y, w: fb2.w, h: fb2.h }, 18], [T_WA - .1, T_WA + .9, { x: fb3.x, y: fsTop + fb3.y, w: fb3.w, h: fb3.h }, 18]];
+  TAPS.forEach(([t]) => sfx(t, 'tap'));
+}
+sfx(1.0, 'land'); sfx(T_NOM + .1, 'type', 1.1); sfx(T_NUM + .15, 'type', .9); sfx(T_PUB + .5, 'done'); sfx(T_CODE + .55, 'tick'); sfx(T_PHO + .6, 'tick'); sfx(T_APP + .25, 'pop'); sfx(T_END, 'end');
+
+/* ---------- the mascot (keyed Flow clips, 24 i/s) ---------- */
+const SEG = [[0, 2.2, 6, 0, 'f'], [2.2, ST[1], 1, 1.3, 'f'], [ST[1], ST[1] + 4.0, 5, .9, 'f'], [ST[1] + 4.0, ST[2], 3, 3.6, 'f'],
+  [ST[2], ST[2] + 3.6, 3, 2.1, 'f'], [ST[2] + 3.6, ST[3], 2, 0, 'p'], [ST[3], ST[4], 9, 1.0, 'f'], [ST[4], ST[5], 10, .5, 'f'], [ST[5], ST[6], 11, .4, 'f'],
+  [ST[6], ST[7], 3, 2.6, 'f'], [ST[7], ST[7] + 4.6, 9, 1.4, 'f'], [ST[7] + 4.6, ST[8], 11, 2.6, 'f'], [ST[8], T_END - .4, 7, 1.0, 'f'], [T_END - .4, DUR + 1, 8, 1.2, 'f']];
+function clipFrame(t) {
+  const sg = SEG.find(([a, b]) => t >= a && t < b) || SEG[SEG.length - 1]; let ct = t - sg[0];
+  if (sg[4] === 'p') { const L = 3.0, m = ct % (2 * L); ct = m < L ? m : 2 * L - m; }
+  return [sg[2], Math.min(192, Math.max(1, Math.round((sg[3] + ct) * 24) + 1)), t - sg[0]];
+}
+
+/* ---------- subtitles: each line cut in short pieces, lit word by word ---------- */
+const KEYS = new Set(['gratuit', 'map', 'orange', 'ajouter', 'profil', 'commerce', 'haut-parleur', 'entree', 'photos', 'nom', 'categorie', 'oui', 'numero', 'continuer', 'publie', 'carte', 'sms', 'devanture', 'photo', 'whatsapp', 'coche']);
+const PIECES = [];
+VO.words.forEach((ws, i) => {
+  const all = ws.map((w, k) => [w[0].replace(/^Odja$/, ws[k + 1] && /^App/.test(ws[k + 1][0]) ? 'Oja' : 'OJA').replace(/^Odja\.$/, 'OJA.').replace(/^Odja,$/, 'OJA,'), ST[i] + w[1], ST[i] + w[2]]);
+  const L = ws2 => ws2.reduce((n, w) => n + w[0].length + 1, 0);
+  let k = 0;
+  while (k < all.length) {
+    // take words while the piece stays under 46 characters; then cut after the last punctuation if the piece is long enough
+    let e = k; while (e < all.length && L(all.slice(k, e + 1)) <= 46) e++;
+    if (e < all.length && L(all.slice(e)) <= 12) e = all.length;          // no short orphan at the end of a line
+    if (e < all.length) {
+      let cut = -1;
+      for (let q = e - 1; q > k; q--) if (/[.!?:,»]$/.test(all[q][0]) && L(all.slice(k, q + 1)) >= 8) { cut = q + 1; break; }
+      if (cut < 0) for (let q = e - 1; q > k; q--) if (/^(et|ou|avec|par)$/i.test(all[q][0]) && L(all.slice(k, q)) >= 14) { cut = q; break; }
+      if (cut > 0) e = cut;
+    }
+    // a piece never starts with a lone punctuation mark
+    while (e < all.length && /^[!?:»,.]+$/.test(all[e][0])) e++;
+    PIECES.push({ i, words: all.slice(k, e) }); k = e;
+  }
+});
+// a word that is only punctuation sticks to the previous one
+PIECES.forEach(p => { const out = []; p.words.forEach(w => { if (/^[!?:»«.,]+$/.test(w[0]) && out.length && w[0] !== '«') out[out.length - 1] = [out[out.length - 1][0] + (w[0].startsWith('»') ? ' ' : ' ') + w[0], out[out.length - 1][1], w[2]]; else out.push(w); }); p.words = out; });
+PIECES.forEach(p => p.html = p.words.map((w, k) => `<span class="w${KEYS.has(norm(w[0]).replace(/'.*$/, '')) || KEYS.has(norm(w[0])) ? ' k' : ''}" data-k="${k}">${w[0]}</span>`).join(' '));
+let curPiece = -1;
+function subAt(t) {
+  let idx = -1; PIECES.forEach((p, k) => { if (t >= p.words[0][1] - .12) idx = k; });
+  if (idx >= 0) { const p = PIECES[idx], last = p.words[p.words.length - 1][2]; const nxt = PIECES[idx + 1]; if (t > last + .9 && (!nxt || t < nxt.words[0][1] - .12)) idx = -1; }
+  const sub = el('sub');
+  if (idx !== curPiece) { sub.innerHTML = idx >= 0 ? `<div>${PIECES[idx].html}</div>` : ''; curPiece = idx; }
+  if (idx >= 0) { const p = PIECES[idx]; sub.querySelectorAll('.w').forEach(s => { const w = p.words[+s.dataset.k]; s.classList.toggle('on', t >= w[1] - .05); });
+    const k = eo(lin(t, p.words[0][1] - .12, p.words[0][1] + .15)); sub.firstChild.style.transform = `translateY(${(1 - k) * 18}px)`; sub.firstChild.style.opacity = k; }
+}
+
+/* ---------- render ---------- */
+const T = (id, s) => { const e = el(id); if (e) Object.assign(e.style, s); };
+function drawAt(t) {
+  // background step cards
+  const si = ST.findIndex((s, k) => t < ST[k + 1]); const sceneI = si < 0 ? 8 : si;
+  STEPS.forEach((_, i) => { const a = ST[i], k = eo(lin(t, a + .05, a + .5)) * (1 - lin(t, (ST[i + 1] ?? DUR) - .25, ST[i + 1] ?? DUR + 1)) * (i === 8 ? 1 - lin(t, T_END - .5, T_END) : 1);
+    T('stp' + i, { opacity: k, transform: `translateY(${(1 - k) * 30}px)` }); });
+  ['e1', 'e2', 'e3'].forEach((id, k) => { const e = el(id); if (e) e.classList.toggle('on', t >= [T_FAB - .3, T_MAP + .1, T_PROF + .1][k]); });
+  const ek = eo(lin(t, T_END, T_END + .6)); T('endc', { opacity: ek, transform: `translateY(${(1 - ek) * 30}px)` });
+  // phone: in from the right, slight turn, a small zoom on the final map
+  const pin = eo(lin(t, .5, 1.3)), fz = eio(lin(t, ST[8] + .2, ST[8] + 1.2)) * (1 - eio(lin(t, T_END - .2, T_END + .8)));
+  el('phone').style.transform = `translateX(${(1 - pin) * 700}px) scale(${1.17 * (1 + .04 * fz)}) rotateY(${-9 + 3 * fz}deg) rotateX(3deg)`;
+  // screens
+  let cur = SCHED[0][1], prev = null, k = 1;
+  SCHED.forEach(([a, n], i) => { if (t >= a) { prev = i ? SCHED[i - 1][1] : null; cur = n; k = eio(lin(t, a, a + .4)); } });
+  SCR_IDS.forEach(n => { const e = el(n); e.style.display = 'none'; e.style.zIndex = 1; });
+  const show = (n, x, z) => { const e = el(n); e.style.display = 'block'; e.style.transform = `translateX(${x}px)`; e.style.zIndex = z; };
+  if (prev && k < 1) show(prev, -k * 120, 1); show(cur, (1 - k) * 390, 2);
+  if (cur === 's_home' && prev === 's_prof') { el('s_prof').style.display = 'none'; }
+  // the sheet over the home screen (scene 2)
+  const sh = eio(lin(t, ST[2] + .05, ST[2] + .45)) * (t < ST[3] + .4 ? 1 : 0);
+  if (sh > 0) { const e = el('s_sheet'); e.style.display = 'block'; e.style.transform = 'none'; e.style.zIndex = 3; T('sheetDim', { opacity: sh }); T('sheetBox', { transform: `translateY(${(1 - sh) * 460}px)` }); }
+  T('optCom', { background: t > T_COM + .1 ? '#FFF1E7' : '#fff', borderColor: t > T_COM + .1 ? '#FF6B00' : '#EEE9E4' });
+  const hpk = t > T_HP && t < T_HP + 1.2 ? 1 + .12 * Math.sin((t - T_HP) * 14) : 1; T('optCom_v', { transform: `scale(${hpk})` });
+  // form
+  T('formC', { transform: `translateY(${-scrollAt(t)}px)` });
+  T('fpin', { transform: `translateY(${(1 - bk(lin(t, ST[3] + .2, ST[3] + .7))) * -60}px)` });
+  const ph = t > T_PHOTO + .35; T('phImg', { opacity: eo(lin(t, T_PHOTO + .35, T_PHOTO + .7)) }); el('phCount').textContent = ph ? '1/5' : '0/5';
+  const NAME = 'Chez Maman Rose', nl = Math.round(cl((t - T_NOM - .1) * 15, 0, NAME.length)); el('nameTxt').textContent = NAME.slice(0, nl);
+  T('caret', { opacity: t > T_NOM - .2 && t < T_CAT && Math.floor(t * 2.5) % 2 === 0 ? 1 : 0 });
+  el('cat4').classList.toggle('on', t > T_CAT + .25);
+  T('ouiCard', { background: t > T_OUI + .1 ? '#FFF1E7' : '#fff', borderColor: t > T_OUI + .1 ? '#FF6B00' : '#EAE5DF' });
+  const TEL = '01 •• •• •• 27', tl = Math.round(cl((t - T_NUM - .15) * 14, 0, TEL.length)); el('telTxt').textContent = TEL.slice(0, tl);
+  // fiche
+  const on = t > T_COCHE + .1; const c = el('chk'); c.style.background = on ? '#FF6B00' : '#fff'; c.style.borderColor = on ? '#FF6B00' : '#17110B'; c.innerHTML = on ? ic('check', 18, '#fff', 3.2) : '';
+  T('pubBtn', { background: on ? '#FF6B00' : '#E5E4E2', color: on ? '#fff' : '#8E8A85' });
+  T('donePin', { transform: `scale(${bk(lin(t, T_PUB + .55, T_PUB + 1.0))})` });
+  // verification
+  T('v1a', { opacity: 1 - lin(t, T_CODE + .45, T_CODE + .7) }); T('v1b', { opacity: lin(t, T_CODE + .5, T_CODE + .75) });
+  T('v2a', { opacity: 1 - lin(t, T_PHO + .5, T_PHO + .75) }); T('v2b', { opacity: lin(t, T_PHO + .55, T_PHO + .8) });
+  T('flash', { opacity: t > T_PHO + .15 && t < T_PHO + .5 ? .85 * (1 - lin(t, T_PHO + .15, T_PHO + .5)) : 0 });
+  // final map: the pin drops, its parts light up, the sheet rises
+  const pk = bk(lin(t, T_APP + .1, T_APP + .55)); T('newPin', { opacity: lin(t, T_APP + .05, T_APP + .2), transform: `translateY(${(1 - pk) * -80}px) scale(${.6 + .4 * pk + (t > T_FPH && t < T_FCAT + .8 ? .06 * Math.sin((t - T_FPH) * 6) : 0)})` });
+  T('fsheet', { transform: `translateY(${(1 - eio(lin(t, T_TROUV + .15, T_TROUV + .6))) * 340}px)` });
+  // touch and rings
+  let tp = null; TAPS.forEach(([a, x, y]) => { if (t > a - .45 && t < a + .5) tp = [a, x, y]; });
+  if (tp) { const [a, x, y] = tp, q = t - a; const press = q < 0 ? 1 - .1 * lin(q, -.15, 0) : .9 + .1 * lin(q, 0, .15);
+    T('tap', { opacity: q < 0 ? lin(q, -.45, -.25) : 1 - lin(q, .25, .5), left: x + 'px', top: (y + (q < 0 ? (1 - eo(lin(q, -.45, -.1))) * 40 : 0)) + 'px', transform: `scale(${press})` });
+    const rq = lin(q, 0, .45); T('rip', { opacity: q > 0 ? 1 - rq : 0, left: (x - 30 - 30 * rq) + 'px', top: (y - 30 - 30 * rq) + 'px', width: (60 + 60 * rq) + 'px', height: (60 + 60 * rq) + 'px' });
+  } else { T('tap', { opacity: 0 }); T('rip', { opacity: 0 }); }
+  let rg = null; RINGS.forEach(r => { if (t > r[0] && t < r[1]) rg = r; });
+  if (rg) { const [a, b, bx, rad] = rg, q = .5 + .5 * Math.sin((t - a) * 9); T('ring', { opacity: Math.min(lin(t, a, a + .15), 1 - lin(t, b - .15, b)), left: (bx.x - 6) + 'px', top: (bx.y - 6) + 'px', width: (bx.w + 12) + 'px', height: (bx.h + 12) + 'px', borderRadius: rad + 'px', boxShadow: `0 0 0 ${4 + 6 * q}px rgba(255,107,0,${.25 - .12 * q})` }); }
+  else T('ring', { opacity: 0 });
+  // mascot
+  const [cn, f, since] = clipFrame(t), src = `assets/mc/c${cn}_${String(f).padStart(3, '0')}.webp`; const im = el('masi'); if (im.getAttribute('src') !== src) im.setAttribute('src', src);
+  const popk = since < .2 && t > .3 ? 1 - .035 * Math.sin(since / .2 * Math.PI) : 1, mk = eo(lin(t, 0, .35));
+  el('mas').style.transform = `translate(${282 - 306}px,${1572 - 926}px) scale(${.72 * popk})`; el('mas').style.opacity = mk;
+  subAt(t);
+  // fades
+  el('stage').style.opacity = 1;
+}
+window.SFX = SFX;
+let CUR = 0;
+window.renderAt = t => { CUR = t; drawAt(t); };
+window.waitFrame = () => { const im = el('masi'); return im.decode ? im.decode().catch(() => 0) : Promise.resolve(); };
+window.ready = (async () => {
+  await document.fonts.ready; await Promise.all(['800 54px Poppins', '900 50px Poppins', '700 16px "Plus Jakarta Sans"', '800 20px "Plus Jakarta Sans"', '600 16px "Plus Jakarta Sans"', '500 14px "Plus Jakarta Sans"'].map(f => document.fonts.load(f)));
+  await Promise.all([...document.images].map(i => i.decode().catch(() => 0)));
+  layout(); window.SFX = SFX.sort((a, b) => a[0] - b[0]); drawAt(0);
+})();
+</script></body></html>

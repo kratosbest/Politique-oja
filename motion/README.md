@@ -1133,3 +1133,40 @@ Aucun montant, aucun concurrent, pas de « gratuit ». « C'est mon commerce » 
 - les mêmes en double définition : `_2160x2700.png` et `_2160x3840.png`.
 
 La page source est `pub_facebook.html` (`#feed` ou `#story`).
+
+## OJA Mascotte — tutoriel « Ajouter un lieu », nouvelle version (9:16, 62 s)
+
+`OJA_Mascotte_AjouterUnLieu_v2_9x16.mp4` (1080 × 1920, 30 i/s) montre comment ajouter un lieu dans la version d'Oja App publiée sur les stores en novembre 2026. Il se termine sur la façon dont le lieu apparaît sur la map, comme Derrick l'a demandé.
+
+**La mascotte parle.** Sa voix a été recréée dans ElevenLabs (clonage instantané, voix « Mascotte OJA ») à partir des 17 s de `Voix_mascotte_echantillon.mp3`. Le texte est dans `assets/lieu2/voix_ajout_lieu.txt`, avec une ligne par scène, et coûte environ 810 crédits à générer. Dans le texte, « Odja » est écrit ainsi pour la prononciation ; les sous-titres affichent « OJA » ou « Oja App ».
+
+Les gestes de la mascotte sont les clips `clips/c1` à `c11`, détourés par `key_clips.py` dans `assets/mc/` (dossier non versionné : il faut relancer `key_clips.py` avant un rendu).
+
+**Les écrans** sont refaits à partir des captures de Derrick (IMG_1145 à IMG_1157), avec des données fictives :
+- « Chez Maman Rose » (restaurant), « Afi Houngbédji » dans le profil ;
+- des numéros +229 masqués ;
+- une map dessinée d'un quartier, à la place de la vraie position.
+
+La bannière de l'accueil est la vraie bannière OJA Market. La police des écrans est Plus Jakarta Sans (`fonts/jakarta.css`, licence OFL).
+
+**Déroulé** (chaque scène suit une phrase de la voix ; les appuis, les surlignages et les sous-titres tombent sur les mots) :
+
+| Scène | Ce qu'on voit |
+|---|---|
+| 0 | La mascotte atterrit et salue. « Ajouter un lieu sur la map », « GRATUIT ». |
+| 1 | Les trois accès : le bouton orange de l'accueil, « Ajouter » sur la carte, « Ajouter mon commerce ou un lieu » dans le profil. |
+| 2 | « Que voulez-vous mettre sur la carte ? », puis « Mon commerce » ; le haut-parleur est mis en avant. |
+| 3 | Étape 1 sur 2 : position trouvée, « Restez devant l'entrée ». |
+| 4 | Une photo est ajoutée, le nom est tapé, la catégorie Restauration est choisie. |
+| 5 | « C'est votre commerce ? Oui », le numéro, puis « Continuer ». |
+| 6 | Étape 2 sur 2 : la fiche, la case cochée, « Publier sur la carte ». |
+| 7 | « … est sur la carte », puis la vérification : code SMS et photo de la devanture, chacun marqué « Vérifié ». |
+| 8 | Le lieu apparaît sur la map (photo, nom, catégorie) et sa fiche s'ouvre : Itinéraire, Appeler, WhatsApp. Fin : « Télécharge Oja App » et le QR code. |
+
+Sur l'écran de vérification, l'état « Vérifié » de la photo est montré comme celui du code SMS : aucune capture de cet état n'était disponible.
+
+**Son et rendu** (depuis `motion/`) :
+1. `python3 src/lieu2_marks.py` : minutage de chaque ligne de la voix et durée des scènes.
+2. `node src/sfx_dump.js oja_ajout_lieu_mascotte.html work/lieu2/sfx.json`
+3. `python3 src/music41.py work/lieu2/sfx.json work/lieu2/mix.wav assets/lieu2/voix_ajout_lieu.mp3`, puis `loudnorm=I=-14` en m4a vers `assets/soundtrack_ajout_lieu_mascotte.m4a`. Groove léger à 100 BPM, un clic à chaque appui, un son de réussite à la publication et aux vérifications. Pas de « whoosh ».
+4. `src/ajout_lieu_mascotte_render.sh`
