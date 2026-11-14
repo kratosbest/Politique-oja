@@ -9,14 +9,16 @@ and adds the numbers to <outdir>/puppets.js (window.PUP) and puppets.json.
 
   fx_venv/bin/python src/puppet.py <config.json>
 config: {"outdir": "assets/sketch2/", "chars": {"bonitel": {"src": "...jpg", "open": "...jpg" | null,
-         "eyes": [[x0,y0,x1,y1], ...], "mouth": [cx, cy, rx, ry] | null, "face": [x0,y0,x1,y1]}}}"""
+         "eyes": [[x0,y0,x1,y1], ...], "mouth": [cx, cy, rx, ry] | null, "face": [x0,y0,x1,y1],
+         "gap_min": 800}}}   (white areas enclosed by the drawing and bigger than gap_min pixels are paper, e.g. between
+         an arm and the body; raise it for white clothes)"""
 import sys, json, os
 import numpy as np, cv2
 from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 
 
-def cutout(img):
+def cutout(img, gap_min=800):
     a = np.asarray(img.convert('RGB')).astype(np.float32)
     ai = a.astype(np.int16)
     white = (ai.min(axis=2) > 236) & ((ai.max(axis=2) - ai.min(axis=2)) < 18)
@@ -31,7 +33,7 @@ def cutout(img):
     inner_white = white & fg
     lab3, n3 = ndi.label(inner_white)          # large enclosed white areas (gap between an arm and the body) are paper
     for i in range(1, n3 + 1):
-        if (lab3 == i).sum() > 800: fg[ndi.binary_dilation(lab3 == i, iterations=1)] = False
+        if (lab3 == i).sum() > gap_min: fg[ndi.binary_dilation(lab3 == i, iterations=1)] = False
     core = ndi.binary_erosion(fg, iterations=2)
     band = ndi.binary_dilation(fg, iterations=2) & ~core
     _, (iy, ix) = ndi.distance_transform_edt(~core, return_indices=True)
@@ -95,7 +97,7 @@ if __name__ == '__main__':
     pj = out + 'puppets.json'; meta = json.load(open(pj)) if os.path.exists(pj) else {}
     for name, c in cfg['chars'].items():
         src = Image.open(c['src']).convert('RGB')
-        rgba, _ = cutout(src); Image.fromarray(rgba).save(out + name + '.png')
+        rgba, _ = cutout(src, c.get('gap_min', 800)); Image.fromarray(rgba).save(out + name + '.png')
         m = dict(size=list(src.size))
         if c.get('open') and c.get('mouth'):
             m.update(mouth(src, Image.open(c['open']).convert('RGB'), c['face'], *c['mouth'], out, name))

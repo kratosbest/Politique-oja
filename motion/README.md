@@ -1231,3 +1231,17 @@ plans 4 et 6).
   terrasse du maquis, marimba), puis loudnorm I=-14 → `assets/soundtrack_sketch_flow3.m4a`.
 - Rendu : `src/sketch_flow3_render.sh` (refait les images des plans et l'écran de l'app s'ils manquent) →
   `OJA_Sketch_JeConnaisTout_9x16.mp4`.
+
+## OJA Sketch 3 en 2D — « Monsieur Je-connais-tout » (9:16, 46 s)
+
+La même histoire que la version Google Flow, en dessin animé (style de Boni et Sèna) : Tonton Augustin et Grâce dans le
+nouveau Cotonou (avenue, salon de coiffure, terrasse du maquis).
+
+- Images (Nano Banana 2 Lite, une variante chacune, flow « Sketch OJA 1 (cour) ») : `assets/sketch4/avenue.jpg`,
+  `salon.jpg`, `maquis.jpg`, `tonton_src.jpg`, `tontonv_src.jpg` (bras ouverts, recalé sur la pose de base →
+  `tontonv_warp.jpg`), `grace_src.jpg`, `table_src.jpg` (la table du maquis au premier plan) et les bouches ouvertes.
+- Marionnettes : `fx_venv/bin/python src/puppet.py work/sketch4_puppets.json` (`gap_min` relevé pour Grâce : son top
+  blanc côtelé n'est pas du fond).
+- Voix : celles de la version Flow (`assets/sketch3/dub/dXX.mp3`, phrases entières). `python3 src/sk4_marks.py` → `marks.js`.
+- Son : `python3 src/sk4_audio.py work/sketch4/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_jct2d.m4a`.
+- Rendu : `src/sketch_jct2d_render.sh` → `OJA_Sketch_JeConnaisTout_2D_9x16.mp4`.
