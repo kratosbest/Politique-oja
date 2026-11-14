@@ -1170,3 +1170,22 @@ Sur l'écran de vérification, l'état « Vérifié » de la photo est montré c
 2. `node src/sfx_dump.js oja_ajout_lieu_mascotte.html work/lieu2/sfx.json`
 3. `python3 src/music41.py work/lieu2/sfx.json work/lieu2/mix.wav assets/lieu2/voix_ajout_lieu.mp3`, puis `loudnorm=I=-14` en m4a vers `assets/soundtrack_ajout_lieu_mascotte.m4a`. Groove léger à 100 BPM, un clic à chaque appui, un son de réussite à la publication et aux vérifications. Pas de « whoosh ».
 4. `src/ajout_lieu_mascotte_render.sh`
+
+## OJA Sketch — « La cour » (9:16, 20 s, test du format sketch animé)
+
+Deux personnages en dessin animé 2D dans une cour de Cotonou, la nuit. Boni a faim, tout est fermé ; Sèna ouvre la map OJA,
+trouve « Chez Maman Rose » encore ouverte, et Boni lui dit d'écrire sur WhatsApp. Fin : « Les bons coins près de toi, sur
+la map OJA », « Télécharge Oja App » et le QR code. Les personnages et le décor sont originaux.
+
+- Images (ElevenLabs, Nano Banana 2 Lite, une seule variante chacune) : `assets/sketch1/cour.jpg`, `boni_src.jpg`,
+  `sena_src.jpg`, et les versions « bouche ouverte » `*_open_src.jpg`. Le flow s'appelle « Sketch OJA 1 (cour) ».
+- Marionnettes : `src/sk1_prep.py build` (fx_venv) découpe les personnages, aligne la bouche ouverte (SIFT), fabrique la
+  bouche mi-ouverte et les yeux fermés → `assets/sketch1/*.png`, `puppets.js`.
+- Voix (eleven_v4) : Boni = « Steve - FR Cameroun » (LyP5UoOYPUqzd2tEP5jc), Sèna = « Tony - Punchy »
+  (fsYODoWLWYJ5ai6CAN3M) → `assets/sketch1/l1..l4.mp3` ; `python3 src/sk1_marks.py` place les répliques, mesure
+  l'ouverture de bouche image par image et découpe les sous-titres → `marks.js`.
+- Écran du téléphone : `node src/sk1_screen.js` capture la fin du tutoriel « Ajouter un lieu » (épingle + fiche) dans
+  `assets/sketch1/scr/` (hors git, se régénère).
+- Son : `node src/sfx_dump.js oja_sketch_cour.html work/sketch1/sfx.json && python3 src/sk1_audio.py work/sketch1/sfx.json
+  work/sketch1/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_cour.m4a`.
+- Rendu : `src/sketch_cour_render.sh` → `OJA_Sketch_LaCour_9x16.mp4`.
