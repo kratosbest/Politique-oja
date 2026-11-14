@@ -1234,14 +1234,19 @@ plans 4 et 6).
 
 ## OJA Sketch 3 en 2D — « Monsieur Je-connais-tout » (9:16, 46 s)
 
-La même histoire que la version Google Flow, en dessin animé (style de Boni et Sèna) : Tonton Augustin et Grâce dans le
-nouveau Cotonou (avenue, salon de coiffure, terrasse du maquis).
+Version 2, le scénario de Derrick (tableau du doc « Sketchs OJA — dialogues »), en dessin animé (style de Boni et Sèna) :
+Tonton Augustin et Grâce marchent dans le nouveau Cotonou (la rue recule, pas et balancement des corps), arrivent devant
+un salon de coiffure là où était le maquis, c'est le Tonton qui s'étonne (« Ah ?! Ils ont changé le lieu ? »). Grâce
+demande le nom, tape « Le Braisé » dans la recherche de la map OJA, le maquis apparaît à deux rues ; ils y vont (rue
+inversée, Grâce devant) et finissent à la terrasse du maquis (42 s).
 
 - Images (Nano Banana 2 Lite, une variante chacune, flow « Sketch OJA 1 (cour) ») : `assets/sketch4/avenue.jpg`,
   `salon.jpg`, `maquis.jpg`, `tonton_src.jpg`, `tontonv_src.jpg` (bras ouverts, recalé sur la pose de base →
   `tontonv_warp.jpg`), `grace_src.jpg`, `table_src.jpg` (la table du maquis au premier plan) et les bouches ouvertes.
 - Marionnettes : `fx_venv/bin/python src/puppet.py src/puppets/sketch4.json` (`gap_min` relevé pour Grâce : son top
   blanc côtelé n'est pas du fond).
-- Voix : celles de la version Flow (`assets/sketch3/dub/dXX.mp3`, phrases entières). `python3 src/sk4_marks.py` → `marks.js`.
+- Voix : d01–d03, d10, d11 de la version Flow (`assets/sketch3/dub/`), et les nouvelles répliques n1–n4b
+  (`assets/sketch4/voix/`, eleven_v4 via `src/tts.py --speed 1.05`, mêmes voix « Martinez » et « Alimata », vérifiées
+  avec Scribe). `python3 src/sk4_marks.py` → `marks.js`.
 - Son : `python3 src/sk4_audio.py work/sketch4/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_jct2d.m4a`.
 - Rendu : `src/sketch_jct2d_render.sh` → `OJA_Sketch_JeConnaisTout_2D_9x16.mp4`.

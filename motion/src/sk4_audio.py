@@ -1,8 +1,8 @@
-# Sketch 3 in 2D (oja_sketch_jct2d.html, 9:16): sound, built like src/sk3_audio.py for the Google Flow version: a modern
-# city street (soft traffic, birds), loud crickets in the awkward silence with a comic « wah-wah », the maquis terrace,
-# a playful marimba bed under the dialogue (cut for the silence), a spring when Tonton opens his arms, pop and tap on the
-# phone, a chime on the end card, and the voices (assets/sketch3/dub/dXX.mp3, whole lines) at their places in
-# assets/sketch4/marks.json (src/sk4_marks.py).
+# Sketch 3 in 2D (oja_sketch_jct2d.html, 9:16), version 2: sound, built like src/sk3_audio.py for the Google Flow
+# version: a modern city street (soft traffic, birds) with their footsteps while they walk, a spring when Tonton opens his
+# arms (« Ah ?! »), the typing of « Le Braisé » in the map OJA (keys, enter, pop and chime when the maquis appears, tap on
+# Itinéraire), the maquis terrace, a playful marimba bed under the dialogue, a chime on the end card, and the voices
+# (assets/sketch3/dub/ and assets/sketch4/voix/, whole lines) at their places in assets/sketch4/marks.json (src/sk4_marks.py).
 # usage (from motion/): python3 src/sk4_audio.py work/sketch4/mix.wav
 import json, subprocess, sys, wave
 import numpy as np
@@ -35,8 +35,10 @@ def gate(t0, t1, fade=.12):
     g = np.zeros(N); a, b = int(t0 * SR), int(min(t1, DUR) * SR); g[a:b] = 1
     k = int(fade * SR); return np.convolve(g, np.ones(k) / k, 'same')
 
-T_SIL0 = EV['silence']; T_SIL1 = next(l['t'] for l in SK['lines'] if l['id'] == 'd07')
+LN = {l['id']: l for l in SK['lines']}
 T_MAQ = EV['maquis']
+T_AH = LN['n1']['t'] - .05
+TY0, TYD, ENTER, TAP, SEARCH = .45, .085, 1.3, 3.55, 'Le Braisé'   # same as the phone insert of the page
 
 # ---------- street: soft traffic, birds, a far horn ----------
 ST = buf()
@@ -50,17 +52,26 @@ t = .8
 while t < DUR: bird(t, rng.uniform(-.7, .7)); t += rng.uniform(1.6, 3.4)
 for th in (5.2, 27.5):
     n = int(.35 * SR); tt = np.arange(n) / SR; add(ST, lp1(np.sign(np.sin(2 * np.pi * 410 * tt)) * env(n, .01, .3), .2), th, .6, .012)
-street = gate(0, T_MAQ) * (1 - .55 * gate(T_SIL0, T_SIL1))
+street = gate(0, T_MAQ)
 
-# ---------- the awkward silence: loud crickets ----------
-CR = buf()
-def cricket(f, period, pulses, pan, g, t0, t1):
-    n = int(.016 * SR); tt = np.arange(n) / SR; p = np.sin(2 * np.pi * f * tt) * np.sin(np.pi * tt / .016) ** 2
-    t = t0
-    while t < t1:
-        for k in range(pulses): add(CR, p, t + k * .032, pan, g * (.85 + .3 * rng.random()))
-        t += period * (.92 + .16 * rng.random())
-cricket(4650, .62, 3, -.4, .07, T_SIL0 + .5, T_SIL1 + .2); cricket(5200, .91, 4, .45, .05, T_SIL0 + .8, T_SIL1 + .2)
+# ---------- footsteps while they walk (same gait as the page: a step every 1/f s) ----------
+FS = buf()
+def step(t0, pan, g, dark):
+    n = int(.09 * SR); tt = np.arange(n) / SR
+    thump = lp1(rng.standard_normal(n), .03 if dark else .05) * np.exp(-tt * 55) * 3
+    scuff = hp1(rng.standard_normal(n), .3) * np.exp(-tt * 70) * .25
+    add(FS, thump + scuff, t0, pan, g * (.8 + .4 * rng.random()))
+def walk_amp(t):
+    if t < EV['arrive']: return 1.0
+    if t < EV['arrive'] + .7: return 1 - (t - EV['arrive']) / .7
+    return 1.0 if EV['walk3'] <= t < T_MAQ else 0.0
+for f, ph, pan, g, dark in ((1.75, 0, -.25, .05, True), (2.0, 1.1, .25, .035, False)):
+    k = 1
+    while True:
+        t = (k * np.pi - ph) / (np.pi * f)
+        if t > T_MAQ: break
+        if walk_amp(t) > .15: step(t, pan, g * walk_amp(t), dark)
+        k += 1
 
 # ---------- the maquis terrace: people talking, music from inside ----------
 MQ = buf()
@@ -91,10 +102,9 @@ PAT = [0, None, 2, 1, None, 2, 0, None, 1, None, 2, None, 0, 1, None, 2]
 t = .3; st = 0
 while t < DUR - .8:
     bar = int((t - .3) / (4 * b)) % 4; root, ch = PROG[bar]; s16 = st % 16; lift = 1.6 if t > EV['end'] else 1.0
-    if not (T_SIL0 - .05 < t < T_SIL1 + 1.6):
-        if PAT[s16] is not None: add(MU, marimba(ch[PAT[s16]], .045 * lift), t, .25 if s16 % 2 else -.25)
-        if s16 in (0, 7, 10): add(MU, bass(root, .1 * lift), t, 0)
-        if s16 % 2 == 0: n = int(.05 * SR); add(MU, hp1(rng.standard_normal(n), .6) * env(n, .003, .015), t, .3, .016 * lift)
+    if PAT[s16] is not None: add(MU, marimba(ch[PAT[s16]], .045 * lift), t, .25 if s16 % 2 else -.25)
+    if s16 in (0, 7, 10): add(MU, bass(root, .1 * lift), t, 0)
+    if s16 % 2 == 0: n = int(.05 * SR); add(MU, hp1(rng.standard_normal(n), .6) * env(n, .003, .015), t, .3, .016 * lift)
     st += 1; t += b / 4
 duck = np.ones(N)
 for p in SK['pieces']:
@@ -104,16 +114,6 @@ MU = [MU[0] * duck, MU[1] * duck]
 
 # ---------- small sounds ----------
 FX = buf()
-def wahwah(t0, g=.09):
-    """muted-trumpet « wah wah wah waaah » (sawtooth through a moving low-pass), the classic comic letdown"""
-    for k, (m, d) in enumerate(((62, .32), (61, .32), (60, .32), (59, 1.1))):
-        n = int(d * SR); tt = np.arange(n) / SR; f = mf(m) * (1 + (.012 * np.sin(2 * np.pi * 6 * tt) if k == 3 else 0 * tt))
-        ph = np.cumsum(f) / SR; saw = 2 * (ph % 1) - 1
-        e = np.minimum(1, tt / .03) * np.clip((d - tt) / .08, 0, 1)
-        wah = .5 - .5 * np.cos(2 * np.pi * np.minimum(tt / .28, 1))
-        y = np.zeros(n); acc = 0.0; cs = .03 + .12 * wah
-        for i in range(n): acc += cs[i] * (saw[i] - acc); y[i] = acc
-        add(FX, y * e, t0 + sum(x[1] for x in ((62, .32), (61, .32), (60, .32))[:k]) * 1.0, -.1, g)
 def softclick(t0, g=.12):
     n = int(.05 * SR); tt = np.arange(n) / SR
     add(FX, np.sin(2 * np.pi * 1700 * tt) * np.exp(-tt * 90) + hp1(rng.standard_normal(n), .45) * np.exp(-tt * 300) * .4, t0, 0, g)
@@ -122,15 +122,16 @@ def pop(t0, f=620, g=.16):
 def chime(t0, fs, g):
     for k2, f in enumerate(fs):
         n = int(1.3 * SR); tt = np.arange(n) / SR; add(FX, np.sin(2 * np.pi * f * tt) * np.exp(-tt * 3.4), t0 + k2 * .06, .3 - .3 * k2, g)
-wahwah(T_SIL0 - .05)
-pop(EV['insert'] + .45); chime(EV['insert'] + .5, (1568.0, 2093.0, 2637.0), .045)
-softclick(EV['insert'] + 1.85)
+I0 = EV['insert']
+for i in range(len(SEARCH)): softclick(I0 + TY0 + i * TYD, .05 + .02 * rng.random())   # the keys of « Le Braisé »
+softclick(I0 + ENTER, .1)
+pop(I0 + ENTER + .3); chime(I0 + ENTER + .35, (1568.0, 2093.0, 2637.0), .045)       # the maquis appears on the map
+softclick(I0 + TAP, .12)
 chime(EV['end'], (1318.5, 1760.0, 2349.3), .08)
 def spring(t0, g=.08):
     n = int(.32 * SR); t2 = np.arange(n) / SR; f = 260 + 220 * t2 / .32 + 60 * np.sin(2 * np.pi * 22 * t2)
     add(FX, np.sin(2 * np.pi * np.cumsum(f) / SR) * env(n, .004, .12), t0, -.2, g)
-d04 = next(l for l in SK['lines'] if l['id'] == 'd04')
-spring(d04['t'] + next(w[1] for w in d04['words'] if w[0].startswith('Voil')) - .05)
+spring(T_AH)
 
 # ---------- mix ----------
 irn = int(1.0 * SR); ir = rng.standard_normal(irn) * np.exp(-np.arange(irn) / SR / .2); ir = lp1(ir, .3); ir /= np.abs(ir).sum() ** .5 * 14
@@ -140,10 +141,10 @@ def conv(x):
 endfade = np.ones(N); i0 = int((EV['end'] - .2) * SR); endfade[i0:] = np.linspace(1, .2, N - i0)
 OUT = [np.zeros(N), np.zeros(N)]
 for c in range(2):
-    OUT[c] = (ST[c] * street * .9 + CR[c] + MQ[c] * maquis) * endfade + MU[c] + FX[c]
+    OUT[c] = (ST[c] * street * .9 + FS[c] + MQ[c] * maquis) * endfade + MU[c] + FX[c]
 VO = buf()
 for p in SK['pieces']:
-    v = pcm(f"assets/sketch3/dub/{p['id']}.mp3"); v = v / (np.abs(v).max() + 1e-9) * .8
+    v = pcm(LN[p['id']]['file']); v = v / (np.abs(v).max() + 1e-9) * .8
     add(VO, v, p['t'], -.08 if p['who'] == 'tonton' else .08)
 for c in range(2): OUT[c] += VO[c] + conv(VO[c]) * .08
 fade = np.ones(N); k = int(1.0 * SR); fade[-k:] = np.linspace(1, 0, k) ** 1.5

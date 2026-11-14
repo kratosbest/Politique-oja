@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <title>Sketch OJA, Je-connais-tout 2D</title>
-<!-- Sketch 3 « Monsieur Je-connais-tout » in 2D cartoon (9:16, 1080x1920). Tonton Augustin and his niece Grâce in the new
-     Cotonou: the avenue, the hair salon (Tonton presents it arms wide open), the awkward silence, the map OJA, the maquis.
-     Puppets built by src/puppet.py (src/puppets/sketch4.json) into assets/sketch4/; voices reused from the Google Flow
-     version (assets/sketch3/dub/), timing and mouths in assets/sketch4/marks.js (src/sk4_marks.py); phone screen captured by
+<!-- Sketch 3 « Monsieur Je-connais-tout » in 2D cartoon (9:16, 1080x1920), version 2 (Derrick's script). Tonton Augustin
+     and his niece Grâce walk through the new Cotonou, arrive where his maquis used to be (now a hair salon: Tonton is the
+     one surprised), Grâce asks the name, searches it on the map OJA, they walk two streets and reach the maquis.
+     Puppets built by src/puppet.py (src/puppets/sketch4.json) into assets/sketch4/; voices from the Google Flow version
+     (assets/sketch3/dub/) and new ones (assets/sketch4/voix/), timing and mouths in assets/sketch4/marks.js
+     (src/sk4_marks.py); phone screen captured by
      src/sk_screen.js into assets/sketch4/scr/. Rendered by src/sketch_jct2d_render.sh. -->
 <link rel="stylesheet" href="fonts/local.css">
 <script src="assets/sketch4/marks.js"></script>
@@ -45,9 +47,9 @@ const IM = {}, load = (k, src) => new Promise(r => { const i = new Image(); i.on
 const D4 = 'assets/sketch4/';
 const files = { avenue: D4 + 'avenue.jpg', salon: D4 + 'salon.jpg', maquis: D4 + 'maquis.jpg', table: D4 + 'table.png' };
 const PU = {
-  tonton: { meta: PUP4.tonton, ax: 430, ay: 1264, speaker: 'tonton', blinks: [2.2, 5.1, 9.6, 13.4, 17.3, 20.6, 22.9, 26.8, 29.6, 35.2, 39.1, 41.6] },
-  tontonv: { meta: PUP4.tontonv, ax: 706, ay: 1264, speaker: 'tonton', blinks: [14.1, 15.9] },
-  grace: { meta: PUP4.grace, ax: 400, ay: 1264, speaker: 'grace', blinks: [1.6, 4.4, 7.3, 10.9, 14.6, 18.2, 21.7, 25.1, 28.3, 34.4, 38.6, 41.0] },
+  tonton: { meta: PUP4.tonton, ax: 430, ay: 1264, speaker: 'tonton', blinks: [2.2, 5.1, 9.6, 12.6, 16.9, 19.4, 22.6, 25.6, 29.1, 32.4, 35.4, 37.9, 40.5] },
+  tontonv: { meta: PUP4.tontonv, ax: 706, ay: 1264, speaker: 'tonton', blinks: [14.25] },
+  grace: { meta: PUP4.grace, ax: 400, ay: 1264, speaker: 'grace', blinks: [1.6, 4.4, 7.3, 10.9, 13.9, 16.2, 19.9, 22.1, 26.0, 29.4, 32.9, 35.0, 38.3, 41.0] },
 };
 for (const [k, p] of Object.entries(PU)) {
   files[k] = D4 + k + '.png'; files[k + '_open'] = D4 + k + '_mouth_open.png'; files[k + '_plate'] = D4 + k + '_mouth_plate.png';
@@ -60,13 +62,20 @@ for (let i = 0; i < NSCR; i++) files['s' + i] = D4 + 'scr/s' + String(i).padStar
 const LN = id => L.find(l => l.id === id);
 const wt = (id, w, nth = 1, end = false) => { const l = LN(id); const xs = l.words.filter(v => v[0].replace(/[^\p{L}']/gu, '').toLowerCase().startsWith(w.toLowerCase())); const x = xs[nth - 1] || xs[0]; return l.t + (x ? x[end ? 2 : 1] : 0); };
 const S = id => LN(id).t, E = id => LN(id).t + LN(id).dur;
-const T_VOILA = wt('d04', 'Voilà'), T_SIL = EV.silence;
+const T_AH = S('n1') - .05, T_POUR = wt('n1', 'Pourtant') - .05;   // Tonton opens his arms on « Ah ?! », puzzled on « Pourtant »
 const SHOTS = [
-  [0, 'av_wide'], [wt('d01', 'Le'), 'av_tonton'], [S('d02') - .1, 'av_grace'], [wt('d03', 'trois'), 'kiosk'], [E('d03') - .4, 'av_grace2'],
-  [EV.salon, 'salon_wide'], [S('d05') - .12, 'salon_grace'], [S('d06') - .1, 'salon_tonton_q'],
-  [T_SIL, 'sil_tonton'], [T_SIL + 1.5, 'sil_ladies'], [T_SIL + 2.7, 'sil_tonton2'],
-  [S('d08') - .2, 'salon_grace2'], [EV.insert, 'phone'], [EV.back, 'salon_tonton'],
+  [0, 'walk_wide'], [wt('d01', 'Le') - .1, 'walk_tonton'], [S('d02') - .1, 'walk_grace'], [wt('d03', 'trois') - .05, 'kiosk'], [E('d03') - .35, 'walk_grace2'],
+  [EV.arrive, 'arrive'], [wt('n1', 'lieu') - .1, 'ladies'], [T_POUR, 'salon_tonton_q'], [S('n2') - .12, 'salon_grace'], [S('n3') - .1, 'salon_tonton'],
+  [EV.insert, 'phone'], [EV.back, 'salon_grace2'], [EV.walk3, 'walk3'],
   [EV.maquis, 'maquis_wide'], [S('d11') - .12, 'maquis_grace'], [EV.end, 'end']];
+// walking: a step every 1/f s, the body highest and leaning on the standing leg mid-step; it fades out when they stop
+const GAIT = { tonton: [1.75, 0], tontonv: [1.75, 0], grace: [2.0, 1.1] };
+const walkAmp = t => t < EV.arrive ? 1 : t < EV.arrive + .7 ? 1 - eio(lin(t, EV.arrive, EV.arrive + .7)) : t >= EV.walk3 && t < EV.maquis ? 1 : 0;
+function gait(inst, t) {
+  const a = walkAmp(t); if (!a) return inst;
+  const [f, ph] = GAIT[inst.k], p = Math.PI * f * t + ph;
+  return { ...inst, dy: (inst.dy || 0) - 17 * a * Math.abs(Math.sin(p)), dx: (inst.dx || 0) + 7 * a * Math.sin(p), rot: (inst.rot || 0) + 1.4 * a * Math.sin(p) * Math.PI / 180 };
+}
 const shotAt = t => { let k = 0; for (let i = 0; i < SHOTS.length; i++) if (t >= SHOTS[i][0]) k = i; return [SHOTS[k][1], t - SHOTS[k][0], (SHOTS[k + 1] ? SHOTS[k + 1][0] : DUR) - SHOTS[k][0]]; };
 
 // ---------- puppets ----------
@@ -100,12 +109,13 @@ function table() {                                  // the maquis table in front
 
 // ---------- camera ----------
 const BG_Y = bg => (H - IM[bg].height * W / IM[bg].width) / 2 - 10;
-function scene(bg, t, z, fx, fy, insts, extra) {
-  const zb = 1 + (z - 1) * .55, bfx = 540 + (fx - 540) * .55, bfy = 960 + (fy - 960) * .55;
+function scene(bg, t, z, fx, fy, insts, extra, o = {}) {        // o.bz: extra background zoom (walking), o.mirror: flipped street
+  const zb = (1 + (z - 1) * .55) * (o.bz || 1), bfx = 540 + (fx - 540) * .55, bfy = 960 + (fy - 960) * .55;
   ctx.save(); ctx.translate(540, 960); ctx.scale(zb, zb); ctx.translate(-bfx, -bfy);
+  if (o.mirror) { ctx.translate(W, 0); ctx.scale(-1, 1); }
   ctx.drawImage(IM[bg], 0, BG_Y(bg), W, IM[bg].height * W / IM[bg].width); ctx.restore();
   ctx.save(); ctx.translate(540, 960); ctx.scale(z, z); ctx.translate(-fx, -fy);
-  insts.forEach(i => puppet(i, t)); if (extra) extra(); ctx.restore();
+  insts.forEach(i => puppet(gait(i, t), t)); if (extra) extra(); ctx.restore();
   vignette(.38);
 }
 function vignette(a) { const g = ctx.createRadialGradient(540, 900, 420, 540, 960, 1250); g.addColorStop(0, 'rgba(20,10,5,0)'); g.addColorStop(1, `rgba(20,10,5,${a})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
@@ -121,6 +131,20 @@ function blurred() {
   b.drawImage(IM.salon, (W - IM.salon.width * s) / 2, (H - IM.salon.height * s) / 2 - 120, IM.salon.width * s, IM.salon.height * s); return BLUR;
 }
 function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+const SEARCH = 'Le Braisé', TY0 = .45, TYD = .085, ENTER = 1.3, SHEET = 2.4, TAP = 3.55;   // phone insert timing (s after EV.insert)
+function searchBar(u) {                              // drawn in the 780x1688 screen coordinates, over the title of the map
+  ctx.save(); rrect(ctx, 160, 116, 600, 110, 55); ctx.shadowColor = 'rgba(0,0,0,.14)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 4;
+  ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.lineWidth = 4; ctx.strokeStyle = u > TY0 - .15 && u < ENTER + .25 ? '#FF6B00' : '#E6E0D8'; ctx.stroke();
+  ctx.strokeStyle = '#7d838f'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.arc(214, 165, 17, 0, 2 * Math.PI); ctx.stroke(); ctx.beginPath(); ctx.moveTo(227, 178); ctx.lineTo(243, 194); ctx.stroke();
+  const n = u < TY0 ? 0 : Math.min(SEARCH.length, Math.floor((u - TY0) / TYD) + 1);
+  ctx.font = '600 40px Poppins'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = n ? '#1d2330' : '#9aa0aa'; ctx.fillText(n ? SEARCH.slice(0, n) : 'Rechercher un lieu', 266, 172);
+  if (u > TY0 - .15 && u < ENTER + .15 && (u < TY0 || Math.floor(u * 3) % 2 === 0 || n < SEARCH.length)) {
+    const x = 266 + (n ? ctx.measureText(SEARCH.slice(0, n)).width + 5 : 0); ctx.fillStyle = '#FF6B00'; ctx.fillRect(x, 146, 4, 52); }
+  ctx.restore();
+}
 function phone(u) {
   ctx.drawImage(blurred(), 0, 0);
   const k = eo(lin(u, 0, .3)), bounce = back(lin(u, 0, .36));
@@ -130,9 +154,10 @@ function phone(u) {
   rrect(ctx, -PW / 2, -PH / 2, PW, PH, 70); ctx.fillStyle = '#1c1e26'; ctx.fill(); ctx.shadowColor = 'transparent';
   ctx.lineWidth = 9; ctx.strokeStyle = '#2a140a'; ctx.stroke();
   ctx.save(); rrect(ctx, -SW / 2, -SH / 2, SW, SH, 50); ctx.clip();
-  let fr = Math.min(30, (u - .15) * 30); if (u > .95) fr = 133 + (u - .95) * 30;
+  let fr = u < ENTER ? 0 : Math.min(30, (u - ENTER) * 30); if (u > SHEET) fr = 133 + (u - SHEET) * 30;
   const img = IM['s' + Math.max(0, Math.min(NSCR - 1, Math.round(fr)))]; if (img) ctx.drawImage(img, -SW / 2, -SH / 2, SW, SH);
-  const q = lin(u, 1.85, 2.35);
+  ctx.save(); ctx.translate(-SW / 2, -SH / 2); ctx.scale(SW / 780, SW / 780); searchBar(u); ctx.restore();
+  const q = lin(u, TAP, TAP + .5);
   if (q > 0 && q < 1) { const sc = SW / 780, rx = -SW / 2 + 146 * sc, ry = -SH / 2 + 1420 * sc;
     ctx.beginPath(); ctx.arc(rx, ry, 30 + 60 * eo(q), 0, 2 * Math.PI); ctx.strokeStyle = `rgba(255,107,0,${.9 * (1 - q)})`; ctx.lineWidth = 10; ctx.stroke();
     ctx.beginPath(); ctx.arc(rx, ry, 30 * (1 - .3 * q), 0, 2 * Math.PI); ctx.fillStyle = `rgba(255,255,255,${.55 * (1 - q)})`; ctx.fill(); }
@@ -142,7 +167,7 @@ function phone(u) {
 // ---------- subtitles ----------
 const SUBS = [];
 L.forEach(l => {
-  const ws = []; l.words.forEach(w => { if (/^[!?.,…]+$/.test(w[0]) && ws.length) { ws[ws.length - 1][0] += (w[0] === ',' || w[0] === '.' ? '' : ' ') + w[0]; ws[ws.length - 1][2] = w[2]; } else ws.push([...w]); });
+  const ws = []; l.words.forEach(w => { if (/^[!?.,…]+$/.test(w[0]) && ws.length) { ws[ws.length - 1][0] += (w[0] === ',' || w[0] === '.' ? '' : '\u00a0') + w[0]; ws[ws.length - 1][2] = w[2]; } else ws.push([...w]); });   // « ? » / « ! » never wrap alone
   const len = g => g.map(w => w[0]).join(' ').length;
   let parts = [], cur = [];
   ws.forEach((w, i) => { cur.push(w); if (i < ws.length - 1 && (/[.!?…]$/.test(w[0]) || (/,$/.test(w[0]) && len(cur) > 22))) { parts.push(cur); cur = []; } });
@@ -159,21 +184,26 @@ SUBS.forEach((s, i) => { const nx = SUBS[i + 1]; s.t1 = nx && nx.line === s.line
 function drawAt(t) {
   const [shot, u, len] = shotAt(t), push = u / Math.max(len, .5);
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
-  const voila = t >= T_VOILA - .05 && t < S('d05') - .12;           // Tonton presents the salon, arms wide open
-  const tonS = () => voila ? { k: 'tontonv', x: 330, y: B, s: 1, dy: hop(t, T_VOILA - .05, 36, .32) } : TON();
-  if (shot === 'av_wide') scene('avenue', t, 1.0 + .035 * push, 540, 960, [TON(), GRA()]);
-  else if (shot === 'av_tonton') scene('avenue', t, 1.42 + .05 * push, 385, 1110, [TON(), GRA()]);
-  else if (shot === 'av_grace' || shot === 'av_grace2') scene('avenue', t, 1.42 + .05 * push, 745, 1085, [TON(), GRA({ rot: (shot === 'av_grace2' ? 1.5 : 0) * Math.PI / 180 })]);
-  else if (shot === 'kiosk') scene('avenue', t, 1.75 + .08 * push, 600, 760, [TON(), GRA()]);
-  else if (shot === 'salon_wide') scene('salon', t, 1.0 + .04 * push, 560, 975, [tonS(), GRA()]);
-  else if (shot === 'salon_grace' || shot === 'salon_grace2') scene('salon', t, 1.45 + .05 * push, 745, 1085, [TON(), GRA()]);
-  else if (shot === 'salon_tonton_q') scene('salon', t, 1.5 + .25 * eo(lin(u, 0, .2)), 385, 1100, [TON({ dy: hop(t, S('d06'), 30, .28) }), GRA()]);
-  else if (shot === 'sil_tonton' || shot === 'sil_tonton2') scene('salon', t, 1.6 + .08 * push, 385, 1095, [TON(), GRA()]);
-  else if (shot === 'sil_ladies') scene('salon', t, 1.9 + .06 * push, 270, 700, [TON(), GRA()]);
+  const surprised = t >= T_AH && t < T_POUR;                          // « Ah ?! Ils ont changé le lieu ? »: arms wide open
+  const tonS = () => surprised ? { k: 'tontonv', x: 330, y: B, s: 1, dy: hop(t, T_AH, 40, .32) } : TON();
+  const bz = 1 + .045 * Math.max(0, len - u);                          // walking toward us: the street slowly recedes
+  const lead = { k: 'tonton', x: 330, y: B, s: 1 }, follow = GRA({ y: B - 18, s: .965 });
+  if (shot === 'walk_wide') scene('avenue', t, 1.0, 540, 960, [follow, lead], null, { bz });
+  else if (shot === 'walk_tonton') scene('avenue', t, 1.42, 385, 1110, [follow, lead], null, { bz });
+  else if (shot === 'walk_grace' || shot === 'walk_grace2') scene('avenue', t, 1.42, 745, 1085, [lead, GRA({ rot: (shot === 'walk_grace2' ? 1.5 : 0) * Math.PI / 180 })], null, { bz });
+  else if (shot === 'kiosk') scene('avenue', t, 1.75, 600, 760, [follow, lead], null, { bz });
+  else if (shot === 'arrive' || shot === 'ladies') {
+    const punch = .1 * eo(lin(t, T_AH, T_AH + .22));                  // a quick push on Tonton's « Ah ?! »
+    if (shot === 'arrive') scene('salon', t, 1.0 + punch, 540 - 150 * punch, 975, [tonS(), GRA()], null, { bz: 1 + .032 * (1 - eo(lin(u, 0, .8))) });
+    else scene('salon', t, 1.9 + .06 * push, 270, 700, [tonS(), GRA()]);   // the ladies of the salon stare at him
+  }
+  else if (shot === 'salon_tonton_q') scene('salon', t, 1.5 + .12 * eo(lin(u, 0, 1.6)), 385, 1100, [TON({ rot: -2.5 * Math.PI / 180 }), GRA()]);
+  else if (shot === 'salon_grace' || shot === 'salon_grace2') scene('salon', t, 1.45 + .05 * push, 745, 1085, [TON(), GRA({ dy: shot === 'salon_grace2' ? hop(t, wt('n4b', 'Allons'), 34, .3) : 0 })]);
+  else if (shot === 'salon_tonton') scene('salon', t, 1.45 + .06 * push, 385, 1110, [TON({ dy: hop(t, wt('n3', 'Braisé'), 30, .3), s: 1 + .02 * eo(lin(t, wt('n3', 'Braisé'), wt('n3', 'Braisé') + .3)) }), GRA()]);
   else if (shot === 'phone') phone(u);
-  else if (shot === 'salon_tonton') scene('salon', t, 1.45 + .06 * push, 385, 1110, [TON({ dy: hop(t, wt('d09', 'Allons'), 34, .3) }), GRA()]);
+  else if (shot === 'walk3') scene('avenue', t, 1.0, 540, 960, [TON({ y: B - 18, s: .965 }), GRA()], null, { bz, mirror: true });   // Grâce leads now
   else if (shot === 'maquis_wide' || shot === 'maquis_grace' || shot === 'end') {
-    const cast = [TON({ y: 1985 }), GRA({ y: 1985 })];
+    const cast = [TON({ y: 1985, dy: hop(t, wt('d10', 'vois'), 26, .28) }), GRA({ y: 1985 })];
     if (shot === 'maquis_grace') scene('maquis', t, 1.4 + .05 * push, 745, 1085, cast, table);
     else scene('maquis', t, 1.0 + .03 * push, 540, 975, cast, table);
   }
@@ -184,7 +214,7 @@ function drawAt(t) {
 }
 window.renderAt = t => drawAt(t);
 window.waitFrame = () => new Promise(r => requestAnimationFrame(() => r()));
-window.SFX = [[T_SIL, 'sting'], [EV.insert + .45, 'pop'], [EV.insert + 1.85, 'tap'], [T_VOILA, 'boing'], [EV.end, 'end']];
+window.SFX = [[T_AH, 'boing'], [EV.insert + TY0, 'type'], [EV.insert + ENTER, 'enter'], [EV.insert + ENTER + .3, 'pop'], [EV.insert + TAP, 'tap'], [EV.end, 'end']];   // for reference: src/sk4_audio.py uses the same times
 window.ready = Promise.all(Object.entries(files).map(([k, v]) => load(k, v))).then(() => document.fonts.ready).then(() => drawAt(0));
 </script>
 </body>
