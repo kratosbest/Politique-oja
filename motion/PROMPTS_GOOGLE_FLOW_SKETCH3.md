@@ -59,7 +59,7 @@ Grâce (from the reference image) stops walking on the paved sidewalk, tired, on
 
 ### Plan 3 — Tonton sûr de lui (« Fais-moi confiance… Voilà ! »)
 ```
-Tonton Augustin (from the reference image) raises one finger, very sure of himself, then turns and opens both arms wide toward something off-screen, proud like a tour guide presenting a monument, on a modern paved street of Cotonou. He says in French: "Fais-moi confiance… Voilà !" Medium shot, slight low angle.
+Tonton Augustin (from the reference image) stands on a modern paved street of Cotonou, smiling with great confidence and lifting his chin proudly. He turns and spreads both arms wide with open palms, warmly presenting the place in front of him like a cheerful tour guide. He says in French, happy and proud: "Fais-moi confiance… Voilà !" Medium shot, friendly comedic tone.
 ```
 
 ### Plan 4 — La révélation (« Tonton… c'est un salon de coiffure. »)
@@ -79,7 +79,7 @@ Grâce (from the reference image) looks at her smartphone, scrolls with her thum
 
 ### Plan 7 — Tonton retombe sur ses pieds (« C'est exactement ce que j'allais dire. »)
 ```
-Tonton Augustin (from the reference image), without missing a beat, nods confidently and taps his own temple with one finger. He says in French, very sure of himself: "Oui, c'est exactement ce que j'allais dire." Beside him, Grâce slowly turns her head and stares at him in disbelief. Medium two-shot, quick push-in on his face.
+Tonton Augustin (from the reference image) nods calmly with a confident smile and straightens the collar of his boubou, as if nothing happened. He says in French, relaxed and sure of himself: "Oui, c'est exactement ce que j'allais dire." Beside him, Grâce (from the reference image) slowly turns her head toward him, amused, raising her eyebrows. Medium two-shot on a modern paved street with palm trees, light comedic tone.
 ```
 
 ### Plan 8 — Au maquis (« Tu vois ? Je connais Cotonou. »)
