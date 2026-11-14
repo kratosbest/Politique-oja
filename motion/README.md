@@ -1189,3 +1189,22 @@ la map OJA », « Télécharge Oja App » et le QR code. Les personnages et le d
 - Son : `node src/sfx_dump.js oja_sketch_cour.html work/sketch1/sfx.json && python3 src/sk1_audio.py work/sketch1/sfx.json
   work/sketch1/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_cour.m4a`.
 - Rendu : `src/sketch_cour_render.sh` → `OJA_Sketch_LaCour_9x16.mp4`.
+
+## OJA Sketch — « L'adresse à la béninoise » (9:16, 72 s)
+
+Dialogue écrit par Derrick dans le document « Sketchs OJA — dialogues » (sketch 1). Sèna est perdu la nuit avec son
+kêkênon ; Boni, au téléphone devant son bar, lui explique le chemin « à la béninoise » (pharmacie Saint-Martin, von de
+Kissè, chien méchant…) ; Sèna sort la map OJA, arrive au bar, et la chute tombe sur le kêkênon. Fin : « Mets ton commerce
+sur la map OJA — C'est gratuit », « Télécharge Oja App » et le QR code.
+
+- Images (Nano Banana 2 Lite, une variante chacune, flow « Sketch OJA 1 (cour) ») : `assets/sketch2/rue.jpg` (panneau
+  « ATTENTION CHIEN MÉCHANT » peint ensuite → `rue_sign.jpg`), `pharmacie.jpg`, `bar.jpg`, `bonitel_src.jpg` (Boni au
+  téléphone) et sa bouche ouverte, `zem_src.jpg` (le kêkênon). Sèna et Boni viennent de `assets/sketch1/`.
+- Marionnettes : `fx_venv/bin/python src/puppet.py work/sketch2/puppets.json` (version générique de `sk1_prep.py`).
+- Voix (eleven_v4, Boni = Steve, Sèna = Tony) : `assets/sketch2/lXX.mp3` ; aboiement : `chien.mp3` (effets sonores
+  ElevenLabs). `python3 src/sk2_marks.py` place les répliques et les événements → `marks.js`.
+- Écran du téléphone : `node src/sk_screen.js assets/sketch2/scr '{"texts":{"Chez Maman Rose":"Le Bar de Boni", …},
+  "photo":"assets/sketch2/bar_photo.jpg"}'` (hors git, se régénère).
+- Son : `node src/sfx_dump.js oja_sketch_adresse.html work/sketch2/sfx.json && python3 src/sk2_audio.py
+  work/sketch2/sfx.json work/sketch2/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_adresse.m4a`.
+- Rendu : `src/sketch_adresse_render.sh` → `OJA_Sketch_LAdresse_9x16.mp4`.

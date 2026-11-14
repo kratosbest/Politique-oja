@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Sketch OJA, l'adresse</title>
+<!-- Sketch « L'adresse à la béninoise » (9:16, 1080x1920), dialogue written by the user in the doc « Sketchs OJA —
+     dialogues ». Sèna is lost at night with his kêkênon; Boni, on the phone at his bar, gives directions « à la
+     béninoise »; the map OJA settles it. Cut-out puppets: Sèna and Boni from assets/sketch1 (src/sk1_prep.py), Boni on
+     the phone and the zem driver from assets/sketch2 (src/puppet.py). Timing, mouths and words: assets/sketch2/marks.js
+     (src/sk2_marks.py). Phone screen: assets/sketch2/scr (src/sk_screen.js). Rendered by src/sketch_adresse_render.sh. -->
+<link rel="stylesheet" href="fonts/local.css">
+<script src="assets/sketch2/marks.js"></script>
+<script src="assets/sketch1/puppets.js"></script>
+<script src="assets/sketch2/puppets.js"></script>
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0b1224}
+#cv{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#sub{position:absolute;left:46px;right:46px;top:300px;text-align:center;font:900 62px/1.08 Poppins;color:#FFD23F;text-transform:uppercase;
+  -webkit-text-stroke:11px #2a1206;paint-order:stroke fill;transform:skewX(-7deg);letter-spacing:.3px;text-shadow:0 6px 0 rgba(42,18,6,.55)}
+#endc{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(120% 80% at 50% 45%,rgba(12,18,40,.9),rgba(8,12,28,.97))}
+#endc h2{margin:0;font:900 82px/1.03 Poppins;color:#fff;letter-spacing:-1.5px}
+#endc h2 span{color:#FF8A1F}
+#endc .free{margin-top:26px;font:800 44px Poppins;color:#FFD23F}
+#endc .dl{margin-top:40px;display:inline-block;padding:20px 40px;border-radius:999px;background:#FF6B00;color:#fff;font:800 46px Poppins;box-shadow:0 14px 34px rgba(255,107,0,.35)}
+#endc .qr{margin-top:32px;width:250px;height:250px;padding:20px;border-radius:30px;background:#fff}
+#endc .qr img{width:100%;height:100%;display:block}
+#endc p{margin:20px 0 0;font:600 30px Poppins;color:#D9DEEA}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="sub"></div>
+<div id="endc"><h2>Mets ton commerce<br>sur la <span>map OJA</span></h2><div class="free">C'est gratuit.</div><div class="dl">Télécharge Oja App</div>
+  <div class="qr"><img src="pubs/qr_telecharger.svg" alt=""></div><p>Play Store et App Store</p></div>
+<script>
+const W = 1080, H = 1920, FPS = SK2.fps, DUR = SK2.total, EV = SK2.ev, L = SK2.lines;
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const lin = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const eo = x => 1 - Math.pow(1 - x, 3), eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const hash = n => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+// ---------- images ----------
+const IM = {}, load = (k, src) => new Promise(r => { const i = new Image(); i.onload = () => { IM[k] = i; r(); }; i.onerror = () => { console.error('missing ' + src); r(); }; i.src = src; });
+const D1 = 'assets/sketch1/', D2 = 'assets/sketch2/', NSCR = 161;
+const files = { rue: D2 + 'rue_sign.jpg', pharma: D2 + 'pharmacie.jpg', bar: D2 + 'bar.jpg' };
+// puppets: image prefix, numbers, horizontal anchor and ground line in source pixels, who speaks through its mouth
+const PU = {
+  sena: { pre: D1 + 'sena', meta: PUP.sena, ax: 430, ay: 1264, speaker: 'sena', blinks: [2.4, 6.9, 12.1, 16.6, 22.8, 27.4, 31.0, 36.9, 43.7, 49.6, 54.2, 59.0, 64.9, 69.2] },
+  boni: { pre: D1 + 'boni', meta: PUP.boni, ax: 470, ay: 1264, speaker: null, blinks: [61.4, 63.6, 65.3, 66.6, 68.2] },
+  bonitel: { pre: D2 + 'bonitel', meta: PUP2.bonitel, ax: 470, ay: 1264, speaker: 'boni', blinks: [5.8, 9.9, 12.6, 19.8, 24.4, 33.9, 38.8, 42.3, 47.1, 50.2, 53.3, 56.6] },
+  zem: { pre: D2 + 'zem', meta: PUP2.zem, ax: 600, ay: 814, speaker: null, blinks: [1.6, 4.1, 8.2, 11.5, 15.3, 20.1, 25.6, 28.3, 30.9, 39.4, 46.8, 52.6, 58.1, 63.2, 66.1, 67.4] },
+};
+for (const [k, p] of Object.entries(PU)) {
+  files[k] = p.pre + '.png';
+  if (p.meta.mouth_box) { files[k + '_open'] = p.pre + '_mouth_open.png'; files[k + '_plate'] = p.pre + '_mouth_plate.png'; }
+  p.meta.eyes.forEach((e, i) => files[k + '_e' + i] = p.pre + '_eye' + i + '_closed.png');
+  p.off = document.createElement('canvas'); p.off.width = p.meta.size[0]; p.off.height = p.meta.size[1];
+}
+for (let i = 0; i < NSCR; i++) files['s' + i] = D2 + 'scr/s' + String(i).padStart(3, '0') + '.jpg';
+
+// ---------- timeline ----------
+const LN = id => L.find(l => l.id === id);
+const wt = (id, w, nth = 1, end = false) => { const l = LN(id); const xs = l.words.filter(v => v[0].replace(/[^\p{L}']/gu, '').startsWith(w)); const x = xs[nth - 1] || xs[0]; return l.t + (x ? x[end ? 2 : 1] : 0); };
+const S = id => LN(id).t, E = id => LN(id).t + LN(id).dur;
+const T_INS = E('13') + .15, T_ARR = EV.insert_end, T_END = EV.end;
+const SHOTS = [
+  [0, 'rue_wide'], [S('02') - .15, 'boni'], [wt('02', 'comptes'), 'sena_blank'], [wt('02', 'Je'), 'boni'],
+  [S('03') - .15, 'sena'], [S('04') - .15, 'boni'], [S('05') - .15, 'sena'], [wt('05', 'Le'), 'zem'], [wt('05', 'Tchooo'), 'sena'],
+  [wt('05', 'En'), 'sign'], [S('06') - .15, 'boni'], [EV.bark, 'bark'], [S('08') - .1, 'sena_panic'], [S('09') - .15, 'boni'],
+  [EV.ride1, 'ride'], [S('10') - .3, 'pharma_wide'], [S('11') - .15, 'boni'], [S('12') - .15, 'pharma_sena'], [S('13') - .15, 'boni'],
+  [T_INS, 'phone'], [T_ARR, 'arrive'], [wt('16', 'Au'), 'bar_sena'], [wt('16', 'Tu'), 'bar_boni'], [wt('16', 'kêkênon'), 'bar_zem'], [T_END, 'end']];
+const shotAt = t => { let k = 0; for (let i = 0; i < SHOTS.length; i++) if (t >= SHOTS[i][0]) k = i; return [SHOTS[k][1], t - SHOTS[k][0], (SHOTS[k + 1] ? SHOTS[k + 1][0] : DUR) - SHOTS[k][0]]; };
+
+// ---------- puppets ----------
+function mouthLevel(p, t) {
+  if (!p.speaker) return 0;
+  for (const l of L) if (l.who === p.speaker && t >= l.t && t < l.t + l.dur) { const i = Math.floor((t - l.t) * FPS); return l.mouth[Math.min(i, l.mouth.length - 1)] || 0; }
+  return 0;
+}
+const talking = (p, t) => !!p.speaker && L.some(l => l.who === p.speaker && t >= l.t - .05 && t < l.t + l.dur + .1);
+function compose(k, t) {
+  const p = PU[k], M = p.meta, c = p.off.getContext('2d');
+  c.clearRect(0, 0, p.off.width, p.off.height); c.drawImage(IM[k], 0, 0);
+  const lv = mouthLevel(p, t);
+  if (M.mouth_box) {
+    const [bx, by, bw, bh] = M.mouth_box;
+    if (lv > .42) c.drawImage(IM[k + '_open'], bx, by);
+    else if (lv > .12) { c.drawImage(IM[k + '_plate'], bx, by); const piv = M.mouth_center[1] - (M.mouth_center[1] - by) * .62, q = .52; c.drawImage(IM[k + '_open'], bx, piv - (piv - by) * q, bw, bh * q); }
+  }
+  if (p.blinks.some(b => t >= b && t < b + .13)) M.eyes.forEach((e, i) => c.drawImage(IM[k + '_e' + i], e[0], e[1]));
+  return lv;
+}
+// inst: {k, x, y (ground line on screen), s, rot, dx, dy, ph}
+function puppet(inst, t) {
+  const p = PU[inst.k], lv = compose(inst.k, t), sp = talking(p, t), ph = inst.ph || 0;
+  const breath = .007 * Math.sin(2 * Math.PI * t / 3.3 + ph);
+  const rot = (inst.rot || 0) + (sp ? .7 : .25) * Math.sin(t * (sp ? 4.3 : 1.3) + ph) * Math.PI / 180 * (inst.k === 'zem' ? .3 : 1);
+  ctx.save(); ctx.translate(inst.x + (inst.dx || 0), inst.y + (inst.dy || 0) - 5 * lv); ctx.rotate(rot);
+  ctx.scale(inst.s * (1 - breath * .4), inst.s * (1 + breath)); ctx.drawImage(p.off, -p.ax, -p.ay); ctx.restore();
+}
+
+// ---------- camera ----------
+const BG_Y = bg => (H - IM[bg].height * W / IM[bg].width) / 2 - 10;
+function scene(bg, t, z, fx, fy, insts, shake = 0) {
+  const sx = shake * (hash(Math.floor(t * 30)) - .5) * 26, sy = shake * (hash(Math.floor(t * 30) + 7) - .5) * 26;
+  const zb = 1 + (z - 1) * .55, bfx = 540 + (fx - 540) * .55, bfy = 960 + (fy - 960) * .55;
+  ctx.save(); ctx.translate(540 + sx, 960 + sy); ctx.scale(zb, zb); ctx.translate(-bfx, -bfy);
+  ctx.drawImage(IM[bg], 0, BG_Y(bg), W, IM[bg].height * W / IM[bg].width); ctx.restore();
+  ctx.save(); ctx.translate(540 + sx, 960 + sy); ctx.scale(z, z); ctx.translate(-fx, -fy);
+  insts.forEach(i => puppet(i, t)); ctx.restore();
+  vignette(.5);
+}
+function vignette(a) { const g = ctx.createRadialGradient(540, 900, 380, 540, 960, 1250); g.addColorStop(0, 'rgba(5,8,20,0)'); g.addColorStop(1, `rgba(5,8,20,${a})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+
+// the cast in each place (ground lines on screen; Sèna and Boni are cut at mid-thigh by the frame)
+const B = 1985;
+const RUE = (t, o = {}) => [{ k: 'zem', x: 250, y: 1500, s: .72, ph: 2.1, ...(o.zem || {}) }, { k: 'sena', x: 800, y: B, s: 1, ph: 1.7, ...(o.sena || {}) }];
+const BAR = (t, o = {}) => [{ k: 'bonitel', x: 540, y: B, s: 1, ...(o.boni || {}) }];
+const hop = (t, t0, h = 60, d = .34) => t > t0 && t < t0 + d ? -h * Math.sin(Math.PI * (t - t0) / d) : 0;
+const jitter = (t, a) => a * (hash(Math.floor(t * 24) + 3) - .5);
+
+// ---------- the phone insert ----------
+let BLUR = {};
+function blurred(bg) {
+  if (BLUR[bg]) return BLUR[bg];
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const b = c.getContext('2d');
+  b.filter = 'blur(16px) brightness(.6)'; const s = W / IM[bg].width * 1.5;
+  b.drawImage(IM[bg], (W - IM[bg].width * s) / 2, (H - IM[bg].height * s) / 2 - 120, IM[bg].width * s, IM[bg].height * s);
+  return (BLUR[bg] = c);
+}
+function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function phone(t, u, frame, ring) {
+  ctx.drawImage(blurred('pharma'), 0, 0);
+  const k = eo(lin(u, 0, .32)), bounce = back(lin(u, 0, .38));
+  const SW = 560, SH = SW * 1688 / 780, PW = SW + 40, PH = SH + 40;
+  ctx.save(); ctx.translate(540, 1150 + (1 - k) * 260); ctx.rotate((-3.5 + 1.2 * Math.sin(t * .9)) * Math.PI / 180); ctx.scale(.92 + .08 * bounce, .92 + .08 * bounce);
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 24;
+  rrect(ctx, -PW / 2, -PH / 2, PW, PH, 70); ctx.fillStyle = '#1c1e26'; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.lineWidth = 9; ctx.strokeStyle = '#2a140a'; ctx.stroke();
+  ctx.save(); rrect(ctx, -SW / 2, -SH / 2, SW, SH, 50); ctx.clip();
+  const img = IM['s' + Math.max(0, Math.min(NSCR - 1, Math.round(frame)))]; if (img) ctx.drawImage(img, -SW / 2, -SH / 2, SW, SH);
+  if (ring) { const sc = SW / 780, rx = -SW / 2 + ring[0] * sc, ry = -SH / 2 + ring[1] * sc, q = ring[2];
+    if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(rx, ry, 30 + 60 * eo(q), 0, 2 * Math.PI); ctx.strokeStyle = `rgba(255,107,0,${.9 * (1 - q)})`; ctx.lineWidth = 10; ctx.stroke();
+      ctx.beginPath(); ctx.arc(rx, ry, 30 * (1 - .3 * q), 0, 2 * Math.PI); ctx.fillStyle = `rgba(255,255,255,${.55 * (1 - q)})`; ctx.fill(); } }
+  ctx.restore(); ctx.restore(); vignette(.4);
+}
+
+// ---------- subtitles: cut at sentence ends and long commas; punctuation sticks to its word ----------
+const SUBS = [];
+L.forEach(l => {
+  const ws = []; l.words.forEach(w => { if (/^[!?.,…]+$/.test(w[0]) && ws.length) { ws[ws.length - 1][0] += (w[0] === ',' || w[0] === '.' ? '' : ' ') + w[0]; ws[ws.length - 1][2] = w[2]; } else ws.push([...w]); });
+  const len = g => g.map(w => w[0]).join(' ').length;
+  // 1) clauses: cut after . ! ? and after a comma once the clause is long enough
+  let parts = [], cur = [];
+  ws.forEach((w, i) => { cur.push(w); if (i < ws.length - 1 && (/[.!?…]$/.test(w[0]) || (/,$/.test(w[0]) && len(cur) > 22))) { parts.push(cur); cur = []; } });
+  if (cur.length) parts.push(cur);
+  // 2) a short piece joins its neighbour when the two still fit on two lines
+  for (let changed = true; changed;) { changed = false;
+    for (let i = 0; i < parts.length; i++) { if (len(parts[i]) > 12) continue;
+      const j = i + 1 < parts.length && (i === 0 || len(parts[i + 1]) <= len(parts[i - 1])) ? i + 1 : i - 1;
+      if (j >= 0 && j < parts.length && len(parts[i]) + len(parts[j]) + 1 <= 46) { const a = Math.min(i, j); parts.splice(a, 2, parts[a].concat(parts[a + 1])); changed = true; break; } } }
+  // 3) a piece longer than two lines is cut at the word boundary nearest its middle (never leaving 1-2 words alone)
+  const out = []; parts.forEach(g => { if (len(g) <= 46 || g.length < 4) { out.push(g); return; }
+    let best = 1, bd = 1e9; for (let k = 2; k < g.length - 1; k++) { const d = Math.abs(len(g.slice(0, k)) - len(g.slice(k))) + (/^(le|la|les|l'|de|du|des|au|aux|un|une|à|en|et|ou|sur|dans|tout|ton|mon)$/i.test(g[k - 1][0]) ? 100 : 0); if (d < bd) { bd = d; best = k; } }
+    out.push(g.slice(0, best), g.slice(best)); });
+  out.forEach(g => SUBS.push({ t0: l.t + g[0][1], text: g.map(w => w[0]).join(' '), line: l }));
+});
+SUBS.forEach((s, i) => { const nx = SUBS[i + 1]; s.t1 = nx && nx.line === s.line ? nx.t0 : Math.min(s.line.t + s.line.dur + .25, nx ? nx.t0 : 1e9); });
+
+// ---------- one frame ----------
+const Tst = (id, st) => Object.assign(document.getElementById(id).style, st);
+function drawAt(t) {
+  const [shot, u, len] = shotAt(t), push = u / Math.max(len, .5);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+  const barkHop = hop(t, EV.bark + .05, 70), barkHop2 = hop(t, EV.bark + .1, 34);
+  if (shot === 'rue_wide') scene('rue', t, 1.0 + .04 * push, 540, 960, RUE(t));
+  else if (shot === 'boni') scene('bar', t, 1.36 + .05 * push, 545, 1105, BAR(t));
+  else if (shot === 'sena_blank') scene('rue', t, 1.5, 790, 1085, RUE(t, { sena: { rot: 2.5 * eo(lin(u, 0, .3)) * Math.PI / 180 } }));
+  else if (shot === 'sena') scene('rue', t, 1.45 + .05 * push, 790, 1085, RUE(t));
+  else if (shot === 'zem') scene('rue', t, 2.0 + .06 * push, 275, 1080, RUE(t, { zem: { dy: hop(t, SHOTS.find(s => s[1] === 'zem')[0] + .2, 10, .4) } }));
+  else if (shot === 'sign') scene('rue', t, 1.65 + .12 * eio(lin(u, 0, len)), 600, 905, RUE(t));
+  else if (shot === 'bark') scene('rue', t, 1.05, 540, 980, RUE(t, { sena: { dy: barkHop }, zem: { dy: barkHop2 } }), 1 - lin(u, .5, 1.1));
+  else if (shot === 'sena_panic') scene('rue', t, 1.5, 790, 1085, RUE(t, { sena: { dx: jitter(t, 6), rot: jitter(t + 9, .012) } }));
+  else if (shot === 'ride') {                                      // smash zoom from the street into the pharmacy
+    const q = eio(lin(u, 0, len)), z = q < .5 ? 1.05 + 1.2 * q * 2 : 1.05 + 1.2 * (1 - q) * 2;
+    scene(q < .5 ? 'rue' : 'pharma', t, z, 540, 980, q < .5 ? RUE(t, { zem: { dx: -500 * q } }) : RUE(t));
+    ctx.globalAlpha = .3; const off = (q < .5 ? q : 1 - q) * 90;
+    ctx.drawImage(cv, -off, -off * .6); ctx.drawImage(cv, off, off * .6); ctx.globalAlpha = 1;
+  }
+  else if (shot === 'pharma_wide') scene('pharma', t, 1.02 + .03 * push, 540, 975, RUE(t, { sena: { dy: 4 * Math.sin(t * 9) } }));
+  else if (shot === 'pharma_sena') scene('pharma', t, 1.45 + .06 * push, 790, 1085, RUE(t));
+  else if (shot === 'phone') {
+    let fr = Math.min(30, (u - .2) * FPS);
+    if (u > 1.0) fr = 133 + (u - 1.0) * FPS;
+    phone(t, u, Math.max(0, fr), [146, 1420, lin(u, 2.0, 2.5)]);
+  }
+  else if (shot === 'arrive' || shot === 'bar_sena' || shot === 'bar_boni' || shot === 'bar_zem') {
+    const ua = t - T_ARR, inA = eo(lin(ua, 0, .9));
+    const cast = [{ k: 'zem', x: 600 + 900 * (1 - inA), y: 1385, s: .5, ph: 2.1, dy: shot === 'bar_zem' ? hop(t, wt('16', 'kêkênon') + .1, 26, .32) + hop(t, wt('16', 'kêkênon') + .5, 18, .3) : 0 },
+      { k: 'boni', x: 300, y: B, s: 1, dy: shot === 'bar_boni' ? 8 * eo(lin(u, 0, .3)) : 0 },
+      { k: 'sena', x: 800 + 560 * (1 - inA), y: B, s: 1, ph: 1.7, dy: 6 * Math.sin(ua * 14) * (1 - inA) }];
+    if (shot === 'arrive') scene('bar', t, 1.0 + .03 * push, 540, 975, cast);
+    else if (shot === 'bar_sena') scene('bar', t, 1.45, 790, 1085, cast);
+    else if (shot === 'bar_boni') scene('bar', t, 1.45 + .05 * push, 300, 1110, cast);
+    else scene('bar', t, 2.5 + .1 * push, 612, 1095, cast);
+  }
+  else if (shot === 'end') scene('bar', t, 1.0, 540, 975, [{ k: 'zem', x: 600, y: 1385, s: .5, ph: 2.1 }, { k: 'boni', x: 300, y: B, s: 1 }, { k: 'sena', x: 800, y: B, s: 1, ph: 1.7 }]);
+  const ek = eo(lin(t, T_END, T_END + .45)); Tst('endc', { opacity: ek, transform: `scale(${1.04 - .04 * ek})` });
+  const s = SUBS.find(x => t >= x.t0 && t < x.t1), sub = document.getElementById('sub');
+  sub.textContent = s ? s.text : '';
+  if (s) sub.style.transform = `skewX(-7deg) scale(${.85 + .15 * back(lin(t, s.t0, s.t0 + .16))})`;
+}
+window.renderAt = t => drawAt(t);
+window.waitFrame = () => new Promise(r => requestAnimationFrame(() => r()));
+// sounds for the mix (src/sk2_audio.py, through src/sfx_dump.js)
+window.SFX = [[.15, 'ring'], [EV.bark, 'bark'], [EV.bark + .05, 'boing'], [EV.ride1, 'ride'], [T_INS + .55, 'pop'], [T_INS + 2.0, 'tap'],
+  [T_ARR, 'arrive'], [wt('16', 'kêkênon') + .1, 'ding'], [T_END, 'end'],
+  ...SHOTS.filter(s => /rue|sena|sign|zem|bark|pharma/.test(s[1])).map(s => [s[0], 'street']), ...SHOTS.filter(s => /boni|phone|arrive|bar_|end/.test(s[1])).map(s => [s[0], 'barplace'])];
+window.ready = Promise.all(Object.entries(files).map(([k, v]) => load(k, v))).then(() => document.fonts.ready).then(() => drawAt(0));
+</script>
+</body>
+</html>
