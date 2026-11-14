@@ -1208,3 +1208,9 @@ sur la map OJA — C'est gratuit », « Télécharge Oja App » et le QR code.
 - Son : `node src/sfx_dump.js oja_sketch_adresse.html work/sketch2/sfx.json && python3 src/sk2_audio.py
   work/sketch2/sfx.json work/sketch2/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_adresse.m4a`.
 - Rendu : `src/sketch_adresse_render.sh` → `OJA_Sketch_LAdresse_9x16.mp4`.
+- **Voix réelles (version actuelle)** : Derrick a enregistré les 13 répliques lui-même (une note vocale par réplique).
+  `python3 src/sk2_voix.py <dossier des wav> <dossier des transcriptions Scribe>` coupe les silences, rend Boni plus grave
+  (−3 demi-tons) et Sèna un peu plus jeune (+1 demi-ton) sans toucher à la prononciation (ffmpeg rubberband, sans
+  crédits), et cale chaque mot écrit sur la voix → `assets/sketch2/voix/`. Puis `python3 src/sk2_marks.py voix`, le son
+  et le rendu comme ci-dessus. Les enregistrements bruts ne sont pas dans le dépôt. `python3 src/sk2_marks.py` (sans
+  argument) revient aux voix ElevenLabs.

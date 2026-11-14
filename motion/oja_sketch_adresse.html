@@ -62,7 +62,7 @@ for (let i = 0; i < NSCR; i++) files['s' + i] = D2 + 'scr/s' + String(i).padStar
 
 // ---------- timeline ----------
 const LN = id => L.find(l => l.id === id);
-const wt = (id, w, nth = 1, end = false) => { const l = LN(id); const xs = l.words.filter(v => v[0].replace(/[^\p{L}']/gu, '').startsWith(w)); const x = xs[nth - 1] || xs[0]; return l.t + (x ? x[end ? 2 : 1] : 0); };
+const wt = (id, w, nth = 1, end = false) => { const l = LN(id); const xs = l.words.filter(v => v[0].replace(/[^\p{L}']/gu, '').toLowerCase().startsWith(w.toLowerCase())); const x = xs[nth - 1] || xs[0]; return l.t + (x ? x[end ? 2 : 1] : 0); };
 const S = id => LN(id).t, E = id => LN(id).t + LN(id).dur;
 const T_INS = E('13') + .15, T_ARR = EV.insert_end, T_END = EV.end;
 const SHOTS = [

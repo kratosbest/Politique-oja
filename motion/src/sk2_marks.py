@@ -1,10 +1,13 @@
 """Sketch 2 « L'adresse à la béninoise » timing: places the 13 dialogue lines (work/sketch2/lines.json, voices in
 assets/sketch2/lXX.mp3), the dog bark, the zem rides and the phone insert, measures the mouth opening per video frame
 and keeps the spoken words for the subtitles. Writes assets/sketch2/marks.js (window.SK2) and marks.json.
-  python3 src/sk2_marks.py"""
+  python3 src/sk2_marks.py          # the ElevenLabs voices (assets/sketch2/lXX.mp3)
+  python3 src/sk2_marks.py voix     # Derrick's own recordings (assets/sketch2/voix/, prepared by src/sk2_voix.py)"""
+import sys
 import json, subprocess, numpy as np
 D = 'assets/sketch2/'
 FPS = 30
+VOIX = len(sys.argv) > 1 and sys.argv[1] == 'voix'
 LINES = json.load(open('work/sketch2/lines.json'))           # [id, who, text with [tags]]
 GAP = {'01': 1.1, '02': .3, '03': .25, '04': .3, '05': .3, '06': .3, '08': 1.45, '09': .3, '10': 1.3, '11': .3,
        '12': .35, '13': .3, '16': 4.6}
@@ -36,14 +39,18 @@ for n, who, _ in LINES:
     if n == '08': ev['bark'] = round(t - 1.3, 3)               # the dog barks just before Sèna panics
     if n == '10': ev['ride1'] = round(t - 1.2, 3)              # the zem takes him back to the pharmacy
     if n == '16': ev['insert_end'] = round(t - 1.6, 3); ev['ride2'] = round(t - 1.5, 3)   # map, then arrival at the bar
-    tm = json.load(open(D + f'l{n}.mp3.json'))
-    y, sr = pcm(D + f'l{n}.mp3'); dur = len(y) / sr; hop = sr // FPS
+    src = D + (f'voix/l{n}.mp3' if VOIX else f'l{n}.mp3')
+    y, sr = pcm(src); dur = len(y) / sr; hop = sr // FPS
     rms = np.array([np.sqrt(np.mean(y[i:i + hop * 2] ** 2) + 1e-9) for i in range(0, len(y), hop)])
     lev = np.clip((rms / (np.percentile(rms, 92) + 1e-6) - 0.08) / 0.75, 0, 1)
     lev = np.convolve(lev, [.25, .5, .25], 'same')
-    ws = words(''.join(tm['characters']), tm['character_start_times_seconds'], tm['character_end_times_seconds'])
-    for w in ws: w[0] = ' '.join(SHOW.get(x, x) for x in w[0].split())
-    lines.append(dict(id=n, who=who, file=f'l{n}', t=round(t, 3), dur=round(dur, 3), mouth=[round(float(v), 2) for v in lev],
+    if VOIX:
+        ws = json.load(open(D + f'voix/l{n}.words.json'))['words']
+    else:
+        tm = json.load(open(D + f'l{n}.mp3.json'))
+        ws = words(''.join(tm['characters']), tm['character_start_times_seconds'], tm['character_end_times_seconds'])
+        for w in ws: w[0] = ' '.join(SHOW.get(x, x) for x in w[0].split())
+    lines.append(dict(id=n, who=who, file=(f'voix/l{n}' if VOIX else f'l{n}'), t=round(t, 3), dur=round(dur, 3), mouth=[round(float(v), 2) for v in lev],
                       words=[[w[0], round(w[1], 3), round(w[2], 3)] for w in ws]))
     t += dur
 ev['end'] = round(t + 1.6, 3)
