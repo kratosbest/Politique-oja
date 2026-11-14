@@ -34,6 +34,7 @@ Garde un style classe, façon pub de mode : Flow refuse parfois les images trop 
 - **Modèle :** **Veo 3.1 – Fast**, qui coûte beaucoup moins de crédits. Passe en « Quality » seulement pour refaire un plan important qui rate.
 - **Format :** **9:16 (portrait)**, **x1**.
 - **Son activé.** La réplique entre guillemets est dite par le personnage, avec les lèvres synchronisées. Je garde ce son au montage.
+- **Un plan refusé ?** Essaie sa version B : un plan sans parole. Je fabrique alors la réplique avec la voix que Veo a donnée au personnage dans ses autres plans.
 - **Une réplique mal prononcée ?** Régénère juste ce plan. « Oja » est écrit « Odja » dans le prompt pour être bien prononcé : les sous-titres afficheront « OJA ».
 - **À la fin :** télécharge chaque plan en **1080p** et nomme-le `plan1.mp4` à `plan8.mp4`. Envoie-les-moi dans un zip.
 
@@ -58,8 +59,13 @@ Grâce (from the reference image) stops walking on the paved sidewalk, tired, on
 ```
 
 ### Plan 3 — Tonton sûr de lui (« Fais-moi confiance… Voilà ! »)
+Version A, simple :
 ```
-Tonton Augustin (from the reference image) stands on a modern paved street of Cotonou, smiling with great confidence and lifting his chin proudly. He turns and spreads both arms wide with open palms, warmly presenting the place in front of him like a cheerful tour guide. He says in French, happy and proud: "Fais-moi confiance… Voilà !" Medium shot, friendly comedic tone.
+The man in the sky-blue boubou from the reference image walks a few steps on a modern paved street of Cotonou, then stops, smiles and opens his arms toward the building in front of him. He says cheerfully in French: "Fais-moi confiance… Voilà !" Medium shot.
+```
+Version B, si A est refusée (vu de dos, sans parole : je mets sa réplique en voix off au montage) :
+```
+View from behind: the man in the sky-blue boubou from the reference image stands on a modern paved street of Cotonou and opens his arms toward a trendy hair salon with a large glass front. We only see his back. Medium wide shot. No dialogue.
 ```
 
 ### Plan 4 — La révélation (« Tonton… c'est un salon de coiffure. »)
@@ -78,8 +84,13 @@ Grâce (from the reference image) looks at her smartphone, scrolls with her thum
 ```
 
 ### Plan 7 — Tonton retombe sur ses pieds (« C'est exactement ce que j'allais dire. »)
+Version A, simple :
 ```
-Tonton Augustin (from the reference image) nods calmly with a confident smile and straightens the collar of his boubou, as if nothing happened. He says in French, relaxed and sure of himself: "Oui, c'est exactement ce que j'allais dire." Beside him, Grâce (from the reference image) slowly turns her head toward him, amused, raising her eyebrows. Medium two-shot on a modern paved street with palm trees, light comedic tone.
+The man in the sky-blue boubou from the reference image smiles calmly and nods, relaxed. He says in French: "Oui, c'est exactement ce que j'allais dire." The young woman from the reference image stands next to him, amused. Medium two-shot on a modern paved street with palm trees.
+```
+Version B, si A est refusée (la réaction de Grâce, sans parole : la réplique de Tonton passe en voix off) :
+```
+Close-up of the young woman from the reference image on a modern paved street with palm trees. She slowly turns her head to the side and raises her eyebrows, amused and unconvinced, as if someone next to her just said something ridiculous. No dialogue.
 ```
 
 ### Plan 8 — Au maquis (« Tu vois ? Je connais Cotonou. »)
