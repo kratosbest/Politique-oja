@@ -1,6 +1,6 @@
 # Prompts Google Flow (Veo) — sketch 3 « Monsieur Je-connais-tout »
 
-Sketch d'environ 45 s, en **9:16 vertical** (TikTok, Reels, statuts WhatsApp), avec de **nouveaux personnages en images réalistes**. Les dialogues viennent du document « Sketchs OJA — dialogues » (sketch 3).
+Sketch d'environ 45 s, en **9:16 vertical** (TikTok, Reels, statuts WhatsApp), avec de **nouveaux personnages en images réalistes**, dans le **nouveau Cotonou** : avenues goudronnées, trottoirs pavés, lampadaires solaires, palmiers et bâtiments modernes. Les dialogues viennent du document « Sketchs OJA — dialogues » (sketch 3).
 
 **Qui fait quoi :**
 - **Dans Flow, tu génères les 8 plans** (environ 8 s chacun), **avec le son** : Veo fait parler les personnages et synchronise les lèvres.
@@ -16,15 +16,17 @@ Sketch d'environ 45 s, en **9:16 vertical** (TikTok, Reels, statuts WhatsApp), a
 
 Dans Flow, génère d'abord **une image** de chaque personnage, avec « Create image ». Garde la meilleure, puis utilise-la comme **ingrédient** dans tous ses plans.
 
-**Tonton Augustin — le Je-connais-tout**
+**Tonton Augustin — le Je-connais-tout, bel homme élégant**
 ```
-Photorealistic full-body portrait of a Beninese man in his mid-fifties, portly, short grey beard, very confident smile, wearing a sky-blue bazin boubou with gold embroidery and a matching cap, brown leather sandals, standing on a sandy residential street in Cotonou in warm late-afternoon light, 9:16 vertical. No text, no logo.
+Photorealistic full-body portrait of a handsome, distinguished Beninese man in his early fifties, fit, well-groomed short salt-and-pepper beard, charming confident smile, wearing an elegant sky-blue bazin boubou with subtle gold embroidery and a matching cap, a classy wristwatch and stylish brown leather sandals, standing on a newly paved avenue of modern Cotonou with palm trees, solar streetlights and modern buildings, warm late-afternoon golden light, 9:16 vertical. No text, no logo.
 ```
 
-**Grâce — sa nièce**
+**Grâce — sa nièce, belle et stylée**
 ```
-Photorealistic full-body portrait of a Beninese young woman around 24, braids gathered in a bun, small gold earrings, wearing a yellow and green wax-print top, blue jeans and white sneakers, holding a smartphone, playful skeptical expression, standing on a sandy residential street in Cotonou in warm late-afternoon light, 9:16 vertical. No text, no logo.
+Photorealistic full-body portrait of a beautiful, stylish Beninese young woman around 24, confident and glamorous, long braids, gold hoop earrings, light makeup, wearing a fitted white crop top, high-waisted frayed denim cut-off shorts and white sneakers, holding a smartphone, playful teasing smile, standing on a newly paved avenue of modern Cotonou with palm trees, solar streetlights and modern buildings, warm late-afternoon golden light, 9:16 vertical. No text, no logo.
 ```
+
+Garde un style classe, façon pub de mode : Flow refuse parfois les images trop osées, et ça colle mieux à une pub OJA.
 
 ## 2. Réglages Flow
 
@@ -38,7 +40,7 @@ Photorealistic full-body portrait of a Beninese young woman around 24, braids ga
 ## 3. Bloc STYLE (à coller à la fin de chaque prompt)
 
 ```
-Present-day Cotonou, Benin. Light comedic tone, cinematic photorealistic live-action, warm late-afternoon light, natural colors, 9:16 vertical, shallow depth of field. The characters speak French with a natural Beninese accent. No text, no readable signs, no logos, no subtitles, no watermark, no background music.
+Modern present-day Cotonou, Benin: newly paved avenues and side streets with clean paved sidewalks, solar streetlights, palm trees, modern buildings and shops. Light comedic tone, cinematic photorealistic live-action, warm late-afternoon golden light, vibrant natural colors, 9:16 vertical, shallow depth of field. The characters speak French with a natural Beninese accent. No text, no readable signs, no logos, no subtitles, no watermark, no background music.
 ```
 
 ---
@@ -47,22 +49,22 @@ Present-day Cotonou, Benin. Light comedic tone, cinematic photorealistic live-ac
 
 ### Plan 1 — Tonton guide (« Suis-moi ! Cotonou, je connais par cœur. »)
 ```
-Tonton Augustin (from the reference image) walks confidently toward the camera along a sandy residential street, chest out, waving his hand for Grâce (from the reference image) to follow him; she walks a few steps behind, looking at her phone. He says proudly in French: "Suis-moi ! Cotonou, je connais par cœur. Le meilleur poulet braisé, c'est par ici." Medium tracking shot.
+Tonton Augustin (from the reference image) walks confidently toward the camera along a newly paved street of modern Cotonou lined with palm trees, chest out, waving his hand for Grâce (from the reference image) to follow him; she walks a few steps behind in her denim cut-off shorts, looking at her phone. He says proudly in French: "Suis-moi ! Cotonou, je connais par cœur. Le meilleur poulet braisé, c'est par ici." Medium tracking shot.
 ```
 
 ### Plan 2 — Grâce fatiguée (« On a déjà fait trois fois le tour. »)
 ```
-Grâce (from the reference image) stops walking, tired, and points at a small kiosk with a red umbrella right next to them. She says in French, deadpan and a bit annoyed: "Tonton… on a déjà fait trois fois le tour." Medium shot on her, the kiosk with the red umbrella clearly visible behind.
+Grâce (from the reference image) stops walking on the paved sidewalk, tired, one hand on her hip, and points at a small modern kiosk with a red umbrella right next to them. She says in French, deadpan and a bit annoyed: "Tonton… on a déjà fait trois fois le tour." Medium shot on her, the kiosk with the red umbrella clearly visible behind.
 ```
 
 ### Plan 3 — Tonton sûr de lui (« Fais-moi confiance… Voilà ! »)
 ```
-Tonton Augustin (from the reference image) raises one finger, very sure of himself, then turns and opens both arms wide toward something off-screen, proud like a tour guide presenting a monument. He says in French: "Fais-moi confiance… Voilà !" Medium shot, slight low angle.
+Tonton Augustin (from the reference image) raises one finger, very sure of himself, then turns and opens both arms wide toward something off-screen, proud like a tour guide presenting a monument, on a modern paved street of Cotonou. He says in French: "Fais-moi confiance… Voilà !" Medium shot, slight low angle.
 ```
 
 ### Plan 4 — La révélation (« Tonton… c'est un salon de coiffure. »)
 ```
-Wide reveal shot: instead of a restaurant, a small open-front neighborhood hair salon. Two women sit under hair dryers and a hairdresser is braiding a client's hair; they all stop and stare at Tonton Augustin standing proudly in front of the salon with his arms open. Grâce (from the reference image), next to him, says in French, deadpan: "Tonton… c'est un salon de coiffure." Comedic timing. No readable sign on the salon.
+Wide reveal shot: instead of a restaurant, a trendy modern hair salon with a large glass front on a paved street of modern Cotonou. Inside, two women sit under hair dryers and a hairdresser is braiding a client's hair; they all stop and stare at Tonton Augustin standing proudly in front of the salon with his arms open. Grâce (from the reference image), next to him, says in French, deadpan: "Tonton… c'est un salon de coiffure." Comedic timing. No readable sign on the salon.
 ```
 
 ### Plan 5 — Le silence gênant (« … Ils ont changé le menu. »)
@@ -72,7 +74,7 @@ Close-up of Tonton Augustin (from the reference image), frozen and embarrassed. 
 
 ### Plan 6 — Grâce sort la map (« C'est sur la map Odja. »)
 ```
-Grâce (from the reference image) looks at her smartphone, scrolls with her thumb, then turns the phone toward Tonton Augustin; the screen faces away from the camera. She says in French, with a teasing smile: "Le maquis a déménagé. Il est à deux rues, c'est sur la map Odja." Medium two-shot.
+Grâce (from the reference image) looks at her smartphone, scrolls with her thumb, then turns the phone toward Tonton Augustin; the screen faces away from the camera. She says in French, with a teasing smile: "Le maquis a déménagé. Il est à deux rues, c'est sur la map Odja." Medium two-shot on a modern paved street with palm trees.
 ```
 
 ### Plan 7 — Tonton retombe sur ses pieds (« C'est exactement ce que j'allais dire. »)
@@ -82,7 +84,7 @@ Tonton Augustin (from the reference image), without missing a beat, nods confide
 
 ### Plan 8 — Au maquis (« Tu vois ? Je connais Cotonou. »)
 ```
-Dusk, a lively neighborhood maquis terrace in Cotonou with plastic chairs and colorful string lights. Tonton Augustin (from the reference image) sits at a table eating braised chicken with alloco with his hands, mouth full, very happy. He says in French with his mouth full: "Tu vois ? Je connais Cotonou." Grâce (from the reference image), sitting across the table, rolls her eyes and laughs. Medium shot.
+Dusk, a trendy open-air maquis-lounge terrace in modern Cotonou, wooden tables, plants and warm string lights. Tonton Augustin (from the reference image) sits at a table eating braised chicken with alloco with his hands, mouth full, very happy. He says in French with his mouth full: "Tu vois ? Je connais Cotonou." Grâce (from the reference image), sitting across the table, rolls her eyes and laughs. Medium shot.
 ```
 
 ---
