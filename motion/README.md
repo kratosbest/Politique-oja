@@ -1200,7 +1200,7 @@ sur la map OJA — C'est gratuit », « Télécharge Oja App » et le QR code.
 - Images (Nano Banana 2 Lite, une variante chacune, flow « Sketch OJA 1 (cour) ») : `assets/sketch2/rue.jpg` (panneau
   « ATTENTION CHIEN MÉCHANT » peint ensuite → `rue_sign.jpg`), `pharmacie.jpg`, `bar.jpg`, `bonitel_src.jpg` (Boni au
   téléphone) et sa bouche ouverte, `zem_src.jpg` (le kêkênon). Sèna et Boni viennent de `assets/sketch1/`.
-- Marionnettes : `fx_venv/bin/python src/puppet.py work/sketch2/puppets.json` (version générique de `sk1_prep.py`).
+- Marionnettes : `fx_venv/bin/python src/puppet.py src/puppets/sketch2.json` (version générique de `sk1_prep.py`).
 - Voix (eleven_v4, Boni = Steve, Sèna = Tony) : `assets/sketch2/lXX.mp3` ; aboiement : `chien.mp3` (effets sonores
   ElevenLabs). `python3 src/sk2_marks.py` place les répliques et les événements → `marks.js`.
 - Écran du téléphone : `node src/sk_screen.js assets/sketch2/scr '{"texts":{"Chez Maman Rose":"Le Bar de Boni", …},
@@ -1240,7 +1240,7 @@ nouveau Cotonou (avenue, salon de coiffure, terrasse du maquis).
 - Images (Nano Banana 2 Lite, une variante chacune, flow « Sketch OJA 1 (cour) ») : `assets/sketch4/avenue.jpg`,
   `salon.jpg`, `maquis.jpg`, `tonton_src.jpg`, `tontonv_src.jpg` (bras ouverts, recalé sur la pose de base →
   `tontonv_warp.jpg`), `grace_src.jpg`, `table_src.jpg` (la table du maquis au premier plan) et les bouches ouvertes.
-- Marionnettes : `fx_venv/bin/python src/puppet.py work/sketch4_puppets.json` (`gap_min` relevé pour Grâce : son top
+- Marionnettes : `fx_venv/bin/python src/puppet.py src/puppets/sketch4.json` (`gap_min` relevé pour Grâce : son top
   blanc côtelé n'est pas du fond).
 - Voix : celles de la version Flow (`assets/sketch3/dub/dXX.mp3`, phrases entières). `python3 src/sk4_marks.py` → `marks.js`.
 - Son : `python3 src/sk4_audio.py work/sketch4/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_jct2d.m4a`.

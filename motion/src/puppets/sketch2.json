@@ -1,0 +1,53 @@
+{
+ "outdir": "assets/sketch2/",
+ "var": "PUP2",
+ "chars": {
+  "bonitel": {
+   "src": "assets/sketch2/bonitel_src.jpg",
+   "open": "assets/sketch2/bonitel_open_src.jpg",
+   "eyes": [
+    [
+     424,
+     285,
+     461,
+     321
+    ],
+    [
+     505,
+     286,
+     535,
+     319
+    ]
+   ],
+   "mouth": [
+    487,
+    378,
+    52,
+    28
+   ],
+   "face": [
+    380,
+    240,
+    600,
+    440
+   ]
+  },
+  "zem": {
+   "src": "assets/sketch2/zem_src.jpg",
+   "eyes": [
+    [
+     625,
+     179,
+     664,
+     204
+    ],
+    [
+     581,
+     180,
+     611,
+     202
+    ]
+   ]
+  }
+ }
+}

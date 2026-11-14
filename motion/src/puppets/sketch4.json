@@ -1,0 +1,100 @@
+{
+ "outdir": "assets/sketch4/",
+ "var": "PUP4",
+ "chars": {
+  "tonton": {
+   "src": "assets/sketch4/tonton_src.jpg",
+   "open": "assets/sketch4/tonton_open_src.jpg",
+   "eyes": [
+    [
+     424,
+     285,
+     462,
+     321
+    ],
+    [
+     505,
+     286,
+     535,
+     319
+    ]
+   ],
+   "mouth": [
+    487,
+    374,
+    46,
+    22
+   ],
+   "face": [
+    380,
+    240,
+    600,
+    440
+   ]
+  },
+  "tontonv": {
+   "src": "assets/sketch4/tontonv_warp.jpg",
+   "open": "assets/sketch4/tonton_open_src.jpg",
+   "eyes": [
+    [
+     700,
+     285,
+     738,
+     321
+    ],
+    [
+     781,
+     286,
+     811,
+     319
+    ]
+   ],
+   "mouth": [
+    763,
+    374,
+    46,
+    22
+   ],
+   "face": [
+    656,
+    240,
+    876,
+    440
+   ]
+  },
+  "grace": {
+   "src": "assets/sketch4/grace_src.jpg",
+   "open": "assets/sketch4/grace_open_src.jpg",
+   "eyes": [
+    [
+     406,
+     293,
+     454,
+     324
+    ],
+    [
+     343,
+     298,
+     379,
+     327
+    ]
+   ],
+   "mouth": [
+    398,
+    381,
+    40,
+    21
+   ],
+   "face": [
+    320,
+    140,
+    520,
+    430
+   ],
+   "gap_min": 1400
+  },
+  "table": {
+   "src": "assets/sketch4/table_src.jpg"
+  }
+ }
+}
