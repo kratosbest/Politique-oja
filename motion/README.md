@@ -1214,3 +1214,20 @@ sur la map OJA — C'est gratuit », « Télécharge Oja App » et le QR code.
   crédits), et cale chaque mot écrit sur la voix → `assets/sketch2/voix/`. Puis `python3 src/sk2_marks.py voix`, le son
   et le rendu comme ci-dessus. Les enregistrements bruts ne sont pas dans le dépôt. `python3 src/sk2_marks.py` (sans
   argument) revient aux voix ElevenLabs.
+
+## OJA Sketch 3 — « Monsieur Je-connais-tout », tourné avec Google Flow (9:16, 44 s)
+
+Tonton Augustin (boubou bleu ciel) emmène sa nièce Grâce au « meilleur maquis » du nouveau Cotonou… qui est devenu un
+salon de coiffure ; Grâce sort la map OJA. Les plans viennent de Google Flow (Veo 3.1, `PROMPTS_GOOGLE_FLOW_SKETCH3.md`),
+générés par Derrick : `clips_sk3/p1…p8.mp4` (pas de plans 3 et 7, refusés par Flow : leurs répliques passent dans les
+plans 4 et 6).
+
+- Voix : Veo disait d'autres mots par endroits, donc tout est redoublé. `python3 src/sk3_dub.py` (ElevenLabs eleven_v4,
+  vitesse 1.15 ; Tonton = « Martinez », Grâce = « Alimata ») coupe chaque réplique en morceaux et les cale là où les lèvres
+  bougent (fenêtres mesurées avec Scribe) → `assets/sketch3/dub/`. `src/tts.py` accepte maintenant `--speed`.
+- Montage : `python3 src/sk3_marks.py` (ordre des plans, insert de la map OJA « Maquis Le Braisé », carte de fin) →
+  `assets/sketch3/marks.js` ; page `oja_sketch_flow3.html` (l'enseigne « 9:16 » écrite par Veo au plan 4 est floutée).
+- Son : `python3 src/sk3_audio.py work/sketch3/mix.wav` (ville moderne, grillons et « wah-wah » dans le silence gênant,
+  terrasse du maquis, marimba), puis loudnorm I=-14 → `assets/soundtrack_sketch_flow3.m4a`.
+- Rendu : `src/sketch_flow3_render.sh` (refait les images des plans et l'écran de l'app s'ils manquent) →
+  `OJA_Sketch_JeConnaisTout_9x16.mp4`.

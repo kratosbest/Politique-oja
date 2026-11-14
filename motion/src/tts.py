@@ -50,7 +50,7 @@ def main():
     ap.add_argument('--voice'); ap.add_argument('--text-file'); ap.add_argument('--out')
     ap.add_argument('--model', default='eleven_v4'); ap.add_argument('--language', default='fr')
     ap.add_argument('--max-credits', type=int); ap.add_argument('--cost-per-char', type=float, default=1.0)
-    ap.add_argument('--stability', type=float); ap.add_argument('--dry-run', action='store_true')
+    ap.add_argument('--stability', type=float); ap.add_argument('--speed', type=float); ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
     if a.credits:
         used, limit, left, tier = credits(); print(f'plan {tier}: {used} / {limit} credits used, {left} left'); return
@@ -83,8 +83,10 @@ def main():
     if a.dry_run:
         return
     body = {'text': text, 'model_id': a.model, 'language_code': a.language}
-    if a.stability is not None:
-        body['voice_settings'] = {'stability': a.stability}
+    vs = {}
+    if a.stability is not None: vs['stability'] = a.stability
+    if a.speed is not None: vs['speed'] = a.speed            # 0.7 (slow) to 1.2 (fast)
+    if vs: body['voice_settings'] = vs
     r = call('POST', f'/v1/text-to-speech/{a.voice}/with-timestamps?output_format=mp3_44100_128', body)
     os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
     open(a.out, 'wb').write(base64.b64decode(r['audio_base64']))
