@@ -1250,3 +1250,17 @@ inversée, Grâce devant) et finissent à la terrasse du maquis (42 s).
   avec Scribe). `python3 src/sk4_marks.py` → `marks.js`.
 - Son : `python3 src/sk4_audio.py work/sketch4/mix.wav`, puis loudnorm I=-14 → `assets/soundtrack_sketch_jct2d.m4a`.
 - Rendu : `src/sketch_jct2d_render.sh` → `OJA_Sketch_JeConnaisTout_2D_9x16.mp4`.
+
+## Pub face caméra « Ton enseigne » (essai, 9:16)
+
+Style « kinetic typography » d'une pub premium : Derrick parle face caméra, coupes sèches avec un nouveau cadrage à chaque
+coupe, quelques mots animés par phrase (italique serif, grosse ronde, capitales serrées orange OJA), certains passent
+derrière sa tête, images d'illustration en cartes inclinées, l'appli dans un téléphone, grain, carte de fin (30 s).
+
+- Source : sa vidéo de test (`work/talk1/src.mp4`, pas dans git) et sa transcription mot à mot (`work/talk1/stt.json`,
+  Scribe ElevenLabs).
+- Montage : `python3 src/tk1_edl.py` garde les phrases, coupe la toux, le « euh » et les pauses, cale chaque coupe sur un
+  silence → `assets/talk1/marks.js`.
+- Détourage : `src/tk1_matte.py` (clé de luminosité : mur clair, vêtements sombres, téléphone fixe) → `work/talk1/mt/`.
+- Son : sa voix nettoyée, un beat minimal (coupé sur « tu n'existes pas »), petits sons sur les mots (`src/tk1_audio.py`).
+- Rendu : `src/talk_enseigne_render.sh` → `OJA_Talk_TonEnseigne_essai_9x16.mp4`.

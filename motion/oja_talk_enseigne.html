@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OJA, Ton enseigne</title>
+<!-- Talking-head ad « Ton enseigne » (9:16, 1080x1920), first try on Derrick's test video. Style of a premium « kinetic
+     typography » edit: jump cuts with a new framing at every cut, a few words per phrase animated around him (mixed fonts:
+     italic serif, heavy round sans, tall condensed capitals in OJA orange), some of them passing behind his head, cutaway
+     pictures in tilted cards, the app in a phone, film grain, an end card. Cut list and words: assets/talk1/marks.js
+     (src/tk1_edl.py); his frames and mattes: work/talk1/fr/ and work/talk1/mt/ (src/tk1_matte.py, not in git). Rendered by
+     src/talk_enseigne_render.sh. -->
+<link rel="stylesheet" href="fonts/local.css">
+<link rel="stylesheet" href="fonts/editorial.css">
+<script src="assets/talk1/marks.js"></script>
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0d0906}
+#cv{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#endc{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(90% 60% at 50% 40%,rgba(255,107,0,.20),rgba(13,9,6,0) 70%),#0d0906}
+#endc .k{font:italic 500 58px 'Playfair Display';color:#F3E6D3;margin-bottom:10px}
+#endc h2{margin:0;font:900 96px/1.0 Poppins;color:#fff;letter-spacing:-2px}
+#endc h2 span{color:#FF6B00}
+#endc .g{margin-top:22px;font:600 40px Poppins;color:#F3E6D3}
+#endc .dl{margin-top:46px;display:inline-block;padding:22px 44px;border-radius:999px;background:#FF6B00;color:#fff;font:800 48px Poppins;box-shadow:0 14px 40px rgba(255,107,0,.35)}
+#endc .qr{margin-top:34px;width:250px;height:250px;padding:20px;border-radius:30px;background:#fff}
+#endc .qr img{width:100%;height:100%;display:block}
+#endc p{margin:20px 0 0;font:600 30px Poppins;color:#cfc4b6}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="endc"><div class="k">Ton commerce mérite d'être trouvé.</div><h2>Ajoute-le sur<br>la <span>map OJA</span></h2><div class="g">C'est gratuit.</div>
+  <div class="dl">Télécharge Oja App</div><div class="qr"><img src="pubs/qr_telecharger.svg" alt=""></div><p>Play Store et App Store</p></div>
+<script>
+const W = 1080, H = 1920, FPS = 30, SEG = TK.segs, NF = 784, OR = '#FF6B00', CREAM = '#F3E6D3';
+const END = TK.speech + .12, DUR = END + 3.6;
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const lin = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const eo = x => 1 - Math.pow(1 - x, 3), eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const hash = n => { const x = Math.sin(n * 127.1 + 3.7) * 43758.5453; return x - Math.floor(x); };
+
+// ---------- timeline ----------
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z']/gi, '').toLowerCase();
+const S = i => SEG[i].t, E = i => SEG[i].t + SEG[i].dur;
+const WT = (i, w, nth = 1) => { const xs = SEG[i].words.filter(x => norm(x[0]).startsWith(norm(w))); const x = xs[nth - 1] || xs[0]; return x ? x[1] : SEG[i].t; };
+const WE = (i, w, nth = 1) => { const xs = SEG[i].words.filter(x => norm(x[0]).startsWith(norm(w))); const x = xs[nth - 1] || xs[0]; return x ? x[2] : E(i); };
+// framings of the phone shot (source 1080x1920): zoom and the point put at the centre; head ≈ (540, 860) in the source
+const FR = { wide: [1.15, 540, 1080], med: [1.4, 540, 1050], close: [1.9, 540, 900] };   // on screen his head is then at y ≈ 700 (med), 935 (close)
+const T_SPLIT = WT(11, 'plus') - .3;
+const SHOTS = [
+  [0, 'A', 'close'], [S(1), 'A', 'med'], [S(2), 'A', 'close'], [S(3), 'B', 'sign'], [S(4), 'B', 'market'], [S(6), 'B', 'phone'],
+  [S(7), 'A', 'med'], [S(9), 'A', 'close'], [S(10), 'B', 'vide'], [S(11), 'A', 'wide'], [T_SPLIT, 'A', 'med'], [S(12), 'A', 'close'],
+  [S(13), 'B', 'app_add'], [S(14), 'B', 'app_map'], [S(15), 'A', 'med'], [END, 'END', '']];
+const shotAt = t => { let k = 0; for (let i = 0; i < SHOTS.length; i++) if (t >= SHOTS[i][0]) k = i; return { s: SHOTS[k], u: t - SHOTS[k][0], len: (SHOTS[k + 1] ? SHOTS[k + 1][0] : DUR) - SHOTS[k][0] }; };
+
+// ---------- images ----------
+const IM = {}, loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => { console.error('missing ' + src); r(null); }; i.src = src; });
+const STATIC = { sign: 'assets/biz_vulca.jpg', market: 'assets/biz_market.jpg', phone: 'assets/zem/h_phone.jpg', vide: 'assets/lieux/h_vide_v.jpg',
+  plat: 'assets/lieu2/plat.jpg', ajout: '../video3/assets/app/ajout.jpg' };
+const NSCR = 161, scr = i => 'assets/sketch4/scr/s' + String(i).padStart(3, '0') + '.jpg';
+const fr = i => `work/talk1/fr/f${String(Math.min(NF, Math.max(1, i))).padStart(4, '0')}.jpg`, mt = i => fr(i).replace('/fr/', '/mt/').replace('.jpg', '.png');
+const CACHE = new Map();
+const get = src => { if (!CACHE.has(src)) { CACHE.set(src, loadImg(src)); if (CACHE.size > 40) CACHE.delete(CACHE.keys().next().value); } return CACHE.get(src); };
+
+// ---------- drawing helpers ----------
+const GRADE = 'contrast(1.14) saturate(.86) brightness(.93) sepia(.10)';
+function vignette(a) { const g = ctx.createRadialGradient(540, 900, 380, 540, 960, 1300); g.addColorStop(0, 'rgba(13,9,6,0)'); g.addColorStop(1, `rgba(13,9,6,${a})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+let GRAIN = null;
+function grain(t) {
+  if (!GRAIN) { GRAIN = []; for (let k = 0; k < 4; k++) { const c = document.createElement('canvas'); c.width = 540; c.height = 960; const g = c.getContext('2d'), d = g.createImageData(540, 960);
+    for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() - .5) * 120; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); GRAIN.push(c); } }
+  ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .10; ctx.drawImage(GRAIN[Math.floor(t * FPS) % 4], 0, 0, W, H); ctx.restore();
+}
+function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function cover(img, z = 1, fx = .5, fy = .5, filter = GRADE) {
+  const s = Math.max(W / img.width, H / img.height) * z, w = img.width * s, h = img.height * s;
+  ctx.save(); ctx.filter = filter; ctx.drawImage(img, (W - w) * fx, (H - h) * fy, w, h); ctx.restore();
+}
+// the phone shot with a framing; `behind` is drawn between the room and him (words passing behind his head)
+const OFF = document.createElement('canvas'); OFF.width = W; OFF.height = H; const octx = OFF.getContext('2d');
+function aroll(img, matte, f, u, behind, punch) {
+  const [z0, cx, cy] = FR[f], z = z0 * (1 + .025 * u) * punch;
+  const place = c => { c.translate(540, 960); c.scale(z, z); c.translate(-cx, -cy); };
+  ctx.save(); place(ctx); ctx.filter = GRADE; ctx.drawImage(img, 0, 0, 1080, 1920); ctx.restore();
+  if (behind && matte) {
+    behind();
+    octx.setTransform(1, 0, 0, 1, 0, 0); octx.clearRect(0, 0, W, H); octx.save(); place(octx); octx.filter = GRADE; octx.drawImage(img, 0, 0, 1080, 1920);
+    octx.globalCompositeOperation = 'destination-in'; octx.filter = 'none'; octx.drawImage(matte, 0, 0, 1080, 1920); octx.restore();
+    ctx.drawImage(OFF, 0, 0);
+  }
+}
+// a picture in a tilted card over a blurred copy of itself
+function card(img, u, len, rot = -3, wcard = 900) {
+  ctx.save(); ctx.filter = 'blur(26px) brightness(.45) saturate(.8)'; const s = Math.max(W / img.width, H / img.height) * 1.15;
+  ctx.drawImage(img, (W - img.width * s) / 2, (H - img.height * s) / 2, img.width * s, img.height * s); ctx.restore();
+  const k = eo(lin(u, 0, .35)), cw = wcard * (1.03 + .04 * u / len), ch = cw * img.height / img.width;
+  ctx.save(); ctx.translate(540, 1000 + (1 - k) * 120); ctx.rotate((rot + 1.2 * u / len) * Math.PI / 180); ctx.globalAlpha = k;
+  ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 30;
+  rrect(ctx, -cw / 2 - 12, -ch / 2 - 12, cw + 24, ch + 24, 34); ctx.fillStyle = CREAM; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.save(); rrect(ctx, -cw / 2, -ch / 2, cw, ch, 24); ctx.clip(); ctx.filter = GRADE; ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch); ctx.restore();
+  ctx.restore();
+}
+function phoneShot(screen, u, tap) {        // the app in a phone, over a dark warm background
+  const g = ctx.createRadialGradient(540, 900, 100, 540, 960, 1200); g.addColorStop(0, '#3a2414'); g.addColorStop(1, '#0d0906'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const k = eo(lin(u, 0, .32)), SW = 600, SH = SW * screen.height / screen.width, PW = SW + 36, PH = SH + 36;
+  ctx.save(); ctx.translate(540, 1110 + (1 - k) * 300); ctx.rotate((2.5 - 1.2 * u) * Math.PI / 180); ctx.scale(.94 + .06 * back(lin(u, 0, .4)), .94 + .06 * back(lin(u, 0, .4)));
+  ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 70; ctx.shadowOffsetY = 30;
+  rrect(ctx, -PW / 2, -PH / 2, PW, PH, 74); ctx.fillStyle = '#17120e'; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.save(); rrect(ctx, -SW / 2, -SH / 2, SW, SH, 56); ctx.clip(); ctx.drawImage(screen, -SW / 2, -SH / 2, SW, SH);
+  if (tap) { const q = lin(u, tap[2], tap[2] + .5), sc = SW / screen.width, rx = -SW / 2 + tap[0] * sc, ry = -SH / 2 + tap[1] * sc;
+    if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(rx, ry, 26 + 60 * eo(q), 0, 2 * Math.PI); ctx.strokeStyle = `rgba(255,107,0,${.9 * (1 - q)})`; ctx.lineWidth = 9; ctx.stroke();
+      ctx.beginPath(); ctx.arc(rx, ry, 26 * (1 - .3 * q), 0, 2 * Math.PI); ctx.fillStyle = `rgba(255,107,0,${.35 * (1 - q)})`; ctx.fill(); } }
+  ctx.restore(); ctx.restore();
+}
+
+// ---------- animated words ----------
+// one item: [t0, t1, text, style, x, y, opts]; styles: it (italic serif), th (light sans), hv (heavy round), cd (tall condensed capitals)
+const STY = { it: (s) => `italic 700 ${s}px 'Playfair Display'`, th: (s) => `500 ${s}px 'Inter Tight'`, hv: (s) => `900 ${s}px Poppins`, cd: (s) => `700 ${s}px Inter` };
+function word(it, t) {
+  const [t0, t1, text, st, x, y, o = {}] = it; if (t < t0 || t >= t1) return;
+  const size = o.size || 80, u = t - t0, a = Math.min(lin(t, t0, t0 + .1), 1 - lin(t, t1 - .08, t1));
+  const pop = o.stamp ? 1 + 1.2 * (1 - eo(lin(u, 0, .16))) : .7 + .3 * back(lin(u, 0, .22));
+  ctx.save(); ctx.translate(x, y + (o.stamp ? 0 : 18 * (1 - eo(lin(u, 0, .22))))); ctx.rotate((o.rot || 0) * Math.PI / 180); ctx.scale(pop * (st === 'cd' ? .74 : 1), pop);
+  ctx.font = STY[st](size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = a;
+  let shown = text;
+  if (o.words) { const n = o.words.filter(w => t >= w).length; shown = text.split(' ').slice(0, Math.max(1, n)).join(' '); }
+  if (o.box) { const w = ctx.measureText(text).width + 70, h = size * 1.25; ctx.save(); ctx.rotate(0); rrect(ctx, -w / 2, -h / 2, w, h, 26); ctx.fillStyle = OR; ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 30; ctx.fill(); ctx.restore(); }
+  ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = o.box ? 0 : 22; ctx.shadowOffsetY = 4;
+  ctx.fillStyle = o.color || '#fff'; ctx.fillText(shown, 0, 0);
+  if (o.strike) { const q = eo(lin(t, o.strike, o.strike + .25)), w = ctx.measureText(text).width * 1.06;
+    if (q > 0) { ctx.shadowColor = 'transparent'; ctx.fillStyle = o.strikeColor || '#fff'; ctx.fillRect(-w / 2, -size * .06, w * q, size * .1); } }
+  if (o.fade) { /* letters drop out one by one: « tu n'existes pas » */ }
+  ctx.restore();
+}
+function arcWord(t0, t1, text, cx, cy, r, a0, a1, t, size, color) {    // letters on an arc around his head, appearing one by one
+  if (t < t0 || t >= t1) return; const n = text.length, spin = 6 * (t - t0);
+  ctx.save(); ctx.font = STY.hv(size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
+  ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
+  for (let i = 0; i < n; i++) { const ti = t0 + i * .035; if (t < ti) break; const k = back(lin(t, ti, ti + .18)), a = (a0 + (a1 - a0) * i / (n - 1) + spin) * Math.PI / 180;
+    ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.scale(k, k); ctx.globalAlpha = Math.min(1, 1 - lin(t, t1 - .08, t1)); ctx.fillText(text[i], 0, 0); ctx.restore(); }
+  ctx.restore();
+}
+function vanish(t0, t1, text, x, y, size, t) {     // « TU N'EXISTES PAS. »: pops, then the letters drop out at random
+  if (t < t0 || t >= t1) return; ctx.save(); ctx.font = STY.hv(size); ctx.textBaseline = 'middle';
+  const total = ctx.measureText(text).width; let xx = x - total / 2; ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
+  const k = .75 + .25 * back(lin(t, t0, t0 + .2));
+  for (let i = 0; i < text.length; i++) { const w = ctx.measureText(text[i]).width, td = t0 + .75 + hash(i + 3) * .45;
+    const a = 1 - lin(t, td, td + .12); if (a > 0) { ctx.globalAlpha = a; ctx.fillStyle = '#fff'; ctx.save(); ctx.translate(x + (xx + w / 2 - x) * k, y); ctx.scale(k, k); ctx.fillText(text[i], -w / 2, 0); ctx.restore(); }
+    xx += w; }
+  ctx.restore();
+}
+const prefix = (i, ws) => ws.map(w => WT(i, w));
+let T = {};                               // word timings used by the items, filled once
+function items() {
+  return [
+    [WT(0, 'Je') - .05, E(0), 'Je vais te dire', 'it', 540, 450, { size: 74, words: prefix(0, ['Je', 'vais', 'te', 'dire']) }],
+    [WT(0, 'un') - .03, E(0), 'UN TRUC.', 'hv', 540, 585, { size: 150, color: OR, rot: -4 }],
+    [WT(1, 'Le') - .05, E(1), 'le prends', 'it', 540, 1250, { size: 96, words: prefix(1, ['Le', 'prends']) }],
+    [WT(2, 'Ton') - .05, E(2), 'Ton', 'it', 250, 380, { size: 110, rot: -6 }],
+    [WT(3, 'personne') - .05, E(3), 'personne', 'it', 540, 470, { size: 130 }],
+    [WT(3, 'ne') - .03, E(3), 'NE LA VOIT.', 'hv', 540, 610, { size: 104, color: OR }],
+    [WT(4, 'Les') - .05, E(5), 'Les clients', 'th', 540, 420, { size: 78 }],
+    [WT(4, 'ne') - .03, E(5), 'ne cherchent pas', 'it', 540, 530, { size: 92 }],
+    [WT(5, 'dans') - .03, E(5), 'DANS LA RUE.', 'cd', 540, 1650, { size: 190, color: OR, strike: WE(5, 'rue') + .02 }],
+    [WT(6, 'Ils') - .05, E(6), 'Ils cherchent sur leur', 'it', 540, 430, { size: 76, words: prefix(6, ['Ils', 'cherchent', 'sur', 'leur']) }],
+    [WT(6, 'téléphone') - .03, E(6), 'TÉLÉPHONE.', 'hv', 540, 560, { size: 136, color: OR }],
+    [WT(7, 'Tu') - .05, E(8), 'Tu peux avoir', 'th', 540, 200, { size: 66, words: prefix(7, ['Tu', 'peux', 'avoir']) }],
+    [WT(7, 'meilleur') - .05, E(8), 'le meilleur', 'it', 540, 300, { size: 96 }],
+    [WT(8, 'du') - .03, E(8), 'du quartier', 'it', 540, 1140, { size: 84, color: CREAM }],
+    [WT(9, 'si') - .05, E(9), 'si on ne te trouve pas', 'th', 540, 1330, { size: 68, words: prefix(9, ['si', 'on', 'ne', 'te', 'trouve', 'pas']) }],
+    [WT(11, 'La') - .05, T_SPLIT, 'La plupart des commerçants', 'th', 540, 400, { size: 64, words: prefix(11, ['La', 'plupart', 'des', 'commerçants']) }],
+    [WT(11, "n'ont") - .05, T_SPLIT, "n'ont pas besoin", 'it', 540, 505, { size: 92 }],
+    [T_SPLIT + .05, E(11), "d'une", 'it', 540, 1150, { size: 80 }],
+    [WT(11, 'plus') - .03, E(11), 'PLUS GRANDE', 'cd', 540, 1300, { size: 200, color: OR, strike: WE(11, 'enseigne') + .05, strikeColor: '#fff' }],
+    [WT(11, 'enseigne') - .03, E(11), 'ENSEIGNE', 'cd', 540, 1490, { size: 200, color: OR, strike: WE(11, 'enseigne') + .15, strikeColor: '#fff' }],
+    [WT(12, 'Ils') - .05, E(12), "Ils ont besoin d'être", 'it', 540, 250, { size: 74, words: prefix(12, ['Ils', 'ont', 'besoin', "d'être"]) }],
+    [WT(13, 'Ajoute') - .05, E(13), 'Ajoute ton commerce', 'hv', 540, 260, { size: 84, words: prefix(13, ['Ajoute', 'ton', 'commerce']) }],
+    [WT(14, 'sur') - .05, E(14), 'sur la', 'it', 540, 230, { size: 84 }],
+    [WT(14, 'map') - .03, E(14), 'MAP OJA', 'hv', 540, 345, { size: 130, color: OR }],
+    [WT(15, "c'est") - .04, END, "C'EST GRATUIT.", 'hv', 540, 1330, { size: 104, box: true, stamp: true, rot: -6 }],
+  ];
+}
+let ITEMS = null;
+// words drawn behind his head (between the room and him)
+function behindFor(shotStart, t) {
+  if (shotStart === S(2)) return () => { const t0 = WT(2, 'enseigne') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3));
+    ctx.save(); ctx.font = STY.cd(270); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 560 + 60 * (1 - k)); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = OR; ctx.fillText('ENSEIGNE', 0, 0); ctx.restore(); };
+  if (shotStart === S(7)) return () => { const t0 = WT(7, 'maquis') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3));
+    ctx.save(); ctx.font = STY.cd(300); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 470 + 50 * (1 - k)); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = OR; ctx.fillText('MAQUIS', 0, 0); ctx.restore(); };
+  if (shotStart === S(12)) return () => { const t0 = WT(12, 'sur') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3)), k2 = eo(lin(t, WT(12, 'map') - .04, WT(12, 'map') + .26));
+    ctx.save(); ctx.font = STY.cd(250); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 410); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = CREAM; ctx.fillText('SUR LA', 0, 0); ctx.restore();
+    ctx.save(); ctx.font = STY.cd(400); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 600 + 70 * (1 - k2)); ctx.scale(.74 * (.8 + .2 * back(k2)), .8 + .2 * back(k2)); ctx.globalAlpha = k2; ctx.fillStyle = OR; ctx.fillText('MAP', 0, 0); ctx.restore(); };
+  return null;
+}
+
+// ---------- one frame ----------
+async function drawAt(t) {
+  if (!ITEMS) ITEMS = items();
+  const { s, u, len } = shotAt(t), [t0, kind, what] = s, fi = Math.floor(t * FPS) + 1;
+  const punch = 1 + .05 * (1 - eo(lin(u, 0, .2)));
+  let img = null, matte = null;
+  if (kind === 'A') { [img, matte] = await Promise.all([get(fr(fi)), get(mt(fi))]); }
+  const st = {};
+  for (const k of ['sign', 'market', 'phone', 'vide', 'plat', 'ajout']) st[k] = await get(STATIC[k]);
+  const scrImg = what === 'app_map' ? await get(scr(Math.min(30, Math.max(0, Math.round((u - .15) * 30))))) : null;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
+  if (kind === 'A') {
+    aroll(img, matte, what, u, behindFor(t0, t), punch);
+    if (t0 === S(1)) arcWord(WT(1, 'pas') - .05, E(1), 'PAS MAL', 515, 740, 345, -128, -52, t, 100, OR);
+    if (t0 === S(7) && t >= WT(7, 'meilleur') + .1) {        // the dish pops in a card over his hands
+      const k = back(lin(t, WT(7, 'meilleur') + .1, WT(7, 'meilleur') + .4)), p = st.plat, cw = 620, ch = cw * p.height / p.width;
+      ctx.save(); ctx.translate(560, 1500); ctx.rotate(5 * Math.PI / 180); ctx.scale(k, k); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 24;
+      rrect(ctx, -cw / 2 - 12, -ch / 2 - 12, cw + 24, ch + 24, 26); ctx.fillStyle = CREAM; ctx.fill(); ctx.shadowColor = 'transparent';
+      ctx.save(); rrect(ctx, -cw / 2, -ch / 2, cw, ch, 18); ctx.clip(); ctx.filter = GRADE; ctx.drawImage(p, -cw / 2, -ch / 2, cw, ch); ctx.restore(); ctx.restore();
+    }
+  } else if (kind === 'B') {
+    if (what === 'sign') { card(st.sign, u, len, -4, 760); const g = lin(u, .3, len); ctx.save(); ctx.globalAlpha = .55 * g; ctx.fillStyle = '#0d0906'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+    else if (what === 'market') card(st.market, u, len, 3, 980);
+    else if (what === 'phone') cover(st.phone, 1.12 - .06 * u / len, .5, .45);
+    else if (what === 'vide') { cover(st.vide, 1.0 + .08 * (1 - u / len), .5, .4, 'grayscale(1) contrast(1.2) brightness(.7)'); }
+    else if (what === 'app_add') phoneShot(st.ajout, u, [560, 640, WE(13, 'commerce') - S(13) - .1]);
+    else if (what === 'app_map' && scrImg) phoneShot(scrImg, u, null);
+  }
+  if (kind !== 'END') {
+    if (t0 === S(10)) vanish(WT(10, 'tu') - .04, E(10), "TU N'EXISTES PAS.", 540, 900, 108, t);
+    ITEMS.forEach(it => word(it, t));
+    vignette(.55); grain(t);
+  }
+  const ek = eo(lin(t, END, END + .45)); const ec = document.getElementById('endc'); ec.style.opacity = ek; ec.style.transform = `scale(${1.04 - .04 * ek})`;
+}
+let pending = Promise.resolve();
+window.renderAt = t => { pending = drawAt(t); };
+window.waitFrame = () => pending.then(() => new Promise(r => requestAnimationFrame(() => r())));
+// sounds for src/tk1_audio.py: [time, kind]
+window.SFX = (() => { const L = items(), out = [];
+  L.forEach(it => out.push([+(it[0] + .04).toFixed(3), it[6] && it[6].stamp ? 'stamp' : (it[3] === 'cd' || it[3] === 'hv') ? 'hit' : 'tick']));
+  [S(2), S(7), S(12)].forEach((s0, i) => out.push([+(i === 0 ? WT(2, 'enseigne') : i === 1 ? WT(7, 'maquis') : WT(12, 'map')).toFixed(3), 'hit']));
+  out.push([+S(10).toFixed(3), 'drop']); out.push([+(WE(13, 'commerce') - .1).toFixed(3), 'tap']); out.push([+(S(14) + .45).toFixed(3), 'pop']);
+  out.push([+END.toFixed(3), 'end']); SHOTS.forEach(s => s[0] > 0 && s[1] !== 'END' && out.push([+s[0].toFixed(3), 'cut']));
+  return out.sort((a, b) => a[0] - b[0]); })();
+window.TOTAL = DUR;
+const FONTS = ['italic 700 80px "Playfair Display"', '500 80px "Inter Tight"', '900 80px Poppins', '700 80px Inter', '800 48px Poppins', '600 40px Poppins', 'italic 500 58px "Playfair Display"'];
+window.ready = Promise.all(FONTS.map(f => document.fonts.load(f, 'AÉé'))).then(() => document.fonts.ready).then(() => Promise.all(Object.values(STATIC).map(get))).then(() => drawAt(0));
+</script>
+</body>
+</html>
