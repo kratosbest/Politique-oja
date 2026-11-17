@@ -5,31 +5,32 @@
 <title>OJA, Ton enseigne</title>
 <!-- Talking-head ad « Ton enseigne » (9:16, 1080x1920), first try on Derrick's test video. Style of a premium « kinetic
      typography » edit: jump cuts with a new framing at every cut, a few words per phrase animated around him (mixed fonts:
-     italic serif, heavy round sans, tall condensed capitals in OJA orange), some of them passing behind his head, cutaway
+     Outfit round sans popping letter by letter, Great Vibes script written on, Anton condensed capitals in worn OJA orange),
+     some of them passing behind his head, magnified pieces of his face flying around it, cutaway
      pictures in tilted cards, the app in a phone, film grain, an end card. Cut list and words: assets/talk1/marks.js
      (src/tk1_edl.py); his frames and mattes: work/talk1/fr/ and work/talk1/mt/ (src/tk1_matte.py, not in git). Rendered by
      src/talk_enseigne_render.sh. -->
 <link rel="stylesheet" href="fonts/local.css">
-<link rel="stylesheet" href="fonts/editorial.css">
+<link rel="stylesheet" href="fonts/talk.css">
 <script src="assets/talk1/marks.js"></script>
 <style>
 html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0d0906}
 #cv{position:absolute;left:0;top:0;width:1080px;height:1920px}
 #endc{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   background:radial-gradient(90% 60% at 50% 40%,rgba(255,107,0,.20),rgba(13,9,6,0) 70%),#0d0906}
-#endc .k{font:italic 500 58px 'Playfair Display';color:#F3E6D3;margin-bottom:10px}
-#endc h2{margin:0;font:900 96px/1.0 Poppins;color:#fff;letter-spacing:-2px}
-#endc h2 span{color:#FF6B00}
-#endc .g{margin-top:22px;font:600 40px Poppins;color:#F3E6D3}
-#endc .dl{margin-top:46px;display:inline-block;padding:22px 44px;border-radius:999px;background:#FF6B00;color:#fff;font:800 48px Poppins;box-shadow:0 14px 40px rgba(255,107,0,.35)}
+#endc .k{font:400 80px 'Great Vibes';color:#F3E6D3;margin-bottom:6px}
+#endc h2{margin:0;font:800 100px/1.0 Outfit;color:#fff;letter-spacing:-2px}
+#endc h2 span{color:#FF6B00;font:400 128px/1.0 Anton;letter-spacing:0}
+#endc .g{margin-top:22px;font:700 42px Outfit;color:#F3E6D3}
+#endc .dl{margin-top:46px;display:inline-block;padding:22px 44px;border-radius:999px;background:#FF6B00;color:#fff;font:800 48px Outfit;box-shadow:0 14px 40px rgba(255,107,0,.35)}
 #endc .qr{margin-top:34px;width:250px;height:250px;padding:20px;border-radius:30px;background:#fff}
 #endc .qr img{width:100%;height:100%;display:block}
-#endc p{margin:20px 0 0;font:600 30px Poppins;color:#cfc4b6}
+#endc p{margin:20px 0 0;font:500 30px Outfit;color:#cfc4b6}
 </style>
 </head>
 <body>
 <canvas id="cv" width="1080" height="1920"></canvas>
-<div id="endc"><div class="k">Ton commerce mérite d'être trouvé.</div><h2>Ajoute-le sur<br>la <span>map OJA</span></h2><div class="g">C'est gratuit.</div>
+<div id="endc"><div class="k">Ton commerce mérite d'être trouvé</div><h2>Ajoute-le sur<br>la <span>MAP OJA</span></h2><div class="g">C'est gratuit.</div>
   <div class="dl">Télécharge Oja App</div><div class="qr"><img src="pubs/qr_telecharger.svg" alt=""></div><p>Play Store et App Store</p></div>
 <script>
 const W = 1080, H = 1920, FPS = 30, SEG = TK.segs, NF = 784, OR = '#FF6B00', CREAM = '#F3E6D3';
@@ -114,89 +115,144 @@ function phoneShot(screen, u, tap) {        // the app in a phone, over a dark w
   ctx.restore(); ctx.restore();
 }
 
-// ---------- animated words ----------
-// one item: [t0, t1, text, style, x, y, opts]; styles: it (italic serif), th (light sans), hv (heavy round), cd (tall condensed capitals)
-const STY = { it: (s) => `italic 700 ${s}px 'Playfair Display'`, th: (s) => `500 ${s}px 'Inter Tight'`, hv: (s) => `900 ${s}px Poppins`, cd: (s) => `700 ${s}px Inter` };
-function word(it, t) {
-  const [t0, t1, text, st, x, y, o = {}] = it; if (t < t0 || t >= t1) return;
-  const size = o.size || 80, u = t - t0, a = Math.min(lin(t, t0, t0 + .1), 1 - lin(t, t1 - .08, t1));
-  const pop = o.stamp ? 1 + 1.2 * (1 - eo(lin(u, 0, .16))) : .7 + .3 * back(lin(u, 0, .22));
-  ctx.save(); ctx.translate(x, y + (o.stamp ? 0 : 18 * (1 - eo(lin(u, 0, .22))))); ctx.rotate((o.rot || 0) * Math.PI / 180); ctx.scale(pop * (st === 'cd' ? .74 : 1), pop);
-  ctx.font = STY[st](size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = a;
-  let shown = text;
-  if (o.words) { const n = o.words.filter(w => t >= w).length; shown = text.split(' ').slice(0, Math.max(1, n)).join(' '); }
-  if (o.box) { const w = ctx.measureText(text).width + 70, h = size * 1.25; ctx.save(); ctx.rotate(0); rrect(ctx, -w / 2, -h / 2, w, h, 26); ctx.fillStyle = OR; ctx.shadowColor = 'rgba(0,0,0,.4)'; ctx.shadowBlur = 30; ctx.fill(); ctx.restore(); }
-  ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = o.box ? 0 : 22; ctx.shadowOffsetY = 4;
-  ctx.fillStyle = o.color || '#fff'; ctx.fillText(shown, 0, 0);
-  if (o.strike) { const q = eo(lin(t, o.strike, o.strike + .25)), w = ctx.measureText(text).width * 1.06;
-    if (q > 0) { ctx.shadowColor = 'transparent'; ctx.fillStyle = o.strikeColor || '#fff'; ctx.fillRect(-w / 2, -size * .06, w * q, size * .1); } }
-  if (o.fade) { /* letters drop out one by one: « tu n'existes pas » */ }
+// ---------- typography ----------
+// Anton: tall condensed capitals (the punch words, orange, worn ink); Outfit: round geometric sans (the phrase);
+// Great Vibes: script (the soft connecting words). Each word appears on its spoken syllable.
+const FONT = { sans: (s, w = 800) => `${w} ${s}px Outfit`, cond: s => `400 ${s}px Anton`, script: s => `400 ${s}px 'Great Vibes'` };
+let SPECK = null;
+function speck() {                        // worn-ink texture: random dots and blotches, punched out of the condensed words
+  if (SPECK) return SPECK; SPECK = document.createElement('canvas'); SPECK.width = SPECK.height = 512; const g = SPECK.getContext('2d');
+  for (let i = 0; i < 2600; i++) { const r = hash(i) < .92 ? .6 + hash(i + 7) * 2.2 : 3 + hash(i + 9) * 7; g.globalAlpha = .35 + .65 * hash(i + 3);
+    g.beginPath(); g.arc(hash(i + 1) * 512, hash(i + 2) * 512, r, 0, 2 * Math.PI); g.fill(); }
+  return SPECK;
+}
+const WORN = new Map();
+function wornWord(text, size, color) {     // the condensed word drawn once with its worn texture, cached
+  const key = text + size + color; if (WORN.has(key)) return WORN.get(key);
+  const c = document.createElement('canvas'), g = c.getContext('2d'); g.font = FONT.cond(size);
+  const w = Math.ceil(g.measureText(text).width) + 20, h = Math.ceil(size * 1.35); c.width = w; c.height = h;
+  g.font = FONT.cond(size); g.textBaseline = 'middle'; g.fillStyle = color; g.fillText(text, 10, h / 2);
+  g.globalCompositeOperation = 'destination-out'; g.globalAlpha = .8; const p = g.createPattern(speck(), 'repeat'); g.fillStyle = p; g.fillRect(0, 0, w, h);
+  WORN.set(key, c); return c;
+}
+// word: [t, t1, text, font, size, x, y, opts]; opts: color, align (left|center), rot, anim (letters|write|slam), strike (time)
+function drawWord(wd, t) {
+  const [t0, t1, text, f, size, x, y, o = {}] = wd; if (t < t0 || t >= t1) return;
+  const out = lin(t, t1 - .14, t1), color = o.color || '#fff', align = o.align || 'left', anim = o.anim || (f === 'script' ? 'write' : f === 'cond' ? 'slam' : 'letters');
+  ctx.save(); ctx.translate(x, y - 24 * eo(out)); ctx.rotate((o.rot || 0) * Math.PI / 180); ctx.globalAlpha = 1 - out;
+  const sc = 1 - .12 * out; ctx.scale(sc, sc);
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 6; ctx.textBaseline = 'middle';
+  if (f === 'cond') {
+    const img = wornWord(text, size, color), w = img.width, h = img.height, k = lin(t, t0, t0 + .16);
+    const s2 = anim === 'slam' ? 1 + .9 * (1 - eo(k)) : 1, shake = anim === 'slam' && t - t0 < .26 ? 7 * Math.sin((t - t0) * 90) * (1 - (t - t0) / .26) : 0;
+    const ox = align === 'center' ? -w / 2 : -10; ctx.globalAlpha *= Math.min(1, k * 2);
+    ctx.translate(shake, 0); ctx.scale(s2, s2); ctx.drawImage(img, ox, -h / 2);
+    if (o.strike) { const q = eo(lin(t, o.strike, o.strike + .22)); if (q > 0) { ctx.shadowColor = 'transparent'; ctx.fillStyle = o.strikeColor || '#fff'; ctx.fillRect(ox + 4, -size * .05, (w - 8) * q, size * .1); } }
+  } else if (anim === 'write') {           // the script word is « written » from left to right
+    ctx.font = FONT.script(size); const w = ctx.measureText(text).width, ox = align === 'center' ? -w / 2 : 0, k = eio(lin(t, t0, t0 + .42));
+    ctx.save(); ctx.beginPath(); ctx.rect(ox - 30, -size, (w + 60) * k, size * 2); ctx.clip(); ctx.shadowColor = 'rgba(0,0,0,.75)'; ctx.shadowBlur = 30; ctx.fillStyle = color; ctx.fillText(text, ox, 0); ctx.shadowBlur = 8; ctx.fillText(text, ox, 0); ctx.restore();
+  } else {                                 // letters pop one after the other
+    ctx.font = FONT.sans(size, o.weight || 800); const w = ctx.measureText(text).width; let xx = align === 'center' ? -w / 2 : 0;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i], cw = ctx.measureText(ch).width, ti = t0 + i * .022, k = lin(t, ti, ti + .2);
+      if (k > 0) { ctx.save(); ctx.translate(xx + cw / 2, (1 - eo(k)) * size * .35); ctx.rotate((1 - eo(k)) * (hash(i + text.length) - .5) * .5); const s3 = .35 + .65 * back(k);
+        ctx.scale(s3, s3); ctx.globalAlpha *= Math.min(1, k * 3); ctx.fillStyle = color; ctx.fillText(ch, -cw / 2, 0); ctx.restore(); }
+      xx += cw; }
+  }
   ctx.restore();
 }
 function arcWord(t0, t1, text, cx, cy, r, a0, a1, t, size, color) {    // letters on an arc around his head, appearing one by one
   if (t < t0 || t >= t1) return; const n = text.length, spin = 6 * (t - t0);
-  ctx.save(); ctx.font = STY.hv(size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
+  ctx.save(); ctx.font = FONT.sans(size, 800); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
   ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
   for (let i = 0; i < n; i++) { const ti = t0 + i * .035; if (t < ti) break; const k = back(lin(t, ti, ti + .18)), a = (a0 + (a1 - a0) * i / (n - 1) + spin) * Math.PI / 180;
     ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.scale(k, k); ctx.globalAlpha = Math.min(1, 1 - lin(t, t1 - .08, t1)); ctx.fillText(text[i], 0, 0); ctx.restore(); }
   ctx.restore();
 }
-function vanish(t0, t1, text, x, y, size, t) {     // « TU N'EXISTES PAS. »: pops, then the letters drop out at random
-  if (t < t0 || t >= t1) return; ctx.save(); ctx.font = STY.hv(size); ctx.textBaseline = 'middle';
+function vanish(t0, t1, text, x, y, size, t) {     // « TU N'EXISTES PAS. »: slams in, then the letters drop out at random
+  if (t < t0 || t >= t1) return; ctx.save(); ctx.font = FONT.cond(size); ctx.textBaseline = 'middle';
   const total = ctx.measureText(text).width; let xx = x - total / 2; ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
-  const k = .75 + .25 * back(lin(t, t0, t0 + .2));
-  for (let i = 0; i < text.length; i++) { const w = ctx.measureText(text[i]).width, td = t0 + .75 + hash(i + 3) * .45;
-    const a = 1 - lin(t, td, td + .12); if (a > 0) { ctx.globalAlpha = a; ctx.fillStyle = '#fff'; ctx.save(); ctx.translate(x + (xx + w / 2 - x) * k, y); ctx.scale(k, k); ctx.fillText(text[i], -w / 2, 0); ctx.restore(); }
+  const k = 1 + .6 * (1 - eo(lin(t, t0, t0 + .16)));
+  for (let i = 0; i < text.length; i++) { const w = ctx.measureText(text[i]).width, td = t0 + .7 + hash(i + 3) * .45;
+    const a = 1 - lin(t, td, td + .12); if (a > 0) { ctx.globalAlpha = a * Math.min(1, lin(t, t0, t0 + .08) * 2); ctx.fillStyle = '#fff'; ctx.save(); ctx.translate(x + (xx + w / 2 - x) * k, y + 40 * (1 - a)); ctx.scale(k, k); ctx.fillText(text[i], -w / 2, 0); ctx.restore(); }
     xx += w; }
   ctx.restore();
 }
-const prefix = (i, ws) => ws.map(w => WT(i, w));
-let T = {};                               // word timings used by the items, filled once
-function items() {
+// ---------- his face in pieces: magnified parts of the same live frame fly over and around his face ----------
+const HEAD = [555, 940];                  // his face in the source frame (eyes at y ≈ 890, mouth ≈ 1010)
+const TILES = [                            // source rect around HEAD [dx, dy, w, h], screen offset from the face [ox, oy] (in close-up units), zoom
+  { r: [-140, -90, 280, 100], o: [40, -380], z: 1.35, d: 0 }, { r: [-85, 35, 170, 100], o: [300, 170], z: 1.45, d: .07 },
+  { r: [-130, -70, 110, 100], o: [-330, -150], z: 1.3, d: .13 }, { r: [30, -40, 110, 140], o: [350, -240], z: 1.2, d: .18 }];
+function fragments(img, t, t0, t1, f) {
+  if (t < t0 || t >= t1 || !img) return; const [z0, cx, cy] = FR[f], z = z0, sx = 540 + (HEAD[0] - cx) * z, sy = 960 + (HEAD[1] - cy) * z, k0 = z / 1.9;
+  TILES.forEach((T, i) => {
+    const ta = t0 + T.d, k = lin(t, ta, ta + .24), out = lin(t, t1 - .16 + i * .02, t1); if (k <= 0) return;
+    const w = T.r[2] * z * T.z, h = T.r[3] * z * T.z, drift = (t - t0) * 14 * (i % 2 ? 1 : -1);
+    const x = sx + T.o[0] * k0 + drift, y = sy + T.o[1] * k0 - drift * .5, s = (.55 + .45 * back(k)) * (1 - .3 * out);
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.globalAlpha = Math.min(1, k * 3) * (1 - out);
+    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 34; ctx.shadowOffsetY = 12; ctx.fillStyle = '#000'; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.shadowColor = 'transparent';
+    ctx.filter = 'contrast(1.12) saturate(.95) brightness(1.3) sepia(.08)';
+    ctx.drawImage(img, HEAD[0] + T.r[0], HEAD[1] + T.r[1], T.r[2], T.r[3], -w / 2, -h / 2, w, h); ctx.restore();
+  });
+}
+const pw = (i, ws) => ws.map(w => WT(i, w));
+function words() {                        // the layout of every phrase (x, y on the 1080x1920 screen)
+  const a = 'left', c = 'center', o = OR;
   return [
-    [WT(0, 'Je') - .05, E(0), 'Je vais te dire', 'it', 540, 450, { size: 74, words: prefix(0, ['Je', 'vais', 'te', 'dire']) }],
-    [WT(0, 'un') - .03, E(0), 'UN TRUC.', 'hv', 540, 585, { size: 150, color: OR, rot: -4 }],
-    [WT(1, 'Le') - .05, E(1), 'le prends', 'it', 540, 1250, { size: 96, words: prefix(1, ['Le', 'prends']) }],
-    [WT(2, 'Ton') - .05, E(2), 'Ton', 'it', 250, 380, { size: 110, rot: -6 }],
-    [WT(3, 'personne') - .05, E(3), 'personne', 'it', 540, 470, { size: 130 }],
-    [WT(3, 'ne') - .03, E(3), 'NE LA VOIT.', 'hv', 540, 610, { size: 104, color: OR }],
-    [WT(4, 'Les') - .05, E(5), 'Les clients', 'th', 540, 420, { size: 78 }],
-    [WT(4, 'ne') - .03, E(5), 'ne cherchent pas', 'it', 540, 530, { size: 92 }],
-    [WT(5, 'dans') - .03, E(5), 'DANS LA RUE.', 'cd', 540, 1650, { size: 190, color: OR, strike: WE(5, 'rue') + .02 }],
-    [WT(6, 'Ils') - .05, E(6), 'Ils cherchent sur leur', 'it', 540, 430, { size: 76, words: prefix(6, ['Ils', 'cherchent', 'sur', 'leur']) }],
-    [WT(6, 'téléphone') - .03, E(6), 'TÉLÉPHONE.', 'hv', 540, 560, { size: 136, color: OR }],
-    [WT(7, 'Tu') - .05, E(8), 'Tu peux avoir', 'th', 540, 200, { size: 66, words: prefix(7, ['Tu', 'peux', 'avoir']) }],
-    [WT(7, 'meilleur') - .05, E(8), 'le meilleur', 'it', 540, 300, { size: 96 }],
-    [WT(8, 'du') - .03, E(8), 'du quartier', 'it', 540, 1140, { size: 84, color: CREAM }],
-    [WT(9, 'si') - .05, E(9), 'si on ne te trouve pas', 'th', 540, 1330, { size: 68, words: prefix(9, ['si', 'on', 'ne', 'te', 'trouve', 'pas']) }],
-    [WT(11, 'La') - .05, T_SPLIT, 'La plupart des commerçants', 'th', 540, 400, { size: 64, words: prefix(11, ['La', 'plupart', 'des', 'commerçants']) }],
-    [WT(11, "n'ont") - .05, T_SPLIT, "n'ont pas besoin", 'it', 540, 505, { size: 92 }],
-    [T_SPLIT + .05, E(11), "d'une", 'it', 540, 1150, { size: 80 }],
-    [WT(11, 'plus') - .03, E(11), 'PLUS GRANDE', 'cd', 540, 1300, { size: 200, color: OR, strike: WE(11, 'enseigne') + .05, strikeColor: '#fff' }],
-    [WT(11, 'enseigne') - .03, E(11), 'ENSEIGNE', 'cd', 540, 1490, { size: 200, color: OR, strike: WE(11, 'enseigne') + .15, strikeColor: '#fff' }],
-    [WT(12, 'Ils') - .05, E(12), "Ils ont besoin d'être", 'it', 540, 250, { size: 74, words: prefix(12, ['Ils', 'ont', 'besoin', "d'être"]) }],
-    [WT(13, 'Ajoute') - .05, E(13), 'Ajoute ton commerce', 'hv', 540, 260, { size: 84, words: prefix(13, ['Ajoute', 'ton', 'commerce']) }],
-    [WT(14, 'sur') - .05, E(14), 'sur la', 'it', 540, 230, { size: 84 }],
-    [WT(14, 'map') - .03, E(14), 'MAP OJA', 'hv', 540, 345, { size: 130, color: OR }],
-    [WT(15, "c'est") - .04, END, "C'EST GRATUIT.", 'hv', 540, 1330, { size: 104, box: true, stamp: true, rot: -6 }],
+    [WT(0, 'Je') - .04, E(0), 'Je vais', 'sans', 74, 120, 360, { weight: 700 }],
+    [WT(0, 'te') - .04, E(0), 'te dire', 'script', 165, 400, 400, {}],
+    [WT(0, 'un') - .03, E(0), 'UN TRUC.', 'cond', 190, 540, 555, { color: o, align: c, rot: -3 }],
+    [WT(1, 'Le') - .04, E(1), 'le prends', 'sans', 92, 540, 1240, { align: c }],
+    [WT(2, 'Ton') - .04, E(2), 'Ton', 'script', 200, 110, 350, { rot: -6 }],
+    [WT(3, 'personne') - .04, E(3), 'personne', 'script', 175, 540, 330, { align: c }],
+    [WT(3, 'ne') - .03, E(3), 'ne la', 'sans', 92, 170, 485, {}],
+    [WT(3, 'voit') - .03, E(3), 'VOIT.', 'cond', 200, 470, 485, { color: o }],
+    [WT(4, 'Les') - .04, E(5), 'Les clients', 'sans', 80, 110, 290, { weight: 700 }],
+    [WT(4, 'ne') - .04, E(5), 'ne cherchent', 'sans', 100, 110, 395, {}],
+    [WT(4, 'pas') - .03, E(5), 'pas', 'script', 150, 760, 420, { color: o }],
+    [WT(5, 'dans') - .03, E(5), 'DANS LA RUE.', 'cond', 215, 540, 1650, { color: o, align: c, strike: WE(5, 'rue') + .02 }],
+    [WT(6, 'Ils') - .04, E(6), 'Ils cherchent', 'sans', 80, 110, 285, { weight: 700 }],
+    [WT(6, 'sur') - .03, E(6), 'sur leur', 'script', 160, 600, 320, {}],
+    [WT(6, 'téléphone') - .03, E(6), 'TÉLÉPHONE.', 'cond', 225, 540, 485, { color: o, align: c }],
+    [WT(7, 'Tu') - .04, E(8), 'Tu peux avoir', 'sans', 70, 120, 205, { weight: 700 }],
+    [WT(7, 'le') - .03, E(8), 'le meilleur', 'script', 165, 300, 290, {}],
+    [WT(8, 'du') - .03, E(8), 'du quartier', 'script', 125, 540, 1150, { align: c }],
+    [WT(9, 'si') - .04, E(9), 'si on ne te', 'sans', 80, 110, 1360, { weight: 700 }],
+    [WT(9, 'trouve') - .03, E(9), 'TROUVE PAS', 'cond', 175, 110, 1490, { color: o }],
+    [WT(11, 'La') - .04, T_SPLIT, 'La plupart des', 'sans', 70, 100, 235, { weight: 700 }],
+    [WT(11, 'commerçants') - .03, T_SPLIT, 'COMMERÇANTS', 'cond', 175, 100, 395, {}],
+    [WT(11, "n'ont") - .03, T_SPLIT, "n'ont pas besoin", 'script', 120, 330, 520, { color: o }],
+    [T_SPLIT + .04, E(11), "d'une", 'script', 160, 170, 1140, {}],
+    [WT(11, 'plus') - .03, E(11), 'PLUS GRANDE', 'cond', 195, 540, 1300, { color: o, align: c, strike: WE(11, 'enseigne') + .05 }],
+    [WT(11, 'enseigne') - .03, E(11), 'ENSEIGNE', 'cond', 195, 540, 1485, { color: o, align: c, strike: WE(11, 'enseigne') + .15 }],
+    [WT(12, 'Ils') - .04, E(12), "Ils ont besoin d'être", 'sans', 70, 540, 225, { weight: 700, align: c }],
+    [WT(13, 'Ajoute') - .04, E(13), 'Ajoute ton', 'sans', 92, 540, 215, { align: c }],
+    [WT(13, 'commerce') - .03, E(13), 'COMMERCE', 'cond', 170, 540, 345, { color: o, align: c }],
+    [WT(14, 'sur') - .04, E(14), 'sur la', 'script', 160, 540, 205, { align: c }],
+    [WT(14, 'map') - .03, E(14), 'MAP OJA', 'cond', 200, 540, 355, { color: o, align: c }],
   ];
 }
-let ITEMS = null;
+let WORDS = null;
+function stamp(t0, t1, t) {               // « C'EST GRATUIT. » stamped on an orange tag
+  if (t < t0 || t >= t1) return; const k = lin(t, t0, t0 + .15), s = 1 + 1.1 * (1 - eo(k));
+  ctx.save(); ctx.translate(540, 1330); ctx.rotate(-6 * Math.PI / 180); ctx.scale(s, s); ctx.globalAlpha = Math.min(1, k * 2);
+  const img = wornWord("C'EST GRATUIT.", 150, '#fff'), w = img.width + 60, h = img.height + 10;
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 30; rrect(ctx, -w / 2, -h / 2, w, h, 24); ctx.fillStyle = OR; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
+}
 // words drawn behind his head (between the room and him)
 function behindFor(shotStart, t) {
-  if (shotStart === S(2)) return () => { const t0 = WT(2, 'enseigne') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3));
-    ctx.save(); ctx.font = STY.cd(270); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 560 + 60 * (1 - k)); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = OR; ctx.fillText('ENSEIGNE', 0, 0); ctx.restore(); };
-  if (shotStart === S(7)) return () => { const t0 = WT(7, 'maquis') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3));
-    ctx.save(); ctx.font = STY.cd(300); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 470 + 50 * (1 - k)); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = OR; ctx.fillText('MAQUIS', 0, 0); ctx.restore(); };
-  if (shotStart === S(12)) return () => { const t0 = WT(12, 'sur') - .04; if (t < t0) return; const k = eo(lin(t, t0, t0 + .3)), k2 = eo(lin(t, WT(12, 'map') - .04, WT(12, 'map') + .26));
-    ctx.save(); ctx.font = STY.cd(250); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 410); ctx.scale(.74, 1); ctx.globalAlpha = k; ctx.fillStyle = CREAM; ctx.fillText('SUR LA', 0, 0); ctx.restore();
-    ctx.save(); ctx.font = STY.cd(400); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.translate(540, 600 + 70 * (1 - k2)); ctx.scale(.74 * (.8 + .2 * back(k2)), .8 + .2 * back(k2)); ctx.globalAlpha = k2; ctx.fillStyle = OR; ctx.fillText('MAP', 0, 0); ctx.restore(); };
+  const big = (text, size, color, x, y, t0) => { if (t < t0) return; const k = eo(lin(t, t0, t0 + .3)), img = wornWord(text, size, color);
+    ctx.save(); ctx.translate(x, y + 60 * (1 - k)); ctx.globalAlpha = k; ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore(); };
+  if (shotStart === S(2)) return () => big('ENSEIGNE', 255, OR, 540, 560, WT(2, 'enseigne') - .04);
+  if (shotStart === S(7)) return () => big('MAQUIS', 290, OR, 540, 430, WT(7, 'maquis') - .04);
+  if (shotStart === S(12)) return () => { big('SUR LA', 190, '#1a0f08', 540, 400, WT(12, 'sur') - .04); big('MAP', 440, OR, 540, 640, WT(12, 'map') - .04); };
   return null;
 }
 
 // ---------- one frame ----------
 async function drawAt(t) {
-  if (!ITEMS) ITEMS = items();
+  if (!WORDS) WORDS = words();
   const { s, u, len } = shotAt(t), [t0, kind, what] = s, fi = Math.floor(t * FPS) + 1;
   const punch = 1 + .05 * (1 - eo(lin(u, 0, .2)));
   let img = null, matte = null;
@@ -208,6 +264,8 @@ async function drawAt(t) {
   if (kind === 'A') {
     aroll(img, matte, what, u, behindFor(t0, t), punch);
     if (t0 === S(1)) arcWord(WT(1, 'pas') - .05, E(1), 'PAS MAL', 515, 740, 345, -128, -52, t, 100, OR);
+    if (t0 === S(9)) fragments(img, t, S(9) + .05, E(9), 'close');
+    if (t0 === S(11)) fragments(img, t, S(11) + .1, T_SPLIT, 'wide');
     if (t0 === S(7) && t >= WT(7, 'meilleur') + .1) {        // the dish pops in a card over his hands
       const k = back(lin(t, WT(7, 'meilleur') + .1, WT(7, 'meilleur') + .4)), p = st.plat, cw = 620, ch = cw * p.height / p.width;
       ctx.save(); ctx.translate(560, 1500); ctx.rotate(5 * Math.PI / 180); ctx.scale(k, k); ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 50; ctx.shadowOffsetY = 24;
@@ -223,8 +281,9 @@ async function drawAt(t) {
     else if (what === 'app_map' && scrImg) phoneShot(scrImg, u, null);
   }
   if (kind !== 'END') {
-    if (t0 === S(10)) vanish(WT(10, 'tu') - .04, E(10), "TU N'EXISTES PAS.", 540, 900, 108, t);
-    ITEMS.forEach(it => word(it, t));
+    if (t0 === S(10)) vanish(WT(10, 'tu') - .04, E(10), "TU N'EXISTES PAS.", 540, 900, 128, t);
+    WORDS.forEach(wd => drawWord(wd, t));
+    stamp(WT(15, "c'est") - .04, END, t);
     vignette(.55); grain(t);
   }
   const ek = eo(lin(t, END, END + .45)); const ec = document.getElementById('endc'); ec.style.opacity = ek; ec.style.transform = `scale(${1.04 - .04 * ek})`;
@@ -233,15 +292,16 @@ let pending = Promise.resolve();
 window.renderAt = t => { pending = drawAt(t); };
 window.waitFrame = () => pending.then(() => new Promise(r => requestAnimationFrame(() => r())));
 // sounds for src/tk1_audio.py: [time, kind]
-window.SFX = (() => { const L = items(), out = [];
-  L.forEach(it => out.push([+(it[0] + .04).toFixed(3), it[6] && it[6].stamp ? 'stamp' : (it[3] === 'cd' || it[3] === 'hv') ? 'hit' : 'tick']));
-  [S(2), S(7), S(12)].forEach((s0, i) => out.push([+(i === 0 ? WT(2, 'enseigne') : i === 1 ? WT(7, 'maquis') : WT(12, 'map')).toFixed(3), 'hit']));
+window.SFX = (() => { const L = words(), out = [];
+  L.forEach(wd => out.push([+(wd[0] + .03).toFixed(3), wd[3] === 'cond' ? 'hit' : 'tick']));
+  [WT(2, 'enseigne'), WT(7, 'maquis'), WT(12, 'map'), WT(10, 'tu')].forEach(x => out.push([+x.toFixed(3), 'hit']));
+  out.push([+(WT(15, "c'est") - .04).toFixed(3), 'stamp']); out.push([+S(9).toFixed(3), 'tick']); out.push([+S(11).toFixed(3), 'tick']);
   out.push([+S(10).toFixed(3), 'drop']); out.push([+(WE(13, 'commerce') - .1).toFixed(3), 'tap']); out.push([+(S(14) + .45).toFixed(3), 'pop']);
-  out.push([+END.toFixed(3), 'end']); SHOTS.forEach(s => s[0] > 0 && s[1] !== 'END' && out.push([+s[0].toFixed(3), 'cut']));
+  out.push([+END.toFixed(3), 'end']);
   return out.sort((a, b) => a[0] - b[0]); })();
 window.TOTAL = DUR;
-const FONTS = ['italic 700 80px "Playfair Display"', '500 80px "Inter Tight"', '900 80px Poppins', '700 80px Inter', '800 48px Poppins', '600 40px Poppins', 'italic 500 58px "Playfair Display"'];
-window.ready = Promise.all(FONTS.map(f => document.fonts.load(f, 'AÉé'))).then(() => document.fonts.ready).then(() => Promise.all(Object.values(STATIC).map(get))).then(() => drawAt(0));
+const FONTS = ['400 80px Anton', '800 80px Outfit', '700 80px Outfit', '500 40px Outfit', "400 80px 'Great Vibes'"];
+window.ready = Promise.all(FONTS.map(f => document.fonts.load(f, 'AÉéç'))).then(() => document.fonts.ready).then(() => Promise.all(Object.values(STATIC).map(get))).then(() => drawAt(0));
 </script>
 </body>
 </html>

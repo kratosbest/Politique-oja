@@ -1,0 +1,7 @@
+/* Fonts of the talking-head ads (SIL Open Font License, from the Fontsource packages on npm, latin subset):
+   Anton (tall condensed capitals), Outfit (round geometric sans), Great Vibes (script). */
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: block; src: url(Anton-400-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Outfit'; font-style: normal; font-weight: 500; font-display: block; src: url(Outfit-500-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Outfit'; font-style: normal; font-weight: 700; font-display: block; src: url(Outfit-700-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Outfit'; font-style: normal; font-weight: 800; font-display: block; src: url(Outfit-800-latin.woff2) format('woff2'); }
+@font-face { font-family: 'Great Vibes'; font-style: normal; font-weight: 400; font-display: block; src: url(GreatVibes-400-latin.woff2) format('woff2'); }

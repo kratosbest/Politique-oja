@@ -1254,8 +1254,10 @@ inversée, Grâce devant) et finissent à la terrasse du maquis (42 s).
 ## Pub face caméra « Ton enseigne » (essai, 9:16)
 
 Style « kinetic typography » d'une pub premium : Derrick parle face caméra, coupes sèches avec un nouveau cadrage à chaque
-coupe, quelques mots animés par phrase (italique serif, grosse ronde, capitales serrées orange OJA), certains passent
-derrière sa tête, images d'illustration en cartes inclinées, l'appli dans un téléphone, grain, carte de fin (30 s).
+coupe, quelques mots animés par phrase (Outfit qui apparaît lettre par lettre, Great Vibes manuscrite qui s'écrit,
+Anton en capitales serrées orange à l'encre usée), certains passent derrière sa tête, des morceaux agrandis de son visage
+(yeux, bouche) volent autour de lui, images d'illustration en cartes inclinées, l'appli dans un téléphone, grain, carte de
+fin (30 s). Polices libres (OFL) prises des paquets Fontsource sur npm : `fonts/talk.css`.
 
 - Source : sa vidéo de test (`work/talk1/src.mp4`, pas dans git) et sa transcription mot à mot (`work/talk1/stt.json`,
   Scribe ElevenLabs).
