@@ -6,6 +6,10 @@ window.DESIGN = ({ W, WE, END }) => {
   const c = 'center', O = '#FF6B00', CR = '#F3E6D3';
   const atSrc = s0 => TK.segs.find(s => s.src[0] >= s0 - .25).t;          // where a stretch of the take starts in the edit
   const C1 = 0, C2 = atSrc(48.3), C3 = atSrc(78.5), C4 = atSrc(121.86), AV = 1.8;   // the 4 chapters (keep ranges of src/talks/avant_goun.json)
+  // « din » is « maintenant » in Goun (Derrick): each chapter stays in black and white until his first « din »
+  const DIN = TK.words.filter(w => w[0].normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/gi, '').toLowerCase() === 'din').map(w => w[1]);
+  const first = (a, b) => DIN.find(t => t >= a && t < b);
+  const D1 = first(C1, C2) ?? C1 + AV, D2 = first(C2, C3) ?? C2 + AV, D3 = first(C3, C4) ?? C3 + AV;
   // a new framing at every cut (pieces shorter than 1.2 s keep the previous one)
   const cyc = ['med', 'close', 'wide', 'close']; const base = []; let k = 0, last = -9;
   TK.segs.forEach(s => { if (s.t - last >= 1.2) { base.push([s.t, { A: cyc[k++ % 4] }]); last = s.t; } });
@@ -21,6 +25,12 @@ window.DESIGN = ({ W, WE, END }) => {
   ins.forEach(([a, b, sp]) => { shots.push([a, sp]);
     if (!ins.some(([a2]) => Math.abs(a2 - b) < .01)) { const prev = base.filter(([t]) => t <= b).pop(); shots.push([b, { ...(prev ? prev[1] : { A: 'med' }) }]); } });
   shots.sort((x, y) => x[0] - y[0]);
+  [[C1, D1], [C2, D2], [C3, D3]].forEach(([a, d]) => {        // black and white from the chapter start to « din », colour from there
+    const cur = shots.filter(([t]) => t <= d).pop();
+    if (cur && cur[1].A) shots.push([d, { A: cur[1].A }]);
+    shots.forEach(sh => { if (sh[0] >= a && sh[0] < d && sh[1].A) sh[1] = { ...sh[1], bw: 1 }; });
+  });
+  shots.sort((x, y) => x[0] - y[0]);
   for (let i = shots.length - 2; i >= 0; i--) if (shots[i + 1][0] - shots[i][0] < .3) shots.splice(i, 1);   // no flash frames between two shots
   return {
     head: [560, 920],
@@ -28,8 +38,8 @@ window.DESIGN = ({ W, WE, END }) => {
     images: { market: 'assets/biz_market.jpg', traffic: 'assets/zem/h_attente.jpg', phone: 'assets/zem/h_phone.jpg',
       appli: 'assets/jour/h_appli_v.jpg', zem: 'assets/edt/moto.jpg' },
     shots,
-    flash: [C1 + AV, C2 + AV, C3 + AV],
-    music: [[C1, 'low'], [C1 + AV, 'full'], [C2, 'low'], [C2 + AV, 'full'], [C3, 'low'], [C3 + AV, 'full']],
+    flash: [D1, D2, D3],
+    music: [[C1, 'low'], [D1, 'full'], [C2, 'low'], [D2, 'full'], [C3, 'low'], [D3, 'full']],
     fx: [
       { type: 'behind', text: 'AVANT,', size: 330, color: CR, y: 400, t0: C1 + .02, t1: C1 + AV, vx: -20 },
       { type: 'frag', t0: C3 + 7.4, t1: C3 + 10.4 },
@@ -40,19 +50,23 @@ window.DESIGN = ({ W, WE, END }) => {
       { type: 'behind', text: 'OJA APP', size: 260, color: O, y: 520, t0: W('app', 3) - .05, t1: W('app', 3) + 2.8 },
     ],
     words: [
-      [C1 + .3, C1 + AV, "« c'est où ? »", 'script', 150, 540, 1420, { align: c }],
-      [C1 + AV, C1 + 4.6, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
-      [C1 + AV + .2, C1 + 4.6, 'je cherche.', 'script', 150, 540, 1420, { align: c }],
+      [C1 + .3, D1, "« c'est où ? »", 'script', 150, 540, 1420, { align: c }],
+      [D1 - .03, D1 + 2.6, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
+      [D1 + .2, D1 + 2.6, 'je cherche.', 'script', 150, 540, 1420, { align: c }],
       [W('téléphone') - .03, C2, 'TÉLÉPHONE.', 'cond', 210, 540, 1690, { align: c, color: O }],
       [C2 + .02, C2 + AV, 'AVANT,', 'cond', 200, 540, 300, { align: c, color: CR }],
       [C2 + .2, C2 + AV, 'demande au vendeur.', 'script', 140, 540, 1700, { align: c }],
-      [C2 + AV, C2 + 4.5, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
-      [C2 + AV + .2, C2 + 4.5, 'la map.', 'script', 170, 540, 1420, { align: c }],
+      [C2 + AV, D2, '« demande au vendeur »', 'script', 130, 540, 1420, { align: c }],
+      [D2 - .03, D2 + 2.6, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
+      [D2 + .2, D2 + 2.6, 'la map.', 'script', 170, 540, 1420, { align: c }],
       [W('map') - .03, C3, 'LA MAP', 'cond', 210, 540, 330, { align: c, color: O }],
       [C3 + .02, C3 + AV, 'AVANT,', 'cond', 200, 540, 300, { align: c, color: CR }],
       [C3 + .2, C3 + AV, 'je tourne une heure.', 'script', 130, 540, 1700, { align: c }],
-      [C3 + AV, C3 + 4.6, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
-      [C3 + AV + .2, C3 + 4.6, 'ITINÉRAIRE.', 'cond', 150, 540, 1450, { align: c, anim: 'wipe' }],
+      [C3 + AV, Math.min(D3, C3 + 5), '« je tourne une heure »', 'script', 130, 540, 1420, { align: c }],
+      [D3 - .03, D3 + 2.6, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
+      [D3 + .2, D3 + 2.6, 'ITINÉRAIRE.', 'cond', 150, 540, 1450, { align: c, anim: 'wipe' }],
+      // every other « din » outside those titles
+      ...DIN.filter(t => ![D1, D2, D3].some(d => t >= d - .05 && t < d + 2.6)).map(t => [t - .03, t + 1.6, 'MAINTENANT', 'cond', 150, 540, 250, { align: c, color: O }]),
       [W('map', 2) - .03, W('map', 2) + 2.2, 'sur la map', 'script', 150, 540, 300, { align: c }],
       [W('directement') - .03, W('directement') + 1.8, 'DIRECTEMENT.', 'cond', 190, 540, 1650, { align: c, color: O }],
       [C4 + .1, C4 + 2.7, 'Le monde', 'script', 170, 540, 240, { align: c }],

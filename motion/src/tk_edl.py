@@ -53,7 +53,9 @@ for k, b in enumerate(blocks):
     segs.append(dict(src=[s0, s1], t=round(t, 3), dur=round(s1 - s0, 3), words=ws)); t += s1 - s0
 TK = dict(fps=30, segs=segs, speech=round(t, 3), words=[w for s in segs for w in s['words']])
 import os; os.makedirs(f'assets/talk_{name}', exist_ok=True)
-json.dump(TK, open(f'assets/talk_{name}/marks.json', 'w'), ensure_ascii=False)
-open(f'assets/talk_{name}/marks.js', 'w').write('window.TK = ' + json.dumps(TK, ensure_ascii=False) + ';\n')
+new = json.dumps(TK, ensure_ascii=False)          # rewritten only when the cut changed (the render redoes frames and mattes then)
+mj = f'assets/talk_{name}/marks.json'
+if not os.path.exists(mj) or open(mj).read() != new:
+    open(mj, 'w').write(new); open(f'assets/talk_{name}/marks.js', 'w').write('window.TK = ' + new + ';\n')
 for i, s in enumerate(segs): print(f"{i:2d} {s['t']:6.2f} {s['dur']:5.2f}", ' '.join(f"{w[0]}@{w[1]:.2f}" for w in s['words']))
 print(name, 'speech', TK['speech'], 's in', len(segs), 'cuts')
