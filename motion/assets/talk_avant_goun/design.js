@@ -4,8 +4,8 @@
 // application, télécharger…) pop on screen when he says them; pictures and the app come in on those words.
 window.DESIGN = ({ W, WE, END }) => {
   const c = 'center', O = '#FF6B00', CR = '#F3E6D3';
-  const at = t => TK.segs.reduce((best, s) => Math.abs(s.t - t) < Math.abs(best - t) ? s.t : best, 0);   // the cut nearest to t
-  const C1 = 0, C2 = at(7.05), C3 = at(18.61), C4 = at(48.63), AV = 1.8;    // chapters, and how long « AVANT » lasts
+  const atSrc = s0 => TK.segs.find(s => s.src[0] >= s0 - .25).t;          // where a stretch of the take starts in the edit
+  const C1 = 0, C2 = atSrc(48.3), C3 = atSrc(78.5), C4 = atSrc(121.86), AV = 1.8;   // the 4 chapters (keep ranges of src/talks/avant_goun.json)
   // a new framing at every cut (pieces shorter than 1.2 s keep the previous one)
   const cyc = ['med', 'close', 'wide', 'close']; const base = []; let k = 0, last = -9;
   TK.segs.forEach(s => { if (s.t - last >= 1.2) { base.push([s.t, { A: cyc[k++ % 4] }]); last = s.t; } });

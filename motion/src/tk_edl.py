@@ -25,14 +25,15 @@ for w in words[1:]:
 blocks.append(cur)
 blocks = [b for b in blocks if any(ch.isalpha() for w in b for ch in w['text'])]   # a lone « ? » is not speech
 # a long silence inside a block (a word the speech-to-text stretched over a pause) is cut too
-lvl = 20 * np.log10(rms + 1e-9); speech_db = np.percentile(lvl[lvl > -60], 70) if (lvl > -60).any() else -30
+lvl = 10 * np.log10(np.convolve(rms ** 2, np.ones(15) / 15, 'same') + 1e-12)   # level smoothed over 0.15 s
+quiet_db = np.percentile(lvl, 10) + 6                                          # just above the room noise
 def split_silences(b):
     out, cur = [], [b[0]]
     for w in b[1:] + [None]:
         last = cur[-1]; i0, i1 = int(last['start'] * 100), int(last['end'] * 100)
         quiet_run, best = 0, None
         for i in range(i0, i1):
-            if lvl[i] < speech_db - 28: quiet_run += 1
+            if lvl[i] < quiet_db: quiet_run += 1
             else: quiet_run = 0
             if quiet_run == 50: best = (i - 49) / 100
         if best is not None:                # end the word at the start of the silence
