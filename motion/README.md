@@ -1255,7 +1255,9 @@ inversée, Grâce devant) et finissent à la terrasse du maquis (42 s).
 
 Style « kinetic typography » d'une pub premium : Derrick parle face caméra, coupes sèches avec un nouveau cadrage à chaque
 coupe, quelques mots animés par phrase (Outfit qui apparaît lettre par lettre, Great Vibes manuscrite qui s'écrit,
-Anton en capitales serrées orange à l'encre usée), certains passent derrière sa tête, des morceaux agrandis de son visage
+Anton en capitales serrées orange à l'encre usée, qui entre en balayage ou s'écrase), du texte qui bouge en continu (un
+anneau de lettres qui tourne autour de sa tête en passant derrière puis devant, une phrase qui défile le long d'un grand
+arc, un bandeau en contour qui glisse derrière lui), certains mots passent derrière sa tête, des morceaux agrandis de son visage
 (yeux, bouche) volent autour de lui, images d'illustration en cartes inclinées, l'appli dans un téléphone, grain, carte de
 fin (30 s). Polices libres (OFL) prises des paquets Fontsource sur npm : `fonts/talk.css`.
 
