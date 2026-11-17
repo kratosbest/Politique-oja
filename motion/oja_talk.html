@@ -295,7 +295,9 @@ async function drawAt(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
   let img = null;
   if (sp.A) {
-    const [im, matte] = await Promise.all([get(fr(fi)), get(mt(fi))]); img = im;
+    let [im, matte] = await Promise.all([get(fr(fi)), get(mt(fi))]);
+    if (!im) { CACHE.delete(fr(fi)); im = await get(fr(fi)) || await get(fr(fi - 1)); }   // a failed read is retried once
+    img = im; if (!img) return;
     const behind = FX.filter(f => (f.behind || f.type === 'orbit') && t >= f.t0 && t < f.t1);
     aroll(img, matte, sp.A, shot.u, behind.length ? () => behind.forEach(f => drawFx(f, t, 'back', img, shot)) : null, punch, flt);
     if (!matte) behind.forEach(f => drawFx(f, t, 'back', img, shot));
