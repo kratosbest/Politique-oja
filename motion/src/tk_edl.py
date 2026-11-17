@@ -13,12 +13,35 @@ rms = np.array([np.sqrt(np.mean(y[i:i + hop * 2] ** 2) + 1e-12) for i in range(0
 def quiet(a, b):
     i0, i1 = int(a * 100), max(int(a * 100) + 1, int(b * 100)); return (i0 + int(np.argmin(rms[i0:i1]))) / 100
 words = [w for w in json.load(open(W + 'stt.json'))['words'] if w['type'] == 'word' and cfg['from'] <= w['start'] <= cfg['to']]
+if 'keep' in cfg:                          # only these stretches (s): e.g. the Goun parts, without the French cue lines
+    words = [w for w in words if any(a <= w['start'] < b for a, b in cfg['keep'])]
+    for w in words:                         # a word that runs past the end of its stretch is cut there
+        for a, b in cfg['keep']:
+            if a <= w['start'] < b: w['end'] = min(w['end'], b)
 blocks, cur = [], [words[0]]
 for w in words[1:]:
     if w['start'] - cur[-1]['end'] > cfg['gap']: blocks.append(cur); cur = []
     cur.append(w)
 blocks.append(cur)
 blocks = [b for b in blocks if any(ch.isalpha() for w in b for ch in w['text'])]   # a lone « ? » is not speech
+# a long silence inside a block (a word the speech-to-text stretched over a pause) is cut too
+lvl = 20 * np.log10(rms + 1e-9); speech_db = np.percentile(lvl[lvl > -60], 70) if (lvl > -60).any() else -30
+def split_silences(b):
+    out, cur = [], [b[0]]
+    for w in b[1:] + [None]:
+        last = cur[-1]; i0, i1 = int(last['start'] * 100), int(last['end'] * 100)
+        quiet_run, best = 0, None
+        for i in range(i0, i1):
+            if lvl[i] < speech_db - 28: quiet_run += 1
+            else: quiet_run = 0
+            if quiet_run == 50: best = (i - 49) / 100
+        if best is not None:                # end the word at the start of the silence
+            last['end'] = best + .05
+        if w is None: break
+        if best is not None: out.append(cur); cur = []
+        cur.append(w)
+    out.append(cur); return out
+blocks = [nb for b in blocks for nb in split_silences(b)]
 segs, t, prev_end = [], 0.0, 0.0
 for k, b in enumerate(blocks):
     s0 = max(prev_end, quiet(b[0]['start'] - .18, b[0]['start'] - .02))

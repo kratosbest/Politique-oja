@@ -1,0 +1,35 @@
+{
+ "title": "Avant / Maintenant, en goun",
+ "from": 20.3,
+ "to": 196,
+ "gap": 0.35,
+ "keep": [
+  [
+   20.3,
+   34.25
+  ],
+  [
+   48.3,
+   68.25
+  ],
+  [
+   78.5,
+   114.58
+  ],
+  [
+   121.86,
+   196
+  ]
+ ],
+ "fix": {
+  "Itinéraire.": "Itinéraire"
+ },
+ "out": "OJA_Campagne_AvantMaintenant_Goun_9x16.mp4",
+ "matte": {
+  "zone": [
+   70,
+   470,
+   560
+  ]
+ }
+}
