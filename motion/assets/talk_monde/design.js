@@ -1,0 +1,67 @@
+// « Le monde a changé » (take IMG_1185): the design of the edit for oja_talk.html?v=monde.
+// Avant = black and white (him, the vendor, the zem, Tantie, the traffic), Aujourd'hui = colour with a flash.
+window.DESIGN = ({ W, WE, END }) => {
+  const c = 'center', l = 'left', O = '#FF6B00', CR = '#F3E6D3';
+  const T = {                              // shot starts
+    on: W('on') - .08, vend: W('au') - .08, zem: W('au', 2) - .08, tantie: W('à Tantie') - .08, et: W('Et') - .08,
+    auj: W("Aujourd'hui") - .04, ton: W('ton') - .08, ta: W('Ta') - .08, alors: W('Alors') - .08, dem: W('demandant') - .2,
+    monde: W('monde', 2) - .25, main: W('Maintenant') - .08, cest: W("C'est") - .08, benin: W('Bénin') - .25, sur: W('map') - .3 };   // « Sur » would also match « sûr »
+  return {
+    head: [545, 900],
+    fr: { close: [1.75, 540, 880], med: [1.35, 540, 960], wide: [1.12, 540, 1000] },
+    images: { market: 'assets/biz_market.jpg', zem: 'assets/edt/moto.jpg', tantie: 'assets/biz_fruits.jpg', traffic: 'assets/zem/h_attente.jpg',
+      phone: 'assets/zem/h_phone.jpg', family: 'assets/jour/h_carrefour_v.jpg', ouidah: 'assets/bj/ph_ouidah.jpg',
+      portonovo: 'assets/bj/ph_portonovo.jpg', rondpoint: 'assets/bj_rondpoint.jpg' },
+    shots: [
+      [0, { A: 'close', bw: 1 }], [T.on, { A: 'med', bw: 1 }], [T.vend, { B: 'card', img: 'market', bw: 1, rot: -3 }],
+      [T.zem, { B: 'cover', img: 'zem', bw: 1, z: 1.12 }], [T.tantie, { B: 'card', img: 'tantie', bw: 1, rot: 3 }],
+      [T.et, { B: 'cover', img: 'traffic', bw: 1, spin: 5 }],
+      [T.auj, { A: 'close' }], [T.ton, { B: 'cover', img: 'phone' }], [T.ta, { B: 'cover', img: 'family' }],
+      [T.alors, { A: 'med' }], [T.dem, { A: 'wide' }], [T.monde, { A: 'close' }], [T.main, { A: 'med' }], [T.cest, { A: 'close' }],
+      [T.benin, { B: 'cards', imgs: ['ouidah', 'portonovo', 'rondpoint'] }], [T.sur, { B: 'app', screen: 'map' }]],
+    flash: [T.auj],
+    music: [[0, 'low'], [T.auj, 'full']],
+    fx: [
+      { type: 'behind', text: 'AVANT', size: 330, color: CR, y: 380, t0: W('Avant') - .04, t1: T.on, vx: -20 },
+      { type: 'frag', t0: W('pourquoi') - .05, t1: T.dem },
+      { type: 'behind', text: 'CHANGÉ.', size: 280, color: O, y: 470, t0: W('changé') - .04, t1: T.main },
+      { type: 'orbit', text: 'EN LIGNE  •  ', t0: W('Maintenant') + .05, t1: T.cest, cx: 540, cy: 560, rx: 340, ry: 95, tilt: -.08, speed: 1.6, size: 86, color: '#fff' },
+    ],
+    words: [
+      [W('pour') - .04, T.on, 'pour trouver', 'sans', 76, 540, 1330, { align: c }],
+      [W('une') - .04, T.on, 'une adresse,', 'script', 150, 540, 1460, { align: c }],
+      [W('on') - .04, T.vend, 'on demandait…', 'script', 170, 540, 1380, { align: c }],
+      [W('au') - .04, T.zem, 'au vendeur', 'sans', 84, 540, 300, { align: c }],
+      [W('du') - .04, T.zem, 'du coin,', 'script', 160, 540, 420, { align: c }],
+      [W('au', 2) - .04, T.tantie, 'AU ZEM,', 'cond', 220, 540, 330, { align: c }],
+      [W('à Tantie') - .04, T.et, 'à Tantie…', 'script', 190, 540, 330, { align: c }],
+      [W('Et') - .04, T.auj, 'et souvent, on', 'sans', 72, 540, 290, { align: c }],
+      [W('tournait') - .03, T.auj, 'TOURNAIT', 'cond', 200, 540, 1500, { align: c, anim: 'wipe' }],
+      [W('longtemps') - .03, T.auj, 'longtemps.', 'script', 150, 540, 1660, { align: c }],
+      [W("Aujourd'hui") - .03, T.ton, "AUJOURD'HUI,", 'cond', 175, 540, 330, { align: c, color: O }],
+      [W('ton') - .04, T.ta, 'ton argent', 'script', 160, 540, 290, { align: c }],
+      [W('passe') - .04, T.ta, 'passe par ton', 'sans', 70, 540, 1540, { align: c }],
+      [W('téléphone') - .03, T.ta, 'TÉLÉPHONE.', 'cond', 210, 540, 1690, { align: c, color: O }],
+      [W('Ta') - .04, T.alors, 'ta famille,', 'script', 170, 540, 290, { align: c }],
+      [W('tu') - .03, T.alors, 'TU LUI PARLES', 'cond', 160, 540, 1530, { align: c, anim: 'wipe' }],
+      [W('par', 3) - .03, T.alors, 'par le téléphone.', 'sans', 66, 540, 1680, { align: c }],
+      [W('Alors') - .04, T.dem, 'Alors pourquoi', 'sans', 72, 100, 250, { weight: 700 }],
+      [W('cherches') - .1, T.dem, 'tu cherches encore', 'sans', 82, 100, 345, {}],
+      [W('chemin') - .2, T.dem, 'TON CHEMIN', 'cond', 190, 100, 1500, { color: O, anim: 'wipe' }],
+      [W('demandant') - .1, T.monde, 'en demandant à', 'sans', 68, 540, 1330, { weight: 700, align: c }],
+      [W('tout') - .03, T.monde, 'TOUT LE QUARTIER ?', 'cond', 128, 540, 1470, { align: c }],
+      [W('monde', 2) - .2, T.main, 'Le monde', 'script', 170, 540, 215, { align: c }],
+      [W('Maintenant') - .03, T.cest, 'MAINTENANT,', 'cond', 170, 540, 250, { align: c, color: O }],
+      [W('tout', 2) - .04, T.cest, 'tout se cherche', 'sans', 80, 540, 1380, { align: c }],
+      [W("C'est") - .04, T.benin, "C'est plus", 'sans', 76, 100, 250, {}],
+      [W('simple') - .03, T.benin, 'SIMPLE', 'cond', 200, 100, 385, { color: O, anim: 'wipe' }],
+      [W('et', 2) - .04, T.benin, 'et tu es sûr de', 'sans', 70, 540, 1400, { align: c }],
+      [W('trouver', 2) - .03, T.benin, 'TROUVER.', 'cond', 210, 540, 1545, { align: c }],
+      [W('Bénin') - .2, T.sur, 'le Bénin aussi', 'script', 160, 540, 280, { align: c }],
+      [W('cherche', 3) - .04, T.sur, 'SE CHERCHE EN LIGNE.', 'cond', 130, 540, 1690, { align: c, color: O, anim: 'wipe' }],
+      [W('map') - .26, END, 'sur la', 'script', 150, 540, 210, { align: c }],
+      [W('map') - .03, END, 'MAP OJA', 'cond', 200, 540, 350, { align: c, color: O }],
+    ],
+    end: { k: 'Le monde a changé', h2: 'Le Bénin se cherche<br>sur la <span>MAP OJA</span>', g: '' },
+  };
+};

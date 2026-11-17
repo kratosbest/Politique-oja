@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OJA, campagne Avant / Aujourd'hui</title>
+<!-- Talking-head ads of the campaign « Avant, on demandait. Aujourd'hui, on cherche. » (9:16, 1080x1920), one page for all
+     the takes: oja_talk.html?v=<name> loads the cut and the words of the take (assets/talk_<name>/marks.js, src/tk_edl.py)
+     and its design (assets/talk_<name>/design.js: shots, framings, animated words, moving text, pictures, end card).
+     « Avant » moments are in black and white, « Aujourd'hui / Maintenant » in colour with the OJA orange. Frames and mattes
+     of the speaker: work/talk_<name>/fr/ and mt/ (src/tk_matte.py, not in git). Rendered by src/talk_render.sh <name>. -->
+<link rel="stylesheet" href="fonts/local.css">
+<link rel="stylesheet" href="fonts/talk.css">
+<style>
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0d0906}
+#cv{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#endc{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(90% 60% at 50% 40%,rgba(255,107,0,.20),rgba(13,9,6,0) 70%),#0d0906}
+#endc .k{font:400 82px 'Great Vibes';color:#F3E6D3;margin-bottom:6px}
+#endc h2{margin:0;font:800 100px/1.0 Outfit;color:#fff;letter-spacing:-2px}
+#endc h2 span{color:#FF6B00;font:400 128px/1.0 Anton;letter-spacing:0}
+#endc .g{margin-top:22px;font:700 42px Outfit;color:#F3E6D3}
+#endc .dl{margin-top:46px;display:inline-block;padding:22px 44px;border-radius:999px;background:#FF6B00;color:#fff;font:800 48px Outfit;box-shadow:0 14px 40px rgba(255,107,0,.35)}
+#endc .qr{margin-top:34px;width:250px;height:250px;padding:20px;border-radius:30px;background:#fff}
+#endc .qr img{width:100%;height:100%;display:block}
+#endc p{margin:20px 0 0;font:500 30px Outfit;color:#cfc4b6}
+</style>
+</head>
+<body>
+<canvas id="cv" width="1080" height="1920"></canvas>
+<div id="endc"><div class="k" id="endk"></div><h2 id="endh"></h2><div class="g" id="endg"></div>
+  <div class="dl">Télécharge Oja App</div><div class="qr"><img src="pubs/qr_telecharger.svg" alt=""></div><p>Play Store et App Store</p></div>
+<script>
+const V = new URLSearchParams(location.search).get('v') || 'monde';
+const W = 1080, H = 1920, FPS = 30, OR = '#FF6B00', CREAM = '#F3E6D3';
+const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+const lin = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
+const eo = x => 1 - Math.pow(1 - x, 3), eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const hash = n => { const x = Math.sin(n * 127.1 + 3.7) * 43758.5453; return x - Math.floor(x); };
+const loadImg = src => new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => { console.error('missing ' + src); r(null); }; i.src = src; });
+const CACHE = new Map();
+const get = src => { if (!CACHE.has(src)) { CACHE.set(src, loadImg(src)); if (CACHE.size > 60) CACHE.delete(CACHE.keys().next().value); } return CACHE.get(src); };
+let FR, HEAD, NF;                         // framings, the face in the source frame, number of frames (set from the design)
+const fr = i => `work/talk_${V}/fr/f${String(Math.min(NF, Math.max(1, i))).padStart(4, '0')}.jpg`, mt = i => fr(i).replace('/fr/', '/mt/').replace('.jpg', '.png');
+const NSCR = 161, scr = i => 'assets/sketch4/scr/s' + String(Math.max(0, Math.min(NSCR - 1, Math.round(i)))).padStart(3, '0') + '.jpg';
+// a word of the take on the output timeline: W('zem') = when « zem » starts, W('le', 2) = the second « le »
+const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z']/gi, '').toLowerCase();
+function findWord(w, nth) { const xs = TK.words.filter(x => norm(x[0]).startsWith(norm(w))); const x = xs[nth - 1] || xs[0]; if (!x) console.error('no word ' + w); return x || [w, 0, 0]; }
+const Wt = (w, nth = 1) => findWord(w, nth)[1], We = (w, nth = 1) => findWord(w, nth)[2];
+
+// ---------- drawing helpers ----------
+const GRADE = 'contrast(1.14) saturate(.86) brightness(.93) sepia(.10)', BW = 'grayscale(1) contrast(1.28) brightness(.9)';
+function vignette(a) { const g = ctx.createRadialGradient(540, 900, 380, 540, 960, 1300); g.addColorStop(0, 'rgba(13,9,6,0)'); g.addColorStop(1, `rgba(13,9,6,${a})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+let GRAIN = null;
+function grain(t) {
+  if (!GRAIN) { GRAIN = []; for (let k = 0; k < 4; k++) { const c = document.createElement('canvas'); c.width = 540; c.height = 960; const g = c.getContext('2d'), d = g.createImageData(540, 960);
+    for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() - .5) * 120; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } g.putImageData(d, 0, 0); GRAIN.push(c); } }
+  ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .10; ctx.drawImage(GRAIN[Math.floor(t * FPS) % 4], 0, 0, W, H); ctx.restore();
+}
+function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function cover(img, z = 1, fx = .5, fy = .5, filter = GRADE) {
+  const s = Math.max(W / img.width, H / img.height) * z, w = img.width * s, h = img.height * s;
+  ctx.save(); ctx.filter = filter; ctx.drawImage(img, (W - w) * fx, (H - h) * fy, w, h); ctx.restore();
+}
+// the phone shot with a framing; `behind` is drawn between the room and him (words passing behind his head)
+const OFF = document.createElement('canvas'); OFF.width = W; OFF.height = H; const octx = OFF.getContext('2d');
+function aroll(img, matte, f, u, behind, punch, flt = GRADE) {
+  const [z0, cx, cy] = FR[f], z = z0 * (1 + .025 * u) * punch;
+  const place = c => { c.translate(540, 960); c.scale(z, z); c.translate(-cx, -cy); };
+  ctx.save(); place(ctx); ctx.filter = flt; ctx.drawImage(img, 0, 0, 1080, 1920); ctx.restore();
+  if (behind && matte) {
+    behind();
+    octx.setTransform(1, 0, 0, 1, 0, 0); octx.clearRect(0, 0, W, H); octx.save(); place(octx); octx.filter = flt; octx.drawImage(img, 0, 0, 1080, 1920);
+    octx.globalCompositeOperation = 'destination-in'; octx.filter = 'none'; octx.drawImage(matte, 0, 0, 1080, 1920); octx.restore();
+    ctx.drawImage(OFF, 0, 0);
+  }
+}
+// a picture in a tilted card over a blurred copy of itself
+function card(img, u, len, rot = -3, wcard = 900, flt = GRADE) {
+  ctx.save(); ctx.filter = 'blur(26px) brightness(.45) saturate(.8)' + (flt === BW ? ' grayscale(1)' : ''); const s = Math.max(W / img.width, H / img.height) * 1.15;
+  ctx.drawImage(img, (W - img.width * s) / 2, (H - img.height * s) / 2, img.width * s, img.height * s); ctx.restore();
+  const k = eo(lin(u, 0, .35)), cw = wcard * (1.03 + .04 * u / len), ch = cw * img.height / img.width;
+  ctx.save(); ctx.translate(540, 1000 + (1 - k) * 120); ctx.rotate((rot + 1.2 * u / len) * Math.PI / 180); ctx.globalAlpha = k;
+  ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 30;
+  rrect(ctx, -cw / 2 - 12, -ch / 2 - 12, cw + 24, ch + 24, 34); ctx.fillStyle = CREAM; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.save(); rrect(ctx, -cw / 2, -ch / 2, cw, ch, 24); ctx.clip(); ctx.filter = flt; ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch); ctx.restore();
+  ctx.restore();
+}
+function phoneShot(screen, u, tap) {        // the app in a phone, over a dark warm background
+  const g = ctx.createRadialGradient(540, 900, 100, 540, 960, 1200); g.addColorStop(0, '#3a2414'); g.addColorStop(1, '#0d0906'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const k = eo(lin(u, 0, .32)), SW = 600, SH = SW * screen.height / screen.width, PW = SW + 36, PH = SH + 36;
+  ctx.save(); ctx.translate(540, 1110 + (1 - k) * 300); ctx.rotate((2.5 - 1.2 * u) * Math.PI / 180); ctx.scale(.94 + .06 * back(lin(u, 0, .4)), .94 + .06 * back(lin(u, 0, .4)));
+  ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 70; ctx.shadowOffsetY = 30;
+  rrect(ctx, -PW / 2, -PH / 2, PW, PH, 74); ctx.fillStyle = '#17120e'; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.save(); rrect(ctx, -SW / 2, -SH / 2, SW, SH, 56); ctx.clip(); ctx.drawImage(screen, -SW / 2, -SH / 2, SW, SH);
+  if (tap) { const q = lin(u, tap[2], tap[2] + .5), sc = SW / screen.width, rx = -SW / 2 + tap[0] * sc, ry = -SH / 2 + tap[1] * sc;
+    if (q > 0 && q < 1) { ctx.beginPath(); ctx.arc(rx, ry, 26 + 60 * eo(q), 0, 2 * Math.PI); ctx.strokeStyle = `rgba(255,107,0,${.9 * (1 - q)})`; ctx.lineWidth = 9; ctx.stroke();
+      ctx.beginPath(); ctx.arc(rx, ry, 26 * (1 - .3 * q), 0, 2 * Math.PI); ctx.fillStyle = `rgba(255,107,0,${.35 * (1 - q)})`; ctx.fill(); } }
+  ctx.restore(); ctx.restore();
+}
+
+// ---------- typography ----------
+// Anton: tall condensed capitals (the punch words, orange, worn ink); Outfit: round geometric sans (the phrase);
+// Great Vibes: script (the soft connecting words). Each word appears on its spoken syllable.
+const FONT = { sans: (s, w = 800) => `${w} ${s}px Outfit`, cond: s => `400 ${s}px Anton`, script: s => `400 ${s}px 'Great Vibes'` };
+let SPECK = null;
+function speck() {                        // worn-ink texture: random dots and blotches, punched out of the condensed words
+  if (SPECK) return SPECK; SPECK = document.createElement('canvas'); SPECK.width = SPECK.height = 512; const g = SPECK.getContext('2d');
+  for (let i = 0; i < 2600; i++) { const r = hash(i) < .92 ? .6 + hash(i + 7) * 2.2 : 3 + hash(i + 9) * 7; g.globalAlpha = .35 + .65 * hash(i + 3);
+    g.beginPath(); g.arc(hash(i + 1) * 512, hash(i + 2) * 512, r, 0, 2 * Math.PI); g.fill(); }
+  return SPECK;
+}
+const WORN = new Map();
+function wornWord(text, size, color) {     // the condensed word drawn once with its worn texture, cached
+  const key = text + size + color; if (WORN.has(key)) return WORN.get(key);
+  const c = document.createElement('canvas'), g = c.getContext('2d'); g.font = FONT.cond(size);
+  const w = Math.ceil(g.measureText(text).width) + 20, h = Math.ceil(size * 1.35); c.width = w; c.height = h;
+  g.font = FONT.cond(size); g.textBaseline = 'middle'; g.fillStyle = color; g.fillText(text, 10, h / 2);
+  g.globalCompositeOperation = 'destination-out'; g.globalAlpha = .8; const p = g.createPattern(speck(), 'repeat'); g.fillStyle = p; g.fillRect(0, 0, w, h);
+  WORN.set(key, c); return c;
+}
+// word: [t, t1, text, font, size, x, y, opts]; opts: color, align (left|center), rot, anim (letters|write|slam), strike (time)
+function drawWord(wd, t) {
+  const [t0, t1, text, f, size, x, y, o = {}] = wd; if (t < t0 || t >= t1) return;
+  const out = lin(t, t1 - .14, t1), color = o.color || '#fff', align = o.align || 'left', anim = o.anim || (f === 'script' ? 'write' : f === 'cond' ? 'slam' : 'letters');
+  const age = t - t0, dx = (o.dx !== undefined ? o.dx : align === 'center' ? 0 : 16) * age, dy = (o.dy || 0) * age, grow = 1 + (o.grow !== undefined ? o.grow : .025) * age;
+  ctx.save(); ctx.translate(x + dx, y + dy - 24 * eo(out)); ctx.rotate((o.rot || 0) * Math.PI / 180); ctx.globalAlpha = 1 - out;
+  const sc = (1 - .12 * out) * grow; ctx.scale(sc, sc);
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 24; ctx.shadowOffsetY = 6; ctx.textBaseline = 'middle';
+  if (f === 'cond') {
+    const img = wornWord(text, size, color), w = img.width, h = img.height, ox = align === 'center' ? -w / 2 : -10;
+    if (anim === 'wipe') {                 // slides in from the left behind a moving edge, with a short motion blur
+      const k = eo(lin(t, t0, t0 + .3)), off = -110 * (1 - k);
+      ctx.save(); ctx.beginPath(); ctx.rect(ox - 20, -h, (w + 40) * k, h * 2); ctx.clip();
+      for (let g = 3; g >= 1; g--) if (k < 1) { ctx.save(); ctx.globalAlpha *= .18 * (1 - k); ctx.drawImage(img, ox + off - g * 26 * (1 - k), -h / 2); ctx.restore(); }
+      ctx.drawImage(img, ox + off, -h / 2); ctx.restore();
+      if (k < 1) { ctx.shadowColor = 'transparent'; ctx.fillStyle = color; ctx.fillRect(ox - 20 + (w + 40) * k - 6, -h * .42, 10, h * .84); }   // the moving edge
+    } else {
+      const k = lin(t, t0, t0 + .16), s2 = anim === 'slam' ? 1 + .9 * (1 - eo(k)) : 1, shake = anim === 'slam' && age < .26 ? 7 * Math.sin(age * 90) * (1 - age / .26) : 0;
+      ctx.globalAlpha *= Math.min(1, k * 2); ctx.translate(shake, 0); ctx.scale(s2, s2); ctx.drawImage(img, ox, -h / 2);
+    }
+    if (o.strike) { const q = eo(lin(t, o.strike, o.strike + .22)); if (q > 0) { ctx.shadowColor = 'transparent'; ctx.fillStyle = o.strikeColor || '#fff'; ctx.fillRect(ox + 4, -size * .05, (w - 8) * q, size * .1); } }
+  } else if (anim === 'write') {           // the script word is « written » from left to right
+    ctx.font = FONT.script(size); const w = ctx.measureText(text).width, ox = align === 'center' ? -w / 2 : 0, k = eio(lin(t, t0, t0 + .42));
+    ctx.save(); ctx.beginPath(); ctx.rect(ox - 30, -size, (w + 60) * k, size * 2); ctx.clip(); ctx.shadowColor = 'rgba(0,0,0,.75)'; ctx.shadowBlur = 30; ctx.fillStyle = color; ctx.fillText(text, ox, 0); ctx.shadowBlur = 8; ctx.fillText(text, ox, 0); ctx.restore();
+  } else {                                 // letters pop one after the other, white ones glow a little
+    ctx.font = FONT.sans(size, o.weight || 800); const w = ctx.measureText(text).width; let xx = align === 'center' ? -w / 2 : 0;
+    const glow = color === '#fff';
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i], cw = ctx.measureText(ch).width, ti = t0 + i * .022, k = lin(t, ti, ti + .2);
+      if (k > 0) { ctx.save(); ctx.translate(xx + cw / 2, (1 - eo(k)) * size * .35); ctx.rotate((1 - eo(k)) * (hash(i + text.length) - .5) * .5); const s3 = .35 + .65 * back(k);
+        ctx.scale(s3, s3); ctx.globalAlpha *= Math.min(1, k * 3); ctx.fillStyle = color;
+        if (glow) { ctx.save(); ctx.shadowColor = 'rgba(255,236,214,.75)'; ctx.shadowBlur = 26; ctx.shadowOffsetY = 0; ctx.fillText(ch, -cw / 2, 0); ctx.restore(); }
+        ctx.fillText(ch, -cw / 2, 0); ctx.restore(); }
+      xx += cw; }
+  }
+  ctx.restore();
+}
+// ---------- moving text: a ring orbiting his head, a big arc sweeping through the frame, a ticker behind him ----------
+// letters laid along an ellipse around (cx, cy); the half behind his head is drawn under his matte (part 'back'), the other
+// half over him (part 'front'); letters turn edge-on at the sides and are seen mirrored from behind, like a real ring
+function orbit(text, t, t0, t1, cx, cy, rx, ry, tilt, speed, size, color, part) {
+  if (t < t0 || t >= t1) return; const age = t - t0, fade = Math.min(lin(t, t0, t0 + .25), 1 - lin(t, t1 - .15, t1));
+  ctx.save(); ctx.font = FONT.sans(size, 800); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  const ws = [...text].map(ch => ctx.measureText(ch).width), per = ws.reduce((a, b) => a + b, 0), R = rx;   // a circle of radius rx seen from above
+  const reps = Math.max(1, Math.floor(2 * Math.PI * R / per)), step = 2 * Math.PI / (reps * per);
+  let acc = 0;
+  for (let r = 0; r < reps; r++) for (let i = 0; i < ws.length; i++) {
+    const th = -(acc + ws[i] / 2) * step + speed * age; acc += ws[i];
+    const depth = Math.sin(th);             // > 0: in front of him (lower half of the ring)
+    if ((part === 'back') !== (depth < 0)) continue;
+    const appear = lin(t, t0 + (r * ws.length + i) * .012, t0 + (r * ws.length + i) * .012 + .15); if (appear <= 0) continue;
+    const ex = rx * Math.cos(th), ey = ry * Math.sin(th), c = Math.cos(tilt), s = Math.sin(tilt);
+    ctx.save(); ctx.translate(cx + ex * c - ey * s, cy + ex * s + ey * c); ctx.rotate(tilt);
+    const sx = Math.sin(th), sc = (.8 + .2 * depth) * appear;
+    ctx.scale(Math.sign(sx || 1) * Math.max(.12, Math.abs(sx)) * sc, sc);
+    ctx.globalAlpha = fade * (depth < 0 ? .75 : 1); ctx.fillStyle = depth < 0 ? '#c9561a' : color;
+    ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 16; ctx.fillText(text[i], 0, 0); ctx.restore();
+  }
+  ctx.restore();
+}
+// text running along a big circle partly outside the frame, rotating so the words sweep through the picture
+function bigArc(text, t, t0, t1, cx, cy, R, a0, speed, size, color, font = 'cond') {
+  if (t < t0 || t >= t1) return; const age = t - t0, fade = Math.min(lin(t, t0, t0 + .2), 1 - lin(t, t1 - .15, t1));
+  ctx.save(); ctx.font = font === 'cond' ? FONT.cond(size) : FONT.sans(size, 800); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  let a = a0 + speed * age; ctx.globalAlpha = fade; ctx.fillStyle = color; ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 22;
+  for (const ch of text) { const w = ctx.measureText(ch).width, da = w / R; a += da / 2;
+    ctx.save(); ctx.translate(cx + R * Math.cos(a), cy + R * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.fillText(ch, 0, 0); ctx.restore(); a += da / 2; }
+  ctx.restore();
+}
+// a big outlined line of text sliding sideways (drawn behind him)
+function ticker(text, t, t0, t1, y, speed, size, color) {
+  if (t < t0 || t >= t1) return; ctx.save(); ctx.font = FONT.cond(size); ctx.textBaseline = 'middle';
+  const w = ctx.measureText(text).width, x0 = -((t - t0) * speed % w); ctx.globalAlpha = Math.min(lin(t, t0, t0 + .2), 1 - lin(t, t1 - .12, t1));
+  ctx.lineWidth = 5; ctx.strokeStyle = color; for (let x = x0 - w; x < W + w; x += w) ctx.strokeText(text, x, y); ctx.restore();
+}
+function arcWord(t0, t1, text, cx, cy, r, a0, a1, t, size, color) {    // letters on an arc around his head, appearing one by one
+  if (t < t0 || t >= t1) return; const n = text.length, spin = 6 * (t - t0);
+  ctx.save(); ctx.font = FONT.sans(size, 800); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = color;
+  ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
+  for (let i = 0; i < n; i++) { const ti = t0 + i * .035; if (t < ti) break; const k = back(lin(t, ti, ti + .18)), a = (a0 + (a1 - a0) * i / (n - 1) + spin) * Math.PI / 180;
+    ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(a + Math.PI / 2); ctx.scale(k, k); ctx.globalAlpha = Math.min(1, 1 - lin(t, t1 - .08, t1)); ctx.fillText(text[i], 0, 0); ctx.restore(); }
+  ctx.restore();
+}
+function vanish(t0, t1, text, x, y, size, t) {     // « TU N'EXISTES PAS. »: slams in, then the letters drop out at random
+  if (t < t0 || t >= t1) return; ctx.save(); ctx.font = FONT.cond(size); ctx.textBaseline = 'middle';
+  const total = ctx.measureText(text).width; let xx = x - total / 2; ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 20;
+  const k = 1 + .6 * (1 - eo(lin(t, t0, t0 + .16)));
+  for (let i = 0; i < text.length; i++) { const w = ctx.measureText(text[i]).width, td = t0 + .7 + hash(i + 3) * .45;
+    const a = 1 - lin(t, td, td + .12); if (a > 0) { ctx.globalAlpha = a * Math.min(1, lin(t, t0, t0 + .08) * 2); ctx.fillStyle = '#fff'; ctx.save(); ctx.translate(x + (xx + w / 2 - x) * k, y + 40 * (1 - a)); ctx.scale(k, k); ctx.fillText(text[i], -w / 2, 0); ctx.restore(); }
+    xx += w; }
+  ctx.restore();
+}
+// ---------- his face in pieces: magnified parts of the same live frame fly over and around his face ----------
+const TILES = [                            // source rect around HEAD [dx, dy, w, h], screen offset from the face (close-up units), zoom
+  { r: [-140, -90, 280, 100], o: [40, -380], z: 1.35, d: 0 }, { r: [-85, 35, 170, 100], o: [300, 170], z: 1.45, d: .07 },
+  { r: [-130, -70, 110, 100], o: [-330, -150], z: 1.3, d: .13 }, { r: [30, -40, 110, 140], o: [350, -240], z: 1.2, d: .18 }];
+function fragments(img, t, t0, t1, f, flt) {
+  if (t < t0 || t >= t1 || !img) return; const [z, cx, cy] = FR[f], sx = 540 + (HEAD[0] - cx) * z, sy = 960 + (HEAD[1] - cy) * z, k0 = z / 1.8;
+  TILES.forEach((T, i) => {
+    const ta = t0 + T.d, k = lin(t, ta, ta + .24), out = lin(t, t1 - .16 + i * .02, t1); if (k <= 0) return;
+    const w = T.r[2] * z * T.z, h = T.r[3] * z * T.z, drift = (t - t0) * 14 * (i % 2 ? 1 : -1);
+    const x = sx + T.o[0] * k0 + drift, y = sy + T.o[1] * k0 - drift * .5, s = (.55 + .45 * back(k)) * (1 - .3 * out);
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.globalAlpha = Math.min(1, k * 3) * (1 - out);
+    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 34; ctx.shadowOffsetY = 12; ctx.fillStyle = '#000'; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.shadowColor = 'transparent';
+    ctx.filter = flt === BW ? 'grayscale(1) contrast(1.3) brightness(1.05)' : 'contrast(1.12) saturate(.95) brightness(1.15) sepia(.08)';
+    ctx.drawImage(img, HEAD[0] + T.r[0], HEAD[1] + T.r[1], T.r[2], T.r[3], -w / 2, -h / 2, w, h); ctx.restore();
+  });
+}
+function stamp(text, t0, t1, t, x = 540, y = 1330) {   // a word stamped on an orange tag
+  if (t < t0 || t >= t1) return; const k = lin(t, t0, t0 + .15), s = 1 + 1.1 * (1 - eo(k));
+  ctx.save(); ctx.translate(x, y); ctx.rotate(-6 * Math.PI / 180); ctx.scale(s, s); ctx.globalAlpha = Math.min(1, k * 2);
+  const img = wornWord(text, 150, '#fff'), w = img.width + 60, h = img.height + 10;
+  ctx.shadowColor = 'rgba(0,0,0,.45)'; ctx.shadowBlur = 30; rrect(ctx, -w / 2, -h / 2, w, h, 24); ctx.fillStyle = OR; ctx.fill(); ctx.shadowColor = 'transparent';
+  ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
+}
+function bigBehind(text, size, color, x, y, t0, t1, t, vx = -30) {   // a huge worn word (drawn behind him when used in `behind`)
+  if (t < t0 || t >= t1) return; const k = eo(lin(t, t0, t0 + .3)), out = lin(t, t1 - .14, t1), img = wornWord(text, size, color);
+  ctx.save(); ctx.translate(x + vx * (t - t0), y + 60 * (1 - k)); ctx.scale(1 + .03 * (t - t0), 1 + .03 * (t - t0)); ctx.globalAlpha = k * (1 - out);
+  ctx.drawImage(img, -img.width / 2, -img.height / 2); ctx.restore();
+}
+// the app: the map with its pins (pin drop), the place sheet with a tap on Itinéraire, the add-a-place screen, a search
+const SEARCH_DUR = q => .3 + q.length * .085 + .15;
+function searchBar(u, q) {                 // in the 780x1688 screen coordinates, over the title of the map
+  ctx.save(); rrect(ctx, 160, 116, 600, 110, 55); ctx.shadowColor = 'rgba(0,0,0,.14)'; ctx.shadowBlur = 16; ctx.shadowOffsetY = 4; ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowColor = 'transparent';
+  const typing = u < SEARCH_DUR(q) + .1; ctx.lineWidth = 4; ctx.strokeStyle = typing ? OR : '#E6E0D8'; ctx.stroke();
+  ctx.strokeStyle = '#7d838f'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(214, 165, 17, 0, 2 * Math.PI); ctx.stroke(); ctx.beginPath(); ctx.moveTo(227, 178); ctx.lineTo(243, 194); ctx.stroke();
+  const n = u < .3 ? 0 : Math.min(q.length, Math.floor((u - .3) / .085) + 1); ctx.font = '600 40px Poppins'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = n ? '#1d2330' : '#9aa0aa'; ctx.fillText(n ? q.slice(0, n) : 'Rechercher un lieu', 266, 172);
+  if (typing && Math.floor(u * 3) % 2 === 0) { const x = 266 + (n ? ctx.measureText(q.slice(0, n)).width + 5 : 0); ctx.fillStyle = OR; ctx.fillRect(x, 146, 4, 52); }
+  ctx.restore();
+}
+async function appShot(sp, u) {
+  let img, tap = null, q = null;
+  if (sp.screen === 'map') img = await get(scr(Math.min(30, (u - .15) * 30)));
+  else if (sp.screen === 'search') { q = sp.query; const d = SEARCH_DUR(q); img = await get(scr(u < d ? 0 : Math.min(30, (u - d) * 30))); }
+  else if (sp.screen === 'sheet') { img = await get(scr(u < .5 ? 30 : 133 + (u - .5) * 30)); tap = [146, 1420, sp.tap || 1.05]; }
+  else if (sp.screen === 'ajout') { img = await get('../video3/assets/app/ajout.jpg'); tap = [560, 640, sp.tap || .9]; }
+  if (!img) return;
+  phoneShot(img, u, tap);
+  if (q) {                                  // the search bar sits on the screen drawn by phoneShot: redo its transform
+    const k = eo(lin(u, 0, .32)), SW = 600, SH = SW * img.height / img.width;
+    ctx.save(); ctx.translate(540, 1110 + (1 - k) * 300); ctx.rotate((2.5 - 1.2 * u) * Math.PI / 180); ctx.scale(.94 + .06 * back(lin(u, 0, .4)), .94 + .06 * back(lin(u, 0, .4)));
+    rrect(ctx, -SW / 2, -SH / 2, SW, SH, 56); ctx.clip(); ctx.translate(-SW / 2, -SH / 2); ctx.scale(SW / 780, SW / 780); searchBar(u, q); ctx.restore();
+  }
+}
+// pictures that pop one after the other (a quick montage of places)
+function cards(imgs, u, len, flt) {
+  const n = imgs.length, per = len / n, i = Math.min(n - 1, Math.floor(u / per));
+  for (let k = 0; k <= i; k++) { const img = imgs[k]; if (!img) continue; const uk = u - k * per;
+    if (k === 0) { ctx.save(); ctx.filter = 'blur(26px) brightness(.4)' + (flt === BW ? ' grayscale(1)' : ''); const s = Math.max(W / img.width, H / img.height) * 1.15;
+      ctx.drawImage(img, (W - img.width * s) / 2, (H - img.height * s) / 2, img.width * s, img.height * s); ctx.restore(); }
+    const kk = back(lin(uk, 0, .28)), cw = 860, ch = cw * img.height / img.width, rot = [-5, 4, -2, 6][k % 4];
+    ctx.save(); ctx.translate(540 + [-30, 40, -10, 20][k % 4], 980 + [0, -60, 50, -20][k % 4]); ctx.rotate(rot * Math.PI / 180); ctx.scale(kk, kk);
+    ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = 60; ctx.shadowOffsetY = 30; rrect(ctx, -cw / 2 - 12, -ch / 2 - 12, cw + 24, ch + 24, 30); ctx.fillStyle = CREAM; ctx.fill();
+    ctx.shadowColor = 'transparent'; ctx.save(); rrect(ctx, -cw / 2, -ch / 2, cw, ch, 20); ctx.clip(); ctx.filter = flt; ctx.drawImage(img, -cw / 2, -ch / 2, cw, ch); ctx.restore(); ctx.restore(); }
+}
+
+// ---------- the timeline of the design ----------
+let D, SHOTS, WORDS, FX, END, DUR, CUTS;
+const shotAt = t => { let k = 0; for (let i = 0; i < SHOTS.length; i++) if (t >= SHOTS[i][0]) k = i; return { k, t0: SHOTS[k][0], sp: SHOTS[k][1], u: t - SHOTS[k][0], len: (SHOTS[k + 1] ? SHOTS[k + 1][0] : DUR) - SHOTS[k][0] }; };
+function drawFx(f, t, part, img, shot) {
+  if (t < f.t0 || t >= f.t1) return;
+  if (f.type === 'orbit') orbit(f.text, t, f.t0, f.t1, f.cx, f.cy, f.rx, f.ry, f.tilt || 0, f.speed || 1.5, f.size || 84, f.color || '#fff', part === 'any' ? 'back' : part), part === 'any' && orbit(f.text, t, f.t0, f.t1, f.cx, f.cy, f.rx, f.ry, f.tilt || 0, f.speed || 1.5, f.size || 84, f.color || '#fff', 'front');
+  else if (f.type === 'behind') bigBehind(f.text, f.size, f.color || OR, f.x || 540, f.y, f.t0, f.t1, t, f.vx === undefined ? -30 : f.vx);
+  else if (f.type === 'ticker') ticker(f.text, t, f.t0, f.t1, f.y, f.speed || 520, f.size || 280, f.color || 'rgba(243,230,211,.85)');
+  else if (f.type === 'arc') bigArc(f.text, t, f.t0, f.t1, f.cx || 540, f.cy || 1760, f.R || 1450, f.a0 || 1.53 * Math.PI, f.speed || -.4, f.size || 112, f.color || '#fff');
+  else if (f.type === 'frag' && shot.sp.A) fragments(img, t, f.t0, f.t1, shot.sp.A, shot.sp.bw ? BW : GRADE);
+  else if (f.type === 'vanish') vanish(f.t0, f.t1, f.text, f.x || 540, f.y || 900, f.size || 128, t);
+  else if (f.type === 'stamp') stamp(f.text, f.t0, f.t1, t, f.x, f.y);
+}
+async function drawAt(t) {
+  const shot = shotAt(t), sp = shot.sp, fi = Math.floor(t * FPS) + 1, flt = sp.bw ? BW : GRADE;
+  const punch = 1 + .05 * (1 - eo(lin(shot.u, 0, .2))) + .025 * (1 - eo(lin(t - (CUTS.filter(c => c <= t).pop() || -9), 0, .16)));
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.filter = 'none'; ctx.globalAlpha = 1; ctx.clearRect(0, 0, W, H);
+  let img = null;
+  if (sp.A) {
+    const [im, matte] = await Promise.all([get(fr(fi)), get(mt(fi))]); img = im;
+    const behind = FX.filter(f => (f.behind || f.type === 'orbit') && t >= f.t0 && t < f.t1);
+    aroll(img, matte, sp.A, shot.u, behind.length ? () => behind.forEach(f => drawFx(f, t, 'back', img, shot)) : null, punch, flt);
+    if (!matte) behind.forEach(f => drawFx(f, t, 'back', img, shot));
+    FX.filter(f => !f.behind).forEach(f => drawFx(f, t, 'front', img, shot));
+  } else if (sp.B) {
+    const one = sp.img ? await get(D.images[sp.img]) : null;
+    if (sp.B === 'card' && one) card(one, shot.u, shot.len, sp.rot === undefined ? -3 : sp.rot, sp.w || 900, flt);
+    else if (sp.B === 'cover' && one) { const z = (sp.z || 1.1) - .07 * shot.u / shot.len;
+      ctx.save(); if (sp.spin) { ctx.translate(540, 960); ctx.rotate(sp.spin * shot.u * Math.PI / 180); ctx.scale(1.25, 1.25); ctx.translate(-540, -960); } cover(one, z, .5, .45, flt); ctx.restore(); }
+    else if (sp.B === 'cards') cards(await Promise.all(sp.imgs.map(k => get(D.images[k]))), shot.u, shot.len, flt);
+    else if (sp.B === 'app') await appShot(sp, shot.u);
+    FX.filter(f => !f.behind && f.type !== 'frag').forEach(f => drawFx(f, t, 'any', null, shot));
+    FX.filter(f => f.behind && f.onB).forEach(f => drawFx(f, t, 'front', null, shot));
+  }
+  if (!sp.END) {
+    WORDS.forEach(wd => drawWord(wd, t));
+    vignette(sp.bw ? .7 : .55); grain(t);
+    if (sp.bw) grain(t + .5);
+    (D.flash || []).forEach(tf => { const q = (t - tf) / .22; if (q >= 0 && q < 1) { ctx.save(); ctx.globalAlpha = .75 * (1 - q); ctx.fillStyle = '#fff6ec'; ctx.fillRect(0, 0, W, H); ctx.restore(); } });
+  }
+  const ek = eo(lin(t, END, END + .45)), ec = document.getElementById('endc'); ec.style.opacity = ek; ec.style.transform = `scale(${1.04 - .04 * ek})`;
+}
+let pending = Promise.resolve();
+window.renderAt = t => { pending = drawAt(t); };
+window.waitFrame = () => pending.then(() => new Promise(r => requestAnimationFrame(() => r())));
+const loadScript = src => new Promise(r => { const s = document.createElement('script'); s.src = src; s.onload = r; s.onerror = () => { console.error('missing ' + src); r(); }; document.head.appendChild(s); });
+const FONTS = ['400 80px Anton', '800 80px Outfit', '700 80px Outfit', '500 40px Outfit', "400 80px 'Great Vibes'", '600 40px Poppins'];
+window.ready = loadScript(`assets/talk_${V}/marks.js`).then(() => loadScript(`assets/talk_${V}/design.js`)).then(() => {
+  END = TK.speech + .12; DUR = END + 3.6; NF = Math.floor(TK.speech * FPS) - 1;
+  D = DESIGN({ W: Wt, WE: We, END });
+  FR = D.fr; HEAD = D.head; SHOTS = D.shots.concat([[END, { END: true }]]); WORDS = D.words; FX = D.fx || [];
+  CUTS = TK.segs.map(s => s.t).filter(x => x > 0);
+  document.getElementById('endk').textContent = D.end.k; document.getElementById('endh').innerHTML = D.end.h2; document.getElementById('endg').textContent = D.end.g || '';
+  // sounds for src/tk_audio.py: [time, kind]
+  const out = [];
+  WORDS.forEach(wd => out.push([+(wd[0] + .03).toFixed(3), wd[3] === 'cond' ? 'hit' : 'tick']));
+  FX.forEach(f => { if (f.type === 'behind') out.push([+f.t0.toFixed(3), 'hit']); if (f.type === 'stamp') out.push([+f.t0.toFixed(3), 'stamp']); if (f.type === 'vanish') out.push([+f.t0.toFixed(3), 'drop']); });
+  (D.flash || []).forEach(tf => out.push([+tf.toFixed(3), 'hit']));
+  (D.music || []).forEach(([tm, kind]) => out.push([+tm.toFixed(3), 'music_' + kind]));
+  SHOTS.forEach(([t0, sp]) => { if (sp.B === 'app') out.push([+(t0 + .45).toFixed(3), 'pop']); if (sp.B === 'app' && (sp.screen === 'sheet' || sp.screen === 'ajout')) out.push([+(t0 + (sp.tap || (sp.screen === 'sheet' ? 1.05 : .9))).toFixed(3), 'tap']); });
+  out.push([+END.toFixed(3), 'end']);
+  window.SFX = out.sort((a, b) => a[0] - b[0]); window.TOTAL = DUR;
+}).then(() => Promise.all(FONTS.map(f => document.fonts.load(f, 'AÉéç')))).then(() => document.fonts.ready)
+  .then(() => Promise.all(Object.values(D.images).map(get))).then(() => drawAt(0));
+</script>
+</body>
+</html>

@@ -1268,3 +1268,20 @@ fin (30 s). Polices libres (OFL) prises des paquets Fontsource sur npm : `fonts/
 - Détourage : `src/tk1_matte.py` (clé de luminosité : mur clair, vêtements sombres, téléphone fixe) → `work/talk1/mt/`.
 - Son : sa voix nettoyée, un beat minimal (coupé sur « tu n'existes pas »), petits sons sur les mots (`src/tk1_audio.py`).
 - Rendu : `src/talk_enseigne_render.sh` → `OJA_Talk_TonEnseigne_essai_9x16.mp4`.
+
+## Campagne « Avant, on demandait. Aujourd'hui, on cherche. » (face caméra, 9:16)
+
+Trois prises de Derrick filmées avec le prompteur (texte 1 « Le monde a changé », texte 2 « Le bouche-à-oreille » pour les
+commerçants, texte 3 « Avant / Maintenant »), montées dans le style de la pub « Ton enseigne » : les moments « Avant » en
+noir et blanc avec une musique étouffée, « Aujourd'hui / Maintenant » en couleurs avec un flash et le beat complet.
+
+- Une seule page pour toutes les prises : `oja_talk.html?v=<nom>` charge `assets/talk_<nom>/marks.js` (le montage) et
+  `assets/talk_<nom>/design.js` (plans, cadrages, mots animés, anneaux, morceaux du visage, images, carte de fin).
+- Montage : `python3 src/tk_edl.py <nom>` garde toute la parole entre `from` et `to` de `src/talks/<nom>.json`, coupe les
+  pauses, et corrige les mots mal entendus à cause de l'accent (« aînés » → « zem, », « vente » → « von »).
+- Détourage : `src/tk_matte.py <nom>` (le mur crème est clair et jaune ; son visage éclairé est plus rose, ses vêtements
+  sombres) → `work/talk_<nom>/mt/`.
+- Son : `python3 src/tk_audio.py <nom>` (voix nettoyée, musique « low » / « full » selon la page, petits sons).
+- Rendu : `PY=<python avec numpy, scipy, pillow> src/talk_render.sh <nom>` → `OJA_Campagne_LeMondeAChange_9x16.mp4`,
+  `OJA_Campagne_BoucheAOreille_9x16.mp4`, `OJA_Campagne_AvantMaintenant_9x16.mp4`.
+- Prompteur pour filmer : artefact « Prompteur OJA » (les trois textes, mode français qui défile, mode goun idée par idée).

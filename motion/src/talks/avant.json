@@ -1,0 +1,16 @@
+{
+ "title": "Avant / Maintenant",
+ "from": 5.5,
+ "to": 35.4,
+ "gap": 0.28,
+ "fix": {
+  "demandons": "demande",
+  "aux": "au",
+  "vendeurs.": "vendeur.",
+  "l'itinéraire.": "Itinéraire.",
+  "Audya": "Oja",
+  "app": "App.",
+  "où.": "où ?"
+ },
+ "out": "OJA_Campagne_AvantMaintenant_9x16.mp4"
+}

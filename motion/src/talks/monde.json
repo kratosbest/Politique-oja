@@ -1,0 +1,13 @@
+{
+ "title": "Le monde a changé",
+ "from": 4.5,
+ "to": 53.6,
+ "gap": 0.28,
+ "fix": {
+  "aux": "au",
+  "aînés": "zem,",
+  "attentifs.": "à Tantie…",
+  "Hoggar": "OJA."
+ },
+ "out": "OJA_Campagne_LeMondeAChange_9x16.mp4"
+}

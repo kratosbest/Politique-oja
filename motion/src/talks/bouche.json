@@ -1,0 +1,14 @@
+{
+ "title": "Le bouche-à-oreille",
+ "from": 6.6,
+ "to": 46.8,
+ "gap": 0.28,
+ "fix": {
+  "bouche": "bouche-à-",
+  "à": "",
+  "oreille.": "oreille.",
+  "vente.": "von.",
+  "Moga,": "OJA,"
+ },
+ "out": "OJA_Campagne_BoucheAOreille_9x16.mp4"
+}
