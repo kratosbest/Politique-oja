@@ -84,6 +84,8 @@ est donnée plus tard.
   ce qu'il confirme la réception ; le vendeur est payé ensuite (MoMo).
 - Litiges arbitrés par l'équipe OJA ; remboursement au numéro qui a payé.
 - Livraison possible par OJA.
+- **Commission OJA** : 10 % du prix de chaque revente (chiffre donné par
+  Derrick, 20 novembre 2026).
 
 ## 7. Market et livraison
 - Commander dans les commerces et restaurants sur OJA.

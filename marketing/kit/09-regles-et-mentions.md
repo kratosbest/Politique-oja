@@ -57,3 +57,8 @@
 - On peut dire « moins que les autres applis », sans nommer ni chiffrer un concurrent.
 - Ne pas afficher le prix des pass. Écrire « Prix des pass fixés par OJA ».
 - Vérifier que le Centre de contrôle est bien réglé sur 15 % au Bénin avant chaque diffusion.
+
+## Commission NOVOJA (chiffre donné par Derrick, 20 novembre 2026)
+- OJA prélève **10 % du prix de chaque revente** NOVOJA ; le vendeur reçoit le reste.
+- Le dire clairement aux vendeurs : pas de frais cachés.
+- Tant que le décaissement MTN n'est pas actif, ne pas promettre « l'argent arrive sur ton MoMo » (voir prérequis 4).
